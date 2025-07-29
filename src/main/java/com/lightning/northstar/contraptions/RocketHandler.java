@@ -293,7 +293,6 @@ public class RocketHandler {
         eventTickNumberCheck = eventTickNumber + 3;
     }
 
-
     public static boolean isInRocket(Entity entity) {
         for (RocketContraptionEntity rockets : ROCKETS) {
             if (rockets.entitiesInContraption.contains(entity)) {
@@ -304,7 +303,6 @@ public class RocketHandler {
     }
 
     public static void register() {
-        System.out.println("Handling rockets for " + Northstar.MOD_ID);
     }
 
 }

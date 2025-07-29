@@ -3,10 +3,6 @@ package com.lightning.northstar;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
-import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
-import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
-import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
-import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;
 import com.lightning.northstar.data.NorthstarDataGen;
@@ -30,32 +26,15 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
 import net.createmod.ponder.foundation.PonderIndex;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
@@ -95,8 +74,8 @@ public class Northstar {
         NorthstarTags.register();
         NorthstarCreativeModeTab.register(modEventBus);
         NorthstarItems.register();
-        NorthstarBlocks.register(modEventBus);
-        NorthstarBlockEntityTypes.register(modEventBus);
+        NorthstarBlocks.register();
+        NorthstarBlockEntityTypes.register();
         NorthstarPotions.register(modEventBus);
         NorthstarEnchantments.register();
         NorthstarTechBlocks.register();
@@ -172,80 +151,6 @@ public class Northstar {
                 MercuryRoachEntity::roachSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
         event.register(NorthstarEntityTypes.MERCURY_TORTOISE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 MercuryTortoiseEntity::tortoiseSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-    }
-
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class CommonEventListener {
-
-        private static void registerItem(BuildCreativeModeTabContentsEvent event, String planet) {
-            ItemStack earth = new ItemStack(NorthstarItems.STAR_MAP.get());
-            earth.setHoverName(Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-            CompoundTag earthTag = earth.getOrCreateTagElement("Planet");
-            earthTag.putString("name", planet);
-            event.accept(earth);
-        }
-
-        private static void registerSpaceSuit(BuildCreativeModeTabContentsEvent event, Item item) {
-            ItemStack stack = new ItemStack(item);
-            CompoundTag tag = stack.getOrCreateTag();
-            tag.putInt("Oxygen", OxygenStuff.maximumOxy);
-            ListTag lore = new ListTag();
-            lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + OxygenStuff.maximumOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
-            stack.getOrCreateTagElement("display").put("Lore", lore);
-            event.accept(stack);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterItems(BuildCreativeModeTabContentsEvent event) {
-            if (event.getTab() == NorthstarCreativeModeTab.ITEMS.get()) {
-                registerItem(event, "earth");
-                registerItem(event, "moon");
-                registerItem(event, "mars");
-                registerItem(event, "mercury");
-                registerItem(event, "venus");
-
-                registerSpaceSuit(event, NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get());
-                registerSpaceSuit(event, NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get());
-            }
-        }
-
-    }
-
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-            MenuScreens.register(NorthstarMenuTypes.TELESCOPE_MENU.get(), TelescopeScreen::new);
-            MenuScreens.register(NorthstarMenuTypes.ASTRONOMY_TABLE_MENU.get(), AstronomyTableScreen::new);
-            MenuScreens.register(NorthstarMenuTypes.ROCKET_STATION.get(), RocketStationScreen::new);
-        }
-
-        @SubscribeEvent
-        public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
-            EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-
-            SpaceSuitLayerRenderer.registerOnAll(dispatcher);
-        }
-
-        @SubscribeEvent
-        public static void registerRenderers(FMLClientSetupEvent event) {
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.SULFURIC_ACID.get().getSource(), RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.SULFURIC_ACID.get(), RenderType.translucent());
-
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_HYDROGEN.get().getSource(), RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_HYDROGEN.get(), RenderType.translucent());
-
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_OXYGEN.get().getSource(), RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_OXYGEN.get(), RenderType.translucent());
-
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.METHANE.get().getSource(), RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.METHANE.get(), RenderType.translucent());
-        }
-
     }
 
     public static ResourceLocation asResource(String path) {

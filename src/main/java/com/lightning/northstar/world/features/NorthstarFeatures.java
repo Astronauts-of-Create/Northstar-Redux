@@ -14,7 +14,7 @@ public abstract class NorthstarFeatures<FC extends FeatureConfiguration> {
 
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(Registries.FEATURE, Northstar.MOD_ID);
 
-    //        public static final Feature<MarsRootsConfig> MARS_ROOTS = register("mars_roots", new MarsRoots(MarsRootsConfig.CODEC));
+    //public static final Feature<MarsRootsConfig> MARS_ROOTS = register("mars_roots", new MarsRoots(MarsRootsConfig.CODEC));
     public static final RegistryObject<Feature<?>> NATURAL_ARGYRE = FEATURES.register("natural_argyre", () -> new ArgyreFeature(AlienTreeConfig.CODEC));
     public static final RegistryObject<Feature<?>> STONE_CLUSTER = FEATURES.register("stone_cluster", () -> new StoneClusterFeature(StoneClusterConfiguration.CODEC));
     public static final RegistryObject<Feature<?>> STONE_COLUMN = FEATURES.register("stone_column", () -> new StoneColumnFeature(StoneColumnConfiguration.CODEC));
@@ -39,4 +39,5 @@ public abstract class NorthstarFeatures<FC extends FeatureConfiguration> {
     public static void register(IEventBus eventBus) {
         FEATURES.register(eventBus);
     }
+
 }

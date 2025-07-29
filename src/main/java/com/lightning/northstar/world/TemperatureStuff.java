@@ -291,14 +291,10 @@ public class TemperatureStuff {
                 entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag) &&
                 entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag) &&
                 entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag));
-
     }
-
 
     public static void register() {
-        System.out.println("Calculating temperatures for " + Northstar.MOD_ID);
     }
-
 
     public static double getHeatRating(ResourceKey<Level> level) {
         // I love spaghetti (2)

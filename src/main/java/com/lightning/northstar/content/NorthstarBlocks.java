@@ -1,6 +1,5 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.*;
 import com.lightning.northstar.block.crops.*;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlock;
@@ -23,9 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.ToIntFunction;
 
@@ -36,8 +32,6 @@ import static net.minecraft.world.level.block.Blocks.OAK_PLANKS;
 import static net.minecraft.world.level.block.Blocks.STONE;
 
 public class NorthstarBlocks {
-
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Northstar.MOD_ID);
 
     static {
         REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.BLOCKS);
@@ -2197,8 +2191,7 @@ public class NorthstarBlocks {
         return Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE);
     }
 
-    public static void register(IEventBus eventBus) {
-        BLOCKS.register(eventBus);
+    public static void register() {
     }
 
 }

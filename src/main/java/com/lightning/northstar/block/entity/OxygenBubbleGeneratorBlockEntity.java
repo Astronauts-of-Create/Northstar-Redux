@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.entity;
 
 import com.google.common.collect.Lists;
+import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import net.minecraft.core.BlockPos;
@@ -12,6 +13,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -21,8 +23,8 @@ public class OxygenBubbleGeneratorBlockEntity extends BlockEntity implements IHa
     public int tickCount;
     private final List<BlockPos> effectBlocks = Lists.newArrayList();
 
-    public OxygenBubbleGeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(NorthstarBlockEntityTypes.OXYGEN_BUBBLE_GENERATOR.get(), pos, state);
+    public OxygenBubbleGeneratorBlockEntity(BlockEntityType<OxygenBubbleGeneratorBlockEntity> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

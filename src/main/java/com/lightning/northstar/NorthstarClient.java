@@ -1,9 +1,21 @@
 package com.lightning.northstar;
 
+import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsHandler;
+import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
+import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
+import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
+import com.lightning.northstar.content.NorthstarFluids;
+import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
 import com.lightning.northstar.particle.NorthstarParticles;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
@@ -11,23 +23,53 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class NorthstarClient {
-
-    @SubscribeEvent
-    public static void onTick(ClientTickEvent event) {
-        if (event.phase == Phase.START) {
-            RocketControlsHandler.tick();
-        }
-    }
 
     public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
         modEventBus.addListener(NorthstarParticles::registerFactories);
     }
 
-    @EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
-    public static class ModBusEvents {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        MenuScreens.register(NorthstarMenuTypes.TELESCOPE_MENU.get(), TelescopeScreen::new);
+        MenuScreens.register(NorthstarMenuTypes.ASTRONOMY_TABLE_MENU.get(), AstronomyTableScreen::new);
+        MenuScreens.register(NorthstarMenuTypes.ROCKET_STATION.get(), RocketStationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
+        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+
+        SpaceSuitLayerRenderer.registerOnAll(dispatcher);
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(FMLClientSetupEvent event) {
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.SULFURIC_ACID.get().getSource(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.SULFURIC_ACID.get(), RenderType.translucent());
+
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_HYDROGEN.get().getSource(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_HYDROGEN.get(), RenderType.translucent());
+
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_OXYGEN.get().getSource(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.LIQUID_OXYGEN.get(), RenderType.translucent());
+
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.METHANE.get().getSource(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.METHANE.get(), RenderType.translucent());
+    }
+
+    @EventBusSubscriber(Dist.CLIENT)
+    public static class ForgeBusEvents {
+        @SubscribeEvent
+        public static void onTick(ClientTickEvent event) {
+            if (event.phase == Phase.START) {
+                RocketControlsHandler.tick();
+            }
+        }
+
         @SubscribeEvent
         public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_oxygen", RemainingOxygenOverlay.INSTANCE);

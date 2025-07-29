@@ -204,7 +204,6 @@ public class OxygenStuff {
     }
 
     public static void register() {
-        System.out.println("Checking for oxygen for " + Northstar.MOD_ID);
     }
 
     @SuppressWarnings("unused")

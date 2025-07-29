@@ -6,12 +6,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class VenusExhaustBlockEntity extends BlockEntity {
 
-    public VenusExhaustBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(NorthstarBlockEntityTypes.VENUS_EXHAUST.get(), pPos, pBlockState);
+    public VenusExhaustBlockEntity(BlockEntityType<VenusExhaustBlockEntity> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     public static void particleTick(Level pLevel, BlockPos pPos, BlockState pState, VenusExhaustBlockEntity pBlockEntity) {

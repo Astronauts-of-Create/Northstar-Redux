@@ -25,7 +25,6 @@ public class NorthstarDimensions {
     public static final ResourceKey<DimensionType> MERCURY_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("mercury"));
 
     public static void register() {
-        System.out.println("Registering dimensions for " + Northstar.MOD_ID);
     }
 
 }

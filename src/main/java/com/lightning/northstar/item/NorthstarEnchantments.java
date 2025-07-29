@@ -10,7 +10,8 @@ import static com.lightning.northstar.Northstar.REGISTRATE;
 
 public class NorthstarEnchantments {
 
-    public static final RegistryEntry<FrostbiteEnchantment> FROSTBITE = REGISTRATE.object("frostbite")
+    public static final RegistryEntry<FrostbiteEnchantment> FROSTBITE = REGISTRATE
+            .object("frostbite")
             .enchantment(EnchantmentCategory.WEAPON, FrostbiteEnchantment::new)
             .addSlots(EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)
             .lang("Frostbite")

@@ -82,10 +82,6 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new TelescopeBlockEntity(pPos, pState);
-    }
-
     private boolean canSeeSky(BlockPos pos, Level level, Direction dir) {
         boolean flag = false;
         int clearSpots = 0;

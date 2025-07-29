@@ -25,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
@@ -35,8 +36,8 @@ public class TelescopeBlockEntity extends SmartBlockEntity implements MenuProvid
     protected final ContainerData data;
     public String SelectedPlanet = null;
     
-    public TelescopeBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(NorthstarBlockEntityTypes.TELESCOPE.get(), pPos, pBlockState);
+    public TelescopeBlockEntity(BlockEntityType<TelescopeBlockEntity> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         this.data = new ContainerData() {
 
             @Override
@@ -46,7 +47,6 @@ public class TelescopeBlockEntity extends SmartBlockEntity implements MenuProvid
 
             @Override
             public void set(int pIndex, int pValue) {
-                return;
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.lightning.northstar.block;
 
 import com.lightning.northstar.block.entity.OxygenBubbleGeneratorBlockEntity;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +28,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 import javax.annotation.Nullable;
 
-public class OxygenBubbleGeneratorBlock extends BaseEntityBlock {
+public class OxygenBubbleGeneratorBlock extends BaseEntityBlock implements IBE<OxygenBubbleGeneratorBlockEntity> {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -44,8 +45,13 @@ public class OxygenBubbleGeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new OxygenBubbleGeneratorBlockEntity(pPos, pState);
+    public Class<OxygenBubbleGeneratorBlockEntity> getBlockEntityClass() {
+        return OxygenBubbleGeneratorBlockEntity.class;
+    }
+
+    @Override
+    public BlockEntityType<? extends OxygenBubbleGeneratorBlockEntity> getBlockEntityType() {
+        return NorthstarBlockEntityTypes.OXYGEN_BUBBLE_GENERATOR.get();
     }
 
     @Nullable

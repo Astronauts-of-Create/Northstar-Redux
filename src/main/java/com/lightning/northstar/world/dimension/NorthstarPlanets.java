@@ -450,14 +450,7 @@ public class NorthstarPlanets {
         return flag;
     }
 
-
-
-
-    
-    
-    
     public static void register() {
-        System.out.println("Calculating Planets for " + Northstar.MOD_ID);
     }
 
 }

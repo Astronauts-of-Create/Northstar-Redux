@@ -1,6 +1,5 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.entity.LaserLenseBlockEntity;
 import com.lightning.northstar.block.entity.OxygenBubbleGeneratorBlockEntity;
 import com.lightning.northstar.block.entity.VenusExhaustBlockEntity;
@@ -37,27 +36,26 @@ import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEn
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import dev.engine_room.flywheel.lib.model.Models;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
 
 // FIXME: remake the renderers for when flywheel is off
 public class NorthstarBlockEntityTypes {
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Northstar.MOD_ID);
+    public static final BlockEntityEntry<TelescopeBlockEntity> TELESCOPE = REGISTRATE
+            .blockEntity("telescope", TelescopeBlockEntity::new)
+            .validBlocks(NorthstarBlocks.TELESCOPE)
+            .register();
 
-    public static final RegistryObject<BlockEntityType<TelescopeBlockEntity>> TELESCOPE = BLOCK_ENTITIES.register("telescope",
-            () -> BlockEntityType.Builder.of(TelescopeBlockEntity::new, NorthstarBlocks.TELESCOPE.get()).build(null));
+    public static final BlockEntityEntry<OxygenBubbleGeneratorBlockEntity> OXYGEN_BUBBLE_GENERATOR = REGISTRATE
+            .blockEntity("oxygen_bubble_generator", OxygenBubbleGeneratorBlockEntity::new)
+            .validBlocks(NorthstarBlocks.OXYGEN_BUBBLE_GENERATOR)
+            .register();
 
-    public static final RegistryObject<BlockEntityType<OxygenBubbleGeneratorBlockEntity>> OXYGEN_BUBBLE_GENERATOR = BLOCK_ENTITIES.register("oxygen_bubble_generator",
-            () -> BlockEntityType.Builder.of(OxygenBubbleGeneratorBlockEntity::new, NorthstarBlocks.OXYGEN_BUBBLE_GENERATOR.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<VenusExhaustBlockEntity>> VENUS_EXHAUST = BLOCK_ENTITIES.register("venus_exhaust",
-            () -> BlockEntityType.Builder.of(VenusExhaustBlockEntity::new, NorthstarBlocks.VENUS_PLUME.get()).build(null));
+    public static final BlockEntityEntry<VenusExhaustBlockEntity> VENUS_EXHAUST = REGISTRATE
+            .blockEntity("venus_exhaust", VenusExhaustBlockEntity::new)
+            .validBlocks(NorthstarBlocks.VENUS_PLUME)
+            .register();
 
     public static final BlockEntityEntry<TemperatureRegulatorBlockEntity> TEMPERATURE_REGULATOR_BLOCK_ENTITY = REGISTRATE
             .blockEntity("temperature_regulator", TemperatureRegulatorBlockEntity::new)
@@ -172,7 +170,7 @@ public class NorthstarBlockEntityTypes {
             .renderer(() -> BracketedKineticBlockEntityRenderer::new)
             .register();
 
-    public static void register(IEventBus eventBus) {
-        BLOCK_ENTITIES.register(eventBus);
+    public static void register() {
     }
+
 }
