@@ -6,7 +6,7 @@ plugins {
     id("org.parchmentmc.librarian.forgegradle") version "1.+"
 }
 
-version = "0.2.2+1.20.1" // https://semver.org/
+version = "0.2.3-SNAPSHOT+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 //archivesBaseName = "northstar"
 
@@ -132,6 +132,10 @@ minecraft {
 mixin {
     add(sourceSets.main.get(), "northstar.refmap.json")
     config("northstar.mixins.json")
+}
+
+tasks.processResources {
+    outputs.upToDateWhen { false }
 }
 
 tasks.jar {
