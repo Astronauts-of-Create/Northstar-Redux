@@ -3,6 +3,7 @@ package com.lightning.northstar;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;
 import com.lightning.northstar.data.NorthstarDataGen;
@@ -35,6 +36,7 @@ import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
@@ -99,6 +101,10 @@ public class Northstar {
 
         PonderIndex.addPlugin(new NorthstarPonderPlugin());
 
+        NorthstarConfigs.register(modContext::registerConfig);
+        modEventBus.addListener(this::onLoadConfig);
+        modEventBus.addListener(this::onReloadConfig);
+
         modEventBus.addListener(Northstar::init);
         modEventBus.addListener(this::registerSpawnPlacements);
         modEventBus.addListener(NorthstarDataGen::gatherData);
@@ -117,6 +123,14 @@ public class Northstar {
             NorthstarAdvancements.register();
             NorthstarTriggers.register();
         });
+    }
+
+    private void onLoadConfig(ModConfigEvent.Loading event) {
+        NorthstarConfigs.onLoad(event.getConfig());
+    }
+
+    private void onReloadConfig(ModConfigEvent.Reloading event) {
+        NorthstarConfigs.onReload(event.getConfig());
     }
 
     private void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
