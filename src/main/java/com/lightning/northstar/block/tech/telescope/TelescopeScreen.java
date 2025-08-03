@@ -220,6 +220,8 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
             int moon_uv_y = (moon_phase / 4) * 128;
             graphics.blit(MOON_GLOW, ((int) NorthstarPlanets.earth_moon_x + (int) scrollX / 2) - 27, ((int) NorthstarPlanets.earth_moon_y + (int) scrollY) - 57, 0 + moon_uv_x, 0 + moon_uv_y, 64, 128);
             pose.popPose();
+
+            pose.pushPose();
             RenderSystem.disableBlend();
             pose.scale(2F, 1F, 1F);
             graphics.blit(MOON_FLAT, ((int) NorthstarPlanets.earth_moon_x + (int) scrollX / 2) - 27, ((int) NorthstarPlanets.earth_moon_y + (int) scrollY) - 57, 0 + moon_uv_x, 0 + moon_uv_y, 64, 128);
