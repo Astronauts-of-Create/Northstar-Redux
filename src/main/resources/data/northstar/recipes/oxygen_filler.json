@@ -10,10 +10,10 @@
       "tag": "forge:plates/iron"
     },
     "A": {
-      "item": "minecraft:iron_ingot"
+      "item": "create:brass_ingot"
     },
     "T": {
-      "item": "create:fluid_tank"
+      "item": "northstar:oxygen_separator"
     },
     "P": {
       "item": "northstar:circuit"

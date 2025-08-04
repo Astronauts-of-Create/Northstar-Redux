@@ -10,7 +10,7 @@
       "item": "northstar:martian_steel_sheet"
     },
     "W": {
-      "tag": "minecraft:wool"
+      "item": "northstar:durable_fabric"
     },
     "P": {
       "item": "northstar:martian_steel_leggings"

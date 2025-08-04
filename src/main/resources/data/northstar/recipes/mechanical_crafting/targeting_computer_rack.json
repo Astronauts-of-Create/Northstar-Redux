@@ -3,7 +3,7 @@
   "acceptMirrored": false,
   "key": {
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "create:andesite_alloy"
     },
     "S": {
       "tag": "forge:plates/iron"
@@ -15,7 +15,7 @@
     "I   I"
   ],
   "result": {
-    "count": 3,
+    "count": 2,
     "item": "northstar:computer_rack"
   }
 }

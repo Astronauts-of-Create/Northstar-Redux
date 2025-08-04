@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "PAP",
-    "ATA",
-    "###"
+    "P#P",
+    "#C#",
+    "AAA"
   ],
   "key": {
     "#": {
-      "tag": "forge:plates/copper"
+      "tag": "forge:plates/brass"
     },
     "A": {
-      "item": "create:andesite_alloy"
+      "item": "create:industrial_iron_block"
     },
-    "T": {
-      "item": "create:fluid_tank"
+    "C": {
+      "item": "northstar:rocket_combustion_chamber"
     },
     "P": {
       "item": "minecraft:piston"

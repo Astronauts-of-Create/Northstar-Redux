@@ -6,10 +6,13 @@
       "item": "northstar:circuit"
     },
     "T": {
-      "tag": "forge:plates/iron"
+      "item": "northstar:titanium_sheet"
+    },
+    "I": {
+      "item": "northstar:titanium_ingot"
     },
     "F": {
-      "item": "create:precision_mechanism"
+      "item": "northstar:hardened_precision_mechanism"
     },
     "C": {
       "item": "northstar:iron_cogwheel"
@@ -26,7 +29,7 @@
     "TFPFT",
     "TCLCT",
     "TFPFT",
-    " TST "
+    "IISII"
   ],
   "result": {
     "count": 1,

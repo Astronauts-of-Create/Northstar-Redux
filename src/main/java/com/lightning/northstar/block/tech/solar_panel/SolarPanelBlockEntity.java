@@ -41,11 +41,14 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     public int getSunlightAtPosition(BlockPos pos) {
-        if(level.isNight()){return 0;}
+        if (level.isNight()) {
+            return 0;
+        }
         if (level.getRawBrightness(pos.above(), -15) >= 16)
-        return (int) (level.getRawBrightness(pos.above(), -15) * NorthstarPlanets.getSunMultiplier(level.dimension()));
+            return (int) (level.getRawBrightness(pos.above(), -15) * NorthstarPlanets.getSunMultiplier(level.dimension()));
         else return 0;
     }
+
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
@@ -59,10 +62,12 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
 
     @Override
     public float getGeneratedSpeed() {
-        if(level == null)
-        return Mth.clamp(sunlightScore, -1, 1) * 8 / getSize();
-        else return (float) ((Mth.clamp(sunlightScore, -1, 1) * 8 / getSize()) * NorthstarPlanets.getSunMultiplier(level.dimension()));
+        if (level == null)
+            return Mth.clamp(sunlightScore, -1, 1) * 8 / getSize();
+        else
+            return (float) ((Mth.clamp(sunlightScore, -1, 1) * 8 / getSize()) * NorthstarPlanets.getSunMultiplier(level.dimension()));
     }
+
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);

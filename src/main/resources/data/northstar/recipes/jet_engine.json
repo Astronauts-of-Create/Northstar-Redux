@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "III",
     "I#I",
-    "IPI"
+    "IPI",
+    "I I"
   ],
   "key": {
     "#": {
-      "item": "create:fluid_tank"
+      "item": "northstar:rocket_combustion_chamber"
     },
     "I": {
-      "tag": "forge:plates/iron"
+      "item": "northstar:titanium_sheet"
     },
     "P": {
       "item": "create:propeller"

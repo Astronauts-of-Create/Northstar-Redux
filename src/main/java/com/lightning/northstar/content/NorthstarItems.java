@@ -26,6 +26,44 @@ public class NorthstarItems {
         REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.ITEMS);
     }
 
+
+    public static final ItemEntry<Item> OXYGEN_SEPARATOR = REGISTRATE
+            .item("oxygen_separator", Item::new)
+            .register();
+
+    //titanium
+    public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
+            .item("titanium_ingot", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> TITANIUM_SHEET = REGISTRATE
+            .item("titanium_sheet", Item::new)
+            .register();
+
+    //sand
+    public static final ItemEntry<Item> COMPRESSED_SAND_BAR = REGISTRATE
+            .item("compressed_sand_bar", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> COMPRESSSED_SAND_TILE = REGISTRATE
+            .item("compressed_sand_tile", Item::new)
+            .register();
+    public static final ItemEntry<Item> DURABLE_FABRIC = REGISTRATE
+            .item("durable_fabric", Item::new)
+            .register();
+
+    //combustion_chambers
+    public static final ItemEntry<Item> ROCKET_COMBUSTION_CHAMBER = REGISTRATE
+            .item("rocket_combustion_chamber", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> HARDENED_PRECISION_MECHANISM = REGISTRATE
+            .item("hardened_precision_mechanism", Item::new)
+            .register();
+
+    public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_HARDENED_PRECISION_MECHANISM
+            = sequencedIngredient("incomplete_hardened_precision_mechanism");
+
     public static final ItemEntry<Item> RAW_MARTIAN_IRON_ORE = REGISTRATE
             .item("raw_martian_iron_ore", Item::new)
             .register();

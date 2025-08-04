@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    },
+    {
+      "tag": "forge:sandstone"
+    }
+  ],
+  "result": {
+    "item": "northstar:compressed_sand_bar",
+    "count": 1
+  }
+}

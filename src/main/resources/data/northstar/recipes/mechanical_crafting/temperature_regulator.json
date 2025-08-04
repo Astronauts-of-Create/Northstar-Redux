@@ -3,10 +3,10 @@
   "acceptMirrored": false,
   "key": {
     "A": {
-      "tag": "forge:plates/iron"
+      "tag": "forge:plates/titanium"
     },
     "N": {
-      "item": "minecraft:iron_ingot"
+      "item": "northstar:titanium_ingot"
     },
     "L": {
       "item": "create:shaft"

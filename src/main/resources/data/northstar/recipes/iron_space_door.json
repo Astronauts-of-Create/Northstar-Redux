@@ -7,7 +7,7 @@
   ],
   "key": {
     "S": {
-      "tag": "forge:plates/iron"
+      "item": "northstar:titanium_sheet"
     },
     "P": {
       "item": "minecraft:glass"

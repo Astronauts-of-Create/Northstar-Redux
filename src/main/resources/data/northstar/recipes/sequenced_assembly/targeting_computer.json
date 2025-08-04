@@ -3,7 +3,7 @@
   "ingredient": {
     "tag": "forge:plates/iron"
   },
-  "loops": 3,
+  "loops": 9,
   "results": [
     {
       "chance": 120.0,
@@ -47,7 +47,7 @@
           "item": "northstar:unfinished_targeting_computer"
         },
         {
-          "item": "create:precision_mechanism"
+          "item": "northstar:hardened_precision_mechanism"
         }
       ],
       "results": [

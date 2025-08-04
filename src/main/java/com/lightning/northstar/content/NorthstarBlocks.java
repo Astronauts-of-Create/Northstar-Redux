@@ -162,7 +162,17 @@ public class NorthstarBlocks {
             .register();
 
 
-    // iron stuff
+    // iron/titanium stuff
+    public static final BlockEntry<Block> TITANIUM_BLOCK = REGISTRATE.block("titanium_block", Block::new)
+            .initialProperties(SharedProperties::netheriteMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .strength(10f, 15f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
+
     public static final BlockEntry<Block> IRON_SHEETMETAL = REGISTRATE.block("iron_sheetmetal", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
@@ -2187,7 +2197,7 @@ public class NorthstarBlocks {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;
     }
 
-    private static Registry<ConfiguredFeature<?,?>> configuredFeatures() {
+    private static Registry<ConfiguredFeature<?, ?>> configuredFeatures() {
         return Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE);
     }
 

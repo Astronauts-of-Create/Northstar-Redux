@@ -3,13 +3,19 @@
   "acceptMirrored": false,
   "key": {
     "A": {
-      "tag": "forge:plates/iron"
+      "item": "northstar:titanium_sheet"
     },
     "L": {
       "item": "northstar:polished_lunar_sapphire"
     },
     "S": {
       "item": "northstar:circuit"
+    },
+    "B": {
+      "tag": "forge:ingots/titanium"
+    },
+    "#": {
+      "item": "northstar:targeting_computer"
     }
   },
   "pattern": [
@@ -17,7 +23,8 @@
     "SLS",
     "ALA",
     "SLS",
-    "ALA"
+    "ALA",
+    "B#B"
   ],
   "result": {
     "count": 1,

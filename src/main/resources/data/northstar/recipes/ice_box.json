@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "I#I",
-    "# #",
+    "#C#",
     "I#I"
   ],
   "key": {
@@ -11,6 +11,9 @@
     },
     "I": {
       "tag": "forge:plates/iron"
+    },
+    "C": {
+      "item": "create:basin"
     }
   },
   "result": {
