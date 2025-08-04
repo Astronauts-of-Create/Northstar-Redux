@@ -60,7 +60,7 @@ dependencies {
 
     modImplementation("mezz.jei:jei-1.20.1-forge:15.20.0.112")
 
-    modLocalRuntime(files(file("run/mods-obf").listFiles()))
+    modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
 
 tasks.processResources {
