@@ -99,8 +99,6 @@ public class Northstar {
 
         RocketHandler.register();
 
-        PonderIndex.addPlugin(new NorthstarPonderPlugin());
-
         NorthstarConfigs.register(modContext::registerConfig);
         modEventBus.addListener(this::onLoadConfig);
         modEventBus.addListener(this::onReloadConfig);

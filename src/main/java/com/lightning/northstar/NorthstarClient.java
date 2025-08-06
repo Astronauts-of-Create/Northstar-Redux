@@ -9,6 +9,8 @@ import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
 import com.lightning.northstar.particle.NorthstarParticles;
+import com.lightning.northstar.ponder.NorthstarPonderPlugin;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -30,6 +32,8 @@ public class NorthstarClient {
 
     public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
         modEventBus.addListener(NorthstarParticles::registerFactories);
+
+        PonderIndex.addPlugin(new NorthstarPonderPlugin());
     }
 
     @SubscribeEvent
