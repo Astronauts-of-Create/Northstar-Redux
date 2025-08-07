@@ -1,5 +1,6 @@
 {
   "credit": "Made with Blockbench",
+  "render_type": "minecraft:cutout_mipped",
   "parent": "block/block",
   "texture_size": [
     32,

@@ -10,7 +10,6 @@ import com.lightning.northstar.world.features.grower.WilterTreeGrower;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -2435,7 +2434,6 @@ public class NorthstarBlocks {
                     .strength(8f, 8f))
             .properties(BlockBehaviour.Properties::noOcclusion)
             .transform(axeOrPickaxe())
-            .addLayer(() -> RenderType::cutoutMipped)
             /*transform(BlockStressDefaults.setCapacity(128.0)) .transform(BlockStressDefaults.setGeneratorSpeed(SolarPanelBlock::getSpeedRange))*/
             .item()
             .transform(customItemModel())

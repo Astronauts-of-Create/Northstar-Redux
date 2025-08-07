@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/template_torch_wall",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "torch": "northstar:block/extinguished_torch",
-    "render_type": "cutout"
+    "torch": "northstar:block/extinguished_torch"
   }
 }

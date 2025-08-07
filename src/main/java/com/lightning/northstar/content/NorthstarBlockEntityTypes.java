@@ -30,6 +30,7 @@ import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegul
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlockEntity;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorRenderer;
+import com.simibubi.create.content.kinetics.base.OrientedRotatingVisual;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntity;
@@ -117,7 +118,7 @@ public class NorthstarBlockEntityTypes {
 
     public static final BlockEntityEntry<ElectrolysisMachineBlockEntity> ELECTROLYSIS_MACHINE = REGISTRATE
             .blockEntity("electrolysis_machine", ElectrolysisMachineBlockEntity::new)
-            .visual(() -> (c, e, t) -> new SingleAxisRotatingVisual<>(c, e, t, Models.partial(AllPartialModels.SHAFT_HALF)))
+            .visual(() -> OrientedRotatingVisual.of(AllPartialModels.SHAFT_HALF))
             .validBlocks(NorthstarTechBlocks.ELECTROLYSIS_MACHINE)
             //.renderer(() -> ElectrolysisMachineRenderer::new)
             .register();
