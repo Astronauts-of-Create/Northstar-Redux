@@ -41,9 +41,8 @@ public class RocketControlsHandler {
         currentlyPressed.clear();
     }
 
-    @SuppressWarnings("resource")
     public static void startControlling(RocketContraptionEntity entity, BlockPos controllerLocalPos) {
-        entityRef = new WeakReference<RocketContraptionEntity>(entity);
+        entityRef = new WeakReference<>(entity);
         controlsPos = controllerLocalPos;
         displaytime = 0;
         Minecraft.getInstance().player.displayClientMessage(

@@ -25,7 +25,7 @@ public class RocketSmokeLandingParticleData implements ParticleOptions, ICustomP
     .apply(i, RocketSmokeLandingParticleData::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<RocketSmokeLandingParticleData> DESERIALIZER = new ParticleOptions.Deserializer<RocketSmokeLandingParticleData>() {
+    public static final ParticleOptions.Deserializer<RocketSmokeLandingParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public RocketSmokeLandingParticleData fromCommand(ParticleType<RocketSmokeLandingParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');

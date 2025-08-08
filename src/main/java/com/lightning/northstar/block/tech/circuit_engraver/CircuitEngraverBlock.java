@@ -29,20 +29,21 @@ public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<
     }
     
     @Override
-    public Class<CircuitEngraverBlockEntity> getBlockEntityClass() {
-        return CircuitEngraverBlockEntity.class;
-    }
-    
-    @Override
     protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(POWERED);
         super.createBlockStateDefinition(builder);
     }
 
     @Override
+    public Class<CircuitEngraverBlockEntity> getBlockEntityClass() {
+        return CircuitEngraverBlockEntity.class;
+    }
+
+    @Override
     public BlockEntityType<? extends CircuitEngraverBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.CIRCUIT_ENGRAVER.get();
     }
+
     @Override
     public Axis getRotationAxis(BlockState state) {
         return state.getValue(HORIZONTAL_FACING)

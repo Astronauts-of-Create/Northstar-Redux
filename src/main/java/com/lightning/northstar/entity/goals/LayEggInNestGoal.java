@@ -95,7 +95,7 @@ public class LayEggInNestGoal extends MoveToBlockGoal {
               this.stop();
           }
           if(state.is(blockToRemove)) {
-              if(state.getValue(MarsWormNestBlock.HAS_EGG).booleanValue())
+              if(state.getValue(MarsWormNestBlock.HAS_EGG))
               {this.stop();}
           }else {this.stop();}
 

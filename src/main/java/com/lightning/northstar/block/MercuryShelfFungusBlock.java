@@ -66,7 +66,7 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
     
     
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
-        return pFacing.getOpposite() == pState.getValue(FACING) && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
+        return pFacing.getOpposite() == pState.getValue(FACING) && ! pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
     }
     
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
@@ -80,9 +80,9 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
         BlockState clickedState = pContext.getLevel().getBlockState(pContext.getClickedPos());
         System.out.println(clickedState.getBlock());
         if (clickedState.is(blockstate.getBlock())) {
-            return clickedState.setValue(SHELVES, Integer.valueOf(Math.min(MAX_SHELVES, clickedState.getValue(SHELVES) + 1)));
+            return clickedState.setValue(SHELVES, Math.min(MAX_SHELVES, clickedState.getValue(SHELVES) + 1));
         }
-        FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
+        FluidState fluidState = pContext.getLevel().getFluidState(pContext.getClickedPos());
         LevelReader levelreader = pContext.getLevel();
         BlockPos blockpos = pContext.getClickedPos();
         Direction[] adirection = pContext.getNearestLookingDirections();
@@ -92,7 +92,7 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
                 Direction direction1 = direction.getOpposite();
                 blockstate = blockstate.setValue(FACING, direction1);
                 if (blockstate.canSurvive(levelreader, blockpos)) {
-                    return blockstate.setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
+                    return blockstate.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
                 }
             }
         }

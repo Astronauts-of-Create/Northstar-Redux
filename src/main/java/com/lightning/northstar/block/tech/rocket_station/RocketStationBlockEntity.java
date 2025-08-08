@@ -211,7 +211,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             System.out.println("Obamna");
         }
 
-        Set<BlockPos> oxyCheck = new HashSet<BlockPos>();
+        Set<BlockPos> oxyCheck = new HashSet<>();
         boolean oxygenSealed = true;
         oxyCheck.add(this.getBlockPos().above());
         if (oxyCheck.size() < OxygenStuff.maximumOxy) {

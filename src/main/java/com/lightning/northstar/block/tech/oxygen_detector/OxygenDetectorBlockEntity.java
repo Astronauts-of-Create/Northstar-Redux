@@ -23,14 +23,16 @@ public class OxygenDetectorBlockEntity extends SmartBlockEntity {
 
     @Override
     public void tick() {
+        super.tick();
+
         BlockState currentState = this.level.getBlockState(worldPosition);
         Direction dir = currentState.getValue(OxygenDetectorBlock.FACING);
         BlockPos facingpos = worldPosition.relative(dir);
         boolean oxyflag = OxygenStuff.hasOxygen(facingpos, level.dimension());
 
-        if(oxyflag && !currentState.getValue(OxygenDetectorBlock.POWERED)) {
+        if (oxyflag && !currentState.getValue(OxygenDetectorBlock.POWERED)) {
             this.level.setBlock(worldPosition, currentState.setValue(OxygenDetectorBlock.POWERED, true), 3);
-        }else if(!oxyflag && currentState.getValue(OxygenDetectorBlock.POWERED)){
+        } else if (!oxyflag && currentState.getValue(OxygenDetectorBlock.POWERED)) {
             this.level.setBlock(worldPosition, currentState.setValue(OxygenDetectorBlock.POWERED, false), 3);
         }
     }

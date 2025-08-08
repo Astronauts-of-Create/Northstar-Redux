@@ -48,38 +48,39 @@ public class FrostBlock extends MultifaceBlock {
 
     public FrostBlock(Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(UP, Boolean.valueOf(false)).setValue(DOWN, Boolean.valueOf(false)).setValue(NORTH, Boolean.valueOf(false))
-                .setValue(EAST, Boolean.valueOf(false)).setValue(SOUTH, Boolean.valueOf(false)).setValue(WEST, Boolean.valueOf(false)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(UP, Boolean.FALSE).setValue(DOWN, Boolean.FALSE).setValue(NORTH, Boolean.FALSE)
+                .setValue(EAST, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE).setValue(WEST, Boolean.FALSE));
         this.shapesCache = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().collect(Collectors.toMap(Function.identity(), FrostBlock::calculateShape)));
     }
 
     private static VoxelShape calculateShape(BlockState p_57906_) {
-          VoxelShape voxelshape = Shapes.empty();
-          if (p_57906_.getValue(UP)) {
-             voxelshape = UP_AABB;
-          }
+        VoxelShape voxelshape = Shapes.empty();
+        if (p_57906_.getValue(UP)) {
+            voxelshape = UP_AABB;
+        }
 
-          if (p_57906_.getValue(NORTH)) {
-             voxelshape = Shapes.or(voxelshape, NORTH_AABB);
-          }
+        if (p_57906_.getValue(NORTH)) {
+            voxelshape = Shapes.or(voxelshape, NORTH_AABB);
+        }
 
-          if (p_57906_.getValue(SOUTH)) {
-             voxelshape = Shapes.or(voxelshape, SOUTH_AABB);
-          }
+        if (p_57906_.getValue(SOUTH)) {
+            voxelshape = Shapes.or(voxelshape, SOUTH_AABB);
+        }
 
-          if (p_57906_.getValue(EAST)) {
-             voxelshape = Shapes.or(voxelshape, EAST_AABB);
-          }
+        if (p_57906_.getValue(EAST)) {
+            voxelshape = Shapes.or(voxelshape, EAST_AABB);
+        }
 
-          if (p_57906_.getValue(WEST)) {
-             voxelshape = Shapes.or(voxelshape, WEST_AABB);
-          }
-          if (p_57906_.getValue(DOWN)) {
-              voxelshape = Shapes.or(voxelshape, DOWN_AABB);
-          }
+        if (p_57906_.getValue(WEST)) {
+            voxelshape = Shapes.or(voxelshape, WEST_AABB);
+        }
+        if (p_57906_.getValue(DOWN)) {
+            voxelshape = Shapes.or(voxelshape, DOWN_AABB);
+        }
 
-          return voxelshape.isEmpty() ? Shapes.block() : voxelshape;
+        return voxelshape.isEmpty() ? Shapes.block() : voxelshape;
     }
+
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return this.shapesCache.get(pState);
     }
@@ -95,25 +96,18 @@ public class FrostBlock extends MultifaceBlock {
     }
 
     public static BlockState giveStateValues(LevelAccessor level, BlockPos pPos, RandomSource rando) {
-        List<Direction> list = new ArrayList<Direction>();
-        for(Direction dir : Direction.values()) {
+        List<Direction> list = new ArrayList<>();
+        for (Direction dir : Direction.values()) {
             BlockState block = level.getBlockState(pPos.relative(dir));
 
             if (block.isAir()) {
                 list.add(dir);
             }
         }
-        BlockState state = rando.nextInt(4) == 0 ?
-                NorthstarBlocks.FROST.get().defaultBlockState()
-                .setValue(FrostBlock.UP, list.contains(Direction.UP)).setValue(FrostBlock.DOWN, list.contains(Direction.DOWN))
-                .setValue(FrostBlock.NORTH, list.contains(Direction.NORTH)).setValue(FrostBlock.SOUTH, list.contains(Direction.SOUTH))
-                .setValue(FrostBlock.EAST, list.contains(Direction.EAST)).setValue(FrostBlock.WEST, list.contains(Direction.WEST))
-                :
-                NorthstarBlocks.FROST.get().defaultBlockState()
+        return NorthstarBlocks.FROST.get().defaultBlockState()
                 .setValue(FrostBlock.UP, list.contains(Direction.UP)).setValue(FrostBlock.DOWN, list.contains(Direction.DOWN))
                 .setValue(FrostBlock.NORTH, list.contains(Direction.NORTH)).setValue(FrostBlock.SOUTH, list.contains(Direction.SOUTH))
                 .setValue(FrostBlock.EAST, list.contains(Direction.EAST)).setValue(FrostBlock.WEST, list.contains(Direction.WEST));
-        return state;
     }
 
     @SuppressWarnings("static-access")
@@ -124,11 +118,11 @@ public class FrostBlock extends MultifaceBlock {
         boolean flag = blockstate.is(this);
         BlockState blockstate1 = flag ? blockstate : this.defaultBlockState();
 
-        for(Direction direction : pContext.getNearestLookingDirections()) {
+        for (Direction direction : pContext.getNearestLookingDirections()) {
             BooleanProperty booleanproperty = getPropertyForFace(direction);
             boolean flag1 = flag && blockstate.getValue(booleanproperty);
             if (!flag1 && this.canSupportAtFace(pContext.getLevel(), pContext.getClickedPos(), direction)) {
-                return blockstate1.setValue(booleanproperty, Boolean.valueOf(true));
+                return blockstate1.setValue(booleanproperty, Boolean.TRUE);
             }
 
         }
@@ -136,27 +130,30 @@ public class FrostBlock extends MultifaceBlock {
     }
 
     public static BlockState getStateForGeneration(WorldGenLevel level, BlockPos pos, RandomSource rando) {
-        BlockState newstate = NorthstarBlocks.FROST.get().defaultBlockState();
-        if(rando.nextInt(4) == 0) {newstate = NorthstarBlocks.FROST.get().defaultBlockState();}
+        BlockState newState = NorthstarBlocks.FROST.get().defaultBlockState();
+        if (rando.nextInt(4) == 0) {
+            newState = NorthstarBlocks.FROST.get().defaultBlockState();
+        }
         int i = 0;
 
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BooleanProperty booleanproperty = getPropertyForFace(direction);
-                if (newstate.getValue(booleanproperty)) {
-                    boolean flag = canSupportAtFace(level, pos, direction);
-                    if (!flag) {
-                        flag = (newstate.is(NorthstarBlocks.FROST.get()) || newstate.is(NorthstarBlocks.FROST.get())) && newstate.getValue(booleanproperty);
-                    }
-
-                   newstate = newstate.setValue(booleanproperty, Boolean.valueOf(flag));
-                   if(!flag)
-                       i++;
+            if (newState.getValue(booleanproperty)) {
+                boolean flag = canSupportAtFace(level, pos, direction);
+                if (!flag) {
+                    flag = (newState.is(NorthstarBlocks.FROST.get()) || newState.is(NorthstarBlocks.FROST.get())) && newState.getValue(booleanproperty);
                 }
+
+                newState = newState.setValue(booleanproperty, flag);
+                if (!flag)
+                    i++;
+            }
         }
-        if(i == 0)
-        {return null;}
-        else
-        {return newstate;}
+        if (i == 0) {
+            return null;
+        } else {
+            return newState;
+        }
     }
 
     @SuppressWarnings("static-access")
@@ -164,31 +161,31 @@ public class FrostBlock extends MultifaceBlock {
         BlockPos blockpos = pPos.above();
         BlockState blockstate = null;
 
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BooleanProperty booleanproperty = getPropertyForFace(direction);
-                if (pState.getValue(booleanproperty)) {
-                    boolean flag = this.canSupportAtFace(pLevel, pPos, direction);
-                    if (!flag) {
-                        if (blockstate == null) {
-                            blockstate = pLevel.getBlockState(blockpos);
-                        }
-
-                        flag = blockstate.is(this) && blockstate.getValue(booleanproperty);
+            if (pState.getValue(booleanproperty)) {
+                boolean flag = this.canSupportAtFace(pLevel, pPos, direction);
+                if (!flag) {
+                    if (blockstate == null) {
+                        blockstate = pLevel.getBlockState(blockpos);
                     }
 
-                    pState = pState.setValue(booleanproperty, Boolean.valueOf(flag));
+                    flag = blockstate.is(this) && blockstate.getValue(booleanproperty);
                 }
+
+                pState = pState.setValue(booleanproperty, flag);
+            }
         }
 
         return pState;
     }
 
-       /**
-        * Update the provided state given the provided neighbor direction and neighbor state, returning a new state.
-        * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
-        * returns its solidified counterpart.
-        * Note that this method should ideally consider only the specific direction passed in.
-        */
+    /**
+     * Update the provided state given the provided neighbor direction and neighbor state, returning a new state.
+     * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
+     * returns its solidified counterpart.
+     * Note that this method should ideally consider only the specific direction passed in.
+     */
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         BlockState blockstate = this.getUpdatedState(pState, pLevel, pCurrentPos);
         return !this.hasFaces(blockstate) ? Blocks.AIR.defaultBlockState() : blockstate;
@@ -200,7 +197,7 @@ public class FrostBlock extends MultifaceBlock {
 
     private int countFaces(BlockState pState) {
         int i = 0;
-        for(BooleanProperty booleanproperty : PROPERTY_BY_DIRECTION.values()) {
+        for (BooleanProperty booleanproperty : PROPERTY_BY_DIRECTION.values()) {
             if (pState.getValue(booleanproperty)) {
                 ++i;
             }
@@ -232,6 +229,6 @@ public class FrostBlock extends MultifaceBlock {
 
     @Override
     public MultifaceSpreader getSpreader() {
-          return this.spreader;
+        return this.spreader;
     }
 }

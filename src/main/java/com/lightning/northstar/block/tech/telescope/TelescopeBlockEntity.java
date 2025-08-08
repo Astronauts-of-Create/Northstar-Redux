@@ -1,6 +1,5 @@
 package com.lightning.northstar.block.tech.telescope;
 
-import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -88,8 +87,8 @@ public class TelescopeBlockEntity extends SmartBlockEntity implements MenuProvid
         int x = (int) NorthstarPlanets.getPlanetX(name);
         int y = (int) NorthstarPlanets.getPlanetY(name);
         ListTag poob = new ListTag();
-        poob.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "X: " + x).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString())); 
-        poob.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "Y: " + y).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString())); 
+        poob.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("X: " + x).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
+        poob.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Y: " + y).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
         itemstack.getOrCreateTagElement("display").put("Lore", poob);
         CompoundTag tag1 = itemstack.getOrCreateTagElement("planetX");
         tag1.putInt("value", (int) x);

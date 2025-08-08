@@ -154,7 +154,7 @@ public class NorthstarBlocks {
             .block("martian_steel_lamp", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(4f, 12f)
                     .requiresCorrectToolForDrops())
@@ -165,7 +165,7 @@ public class NorthstarBlocks {
             .block("martian_steel_blue_lamp", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(4f, 12f)
                     .requiresCorrectToolForDrops())
@@ -392,7 +392,7 @@ public class NorthstarBlocks {
             .block("glowstone_lamp", Block::new)
             /*.initialProperties(SharedProperties::decoration)*/
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.GLASS)
                     .strength(2f, 5f))
             .simpleItem()
@@ -494,7 +494,7 @@ public class NorthstarBlocks {
             .block("glowing_mars_roots", MarsRootBlock::new)
             /*.initialProperties(SharedProperties::LEAVES)*/
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_GRAY)
-                    .lightLevel(state -> 10)
+                    .lightLevel(pState -> 10)
                     .sound(SoundType.VINE)
                     .noOcclusion()
                     .noCollission()
@@ -787,7 +787,7 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission()
                     .offsetType(BlockBehaviour.OffsetType.XZ)
-                    .lightLevel(state -> 7))
+                    .lightLevel(pState -> 7))
             .simpleItem()
             .register();
 
@@ -798,7 +798,7 @@ public class NorthstarBlocks {
                     .randomTicks()
                     .instabreak()
                     .noCollission()
-                    .lightLevel(state -> 14))
+                    .lightLevel(pState -> 14))
             .simpleItem()
             .register();
 
@@ -931,7 +931,7 @@ public class NorthstarBlocks {
             .block("mars_stone_lamp", Block::new)
             /*.initialProperties(SharedProperties::DECORATION)*/
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.GLASS)
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
@@ -1216,7 +1216,7 @@ public class NorthstarBlocks {
             .block("moon_stone_lamp", Block::new)
             /*.initialProperties(SharedProperties::DECORATION)*/
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.GLASS)
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
@@ -1332,7 +1332,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 15))
+                    .lightLevel(pState -> 15))
             .simpleItem()
             .register();
 
@@ -1423,7 +1423,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 15))
+                    .lightLevel(pState -> 15))
             .simpleItem()
             .register();
 
@@ -1560,7 +1560,7 @@ public class NorthstarBlocks {
                     .strength(0f, 0.5f)
                     .noCollission()
                     .instabreak()
-                    .lightLevel(state -> 7))
+                    .lightLevel(pState -> 7))
             .simpleItem()
             .register();
 
@@ -1690,7 +1690,7 @@ public class NorthstarBlocks {
                     .randomTicks()
                     .noCollission()
                     .noOcclusion()
-                    .lightLevel(state -> 11))
+                    .lightLevel(pState -> 11))
             .simpleItem()
             .register();
 
@@ -1800,7 +1800,7 @@ public class NorthstarBlocks {
             .block("venus_stone_lamp", Block::new)
             /*.initialProperties(SharedProperties::DECORATION)*/
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.GLASS)
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
@@ -1894,7 +1894,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 6))
+                    .lightLevel(pState -> 6))
             .simpleItem()
             .register();
 
@@ -1974,7 +1974,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 6))
+                    .lightLevel(pState -> 6))
             .simpleItem()
             .register();
 
@@ -2095,7 +2095,7 @@ public class NorthstarBlocks {
             .block("mercury_stone_lamp", Block::new)
             /*.initialProperties(SharedProperties::DECORATION)*/
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
-                    .lightLevel(state -> 15)
+                    .lightLevel(pState -> 15)
                     .sound(SoundType.GLASS)
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
@@ -2189,7 +2189,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 15))
+                    .lightLevel(pState -> 15))
             .simpleItem()
             .register();
 
@@ -2291,7 +2291,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 15))
+                    .lightLevel(pState -> 15))
             .simpleItem()
             .register();
 

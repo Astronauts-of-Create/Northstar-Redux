@@ -135,9 +135,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
         if (flag && (!set1.isEmpty() || !set2.isEmpty())) {
             if (!treeconfiguration.decorators.isEmpty()) {
                 TreeDecorator.Context treedecorator$context = new TreeDecorator.Context(worldgenlevel, biconsumer3, randomsource, set1, set2, set);
-                treeconfiguration.decorators.forEach((p_225282_) -> {
-                    p_225282_.place(treedecorator$context);
-                });
+                treeconfiguration.decorators.forEach((p_225282_) -> p_225282_.place(treedecorator$context));
             }
 
             return BoundingBox.encapsulatingPositions(Iterables.concat(set, set1, set2, set3)).map((p_225270_) -> {
@@ -178,7 +176,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
                     BlockState blockstate = pLevel.getBlockState(blockpos$mutableblockpos);
                     if (blockstate.hasProperty(BlockStateProperties.DISTANCE)) {
                         list.get(0).add(blockpos$mutableblockpos.immutable());
-                        setBlockKnownShape(pLevel, blockpos$mutableblockpos, blockstate.setValue(BlockStateProperties.DISTANCE, Integer.valueOf(1)));
+                        setBlockKnownShape(pLevel, blockpos$mutableblockpos, blockstate.setValue(BlockStateProperties.DISTANCE, 1));
                         if (pBox.isInside(blockpos$mutableblockpos)) {
                             discretevoxelshape.fill(blockpos$mutableblockpos.getX() - pBox.minX(), blockpos$mutableblockpos.getY() - pBox.minY(), blockpos$mutableblockpos.getZ() - pBox.minZ());
                         }
@@ -203,7 +201,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
                         if (blockstate1.hasProperty(BlockStateProperties.DISTANCE)) {
                             int k = blockstate1.getValue(BlockStateProperties.DISTANCE);
                             if (k > l + 1) {
-                                BlockState blockstate2 = blockstate1.setValue(BlockStateProperties.DISTANCE, Integer.valueOf(l + 1));
+                                BlockState blockstate2 = blockstate1.setValue(BlockStateProperties.DISTANCE, l + 1);
                                 setBlockKnownShape(pLevel, blockpos$mutableblockpos, blockstate2);
                                 if (pBox.isInside(blockpos$mutableblockpos)) {
                                     discretevoxelshape.fill(blockpos$mutableblockpos.getX() - pBox.minX(), blockpos$mutableblockpos.getY() - pBox.minY(), blockpos$mutableblockpos.getZ() - pBox.minZ());

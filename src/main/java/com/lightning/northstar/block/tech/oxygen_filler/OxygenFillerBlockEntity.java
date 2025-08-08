@@ -92,7 +92,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                      if(this.tank.getPrimaryHandler().getFluidAmount() > oxytarget) {
                          newoxy += oxytarget;
                          thing.putInt("Oxygen", newoxy);
-                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString())); 
+                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
                          item.getOrCreateTagElement("display").put("Lore", lore);
                          item.setTag(thing);
                          System.out.println(thing);
@@ -103,7 +103,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                      {
                          newoxy += this.tank.getPrimaryHandler().getFluidAmount();
                          thing.putInt("Oxygen", newoxy);
-                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString())); 
+                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
                          item.getOrCreateTagElement("display").put("Lore", lore);
                          item.setTag(thing);
                          this.tank.getPrimaryHandler().drain(
@@ -156,7 +156,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
              int newOxyAmount =  Mth.clamp(increment, 0, tank.getPrimaryHandler().getFluidAmount());
              int newoxy = currentOxy + newOxyAmount;
              thing.putInt("Oxygen", newoxy);
-             lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString())); 
+             lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
              item.getOrCreateTagElement("display").put("Lore", lore);
              item.setTag(thing);
              this.tank.getPrimaryHandler().drain(new FluidStack(tankFluid,newOxyAmount), FluidAction.EXECUTE);

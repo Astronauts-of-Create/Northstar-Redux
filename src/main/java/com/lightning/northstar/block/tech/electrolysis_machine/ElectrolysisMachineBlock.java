@@ -18,7 +18,7 @@ public class ElectrolysisMachineBlock extends HorizontalKineticBlock implements 
 
     @Override
     public Axis getRotationAxis(BlockState state) {
-        return Axis.Y;
+        return state.getValue(HORIZONTAL_FACING).getAxis();
     }
 
     @Override
@@ -35,4 +35,5 @@ public class ElectrolysisMachineBlock extends HorizontalKineticBlock implements 
     public BlockEntityType<? extends ElectrolysisMachineBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.ELECTROLYSIS_MACHINE.get();
     }
+
 }

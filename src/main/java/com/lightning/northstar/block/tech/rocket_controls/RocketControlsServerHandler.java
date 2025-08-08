@@ -65,8 +65,7 @@ public class RocketControlsServerHandler {
         Collection<ManuallyPressedKey> list = ctx.keys;
 
         WithNext: for (Integer activated : collect) {
-            for (Iterator<ManuallyPressedKey> iterator = list.iterator(); iterator.hasNext();) {
-                ManuallyPressedKey entry = iterator.next();
+            for (ManuallyPressedKey entry : list) {
                 Integer inputType = entry.getSecond();
                 if (inputType.equals(activated)) {
                     if (!pressed)

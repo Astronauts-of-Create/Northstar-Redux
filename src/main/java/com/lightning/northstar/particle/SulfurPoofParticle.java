@@ -68,8 +68,7 @@ public class SulfurPoofParticle  extends SimpleAnimatedParticle {
     public static class Data extends BasicParticleData<SulfurPoofParticle> {
         @Override
         public IBasicParticleFactory<SulfurPoofParticle> getBasicFactory() {
-            return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new SulfurPoofParticle(worldIn, x, y, z, vx, vy, vz,
-                    spriteSet);
+            return SulfurPoofParticle::new;
         }
 
         @Override

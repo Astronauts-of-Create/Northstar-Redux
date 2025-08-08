@@ -25,13 +25,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class SpikeTrunkPlacer extends TrunkPlacer {
-       public static final Codec<SpikeTrunkPlacer> CODEC = RecordCodecBuilder.create((p_226236_) -> {
-              return trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> {
-                 return p_226242_.extraBranchSteps;
-              }), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> {
-                 return p_226234_.canGrowThrough;
-              }))).apply(p_226236_, SpikeTrunkPlacer::new);
-           });
+       public static final Codec<SpikeTrunkPlacer> CODEC = RecordCodecBuilder.create((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough))).apply(p_226236_, SpikeTrunkPlacer::new));
            private final IntProvider extraBranchSteps;
            private final HolderSet<Block> canGrowThrough;
            private BlockPos pos;
@@ -168,8 +162,6 @@ public class SpikeTrunkPlacer extends TrunkPlacer {
                }
            @Override
            protected boolean validTreePos(LevelSimulatedReader pLevel, BlockPos pPos) {
-               return pLevel.isStateAtPosition(pPos, (state) -> {
-                   return state.is(Blocks.AIR) || state.is(NorthstarBlocks.SPIKE_FUNGUS.get()) || state.is(NorthstarBlocks.VENUS_STONE.get()) || state.is(NorthstarBlocks.VENUS_DEEP_STONE.get());
-               });
+               return pLevel.isStateAtPosition(pPos, (state) -> state.is(Blocks.AIR) || state.is(NorthstarBlocks.SPIKE_FUNGUS.get()) || state.is(NorthstarBlocks.VENUS_STONE.get()) || state.is(NorthstarBlocks.VENUS_DEEP_STONE.get()));
            }
         }

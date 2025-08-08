@@ -12,8 +12,7 @@ public class RocketStationEditPacket extends BlockEntityConfigurationPacket<Rock
     private Boolean tryAssemble;
 
     public static RocketStationEditPacket dropSchedule(BlockPos pos) {
-        RocketStationEditPacket packet = new RocketStationEditPacket(pos);
-        return packet;
+        return new RocketStationEditPacket(pos);
     }
 
     public static RocketStationEditPacket tryAssemble(BlockPos pos) {

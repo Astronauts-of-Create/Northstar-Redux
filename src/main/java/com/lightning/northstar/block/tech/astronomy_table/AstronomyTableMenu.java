@@ -104,8 +104,7 @@ public class AstronomyTableMenu extends AbstractContainerMenu  {
           this.inputSlots.setItem(0, ItemStack.EMPTY);
           this.inputSlots.setItem(1, ItemStack.EMPTY);
           this.inputSlots.setItem(2, ItemStack.EMPTY);
-          access.execute((p_150479_, p_150480_) -> {
-              p_150479_.playSound((Player)null, p_150480_, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 1.0F, 1.0F); });};
+          access.execute((p_150479_, p_150480_) -> p_150479_.playSound((Player)null, p_150480_, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 1.0F, 1.0F));};
 
     protected boolean isValidBlock(BlockState pState) {
         return false;
@@ -211,9 +210,7 @@ public class AstronomyTableMenu extends AbstractContainerMenu  {
     }
     
     public boolean stillValid(Player pPlayer) {
-        return this.access.evaluate((p_39785_, p_39786_) -> {
-            return !this.isValidBlock(p_39785_.getBlockState(p_39786_)) ? false : pPlayer.distanceToSqr((double)p_39786_.getX() + 0.5D, (double)p_39786_.getY() + 0.5D, (double)p_39786_.getZ() + 0.5D) <= 64.0D;
-        }, true);
+        return this.access.evaluate((p_39785_, p_39786_) -> !this.isValidBlock(p_39785_.getBlockState(p_39786_)) ? false : pPlayer.distanceToSqr((double)p_39786_.getX() + 0.5D, (double)p_39786_.getY() + 0.5D, (double)p_39786_.getZ() + 0.5D) <= 64.0D, true);
     }
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {

@@ -9,21 +9,7 @@ import net.minecraft.network.chat.Component;
 
 public class VenusWeather {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("venusweather").requires((p_139171_) -> {
-            return p_139171_.hasPermission(2);
-        }).then(Commands.literal("clear").executes((p_139190_) -> {
-            return setClear(p_139190_.getSource(), 6000);
-        }).then(Commands.argument("duration", IntegerArgumentType.integer(0, 1000000)).executes((p_139188_) -> {
-            return setClear(p_139188_.getSource(), IntegerArgumentType.getInteger(p_139188_, "duration") * 20);
-        }))).then(Commands.literal("rain").executes((p_139186_) -> {
-            return setRain(p_139186_.getSource(), 6000);
-        }).then(Commands.argument("duration", IntegerArgumentType.integer(0, 1000000)).executes((p_139181_) -> {
-            return setRain(p_139181_.getSource(), IntegerArgumentType.getInteger(p_139181_, "duration") * 20);
-        }))).then(Commands.literal("thunder").executes((p_139176_) -> {
-            return setThunder(p_139176_.getSource(), 6000);
-        }).then(Commands.argument("duration", IntegerArgumentType.integer(0, 1000000)).executes((p_139169_) -> {
-            return setThunder(p_139169_.getSource(), IntegerArgumentType.getInteger(p_139169_, "duration") * 20);
-        }))));
+        dispatcher.register(Commands.literal("venusweather").requires((p_139171_) -> p_139171_.hasPermission(2)).then(Commands.literal("clear").executes((p_139190_) -> setClear(p_139190_.getSource(), 6000)).then(Commands.argument("duration", IntegerArgumentType.integer(0, 1000000)).executes((p_139188_) -> setClear(p_139188_.getSource(), IntegerArgumentType.getInteger(p_139188_, "duration") * 20)))).then(Commands.literal("rain").executes((p_139186_) -> setRain(p_139186_.getSource(), 6000)).then(Commands.argument("duration", IntegerArgumentType.integer(0, 1000000)).executes((p_139181_) -> setRain(p_139181_.getSource(), IntegerArgumentType.getInteger(p_139181_, "duration") * 20)))).then(Commands.literal("thunder").executes((p_139176_) -> setThunder(p_139176_.getSource(), 6000)).then(Commands.argument("duration", IntegerArgumentType.integer(0, 1000000)).executes((p_139169_) -> setThunder(p_139169_.getSource(), IntegerArgumentType.getInteger(p_139169_, "duration") * 20)))));
     }
 
     private static int setClear(CommandSourceStack pSource, int pTime) {

@@ -1,8 +1,6 @@
 package com.lightning.northstar.block.entity;
 
 import com.google.common.collect.Lists;
-import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
-import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -35,8 +33,7 @@ public class OxygenBubbleGeneratorBlockEntity extends BlockEntity implements IHa
         ++pBlockEntity.tickCount;
 //      System.out.println("big fart");
         long i = pLevel.getGameTime();
-        List<BlockPos> list = pBlockEntity.effectBlocks;
-        applyEffects(pLevel, pPos, list);
+        applyEffects(pLevel, pPos, pBlockEntity.effectBlocks);
         if (i % 40L == 0L) {
             pLevel.playSound((Player) null, pPos, SoundEvents.CONDUIT_AMBIENT, SoundSource.BLOCKS, 1.0F, 1.0F);
         }

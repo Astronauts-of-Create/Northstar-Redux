@@ -25,7 +25,7 @@ public class DustCloudParticleData implements ParticleOptions, ICustomParticleDa
     .apply(i, DustCloudParticleData::new));
     
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<DustCloudParticleData> DESERIALIZER = new ParticleOptions.Deserializer<DustCloudParticleData>() {
+    public static final ParticleOptions.Deserializer<DustCloudParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public DustCloudParticleData fromCommand(ParticleType<DustCloudParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');

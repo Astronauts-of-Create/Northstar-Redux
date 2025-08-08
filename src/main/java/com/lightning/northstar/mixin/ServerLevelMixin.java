@@ -63,9 +63,7 @@ public class ServerLevelMixin {
            return optional.get();
         } else {
            AABB aabb = (new AABB(blockpos, new BlockPos(blockpos.getX(), level.getMaxBuildHeight(), blockpos.getZ()))).inflate(3.0D);
-           List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, aabb, (p_184067_) -> {
-              return p_184067_ != null && p_184067_.isAlive() && level.canSeeSky(p_184067_.blockPosition());
-           });
+           List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, aabb, (p_184067_) -> p_184067_ != null && p_184067_.isAlive() && level.canSeeSky(p_184067_.blockPosition()));
            if (!list.isEmpty()) {
               return list.get(level.random.nextInt(list.size())).blockPosition();
            } else {
@@ -80,14 +78,8 @@ public class ServerLevelMixin {
     @SuppressWarnings("resource")
     private Optional<BlockPos> findLightningRod(BlockPos pPos) {
         ServerLevel level = (ServerLevel)(Object) this;
-        Optional<BlockPos> optional = level.getPoiManager().findClosest((p_215059_) -> {
-           return p_215059_.is(PoiTypes.LIGHTNING_ROD);
-        }, (p_184055_) -> {
-           return p_184055_.getY() == level.getHeight(Heightmap.Types.WORLD_SURFACE, p_184055_.getX(), p_184055_.getZ()) - 1;
-        }, pPos, 128, PoiManager.Occupancy.ANY);
-        return optional.map((p_184053_) -> {
-           return p_184053_.above(1);
-        });
+        Optional<BlockPos> optional = level.getPoiManager().findClosest((p_215059_) -> p_215059_.is(PoiTypes.LIGHTNING_ROD), (p_184055_) -> p_184055_.getY() == level.getHeight(Heightmap.Types.WORLD_SURFACE, p_184055_.getX(), p_184055_.getZ()) - 1, pPos, 128, PoiManager.Occupancy.ANY);
+        return optional.map((p_184053_) -> p_184053_.above(1));
      }
     
     //yay :]

@@ -66,8 +66,7 @@ public class SnowflakeParticle  extends SimpleAnimatedParticle {
     public static class Data extends BasicParticleData<SnowflakeParticle> {
         @Override
         public IBasicParticleFactory<SnowflakeParticle> getBasicFactory() {
-            return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new SnowflakeParticle(worldIn, x, y, z, vx, vy, vz,
-                    spriteSet);
+            return SnowflakeParticle::new;
         }
 
         @Override

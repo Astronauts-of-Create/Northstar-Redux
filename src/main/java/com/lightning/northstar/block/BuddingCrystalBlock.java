@@ -59,7 +59,7 @@ public class BuddingCrystalBlock extends AmethystBlock {
              }
 
              if (block != null) {
-                BlockState blockstate1 = block.defaultBlockState().setValue(ClusterBlock.FACING, direction).setValue(ClusterBlock.WATERLOGGED, Boolean.valueOf(blockstate.getFluidState().getType() == Fluids.WATER));
+                BlockState blockstate1 = block.defaultBlockState().setValue(ClusterBlock.FACING, direction).setValue(ClusterBlock.WATERLOGGED, blockstate.getFluidState().getType() == Fluids.WATER);
                 pLevel.setBlockAndUpdate(blockpos, blockstate1);
              }
 

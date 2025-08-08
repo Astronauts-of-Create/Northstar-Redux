@@ -112,8 +112,7 @@ public class TemperatureStuff {
     }
 
     public static HashMap<BlockPos, Integer> spreadTemp(Level level, HashMap<BlockPos, Integer> list, int maxSize, int temp) {
-        List<BlockPos> newBlocks = new ArrayList<BlockPos>();
-        newBlocks.addAll(list.keySet());
+        List<BlockPos> newBlocks = new ArrayList<>(list.keySet());
         for (int i = 0; i < newBlocks.size() && i < maxSize; i++) {
             BlockPos pos = newBlocks.get(i);
             for (Direction direction : Direction.values()) {

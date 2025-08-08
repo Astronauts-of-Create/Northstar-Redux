@@ -25,7 +25,7 @@ public class PointedCrimsiteBlock extends PointedDripstoneBlock implements Falla
 
     public PointedCrimsiteBlock(Properties pProperties) {
         super(pProperties);
-         this.registerDefaultState(this.stateDefinition.any().setValue(TIP_DIRECTION, Direction.UP).setValue(THICKNESS, DripstoneThickness.TIP).setValue(WATERLOGGED, Boolean.valueOf(false)));
+         this.registerDefaultState(this.stateDefinition.any().setValue(TIP_DIRECTION, Direction.UP).setValue(THICKNESS, DripstoneThickness.TIP).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
     @Nullable
@@ -40,7 +40,7 @@ public class PointedCrimsiteBlock extends PointedDripstoneBlock implements Falla
         } else {
             boolean flag = !pContext.isSecondaryUseActive();
             DripstoneThickness dripstonethickness = calculateDripstoneThickness(levelaccessor, blockpos, direction1, flag);
-            return dripstonethickness == null ? null : this.defaultBlockState().setValue(TIP_DIRECTION, direction1).setValue(THICKNESS, dripstonethickness).setValue(WATERLOGGED, Boolean.valueOf(levelaccessor.getFluidState(blockpos).getType() == Fluids.WATER));
+            return dripstonethickness == null ? null : this.defaultBlockState().setValue(TIP_DIRECTION, direction1).setValue(THICKNESS, dripstonethickness).setValue(WATERLOGGED, levelaccessor.getFluidState(blockpos).getType() == Fluids.WATER);
         }
     }
 
@@ -139,7 +139,7 @@ public class PointedCrimsiteBlock extends PointedDripstoneBlock implements Falla
              BlockPos.MutableBlockPos blockpos$mutableblockpos = pPos.mutable();
              buildBaseToTipColumn(pDirection, pHeight, pMergeTip, (p_190846_) -> {
                 if (p_190846_.is(block)) {
-                   p_190846_ = p_190846_.setValue(WATERLOGGED, Boolean.valueOf(pLevel.isWaterAt(blockpos$mutableblockpos)));
+                   p_190846_ = p_190846_.setValue(WATERLOGGED, pLevel.isWaterAt(blockpos$mutableblockpos));
                 }
                 if(!pLevel.getBlockState(blockpos$mutableblockpos).isSolidRender(pLevel, blockpos$mutableblockpos))
                 {pLevel.setBlock(blockpos$mutableblockpos, p_190846_, 2);}

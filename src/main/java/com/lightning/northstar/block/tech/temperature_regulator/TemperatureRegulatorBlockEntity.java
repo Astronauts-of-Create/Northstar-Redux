@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
-    private HashMap<BlockPos, Integer> TEMP_ZONES = new HashMap<BlockPos, Integer>();
+    private HashMap<BlockPos, Integer> TEMP_ZONES = new HashMap<>();
     public int temp = 20;
     public int tempChange = 0;
     public int maxSize = 0;
@@ -71,7 +71,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
                 }
 
                 if (this.envFill) {
-                    HashMap<BlockPos, Integer> newList = new HashMap<BlockPos, Integer>();
+                    HashMap<BlockPos, Integer> newList = new HashMap<>();
                     newList.put(getBlockPos().above(), temp);
                     TemperatureStuff.spreadTemp(this.level, newList, maxSize, this.temp);
                     if (!newList.equals(TEMP_ZONES)) {

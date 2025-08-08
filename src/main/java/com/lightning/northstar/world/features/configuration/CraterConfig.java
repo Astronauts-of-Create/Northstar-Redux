@@ -12,21 +12,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 
 public class CraterConfig implements FeatureConfiguration {
     public static final Codec<Double> CHANCE_RANGE = Codec.doubleRange(0.0D, 1.0D);
-    public static final Codec<CraterConfig> CODEC = RecordCodecBuilder.create((p_160784_) -> {
-        return p_160784_.group(IntProvider.codec(1, 128).fieldOf("radius").forGetter((p_160802_) -> {
-            return p_160802_.radius;
-        }), IntProvider.codec(1, 128).fieldOf("half_height").forGetter((p_160802_) -> {
-            return p_160802_.half_height;
-        }), IntProvider.codec(1, 128).fieldOf("depth").forGetter((p_160802_) -> {
-            return p_160802_.depth;
-        }), BlockStateProvider.CODEC.fieldOf("block_provider").forGetter((p_161135_) -> {
-            return p_161135_.block_provider;
-        }), BlockStateProvider.CODEC.fieldOf("air_provider").forGetter((p_161136_) -> {
-            return p_161136_.air_provider;
-        }), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_delete").forGetter((p_226234_) -> {
-            return p_226234_.canDelete;
-        })).apply(p_160784_, CraterConfig::new);
-    });
+    public static final Codec<CraterConfig> CODEC = RecordCodecBuilder.create((p_160784_) -> p_160784_.group(IntProvider.codec(1, 128).fieldOf("radius").forGetter((p_160802_) -> p_160802_.radius), IntProvider.codec(1, 128).fieldOf("half_height").forGetter((p_160802_) -> p_160802_.half_height), IntProvider.codec(1, 128).fieldOf("depth").forGetter((p_160802_) -> p_160802_.depth), BlockStateProvider.CODEC.fieldOf("block_provider").forGetter((p_161135_) -> p_161135_.block_provider), BlockStateProvider.CODEC.fieldOf("air_provider").forGetter((p_161136_) -> p_161136_.air_provider), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_delete").forGetter((p_226234_) -> p_226234_.canDelete)).apply(p_160784_, CraterConfig::new));
     public final IntProvider radius;
     public final IntProvider half_height;
     public final IntProvider depth;

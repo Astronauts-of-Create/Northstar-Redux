@@ -87,9 +87,8 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = worldIn.getBlockEntity(pos);
-            if (!(be instanceof RocketStationBlockEntity))
+            if (!(be instanceof RocketStationBlockEntity stationBE))
                 return;
-            RocketStationBlockEntity stationBE = (RocketStationBlockEntity) be;
             Block.popResource(worldIn, pos, stationBE.container.getItem(0));
         }
         IBE.onRemove(state, worldIn, pos, newState);

@@ -42,9 +42,8 @@ public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
                  return false;
               } else {
                  Optional<Column> optional = Column.scan(worldgenlevel, blockpos, largedripstoneconfiguration.floorToCeilingSearchRange, DripstoneUtils::isEmptyOrWater, DripstoneUtils::isDripstoneBaseOrLava);
-                 if (optional.isPresent() && optional.get() instanceof Column.Range) {
-                    Column.Range column$range = (Column.Range)optional.get();
-                    if (column$range.height() < 4) {
+                 if (optional.isPresent() && optional.get() instanceof Column.Range column$range) {
+                     if (column$range.height() < 4) {
                        return false;
                     } else {
                        int i = (int)((float)column$range.height() * largedripstoneconfiguration.maxColumnRadiusToCaveHeightRatio);

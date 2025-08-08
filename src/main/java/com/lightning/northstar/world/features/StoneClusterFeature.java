@@ -55,7 +55,7 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
     }
 
      private void placeColumn(WorldGenLevel pLevel, RandomSource pRandom, BlockPos pPos, int pX, int pZ, float pWetness, float lavaness, float thirdthingness, double pChance, int pHeight, float pDensity, StoneClusterConfiguration config) {
-          Optional<Column> optional = Column.scan(pLevel, pPos, config.floorToCeilingSearchRange, block ->{return !block.isSolidRender(pLevel, pPos);},  blockdeny ->{return blockdeny.isSolidRender(pLevel, pPos);});
+          Optional<Column> optional = Column.scan(pLevel, pPos, config.floorToCeilingSearchRange, block -> !block.isSolidRender(pLevel, pPos), blockdeny -> blockdeny.isSolidRender(pLevel, pPos));
           if (optional.isPresent()) {
              OptionalInt optionalint = optional.get().getCeiling();
              OptionalInt optionalint1 = optional.get().getFloor();
@@ -192,16 +192,14 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
             for(int i = 0; i < scanDist; i++) {
                 mutable.move(Direction.UP);
                 if(level.getBlockState(mutable).isAir() && level.getBlockState(mutable.relative(dir)).isSolidRender(level, pos)) {
-                    BlockPos newblockpos = new BlockPos(mutable.getX(),mutable.getY(),mutable.getZ());
-                    return newblockpos;
+                    return new BlockPos(mutable.getX(),mutable.getY(),mutable.getZ());
                 }
             }
             mutable = pos.mutable();
             for(int i = 0; i < scanDist; i++) {
                 mutable.move(dir);
                 if(level.getBlockState(mutable.relative(dir)).isSolidRender(level, pos) && level.getBlockState(mutable.relative(dir.getOpposite())).isAir()) {
-                    BlockPos newblockpos = new BlockPos(mutable.getX(),mutable.getY(),mutable.getZ());
-                    return newblockpos;
+                    return new BlockPos(mutable.getX(),mutable.getY(),mutable.getZ());
                 }
             }
 

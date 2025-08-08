@@ -82,7 +82,7 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
     }
 
     public BlockState getStateForAge(int pAge) {
-        return this.defaultBlockState().setValue(this.getAgeProperty(), Integer.valueOf(pAge));
+        return this.defaultBlockState().setValue(this.getAgeProperty(), pAge);
     }
 
     protected int getAge(BlockState pState) {
@@ -98,7 +98,7 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         Item playerItem = pContext.getPlayer().getItemInHand(pContext.getHand()).getItem();
         if (playerItem == this.getSeedItem())
-            return this.defaultBlockState().setValue(AGE, Integer.valueOf(0));
+            return this.defaultBlockState().setValue(AGE, 0);
         return this.defaultBlockState();
     }
 

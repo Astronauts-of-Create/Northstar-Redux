@@ -25,7 +25,7 @@ public class OxyFlowParticleData implements ParticleOptions, ICustomParticleData
     .apply(i, OxyFlowParticleData::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<OxyFlowParticleData> DESERIALIZER = new ParticleOptions.Deserializer<OxyFlowParticleData>() {
+    public static final ParticleOptions.Deserializer<OxyFlowParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public OxyFlowParticleData fromCommand(ParticleType<OxyFlowParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');

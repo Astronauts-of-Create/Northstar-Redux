@@ -47,9 +47,8 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean pIsMoving) {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (!(be instanceof TargetingComputerRackBlockEntity))
+            if (!(be instanceof TargetingComputerRackBlockEntity rackBE))
                 return;
-            TargetingComputerRackBlockEntity rackBE = (TargetingComputerRackBlockEntity) be;
             for(int brh = 0; brh < rackBE.container.getContainerSize(); brh++) {
                 Block.popResource(world, pos, rackBE.container.getItem(brh));
             }

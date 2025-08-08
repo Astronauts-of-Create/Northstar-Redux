@@ -42,17 +42,17 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
 
     public ExtinguishedLanternBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(HANGING, Boolean.valueOf(false)).setValue(WATERLOGGED, Boolean.valueOf(false)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(HANGING, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
-        for(Direction direction : pContext.getNearestLookingDirections()) {
+        for (Direction direction : pContext.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
-                BlockState blockstate = this.defaultBlockState().setValue(HANGING, Boolean.valueOf(direction == Direction.UP));
+                BlockState blockstate = this.defaultBlockState().setValue(HANGING, direction == Direction.UP);
                 if (blockstate.canSurvive(pContext.getLevel(), pContext.getClickedPos())) {
-                   return blockstate.setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
+                    return blockstate.setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
                 }
             }
         }
@@ -62,7 +62,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return pState.getValue(HANGING) ? HANGING_AABB : AABB;
     }
-        
+
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HANGING, WATERLOGGED);
     }
@@ -79,7 +79,8 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         boolean fireflag = false;
         if ((pPlayer.getItemInHand(pHand).getItem() == Items.FLINT_AND_STEEL || pPlayer.getItemInHand(pHand).getItem() == Items.FIRE_CHARGE) && OxygenStuff.hasOxygen(pPos, pLevel.dimension())) {
-            fireflag = true;}
+            fireflag = true;
+        }
         if (pPlayer.getAbilities().mayBuild && fireflag) {
             pLevel.setBlock(pPos, Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, pState.getValue(HANGING)).setValue(LanternBlock.WATERLOGGED, pState.getValue(WATERLOGGED)), 64);
             pLevel.playSound(pPlayer, pPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
@@ -101,12 +102,12 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         return PushReaction.DESTROY;
     }
 
-       /**
-        * Update the provided state given the provided neighbor direction and neighbor state, returning a new state.
-        * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
-        * returns its solidified counterpart.
-        * Note that this method should ideally consider only the specific direction passed in.
-        */
+    /**
+     * Update the provided state given the provided neighbor direction and neighbor state, returning a new state.
+     * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
+     * returns its solidified counterpart.
+     * Note that this method should ideally consider only the specific direction passed in.
+     */
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
         if (pState.getValue(WATERLOGGED)) {

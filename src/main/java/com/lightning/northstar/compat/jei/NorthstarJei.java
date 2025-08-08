@@ -285,7 +285,7 @@ public class NorthstarJei implements IModPlugin {
                     return recipes;
                 };
             } else {
-                recipesSupplier = () -> Collections.emptyList();
+                recipesSupplier = Collections::emptyList;
             }
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(

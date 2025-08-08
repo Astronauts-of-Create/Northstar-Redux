@@ -64,13 +64,13 @@ public class MarsFarmlandBlock extends FarmBlock {
         int i = blockState.getValue(MOISTURE);
         if (!isNearWater(level, pos) && !level.isRainingAt(pos.above())) {
         if (i > 0) {
-        level.setBlock(pos, blockState.setValue(MOISTURE, Integer.valueOf(i - 1)), 2);
+        level.setBlock(pos, blockState.setValue(MOISTURE, i - 1), 2);
 
     } else if (!isUnderCrops(level, pos)) {
         turntoMarsSoil(blockState, level, pos);
     }
     } else if (i < 7) {
-        level.setBlock(pos, blockState.setValue(MOISTURE, Integer.valueOf(7)), 2);
+        level.setBlock(pos, blockState.setValue(MOISTURE, 7), 2);
     }
 
 

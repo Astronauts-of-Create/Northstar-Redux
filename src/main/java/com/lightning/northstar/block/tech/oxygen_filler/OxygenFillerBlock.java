@@ -21,16 +21,17 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+// TODO: this is NOT a kinetic block
 public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<OxygenFillerBlockEntity> {
 
     public OxygenFillerBlock(Properties properties) {
         super(properties);
     }
-    
+
     @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-        BlockHitResult hit) {
+                                 BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
         System.out.println(heldItem);
 
@@ -39,26 +40,25 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
             player.getInventory().placeItemBackInInventory(mainItemStack);
             player.getInventory().removeItem(heldItem);
             be.container.setItem(0, heldItem);
-            if(!mainItemStack.isEmpty())
-            world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
+            if (!mainItemStack.isEmpty())
+                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
 
             be.notifyUpdate();
             return InteractionResult.SUCCESS;
-        });    
+        });
     }
-    
+
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean pIsMoving) {
         if (!state.is(newState.getBlock())) {
             BlockEntity be = world.getBlockEntity(pos);
-            if (!(be instanceof OxygenFillerBlockEntity))
+            if (!(be instanceof OxygenFillerBlockEntity fillerBE))
                 return;
-            OxygenFillerBlockEntity fillerBE = (OxygenFillerBlockEntity) be;
             Block.popResource(world, pos, fillerBE.container.getItem(0));
             world.removeBlockEntity(pos);
         }
     }
-    
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return IBE.super.newBlockEntity(pPos, pState);
@@ -68,7 +68,7 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
     public Axis getRotationAxis(BlockState state) {
         return Axis.Y;
     }
-    
+
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return face == Direction.DOWN;

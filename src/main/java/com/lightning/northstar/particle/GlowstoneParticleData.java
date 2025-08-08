@@ -25,7 +25,7 @@ public class GlowstoneParticleData implements ParticleOptions, ICustomParticleDa
     .apply(i, GlowstoneParticleData::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<GlowstoneParticleData> DESERIALIZER = new ParticleOptions.Deserializer<GlowstoneParticleData>() {
+    public static final ParticleOptions.Deserializer<GlowstoneParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public GlowstoneParticleData fromCommand(ParticleType<GlowstoneParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');

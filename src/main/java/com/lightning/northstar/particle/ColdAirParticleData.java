@@ -25,7 +25,7 @@ public class ColdAirParticleData implements ParticleOptions, ICustomParticleData
     .apply(i, ColdAirParticleData::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<ColdAirParticleData> DESERIALIZER = new ParticleOptions.Deserializer<ColdAirParticleData>() {
+    public static final ParticleOptions.Deserializer<ColdAirParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public ColdAirParticleData fromCommand(ParticleType<ColdAirParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
