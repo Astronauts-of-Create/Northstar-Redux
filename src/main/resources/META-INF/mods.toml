@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[43,)"
 license = "MIT"
-issueTrackerURL = "https://github.com/Redstonneur1256/Northstar-Redux/issues"
+issueTrackerURL = "https://github.com/Astronauts-of-Create/Northstar-Redux/issues"
 
 
 [[mods]]
