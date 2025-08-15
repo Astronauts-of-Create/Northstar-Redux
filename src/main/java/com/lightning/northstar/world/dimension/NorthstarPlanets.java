@@ -244,38 +244,40 @@ public class NorthstarPlanets {
     }
     
     public static double getPlanetX(String name) {
-        switch (name) {
-        case "mercury": {return mercury_x;}
-        case "venus": {return venus_x;}
-        case "earth": {return earth_x;}
-        case "earth_moon": {return earth_moon_x;}
-        case "moon": {return moon_x;}
-        case "mars": {return mars_x;}
-        case "ceres": {return ceres_x;}
-        case "jupiter": {return jupiter_x;}
-        case "saturn": {return saturn_x;}
-        case "uranus": {return uranus_x;}
-        case "neptune": {return neptune_x;}
-        case "pluto": {return pluto_x;}
-        case "eris": {return eris_x;}
-        default:return 0;}
+        return switch (name) {
+            case "mercury" -> mercury_x;
+            case "venus" -> venus_x;
+            case "earth" -> earth_x;
+            case "earth_moon" -> earth_moon_x;
+            case "moon" -> moon_x;
+            case "mars" -> mars_x;
+            case "ceres" -> ceres_x;
+            case "jupiter" -> jupiter_x;
+            case "saturn" -> saturn_x;
+            case "uranus" -> uranus_x;
+            case "neptune" -> neptune_x;
+            case "pluto" -> pluto_x;
+            case "eris" -> eris_x;
+            default -> 0;
+        };
     }
     public static double getPlanetY(String name) {
-        switch (name) {
-        case "mercury": {return mercury_y;}
-        case "venus": {return venus_y;}
-        case "earth": {return earth_y;}
-        case "earth_moon": {return earth_moon_y;}
-        case "moon": {return moon_y;}
-        case "mars": {return mars_y;}
-        case "ceres": {return ceres_y;}
-        case "jupiter": {return jupiter_y;}
-        case "saturn": {return saturn_y;}
-        case "uranus": {return uranus_y;}
-        case "neptune": {return neptune_y;}
-        case "pluto": {return pluto_y;}
-        case "eris": {return eris_y;}
-        default:return 0;}
+        return switch (name) {
+            case "mercury" -> mercury_y;
+            case "venus" -> venus_y;
+            case "earth" -> earth_y;
+            case "earth_moon" -> earth_moon_y;
+            case "moon" -> moon_y;
+            case "mars" -> mars_y;
+            case "ceres" -> ceres_y;
+            case "jupiter" -> jupiter_y;
+            case "saturn" -> saturn_y;
+            case "uranus" -> uranus_y;
+            case "neptune" -> neptune_y;
+            case "pluto" -> pluto_y;
+            case "eris" -> eris_y;
+            default -> 0;
+        };
     }
     public static String getPlanetName(ResourceKey<Level> level) {
         if (level == NorthstarDimensions.MARS_DIM_KEY) {return "mars";}

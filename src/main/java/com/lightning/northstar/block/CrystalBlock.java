@@ -35,7 +35,7 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         super(pProperties);
         int pOffset = 4;
         int pSize = 7;
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(FACING, Direction.UP));
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, Boolean.FALSE).setValue(FACING, Direction.UP));
         this.upAabb = Block.box((double)pOffset, 0.0D, (double)pOffset, (double)(16 - pOffset), (double)pSize, (double)(16 - pOffset));
         this.downAabb = Block.box((double)pOffset, (double)(16 - pSize), (double)pOffset, (double)(16 - pOffset), 16.0D, (double)(16 - pOffset));
         this.northAabb = Block.box((double)pOffset, (double)pOffset, (double)(16 - pSize), (double)(16 - pOffset), (double)(16 - pOffset), 16.0D);
@@ -44,22 +44,14 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         this.westAabb = Block.box((double)(16 - pSize), (double)pOffset, (double)pOffset, 16.0D, (double)(16 - pOffset), (double)(16 - pOffset));
     }
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        Direction direction = pState.getValue(FACING);
-        switch (direction) {
-        case NORTH:
-            return this.northAabb;
-        case SOUTH:
-            return this.southAabb;
-        case EAST:
-            return this.eastAabb;
-        case WEST:
-            return this.westAabb;
-        case DOWN:
-            return this.downAabb;
-        case UP:
-        default:
-            return this.upAabb;
-        }
+        return switch (pState.getValue(FACING)) {
+            case NORTH -> this.northAabb;
+            case SOUTH -> this.southAabb;
+            case EAST -> this.eastAabb;
+            case WEST -> this.westAabb;
+            case DOWN -> this.downAabb;
+            default -> this.upAabb;
+        };
     }
 
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
@@ -87,14 +79,14 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
             pLevel.scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
         }
 
-        return pDirection == pState.getValue(FACING).getOpposite() && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
+        return pDirection == pState.getValue(FACING).getOpposite() && ! pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
     }
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         LevelAccessor levelaccessor = pContext.getLevel();
         BlockPos blockpos = pContext.getClickedPos();
-        return this.defaultBlockState().setValue(WATERLOGGED, Boolean.valueOf(levelaccessor.getFluidState(blockpos).getType() == Fluids.WATER)).setValue(FACING, pContext.getClickedFace());
+        return this.defaultBlockState().setValue(WATERLOGGED, levelaccessor.getFluidState(blockpos).getType() == Fluids.WATER).setValue(FACING, pContext.getClickedFace());
     }
 
     /**

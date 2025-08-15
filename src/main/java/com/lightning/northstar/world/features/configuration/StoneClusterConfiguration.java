@@ -9,39 +9,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.material.FluidState;
 
 public class StoneClusterConfiguration implements FeatureConfiguration {
-       public static final Codec<StoneClusterConfiguration> CODEC = RecordCodecBuilder.create((p_160784_) -> {
-              return p_160784_.group(Codec.intRange(1, 512).fieldOf("floor_to_ceiling_search_range").forGetter((p_160806_) -> {
-                 return p_160806_.floorToCeilingSearchRange;
-              }), IntProvider.codec(1, 128).fieldOf("height").forGetter((p_160804_) -> {
-                 return p_160804_.height;
-              }), IntProvider.codec(1, 128).fieldOf("radius").forGetter((p_160802_) -> {
-                 return p_160802_.radius;
-              }), Codec.intRange(0, 64).fieldOf("max_stalagmite_stalactite_height_diff").forGetter((p_160800_) -> {
-                 return p_160800_.maxStalagmiteStalactiteHeightDiff;
-              }), Codec.intRange(1, 64).fieldOf("height_deviation").forGetter((p_160798_) -> {
-                 return p_160798_.heightDeviation;
-              }), IntProvider.codec(0, 128).fieldOf("dripstone_block_layer_thickness").forGetter((p_160796_) -> {
-                 return p_160796_.dripstoneBlockLayerThickness;
-              }), FloatProvider.codec(0.0F, 2.0F).fieldOf("density").forGetter((p_160794_) -> {
-                 return p_160794_.density;
-              }), FloatProvider.codec(0.0F, 2.0F).fieldOf("wetness").forGetter((p_160792_) -> {
-                 return p_160792_.wetness;
-              }), FloatProvider.codec(0.0F, 2.0F).fieldOf("lavaness").forGetter((p_160792_) -> {
-                     return p_160792_.lavaness;
-              }), FloatProvider.codec(0.0F, 2.0F).fieldOf("thirdthingness").forGetter((p_160792_) -> {
-                 return p_160792_.lavaness;
-              }),Codec.floatRange(0.0F, 1.0F).fieldOf("chance_of_dripstone_column_at_max_distance_from_center").forGetter((p_160790_) -> {
-                 return p_160790_.chanceOfDripstoneColumnAtMaxDistanceFromCenter;
-              }), Codec.intRange(1, 64).fieldOf("max_distance_from_edge_affecting_chance_of_dripstone_column").forGetter((p_160788_) -> {
-                 return p_160788_.maxDistanceFromEdgeAffectingChanceOfDripstoneColumn;
-              }), Codec.intRange(1, 64).fieldOf("max_distance_from_center_affecting_height_bias").forGetter((p_160786_) -> {
-                 return p_160786_.maxDistanceFromCenterAffectingHeightBias;
-              }), BlockStateProvider.CODEC.fieldOf("stone_provider").forGetter((p_161135_) -> {
-                     return p_161135_.stone_provider;
-              }), FluidState.CODEC.fieldOf("fluid_provider").forGetter((p_161135_) -> {
-                         return p_161135_.fluid_provider;
-              })).apply(p_160784_, StoneClusterConfiguration::new);
-           });
+       public static final Codec<StoneClusterConfiguration> CODEC = RecordCodecBuilder.create((p_160784_) -> p_160784_.group(Codec.intRange(1, 512).fieldOf("floor_to_ceiling_search_range").forGetter((p_160806_) -> p_160806_.floorToCeilingSearchRange), IntProvider.codec(1, 128).fieldOf("height").forGetter((p_160804_) -> p_160804_.height), IntProvider.codec(1, 128).fieldOf("radius").forGetter((p_160802_) -> p_160802_.radius), Codec.intRange(0, 64).fieldOf("max_stalagmite_stalactite_height_diff").forGetter((p_160800_) -> p_160800_.maxStalagmiteStalactiteHeightDiff), Codec.intRange(1, 64).fieldOf("height_deviation").forGetter((p_160798_) -> p_160798_.heightDeviation), IntProvider.codec(0, 128).fieldOf("dripstone_block_layer_thickness").forGetter((p_160796_) -> p_160796_.dripstoneBlockLayerThickness), FloatProvider.codec(0.0F, 2.0F).fieldOf("density").forGetter((p_160794_) -> p_160794_.density), FloatProvider.codec(0.0F, 2.0F).fieldOf("wetness").forGetter((p_160792_) -> p_160792_.wetness), FloatProvider.codec(0.0F, 2.0F).fieldOf("lavaness").forGetter((p_160792_) -> p_160792_.lavaness), FloatProvider.codec(0.0F, 2.0F).fieldOf("thirdthingness").forGetter((p_160792_) -> p_160792_.lavaness),Codec.floatRange(0.0F, 1.0F).fieldOf("chance_of_dripstone_column_at_max_distance_from_center").forGetter((p_160790_) -> p_160790_.chanceOfDripstoneColumnAtMaxDistanceFromCenter), Codec.intRange(1, 64).fieldOf("max_distance_from_edge_affecting_chance_of_dripstone_column").forGetter((p_160788_) -> p_160788_.maxDistanceFromEdgeAffectingChanceOfDripstoneColumn), Codec.intRange(1, 64).fieldOf("max_distance_from_center_affecting_height_bias").forGetter((p_160786_) -> p_160786_.maxDistanceFromCenterAffectingHeightBias), BlockStateProvider.CODEC.fieldOf("stone_provider").forGetter((p_161135_) -> p_161135_.stone_provider), FluidState.CODEC.fieldOf("fluid_provider").forGetter((p_161135_) -> p_161135_.fluid_provider)).apply(p_160784_, StoneClusterConfiguration::new));
            public final int floorToCeilingSearchRange;
            public final BlockStateProvider stone_provider;
            public final FluidState fluid_provider;

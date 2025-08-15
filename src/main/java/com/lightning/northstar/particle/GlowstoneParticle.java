@@ -69,8 +69,7 @@ public class GlowstoneParticle extends SimpleAnimatedParticle {
     public static class Data extends BasicParticleData<GlowstoneParticle> {
         @Override
         public IBasicParticleFactory<GlowstoneParticle> getBasicFactory() {
-            return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new GlowstoneParticle(worldIn, x, y, z, vx, vy, vz,
-                    spriteSet);
+            return GlowstoneParticle::new;
         }
 
         @Override

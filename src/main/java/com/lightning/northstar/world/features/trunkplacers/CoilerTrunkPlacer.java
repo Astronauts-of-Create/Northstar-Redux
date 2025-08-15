@@ -22,19 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class CoilerTrunkPlacer extends TrunkPlacer {
-    public static final Codec<CoilerTrunkPlacer> CODEC = RecordCodecBuilder.create((p_226236_) -> {
-        return trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> {
-            return p_226242_.extraBranchSteps;
-        }), Codec.floatRange(0.0F, 1.0F).fieldOf("place_branch_per_log_probability").forGetter((p_226240_) -> {
-            return p_226240_.placeBranchPerLogProbability;
-        }), IntProvider.NON_NEGATIVE_CODEC.fieldOf("extra_branch_length").forGetter((p_226238_) -> {
-            return p_226238_.extraBranchLength;
-        }), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> {
-            return p_226234_.canGrowThrough;
-        }), IntProvider.NON_NEGATIVE_CODEC.fieldOf("extra_branch_length").forGetter((p_226238_) -> {
-            return p_226238_.spinFactor;
-        }))).apply(p_226236_, CoilerTrunkPlacer::new);
-    });
+    public static final Codec<CoilerTrunkPlacer> CODEC = RecordCodecBuilder.create((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), Codec.floatRange(0.0F, 1.0F).fieldOf("place_branch_per_log_probability").forGetter((p_226240_) -> p_226240_.placeBranchPerLogProbability), IntProvider.NON_NEGATIVE_CODEC.fieldOf("extra_branch_length").forGetter((p_226238_) -> p_226238_.extraBranchLength), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough), IntProvider.NON_NEGATIVE_CODEC.fieldOf("extra_branch_length").forGetter((p_226238_) -> p_226238_.spinFactor))).apply(p_226236_, CoilerTrunkPlacer::new));
     private final IntProvider extraBranchSteps;
     private final float placeBranchPerLogProbability;
     private final IntProvider extraBranchLength;
@@ -181,8 +169,6 @@ public class CoilerTrunkPlacer extends TrunkPlacer {
 
     @Override
     protected boolean validTreePos(LevelSimulatedReader pLevel, BlockPos pPos) {
-        return super.validTreePos(pLevel, pPos) || pLevel.isStateAtPosition(pPos, (p_226232_) -> {
-            return p_226232_.is(this.canGrowThrough);
-        });
+        return super.validTreePos(pLevel, pPos) || pLevel.isStateAtPosition(pPos, (p_226232_) -> p_226232_.is(this.canGrowThrough));
     }
 }

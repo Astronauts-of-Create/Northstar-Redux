@@ -40,10 +40,10 @@ import java.util.Set;
 
 @EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class OxygenStuff {
-    public static HashMap<BlockPos, Integer> oxygenBlocks = new HashMap<BlockPos, Integer>();
-    public static HashMap<Set<BlockPos>, ResourceKey<Level>> oxygenSources = new HashMap<Set<BlockPos>, ResourceKey<Level>>();
-    public static HashMap<Set<BlockPos>, ResourceKey<Level>> tickingQueue = new HashMap<Set<BlockPos>, ResourceKey<Level>>();
-    public static List<LivingEntity> oxygenatedEntities = new ArrayList<LivingEntity>();
+    public static HashMap<BlockPos, Integer> oxygenBlocks = new HashMap<>();
+    public static HashMap<Set<BlockPos>, ResourceKey<Level>> oxygenSources = new HashMap<>();
+    public static HashMap<Set<BlockPos>, ResourceKey<Level>> tickingQueue = new HashMap<>();
+    public static List<LivingEntity> oxygenatedEntities = new ArrayList<>();
     public static int power = 2000;
     public static int maximumOxy = 2000;
     public static boolean debugMode = false;
@@ -91,8 +91,7 @@ public class OxygenStuff {
     }
 
     public static Set<BlockPos> spreadOxy(Level level, Set<BlockPos> list, int maxSize) {
-        List<BlockPos> newBlocks = new ArrayList<BlockPos>();
-        newBlocks.addAll(list);
+        List<BlockPos> newBlocks = new ArrayList<>(list);
         for (int i = 0; i < newBlocks.size() && i < maxSize; i++) {
             BlockPos pos = newBlocks.get(i);
             for (Direction direction : Direction.values()) {
@@ -110,10 +109,9 @@ public class OxygenStuff {
     }
 
     public static void removeSource(BlockPos pos, Level level, Set<BlockPos> list, Set<BlockPos> newlist) {
-        Set<BlockPos> templist = list;
         oxygenSources.remove(list, level.dimension());
         if (!level.isClientSide) {
-            for (BlockPos block : templist) {
+            for (BlockPos block : list) {
                 if (!newlist.contains(block)) {
                     if (!level.getBlockState(block).isAir()) {
                         level.getBlockState(block).tick((ServerLevel) level, block, level.random);
@@ -125,7 +123,7 @@ public class OxygenStuff {
     }
 
     public static List<BlockPos> spreadOxyNew(BlockPos pos, Level level, List<BlockPos> list, int maxSize) {
-        java.util.List<BlockPos> newblockslist = new ArrayList<BlockPos>();
+        java.util.List<BlockPos> newblockslist = new ArrayList<>();
         boolean flag = false;
         BlockPos.MutableBlockPos blockpos = new BlockPos.MutableBlockPos();
         for (Direction direction : Direction.values()) {
@@ -163,7 +161,7 @@ public class OxygenStuff {
     }
 
     public static List<BlockPos> spreadOxy2(Level level, List<BlockPos> list, int maxSize, List<BlockPos> parentList) {
-        java.util.List<BlockPos> newblockslist = new ArrayList<BlockPos>();
+        java.util.List<BlockPos> newblockslist = new ArrayList<>();
         BlockPos.MutableBlockPos blockpos = new BlockPos.MutableBlockPos();
         for (int i = 0; i < list.size() && list.size() < maxSize; i++) {
             BlockPos iPos = list.get(i);
@@ -273,7 +271,7 @@ public class OxygenStuff {
         ListTag lore = new ListTag();
         int oxy = tag.getInt("Oxygen");
         int newOxy = Mth.clamp(oxy - 1, 0, 5000);
-        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
+        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
         tag.remove("Oxygen");
         tag.putInt("Oxygen", newOxy);
         stack.getOrCreateTagElement("display").put("Lore", lore);

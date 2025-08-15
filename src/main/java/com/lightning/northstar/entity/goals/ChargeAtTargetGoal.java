@@ -205,8 +205,7 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
     }
 
     public Vec3 blockPosToVec3(BlockPos pos) {
-        Vec3 vec = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-        return vec;
+        return new Vec3(pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override

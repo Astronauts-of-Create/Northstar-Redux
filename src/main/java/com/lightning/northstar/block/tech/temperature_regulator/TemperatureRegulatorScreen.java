@@ -32,7 +32,7 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
     private int offsetY;
     private int offsetZ;
     private int temp;
-    protected final List<Component> envOptions = new ArrayList<Component>();
+    protected final List<Component> envOptions = new ArrayList<>();
 
     private boolean envFill;
     private TemperatureRegulatorBlockEntity blockEntity;

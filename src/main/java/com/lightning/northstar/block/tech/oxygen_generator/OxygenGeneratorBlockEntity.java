@@ -34,7 +34,7 @@ import java.util.Set;
 public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
     public int maxOxy;
     public int minOxy;
-    public Set<BlockPos> OXYGEN_BLOBS = new HashSet<BlockPos>();
+    public Set<BlockPos> OXYGEN_BLOBS = new HashSet<>();
     SmartFluidTankBehaviour tank;
     private int audioTick = 0;
 
@@ -69,7 +69,7 @@ public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IH
 
             //this is called every 40 ticks to check if any of the blocks have changed and changes the shape of the oxygen's influence accordingly
             //its also really laggy and makes me want to cry
-            Set<BlockPos> newList = new HashSet<BlockPos>();
+            Set<BlockPos> newList = new HashSet<>();
 //          System.out.println("SPREAD THE DISEASE SPREAD THE DISEASE");
             if (level.getBlockState(getBlockPos().above()).is(NorthstarTags.NorthstarBlockTags.AIR_PASSES_THROUGH.tag))
                 newList.add(getBlockPos().above());

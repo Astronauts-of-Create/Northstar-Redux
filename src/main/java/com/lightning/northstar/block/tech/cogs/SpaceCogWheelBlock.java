@@ -23,4 +23,5 @@ public class SpaceCogWheelBlock extends CogWheelBlock {
     public static SpaceCogWheelBlock large(Properties properties) {
         return new SpaceCogWheelBlock(true, properties);
     }
+
 }

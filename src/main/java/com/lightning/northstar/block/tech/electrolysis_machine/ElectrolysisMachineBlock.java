@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -16,19 +15,15 @@ public class ElectrolysisMachineBlock extends HorizontalKineticBlock implements 
     public ElectrolysisMachineBlock(Properties properties) {
         super(properties);
     }
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return IBE.super.newBlockEntity(pPos, pState);
-    }
 
     @Override
     public Axis getRotationAxis(BlockState state) {
-        return Axis.Y;
+        return state.getValue(HORIZONTAL_FACING).getAxis();
     }
 
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-        return face == Direction.DOWN;
+        return state.getValue(HORIZONTAL_FACING).getOpposite() == face;
     }
 
     @Override
@@ -40,4 +35,5 @@ public class ElectrolysisMachineBlock extends HorizontalKineticBlock implements 
     public BlockEntityType<? extends ElectrolysisMachineBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.ELECTROLYSIS_MACHINE.get();
     }
+
 }

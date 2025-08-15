@@ -30,17 +30,18 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class ExtinguishedTorchWallBlock extends Block{
+public class ExtinguishedTorchWallBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-       protected static final float AABB_OFFSET = 2.5F;
-       private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D),
-               Direction.SOUTH, Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D), Direction.WEST, Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D),
-               Direction.EAST, Block.box(0.0D, 3.0D, 5.5D, 5.0D, 13.0D, 10.5D)));
+    protected static final float AABB_OFFSET = 2.5F;
+    private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D),
+            Direction.SOUTH, Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D), Direction.WEST, Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D),
+            Direction.EAST, Block.box(0.0D, 3.0D, 5.5D, 5.0D, 13.0D, 10.5D)));
 
     public ExtinguishedTorchWallBlock(BlockBehaviour.Properties pProperties) {
-    super(pProperties);
-    this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        super(pProperties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
+
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return getShape(pState);
     }
@@ -49,8 +50,7 @@ public class ExtinguishedTorchWallBlock extends Block{
         return AABBS.get(pState.getValue(FACING));
     }
 
-
-
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         return pFacing.getOpposite() == pState.getValue(FACING) && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
     }
@@ -62,7 +62,7 @@ public class ExtinguishedTorchWallBlock extends Block{
         BlockPos blockpos = pContext.getClickedPos();
         Direction[] adirection = pContext.getNearestLookingDirections();
 
-        for(Direction direction : adirection) {
+        for (Direction direction : adirection) {
             if (direction.getAxis().isHorizontal()) {
                 Direction direction1 = direction.getOpposite();
                 blockstate = blockstate.setValue(FACING, direction1);
@@ -81,10 +81,12 @@ public class ExtinguishedTorchWallBlock extends Block{
         BlockState blockstate = pLevel.getBlockState(blockpos);
         return blockstate.isFaceSturdy(pLevel, blockpos, direction);
     }
+
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         boolean fireflag = false;
-        if ((pPlayer.getItemInHand(pHand).getItem() == Items.FLINT_AND_STEEL || pPlayer.getItemInHand(pHand).getItem() == Items.FIRE_CHARGE) && OxygenStuff.hasOxygen(pPos,pLevel.dimension())) {
-            fireflag = true;}
+        if ((pPlayer.getItemInHand(pHand).getItem() == Items.FLINT_AND_STEEL || pPlayer.getItemInHand(pHand).getItem() == Items.FIRE_CHARGE) && OxygenStuff.hasOxygen(pPos, pLevel.dimension())) {
+            fireflag = true;
+        }
         if (pPlayer.getAbilities().mayBuild && fireflag) {
             pLevel.setBlock(pPos, Blocks.WALL_TORCH.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, pState.getValue(FACING)), 64);
             pLevel.playSound(pPlayer, pPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, pLevel.getRandom().nextFloat() * 0.4F + 0.8F);
@@ -93,6 +95,7 @@ public class ExtinguishedTorchWallBlock extends Block{
             return InteractionResult.PASS;
         }
     }
+
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING);
     }

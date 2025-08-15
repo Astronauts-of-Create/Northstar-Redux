@@ -8,22 +8,24 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public class JetEngineBlock extends Block implements IWrenchable, IBE<JetEngineBlockEntity>{
+public class JetEngineBlock extends Block implements IWrenchable, IBE<JetEngineBlockEntity> {
+
     public static final BooleanProperty TOP = BooleanProperty.create("top");
     public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
 
-    public JetEngineBlock(Properties properties)
-    {super(properties);
-    this.registerDefaultState(defaultBlockState().setValue(TOP, true)
-            .setValue(BOTTOM, true));}
-
+    public JetEngineBlock(Properties properties) {
+        super(properties);
+        this.registerDefaultState(defaultBlockState()
+                .setValue(TOP, true)
+                .setValue(BOTTOM, true));
+    }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-        p_206840_1_.add(TOP, BOTTOM);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(TOP, BOTTOM);
     }
 
     public static boolean isTank(BlockState state) {
@@ -44,10 +46,14 @@ public class JetEngineBlock extends Block implements IWrenchable, IBE<JetEngineB
         return JetEngineBlockEntity.class;
     }
 
-
     @Override
     public BlockEntityType<? extends JetEngineBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.JET_ENGINE.get();
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+        IBE.onRemove(state, world, pos, newState);
     }
 
 }

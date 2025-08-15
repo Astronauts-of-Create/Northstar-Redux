@@ -42,7 +42,7 @@ import java.util.Map.Entry;
 public class RocketHandler {
     public static List<RocketContraptionEntity> ROCKETS = new ArrayList<>();
     public static List<Pair<Level, BlockPos>> TICKET_QUEUE = new ArrayList<>();
-    public static HashMap<Pair<UUID, BlockPos>, Integer> CONTROL_QUEUE = new HashMap<Pair<UUID, BlockPos>, Integer>();
+    public static HashMap<Pair<UUID, BlockPos>, Integer> CONTROL_QUEUE = new HashMap<>();
     public static long eventTickNumber;
     public static long eventTickNumberCheck;
     private static UUID pilotID;
@@ -55,7 +55,7 @@ public class RocketHandler {
 
         // this is pretty much only clientside
         if (!CONTROL_QUEUE.isEmpty() && eventTickNumber > eventTickNumberCheck) {
-            HashMap<Pair<UUID, BlockPos>, Integer> destroy = new HashMap<Pair<UUID, BlockPos>, Integer>();
+            HashMap<Pair<UUID, BlockPos>, Integer> destroy = new HashMap<>();
             for (Entry<Pair<UUID, BlockPos>, Integer> entries : CONTROL_QUEUE.entrySet()) {
                 if (entries.getKey().getFirst() != null) {
                     Player player = event.level.getPlayerByUUID(entries.getKey().getFirst());
@@ -118,16 +118,11 @@ public class RocketHandler {
         if (entity == null)
             return;
         entity.startLanding();
-        ResourceKey<Level> dest;
-        if (entity.destination == null) {
-            dest = NorthstarDimensions.MOON_DIM_KEY;
-        } else {
-            dest = entity.destination;
-        }
+        ResourceKey<Level> dest = entity.destination == null ? NorthstarDimensions.MOON_DIM_KEY : entity.destination;
         ServerLevel destLevel = entity.level().getServer().getLevel(dest);
-        HashMap<Entity, Integer> seatMap = new HashMap<Entity, Integer>();
+        HashMap<Entity, Integer> seatMap = new HashMap<>();
         UUID controller = null;
-        Map<Entity, MutableInt> colliders = new HashMap<Entity, MutableInt>();
+        Map<Entity, MutableInt> colliders = new HashMap<>();
         for (Entity passengers : entity.entitiesInContraption) {
             if (passengers.level().getServer().getLevel(passengers.level().dimension()) != destLevel && !passengers.level().isClientSide) {
                 if (passengers instanceof ServerPlayer) {
@@ -249,7 +244,7 @@ public class RocketHandler {
                 }
             }
         }
-        if (contrapEnt.hasControllingPassenger() && contrapEnt.getControllingPlayer() != null) {
+        if (contrapEnt.hasControllingPassenger() && contrapEnt.getControllingPlayer().isPresent()) {
             controller = contrapEnt.getControllingPlayer().get();
         }
         playerlist.sendPlayerPermissionLevel(entity);

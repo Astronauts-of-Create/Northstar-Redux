@@ -90,7 +90,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public WeakReference<RocketContraptionEntity> entity;
     @SuppressWarnings("unused")
     private Vec3 serverPrevPos;
-    public List<Entity> entitiesInContraption = new ArrayList<Entity>();
+    public List<Entity> entitiesInContraption = new ArrayList<>();
     public BlockPos localControlsPos;
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
@@ -204,7 +204,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
         if (destination == null) {
             //bruh :(
-            destination = level().OVERWORLD;
+            destination = Level.OVERWORLD;
         }
         if (((RocketContraption) this.contraption).fuelAmount() < ((RocketContraption) this.contraption).fuelCost && fuelBurned == false) {
             this.disassemble();
@@ -492,15 +492,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
             MovementBehaviour movementBehaviour = MovementBehaviour.REGISTRY.get(blockInfo.state());
             if (movementBehaviour != null) {
-                if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
-                    BlockBreakingMovementBehaviour behaviour = (BlockBreakingMovementBehaviour) movementBehaviour;
+                if (movementBehaviour instanceof BlockBreakingMovementBehaviour behaviour) {
                     if (!behaviour.canBreak(world, colliderPos, collidedState) && !emptyCollider)
                         return true;
                     continue;
                 }
-                if (movementBehaviour instanceof HarvesterMovementBehaviour) {
-                    HarvesterMovementBehaviour harvesterMovementBehaviour =
-                            (HarvesterMovementBehaviour) movementBehaviour;
+                if (movementBehaviour instanceof HarvesterMovementBehaviour harvesterMovementBehaviour) {
                     if (!harvesterMovementBehaviour.isValidCrop(world, colliderPos, collidedState)
                             && !harvesterMovementBehaviour.isValidOther(world, colliderPos, collidedState)
                             && !emptyCollider)

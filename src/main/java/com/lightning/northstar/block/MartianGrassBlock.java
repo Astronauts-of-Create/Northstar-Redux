@@ -87,7 +87,7 @@ public class MartianGrassBlock extends Block implements BonemealableBlock  {
                 for(int z = -2; z <= 2; z++) {
                     BlockPos pos = new BlockPos(pPos.getX() + x, pPos.getY() + y, pPos.getZ() + z);
                     BlockState state = level.getBlockState(pos.below());
-                    if(level.getBlockState(pos).isAir() && (state.is(NorthstarBlocks.MARTIAN_GRASS.get()) || state.is(NorthstarBlocks.MARS_SOIL.get())) && pRandom.nextInt(2) == 0) {
+                    if(level.getBlockState(pos).isAir() && (pState.is(NorthstarBlocks.MARTIAN_GRASS.get()) || state.is(NorthstarBlocks.MARS_SOIL.get())) && pRandom.nextInt(2) == 0) {
                         level.setBlock(pos, blockstate, 2);
                     }
                 }

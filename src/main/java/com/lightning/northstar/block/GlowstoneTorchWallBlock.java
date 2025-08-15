@@ -30,19 +30,20 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedBlock{
-      public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-        public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-       protected static final float AABB_OFFSET = 2.5F;
-       private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D),
-               Direction.SOUTH, Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D), Direction.WEST, Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D),
-               Direction.EAST, Block.box(0.0D, 3.0D, 5.5D, 5.0D, 13.0D, 10.5D)));
-    
+public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedBlock {
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    protected static final float AABB_OFFSET = 2.5F;
+    private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D),
+            Direction.SOUTH, Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D), Direction.WEST, Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D),
+            Direction.EAST, Block.box(0.0D, 3.0D, 5.5D, 5.0D, 13.0D, 10.5D)));
+
 
     public GlowstoneTorchWallBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
+
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return getShape(pState);
     }
@@ -51,26 +52,26 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
         return AABBS.get(pState.getValue(FACING));
     }
 
-    
-    
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         return pFacing.getOpposite() == pState.getValue(FACING) && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
     }
-    
+
     @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = this.defaultBlockState();
-        FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
+        FluidState fluidState = pContext.getLevel().getFluidState(pContext.getClickedPos());
         LevelReader levelreader = pContext.getLevel();
         BlockPos blockpos = pContext.getClickedPos();
         Direction[] adirection = pContext.getNearestLookingDirections();
-              
-        for(Direction direction : adirection) {
+
+        for (Direction direction : adirection) {
             if (direction.getAxis().isHorizontal()) {
                 Direction direction1 = direction.getOpposite();
                 blockstate = blockstate.setValue(FACING, direction1);
                 if (blockstate.canSurvive(levelreader, blockpos)) {
-                    return blockstate.setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
+                    return blockstate.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
                 }
             }
         }
@@ -91,15 +92,17 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
         BlockState blockstate = pLevel.getBlockState(blockpos);
         return blockstate.isFaceSturdy(pLevel, blockpos, direction);
     }
+
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         Direction direction = pState.getValue(FACING);
-        double d0 = (double)pPos.getX() + 0.5D;
-        double d1 = (double)pPos.getY() + 0.7D;
-        double d2 = (double)pPos.getZ() + 0.5D;
+        double d0 = (double) pPos.getX() + 0.5D;
+        double d1 = (double) pPos.getY() + 0.7D;
+        double d2 = (double) pPos.getZ() + 0.5D;
         Direction direction1 = direction.getOpposite();
         if (pRandom.nextInt(4) == 0)
-            pLevel.addParticle(new GlowstoneParticleData(), d0 + 0.27D * (double)direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double)direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+            pLevel.addParticle(new GlowstoneParticleData(), d0 + 0.27D * (double) direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
     }
+
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING, WATERLOGGED);
     }

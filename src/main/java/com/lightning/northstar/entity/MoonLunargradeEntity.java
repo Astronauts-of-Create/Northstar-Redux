@@ -156,8 +156,7 @@ public class MoonLunargradeEntity extends Monster implements GeoAnimatable, Rang
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean canContinueToUse() {
-            if (this.mob instanceof MoonLunargradeEntity) {
-                MoonLunargradeEntity lunargrade = (MoonLunargradeEntity) this.mob;
+            if (this.mob instanceof MoonLunargradeEntity lunargrade) {
                 if (lunargrade.didSpit) {
                     lunargrade.setDidSpit(false);
                     return false;

@@ -8,13 +8,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import java.util.List;
 
 public class StructureFeatureConfig implements FeatureConfiguration  {
-    public static final Codec<StructureFeatureConfig> CODEC = RecordCodecBuilder.create((p_159816_) -> {
-        return p_159816_.group(ResourceLocation.CODEC.listOf().fieldOf("structures").forGetter((p_159830_) -> {
-            return p_159830_.structures;
-        }), Codec.intRange(-100, 100).fieldOf("vertical_offset").forGetter((p_160970_) -> {
-             return p_160970_.verticalOffset;
-        })).apply(p_159816_, StructureFeatureConfig::new);    
-    });
+    public static final Codec<StructureFeatureConfig> CODEC = RecordCodecBuilder.create((p_159816_) -> p_159816_.group(ResourceLocation.CODEC.listOf().fieldOf("structures").forGetter((p_159830_) -> p_159830_.structures), Codec.intRange(-100, 100).fieldOf("vertical_offset").forGetter((p_160970_) -> p_160970_.verticalOffset)).apply(p_159816_, StructureFeatureConfig::new));
     public final List<ResourceLocation> structures;
     public final int verticalOffset;
     

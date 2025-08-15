@@ -241,9 +241,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
         public CobraLookForPlayerGoal(MarsCobraEntity coberuh, @Nullable Predicate<LivingEntity> pSelectionPredicate) {
             super(coberuh, Player.class, 10, false, false, pSelectionPredicate);
             this.cobra = coberuh;
-            this.startAggroTargetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector((p_32578_) -> {
-                return coberuh.isLookingAtMe((Player) p_32578_);
-            });
+            this.startAggroTargetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector((p_32578_) -> coberuh.isLookingAtMe((Player) p_32578_));
         }
 
         public boolean canUse() {

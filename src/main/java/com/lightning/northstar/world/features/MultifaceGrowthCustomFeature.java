@@ -58,7 +58,7 @@ public class MultifaceGrowthCustomFeature extends Feature<MultifaceGrowthConfigu
         for(BlockPos blockpos1 : BlockPos.betweenClosed(pos.offset(-radius, -radius / 2, -radius), pos.offset(radius, radius / 2, radius))) {
             int difX = blockpos1.getX() - pos.getX();
             int difZ = blockpos1.getZ() - pos.getZ();
-            List<Direction> dirs = new ArrayList<Direction>();
+            List<Direction> dirs = new ArrayList<>();
             if (difX * difX + difZ * difZ <= radius * radius - 0.1) {
                 for(Direction direction : Direction.values()) {
                     BlockState blockstate = level.getBlockState(mutable.setWithOffset(blockpos1, direction));

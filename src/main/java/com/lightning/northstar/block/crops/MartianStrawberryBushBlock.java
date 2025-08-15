@@ -38,7 +38,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
 
     public MartianStrawberryBushBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), Integer.valueOf(0)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0));
     }
 
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -66,7 +66,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     }
 
     public BlockState getStateForAge(int pAge) {
-        return this.defaultBlockState().setValue(this.getAgeProperty(), Integer.valueOf(pAge));
+        return this.defaultBlockState().setValue(this.getAgeProperty(), pAge);
     }
 
     public boolean isMaxAge(BlockState pState) {

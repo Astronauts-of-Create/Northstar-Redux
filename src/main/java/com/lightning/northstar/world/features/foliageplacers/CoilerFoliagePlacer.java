@@ -11,9 +11,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
 public class CoilerFoliagePlacer extends FoliagePlacer {
-   public static final Codec<CoilerFoliagePlacer> CODEC = RecordCodecBuilder.create((p_68380_) -> {
-      return foliagePlacerParts(p_68380_).apply(p_68380_, CoilerFoliagePlacer::new);
-   });
+   public static final Codec<CoilerFoliagePlacer> CODEC = RecordCodecBuilder.create((p_68380_) -> foliagePlacerParts(p_68380_).apply(p_68380_, CoilerFoliagePlacer::new));
 
    public CoilerFoliagePlacer(IntProvider int1, IntProvider int2) {
       super(int1, int2);

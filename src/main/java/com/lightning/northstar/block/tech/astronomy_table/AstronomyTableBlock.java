@@ -41,54 +41,53 @@ public class AstronomyTableBlock extends Block implements IBE<AstronomyTableBloc
         super(properties);
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
     }
-    
+
+    @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
-    
+
+    @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE_COLLISION;
-     }
+    }
 
-     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        switch ((Direction)pState.getValue(FACING)) {
-           case NORTH:
-              return SHAPE_NORTH;
-           case SOUTH:
-              return SHAPE_SOUTH;
-           case EAST:
-              return SHAPE_EAST;
-           case WEST:
-              return SHAPE_WEST;
-           default:
-              return SHAPE_COMMON;
-        }
-     }
-    
-    
-     @Override
-      public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-            if (!pLevel.isClientSide()) {
-                BlockEntity entity = pLevel.getBlockEntity(pPos);
-                if(entity instanceof AstronomyTableBlockEntity) {
-                    NetworkHooks.openScreen(((ServerPlayer)pPlayer), (AstronomyTableBlockEntity)entity, pPos);
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return switch (pState.getValue(FACING)) {
+            case NORTH -> SHAPE_NORTH;
+            case SOUTH -> SHAPE_SOUTH;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+            default -> SHAPE_COMMON;
+        };
+    }
 
-                } else {
-                    throw new IllegalStateException("Our Container provider is missing!");
-                }
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide()) {
+            BlockEntity entity = pLevel.getBlockEntity(pPos);
+            if (entity instanceof AstronomyTableBlockEntity) {
+                NetworkHooks.openScreen(((ServerPlayer) pPlayer), (AstronomyTableBlockEntity) entity, pPos);
+
+            } else {
+                throw new IllegalStateException("Our Container provider is missing!");
             }
-
-            return InteractionResult.sidedSuccess(pLevel.isClientSide());
         }
 
-     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
-     }
-     
-     
+        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+    }
+
     @Override
     public Class<AstronomyTableBlockEntity> getBlockEntityClass() {
         return AstronomyTableBlockEntity.class;
@@ -98,6 +97,6 @@ public class AstronomyTableBlock extends Block implements IBE<AstronomyTableBloc
     public BlockEntityType<? extends AstronomyTableBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.ASTRONOMY_TABLE.get();
     }
-    
+
 
 }

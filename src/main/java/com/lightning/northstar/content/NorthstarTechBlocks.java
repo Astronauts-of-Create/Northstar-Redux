@@ -31,7 +31,6 @@ import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
 import com.simibubi.create.foundation.data.*;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.LanternBlock;
@@ -58,7 +57,6 @@ public class NorthstarTechBlocks {
                     .noOcclusion())
             .transform(axeOrPickaxe())
             .blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
-            .addLayer(() -> RenderType::cutoutMipped)
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 128.0))
             .onRegister(BlockStressValues.setGeneratorSpeed(SolarPanelBlock.getSpeedRange().getSecond(), true))
             .item()
@@ -73,7 +71,6 @@ public class NorthstarTechBlocks {
                     .noOcclusion())
             .properties(p -> p.sound(SoundType.COPPER))
             .transform(pickaxeOnly())
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
 
             .register();
@@ -110,7 +107,6 @@ public class NorthstarTechBlocks {
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             //.transform(CStress.setImpact(16.0))
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -123,7 +119,6 @@ public class NorthstarTechBlocks {
                     .strength(6, 6))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -138,7 +133,6 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -152,7 +146,6 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -168,7 +161,6 @@ public class NorthstarTechBlocks {
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 256))
             .onRegister(BlockStressValues.setGeneratorSpeed(CombustionEngineBlock.getSpeedRange().getSecond(), true))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -179,7 +171,6 @@ public class NorthstarTechBlocks {
                     .noOcclusion()
                     .isViewBlocking(NorthstarTechBlocks::never))
             .transform(pickaxeOnly())
-            .addLayer(() -> RenderType::cutoutMipped)
             .onRegister(MovementBehaviour.movementBehaviour(new JetEngineMovementBehaviour()))
             .item(JetEngineItem::new)
             .build()
@@ -202,7 +193,6 @@ public class NorthstarTechBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
-            .addLayer(() -> RenderType::cutoutMipped)
             .onRegister(MovementBehaviour.movementBehaviour(new BasinMovementBehaviour()))
             .item()
             .transform(customItemModel("_", "block"))
@@ -215,7 +205,6 @@ public class NorthstarTechBlocks {
                     .isViewBlocking(NorthstarTechBlocks::never)
                     .sound(SoundType.NETHERITE_BLOCK).noOcclusion())
             .transform(pickaxeOnly())
-            .addLayer(() -> RenderType::cutoutMipped)
             .item()
             .transform(customItemModel("_", "block"))
             .register();
@@ -279,7 +268,6 @@ public class NorthstarTechBlocks {
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
                     .instabreak())
-            .addLayer(() -> RenderType::cutoutMipped)
             .register();
 
     public static final BlockEntry<ExtinguishedTorchWallBlock> EXTINGUISHED_TORCH_WALL = REGISTRATE
@@ -287,14 +275,12 @@ public class NorthstarTechBlocks {
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
                     .instabreak())
-            .addLayer(() -> RenderType::cutoutMipped)
             .register();
 
     public static final BlockEntry<ExtinguishedLanternBlock> EXTINGUISHED_LANTERN = REGISTRATE
             .block("extinguished_lantern", ExtinguishedLanternBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.sound(SoundType.LANTERN))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -305,7 +291,6 @@ public class NorthstarTechBlocks {
                     .sound(SoundType.METAL)
                     .noCollission()
                     .instabreak())
-            .addLayer(() -> RenderType::cutoutMipped)
             .register();
 
     public static final BlockEntry<GlowstoneTorchWallBlock> GLOWSTONE_TORCH_WALL = REGISTRATE
@@ -315,7 +300,6 @@ public class NorthstarTechBlocks {
                     .sound(SoundType.METAL)
                     .noCollission()
                     .instabreak())
-            .addLayer(() -> RenderType::cutoutMipped)
             .register();
 
     public static final BlockEntry<LanternBlock> GLOWSTONE_LANTERN = REGISTRATE
@@ -324,7 +308,6 @@ public class NorthstarTechBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .lightLevel(value -> 15)
                     .sound(SoundType.LANTERN))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -334,7 +317,6 @@ public class NorthstarTechBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_PURPLE)
                     .lightLevel(value -> 5)
                     .sound(SoundType.AMETHYST_CLUSTER))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 
@@ -344,7 +326,6 @@ public class NorthstarTechBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .lightLevel(value -> 7)
                     .sound(SoundType.AMETHYST_CLUSTER))
-            .addLayer(() -> RenderType::cutoutMipped)
             .simpleItem()
             .register();
 

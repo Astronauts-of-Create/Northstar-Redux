@@ -7,13 +7,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 
 public class HugeFungusConfig implements FeatureConfiguration {
-    public static final Codec<HugeFungusConfig> CODEC = RecordCodecBuilder.create((p_225468_) -> {
-          return p_225468_.group(BlockStateProvider.CODEC.fieldOf("trunk_provider").forGetter((p_161248_) -> {
-             return p_161248_.trunkProvider;
-          }), TrunkPlacer.CODEC.fieldOf("trunk_placer").forGetter((p_161246_) -> {
-             return p_161246_.trunkPlacer;
-          })).apply(p_225468_, HugeFungusConfig::new);
-       });
+    public static final Codec<HugeFungusConfig> CODEC = RecordCodecBuilder.create((p_225468_) -> p_225468_.group(BlockStateProvider.CODEC.fieldOf("trunk_provider").forGetter((p_161248_) -> p_161248_.trunkProvider), TrunkPlacer.CODEC.fieldOf("trunk_placer").forGetter((p_161246_) -> p_161246_.trunkPlacer)).apply(p_225468_, HugeFungusConfig::new));
        //TODO: Review this, see if we can hook in the sapling into the Codec
        public final BlockStateProvider trunkProvider;
        public final TrunkPlacer trunkPlacer;

@@ -64,7 +64,7 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
 //                         newoxy += oxytarget;
 //                         System.out.println("oxytarget " + oxytarget);
 //                         thing.putInt("Oxygen", newoxy);
-//                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
+//                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
 //                         item.getOrCreateTagElement("display").put("Lore", lore);
 //                         item.setTag(thing);
 //                         System.out.println(thing);
@@ -76,7 +76,7 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
 //                         newoxy += this.tank.getPrimaryHandler().getFluidAmount();
 //                         System.out.println("oxytarget " + oxytarget);
 //                         thing.putInt("Oxygen", newoxy);
-//                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal( "Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
+//                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
 //                         item.getOrCreateTagElement("display").put("Lore", lore);
 //                         item.setTag(thing);
 //                         System.out.println(thing);

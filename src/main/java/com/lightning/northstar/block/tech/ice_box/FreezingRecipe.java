@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
 
     //im gonna cry I just want this to work
@@ -36,9 +35,8 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
         if (filter == null)
             return false;
 
-        boolean filterTest = filter.test(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
-        if (recipe instanceof FreezingRecipe) {
-            FreezingRecipe FreezingRecipe = (FreezingRecipe) recipe;
+        boolean filterTest = filter.test(recipe.getResultItem(iceBox.getLevel().registryAccess()));
+        if (recipe instanceof FreezingRecipe FreezingRecipe) {
             if (FreezingRecipe.getRollableResults()
                     .isEmpty()
                     && !FreezingRecipe.getFluidResults()
@@ -80,9 +78,7 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
             int[] extractedFluidsFromTank = new int[availableFluids.getTanks()];
 
             Ingredients:
-            for (int i = 0; i < ingredients.size(); i++) {
-                Ingredient ingredient = ingredients.get(i);
-
+            for (Ingredient ingredient : ingredients) {
                 for (int slot = 0; slot < availableItems.getSlots(); slot++) {
                     if (simulate && availableItems.getStackInSlot(slot)
                             .getCount() <= extractedItemsFromSlot[slot])
@@ -102,8 +98,7 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
 
             boolean fluidsAffected = false;
             FluidIngredients:
-            for (int i = 0; i < fluidIngredients.size(); i++) {
-                FluidIngredient fluidIngredient = fluidIngredients.get(i);
+            for (FluidIngredient fluidIngredient : fluidIngredients) {
                 int amountRequired = fluidIngredient.getRequiredAmount();
 
                 for (int tank = 0; tank < availableFluids.getTanks(); tank++) {

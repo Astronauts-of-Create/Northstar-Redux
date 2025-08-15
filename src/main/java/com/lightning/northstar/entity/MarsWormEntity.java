@@ -243,7 +243,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
 
         if (level instanceof ServerLevel serverlevel) {
             if (notTargetUUID != null) {
-                notTarget = (LivingEntity) ((ServerLevel) level).getEntity(notTargetUUID);
+                notTarget = (LivingEntity) serverlevel.getEntity(notTargetUUID);
                 notTargetUUID = null;
             }
 

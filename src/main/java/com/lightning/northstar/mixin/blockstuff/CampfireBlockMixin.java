@@ -28,7 +28,7 @@ public class CampfireBlockMixin {
             if(item.is(Items.CAMPFIRE)) {
                 if(!OxygenStuff.hasOxygen(pos, level.dimension())) {
                     info.cancel();
-                    info.setReturnValue(Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.WATERLOGGED, Boolean.valueOf(flag))
+                    info.setReturnValue(Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.WATERLOGGED, flag)
                             .setValue(CampfireBlock.LIT, false).setValue(CampfireBlock.FACING, pContext.getHorizontalDirection()));
 
                 }

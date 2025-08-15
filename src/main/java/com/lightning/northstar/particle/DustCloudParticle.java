@@ -75,8 +75,7 @@ public class DustCloudParticle extends SimpleAnimatedParticle {
     public static class Data extends BasicParticleData<DustCloudParticle> {
         @Override
         public IBasicParticleFactory<DustCloudParticle> getBasicFactory() {
-            return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new DustCloudParticle(worldIn, x, y, z, vx, vy, vz,
-                    spriteSet);
+            return DustCloudParticle::new;
         }
 
         @Override

@@ -25,7 +25,7 @@ public class SulfurPoofParticleData implements ParticleOptions, ICustomParticleD
     .apply(i, SulfurPoofParticleData::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<SulfurPoofParticleData> DESERIALIZER = new ParticleOptions.Deserializer<SulfurPoofParticleData>() {
+    public static final ParticleOptions.Deserializer<SulfurPoofParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public SulfurPoofParticleData fromCommand(ParticleType<SulfurPoofParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');

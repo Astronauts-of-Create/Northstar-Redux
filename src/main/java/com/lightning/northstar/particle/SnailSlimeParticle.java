@@ -66,8 +66,7 @@ public class SnailSlimeParticle  extends SimpleAnimatedParticle {
     public static class Data extends BasicParticleData<SnailSlimeParticle> {
         @Override
         public IBasicParticleFactory<SnailSlimeParticle> getBasicFactory() {
-            return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new SnailSlimeParticle(worldIn, x, y, z, vx, vy, vz,
-                    spriteSet);
+            return SnailSlimeParticle::new;
         }
 
         @Override

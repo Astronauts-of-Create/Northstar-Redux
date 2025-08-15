@@ -73,8 +73,7 @@ public class RocketFlameParticle  extends SimpleAnimatedParticle {
     public static class Data extends BasicParticleData<RocketFlameParticle> {
         @Override
         public IBasicParticleFactory<RocketFlameParticle> getBasicFactory() {
-            return (worldIn, x, y, z, vx, vy, vz, spriteSet) -> new RocketFlameParticle(worldIn, x, y, z, vx, vy, vz,
-                    spriteSet);
+            return RocketFlameParticle::new;
         }
 
         @Override

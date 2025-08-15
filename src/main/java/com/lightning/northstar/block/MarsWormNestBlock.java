@@ -76,7 +76,7 @@ public class MarsWormNestBlock extends Block {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource pRandom) {
-        if (state.getValue(HAS_EGG).booleanValue() && pRandom.nextInt(9) == 0) {
+        if (state.getValue(HAS_EGG) && pRandom.nextInt(9) == 0) {
             MarsWormEntity baby = NorthstarEntityTypes.MARS_WORM.get().create(level);
             baby.setBaby(true);
             baby.eggTimer = 12000;

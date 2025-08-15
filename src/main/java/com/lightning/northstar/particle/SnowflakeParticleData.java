@@ -25,7 +25,7 @@ public class SnowflakeParticleData implements ParticleOptions, ICustomParticleDa
     .apply(i, SnowflakeParticleData::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleOptions.Deserializer<SnowflakeParticleData> DESERIALIZER = new ParticleOptions.Deserializer<SnowflakeParticleData>() {
+    public static final ParticleOptions.Deserializer<SnowflakeParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         public SnowflakeParticleData fromCommand(ParticleType<SnowflakeParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');

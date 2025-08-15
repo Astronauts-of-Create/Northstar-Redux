@@ -34,7 +34,7 @@ public class SphereFeature extends Feature<SphereConfig>  {
         * Places the given feature at the given location.
         * During world generation, features are provided with a 3x3 region of chunks, centered on the chunk being generated,
         * that they can safely generate into.
-        * @param pContext A context object with a reference to the level and the position the feature is being placed at
+        * @param context A context object with a reference to the level and the position the feature is being placed at
         */
        public boolean place(FeaturePlaceContext<SphereConfig> context) {
            SphereConfig config = context.config();
@@ -107,7 +107,7 @@ public class SphereFeature extends Feature<SphereConfig>  {
              double d7 = 0.0D;
 
              for(Pair<BlockPos, Integer> pair : list) {
-                d6 += Mth.fastInvSqrt(blockpos3.distSqr(pair.getFirst()) + (double)pair.getSecond().intValue()) + d8;
+                d6 += Mth.fastInvSqrt(blockpos3.distSqr(pair.getFirst()) + (double) pair.getSecond()) + d8;
              }
 
              for(BlockPos blockpos6 : list1) {
@@ -159,7 +159,7 @@ public class SphereFeature extends Feature<SphereConfig>  {
                 BlockPos blockpos5 = blockpos4.relative(direction);
                 BlockState blockstate2 = worldgenlevel.getBlockState(blockpos5);
                 if (blockstate1.hasProperty(BlockStateProperties.WATERLOGGED)) {
-                   blockstate1 = blockstate1.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(blockstate2.getFluidState().isSource()));
+                   blockstate1 = blockstate1.setValue(BlockStateProperties.WATERLOGGED, blockstate2.getFluidState().isSource());
                 }
              }
           }

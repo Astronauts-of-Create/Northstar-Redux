@@ -26,7 +26,7 @@ public class CandleBlockMixin {
             if(pState.is(BlockTags.CANDLES)) {
                 System.out.println(OxygenStuff.hasOxygen(pCurrentPos,((Level)pLevel).dimension()));
                 if(!OxygenStuff.hasOxygen(pCurrentPos,((Level)pLevel).dimension()) && pState.getValue(CandleBlock.LIT)) {
-                    if(!pState.canSurvive(pLevel, pCurrentPos)) {
+                    if(! pState.canSurvive(pLevel, pCurrentPos)) {
                         info.setReturnValue(Blocks.AIR.defaultBlockState());
                         return;
                     }

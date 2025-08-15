@@ -28,18 +28,17 @@ public class MercuryCactusFeature extends Feature<NoneFeatureConfiguration> {
         {return false;}
         int caveHeight = caveCeilingPos.getY() / 2;
         RandomSource rando = pContext.random();
-        int height = caveHeight;
-//        int height = rando.nextInt(5, 10);
+        //        int height = rando.nextInt(5, 10);
         
-        for(int i = 0; i < height;) {
+        for(int i = 0; i < caveHeight;) {
             if(level.getBlockState(newpos).isAir() || level.getBlockState(newpos).canBeReplaced())
             {level.setBlock(newpos, NorthstarBlocks.MERCURY_CACTUS.get().defaultBlockState(), 3);}else 
             {i+=99999;}
-            if(i == height - 1) {
-                placeBranch(level, newpos, rando, (int)(height * 2.2f), Direction.NORTH, rando.nextInt(1, 3));
-                placeBranch(level, newpos, rando, (int)(height * 2.2f), Direction.SOUTH, rando.nextInt(1, 3));
-                placeBranch(level, newpos, rando, (int)(height * 2.2f), Direction.EAST, rando.nextInt(1, 3));
-                placeBranch(level, newpos, rando, (int)(height * 2.2f), Direction.WEST, rando.nextInt(1, 3));
+            if(i == caveHeight - 1) {
+                placeBranch(level, newpos, rando, (int)(caveHeight * 2.2f), Direction.NORTH, rando.nextInt(1, 3));
+                placeBranch(level, newpos, rando, (int)(caveHeight * 2.2f), Direction.SOUTH, rando.nextInt(1, 3));
+                placeBranch(level, newpos, rando, (int)(caveHeight * 2.2f), Direction.EAST, rando.nextInt(1, 3));
+                placeBranch(level, newpos, rando, (int)(caveHeight * 2.2f), Direction.WEST, rando.nextInt(1, 3));
             }
             if(rando.nextInt(4) == 0 && i > 2) {
                 newpos.move(Direction.Plane.HORIZONTAL.getRandomDirection(rando));

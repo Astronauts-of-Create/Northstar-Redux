@@ -346,8 +346,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             for (int roll = 0; roll < rolls; roll++) {
                 List<ItemStack> rolledResults = ((FreezingRecipe) currentRecipe)
                         .rollResults();
-                for (int i = 0; i < rolledResults.size(); i++) {
-                    ItemStack stack = rolledResults.get(i);
+                for (ItemStack stack : rolledResults) {
                     ItemHelper.addToList(stack, list);
                 }
             }

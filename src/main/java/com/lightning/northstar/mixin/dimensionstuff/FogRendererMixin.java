@@ -163,9 +163,7 @@ public abstract class FogRendererMixin {
             float f11 = Mth.clamp(Mth.cos(level.getTimeOfDay(pPartialTicks) * ((float)Math.PI * 2F)) * 2.0F + 0.5F, 0.0F, 1.0F);
             BiomeManager biomemanager = level.getBiomeManager();
             Vec3 vec31 = cam.getPosition().subtract(2.0D, 2.0D, 2.0D).scale(0.25D);
-            Vec3 vec32 = CubicSampler.gaussianSampleVec3(vec31, (p_109033_, p_109034_, p_109035_) -> {
-               return level.effects().getBrightnessDependentFogColor(Vec3.fromRGB24(biomemanager.getNoiseBiomeAtQuart(p_109033_, p_109034_, p_109035_).value().getFogColor()), f11);
-            });
+            Vec3 vec32 = CubicSampler.gaussianSampleVec3(vec31, (p_109033_, p_109034_, p_109035_) -> level.effects().getBrightnessDependentFogColor(Vec3.fromRGB24(biomemanager.getNoiseBiomeAtQuart(p_109033_, p_109034_, p_109035_).value().getFogColor()), f11));
             fogRed = (float)vec32.x();
             fogGreen = (float)vec32.y();
             fogBlue = (float)vec32.z();
@@ -221,9 +219,7 @@ public abstract class FogRendererMixin {
             float f11 = Mth.clamp(Mth.cos(level.getTimeOfDay(pPartialTicks) * ((float)Math.PI * 2F)) * 2.0F + 0.5F, 0.0F, 1.0F);
             BiomeManager biomemanager = level.getBiomeManager();
             Vec3 vec31 = cam.getPosition().subtract(2.0D, 2.0D, 2.0D).scale(0.25D);
-            Vec3 vec32 = CubicSampler.gaussianSampleVec3(vec31, (p_109033_, p_109034_, p_109035_) -> {
-               return level.effects().getBrightnessDependentFogColor(Vec3.fromRGB24(biomemanager.getNoiseBiomeAtQuart(p_109033_, p_109034_, p_109035_).value().getFogColor()), f11);
-            });
+            Vec3 vec32 = CubicSampler.gaussianSampleVec3(vec31, (p_109033_, p_109034_, p_109035_) -> level.effects().getBrightnessDependentFogColor(Vec3.fromRGB24(biomemanager.getNoiseBiomeAtQuart(p_109033_, p_109034_, p_109035_).value().getFogColor()), f11));
             fogRed = (float)vec32.x();
             fogGreen = (float)vec32.y();
             fogBlue = (float)vec32.z();
@@ -282,9 +278,7 @@ public abstract class FogRendererMixin {
             float f11 = Mth.clamp(Mth.cos(level.getTimeOfDay(pPartialTicks) * ((float)Math.PI * 2F)) * 2.0F + 0.5F, 0.0F, 1.0F);
             BiomeManager biomemanager = level.getBiomeManager();
             Vec3 vec31 = cam.getPosition().subtract(2.0D, 2.0D, 2.0D).scale(0.25D);
-            Vec3 vec32 = CubicSampler.gaussianSampleVec3(vec31, (p_109033_, p_109034_, p_109035_) -> {
-               return level.effects().getBrightnessDependentFogColor(Vec3.fromRGB24(biomemanager.getNoiseBiomeAtQuart(p_109033_, p_109034_, p_109035_).value().getFogColor()), f11);
-            });
+            Vec3 vec32 = CubicSampler.gaussianSampleVec3(vec31, (p_109033_, p_109034_, p_109035_) -> level.effects().getBrightnessDependentFogColor(Vec3.fromRGB24(biomemanager.getNoiseBiomeAtQuart(p_109033_, p_109034_, p_109035_).value().getFogColor()), f11));
             fogRed = (float)vec32.x();
             fogGreen = (float)vec32.y();
             fogBlue = (float)vec32.z();

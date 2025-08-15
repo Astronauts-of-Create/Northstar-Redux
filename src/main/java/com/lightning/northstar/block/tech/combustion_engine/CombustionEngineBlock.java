@@ -47,7 +47,6 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
 
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return switch (pState.getValue(HORIZONTAL_FACING)) {
-            case NORTH -> SHAPE_NORTH_SOUTH;
             case EAST, WEST -> SHAPE_EAST_WEST;
             default -> SHAPE_NORTH_SOUTH;
         };

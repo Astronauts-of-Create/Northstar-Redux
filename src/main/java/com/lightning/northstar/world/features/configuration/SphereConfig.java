@@ -11,35 +11,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 
 public class SphereConfig implements FeatureConfiguration{
        public static final Codec<Double> CHANCE_RANGE = Codec.doubleRange(0.0D, 1.0D);
-       public static final Codec<SphereConfig> CODEC = RecordCodecBuilder.create((p_160842_) -> {
-              return p_160842_.group(GeodeBlockSettings.CODEC.fieldOf("blocks").forGetter((p_160868_) -> {
-                 return p_160868_.geodeBlockSettings;
-              }), GeodeLayerSettings.CODEC.fieldOf("layers").forGetter((p_160866_) -> {
-                 return p_160866_.geodeLayerSettings;
-              }), GeodeCrackSettings.CODEC.fieldOf("crack").forGetter((p_160864_) -> {
-                 return p_160864_.geodeCrackSettings;
-              }), CHANCE_RANGE.fieldOf("use_potential_placements_chance").orElse(0.35D).forGetter((p_160862_) -> {
-                 return p_160862_.usePotentialPlacementsChance;
-              }), CHANCE_RANGE.fieldOf("use_alternate_layer0_chance").orElse(0.0D).forGetter((p_160860_) -> {
-                 return p_160860_.useAlternateLayer0Chance;
-              }), Codec.BOOL.fieldOf("placements_require_layer0_alternate").orElse(true).forGetter((p_160858_) -> {
-                 return p_160858_.placementsRequireLayer0Alternate;
-              }), IntProvider.codec(1, 256).fieldOf("outer_wall_distance").orElse(UniformInt.of(4, 5)).forGetter((p_160856_) -> {
-                 return p_160856_.outerWallDistance;
-              }), IntProvider.codec(1, 20).fieldOf("distribution_points").orElse(UniformInt.of(3, 4)).forGetter((p_160854_) -> {
-                 return p_160854_.distributionPoints;
-              }), IntProvider.codec(0, 10).fieldOf("point_offset").orElse(UniformInt.of(1, 2)).forGetter((p_160852_) -> {
-                 return p_160852_.pointOffset;
-              }), Codec.INT.fieldOf("min_gen_offset").orElse(-16).forGetter((p_160850_) -> {
-                 return p_160850_.minGenOffset;
-              }), Codec.INT.fieldOf("max_gen_offset").orElse(16).forGetter((p_160848_) -> {
-                 return p_160848_.maxGenOffset;
-              }), CHANCE_RANGE.fieldOf("noise_multiplier").orElse(0.05D).forGetter((p_160846_) -> {
-                 return p_160846_.noiseMultiplier;
-              }), Codec.INT.fieldOf("invalid_blocks_threshold").forGetter((p_160844_) -> {
-                 return p_160844_.invalidBlocksThreshold;
-              })).apply(p_160842_, SphereConfig::new);
-           });
+       public static final Codec<SphereConfig> CODEC = RecordCodecBuilder.create((p_160842_) -> p_160842_.group(GeodeBlockSettings.CODEC.fieldOf("blocks").forGetter((p_160868_) -> p_160868_.geodeBlockSettings), GeodeLayerSettings.CODEC.fieldOf("layers").forGetter((p_160866_) -> p_160866_.geodeLayerSettings), GeodeCrackSettings.CODEC.fieldOf("crack").forGetter((p_160864_) -> p_160864_.geodeCrackSettings), CHANCE_RANGE.fieldOf("use_potential_placements_chance").orElse(0.35D).forGetter((p_160862_) -> p_160862_.usePotentialPlacementsChance), CHANCE_RANGE.fieldOf("use_alternate_layer0_chance").orElse(0.0D).forGetter((p_160860_) -> p_160860_.useAlternateLayer0Chance), Codec.BOOL.fieldOf("placements_require_layer0_alternate").orElse(true).forGetter((p_160858_) -> p_160858_.placementsRequireLayer0Alternate), IntProvider.codec(1, 256).fieldOf("outer_wall_distance").orElse(UniformInt.of(4, 5)).forGetter((p_160856_) -> p_160856_.outerWallDistance), IntProvider.codec(1, 20).fieldOf("distribution_points").orElse(UniformInt.of(3, 4)).forGetter((p_160854_) -> p_160854_.distributionPoints), IntProvider.codec(0, 10).fieldOf("point_offset").orElse(UniformInt.of(1, 2)).forGetter((p_160852_) -> p_160852_.pointOffset), Codec.INT.fieldOf("min_gen_offset").orElse(-16).forGetter((p_160850_) -> p_160850_.minGenOffset), Codec.INT.fieldOf("max_gen_offset").orElse(16).forGetter((p_160848_) -> p_160848_.maxGenOffset), CHANCE_RANGE.fieldOf("noise_multiplier").orElse(0.05D).forGetter((p_160846_) -> p_160846_.noiseMultiplier), Codec.INT.fieldOf("invalid_blocks_threshold").forGetter((p_160844_) -> p_160844_.invalidBlocksThreshold)).apply(p_160842_, SphereConfig::new));
     
        public final GeodeBlockSettings geodeBlockSettings;
        public final GeodeLayerSettings geodeLayerSettings;

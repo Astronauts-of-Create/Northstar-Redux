@@ -81,7 +81,7 @@ public class VenusVinesBlock extends Block implements BonemealableBlock {
     public void performBonemeal(ServerLevel pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         BlockPos blockpos = pPos.relative(Direction.DOWN);
         int i = Math.min(pState.getValue(AGE) + 1, 25);
-        pLevel.setBlockAndUpdate(blockpos, pState.setValue(AGE, Integer.valueOf(i)));
+        pLevel.setBlockAndUpdate(blockpos, pState.setValue(AGE, i));
         blockpos = blockpos.relative(Direction.DOWN);
         i = Math.min(i + 1, 25);
     }

@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.9.+"
 }
 
-version = "0.2.3+1.20.1" // https://semver.org/
+version = "0.2.6+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -38,27 +38,38 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
+    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
+        credentials {
+            username = project.property("github.packages.username") as? String
+            password = project.property("github.packages.password") as? String
+        }
+    }
+    maven("https://cursemaven.com") {
+        content {
+            includeGroup("curse.maven")
+        }
+    }
 }
 
 dependencies {
-    // TODO: regroup versions in a separate place
-    minecraft("com.mojang:minecraft:1.20.1")
+    minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
-    "forge"("net.minecraftforge:forge:1.20.1-47.4.0")
+    "forge"(libs.forge)
 
-    annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
-    implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
+    annotationProcessor(libs.mixinextras.common)
+    implementation(libs.mixinextras.forge)
 
-    modImplementation("com.simibubi.create:create-1.20.1:6.0.6-205:slim")
-    modImplementation("net.createmod.ponder:Ponder-Forge-1.20.1:1.0.83")
-    modImplementation("com.tterrag.registrate:Registrate:MC1.20-1.3.3")
-    modCompileOnly("dev.engine-room.flywheel:flywheel-forge-api-1.20.1:1.0.2")
-    modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-1.20.1:1.0.2")
+    modImplementation(variantOf(libs.create) { classifier("slim") })
+    modImplementation(libs.ponder.forge)
+    modImplementation(libs.registrate)
+    modCompileOnly(libs.flywheel.forge.api)
+    modRuntimeOnly(libs.flywheel.forge)
 
-    modImplementation("software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2")
-    forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20") // required by GeckoLib
+    modImplementation(libs.geckolib.forge)
+    forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
-    modImplementation("mezz.jei:jei-1.20.1-forge:15.20.0.112")
+    modImplementation(libs.jei.forge)
+    modImplementation(libs.copycats)
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
@@ -70,12 +81,12 @@ tasks.processResources {
 tasks.jar {
     manifest {
         attributes(mapOf(
-            "Specification-Title"      to "northstar",
-            "Specification-Vendor"     to "Redstonneur1256",
-            "Specification-Version"    to version,
-            "Implementation-Title"     to project.name,
-            "Implementation-Version"   to version,
-            "Implementation-Vendor"    to "Redstonneur1256",
+            "Specification-Title" to "northstar",
+            "Specification-Vendor" to "Redstonneur1256",
+            "Specification-Version" to version,
+            "Implementation-Title" to project.name,
+            "Implementation-Version" to version,
+            "Implementation-Vendor" to "Redstonneur1256",
             "Implementation-Timestamp" to Instant.now().toString()
         ))
     }

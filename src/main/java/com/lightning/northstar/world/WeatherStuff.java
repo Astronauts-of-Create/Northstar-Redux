@@ -22,7 +22,7 @@ public class WeatherStuff {
         STORMY
     }
 
-    public static Map<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> managedPlanets = new HashMap<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>>();
+    public static Map<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> managedPlanets = new HashMap<>();
 
 //    @SubscribeEvent
 //    public static void onWorldTick(TickEvent.LevelTickEvent event){
