@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
 
     //im gonna cry I just want this to work
@@ -36,7 +35,7 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
         if (filter == null)
             return false;
 
-        boolean filterTest = filter.test(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
+        boolean filterTest = filter.test(recipe.getResultItem(iceBox.getLevel().registryAccess()));
         if (recipe instanceof FreezingRecipe FreezingRecipe) {
             if (FreezingRecipe.getRollableResults()
                     .isEmpty()
