@@ -45,6 +45,7 @@ repositories {
             password = project.property("github.packages.password") as? String
         }
     }
+    maven("https://maven.ftb.dev/releases")
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
@@ -60,10 +61,7 @@ dependencies {
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
 
-    modImplementation(variantOf(libs.create) { classifier("slim") }) {
-        exclude(mapOf("group" to "dev.ftb.mods"))
-    }
-    //modImplementation(libs.ponder.forge)
+    modImplementation(variantOf(libs.create) { classifier("slim") })
     modImplementation(libs.registrate)
     modImplementation(libs.flywheel.forge)
 
@@ -71,6 +69,13 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
+
+    // see https://github.com/cc-tweaked/CC-Tweaked/discussions/1752
+    forgeRuntimeLibrary("org.squiddev:Cobalt:0.7.3")
+    forgeRuntimeLibrary("com.jcraft:jzlib:1.1.3")
+    forgeRuntimeLibrary("io.netty:netty-codec-http:4.1.82.Final")
+    forgeRuntimeLibrary("io.netty:netty-codec-socks:4.1.82.Final")
+    forgeRuntimeLibrary("io.netty:netty-handler-proxy:4.1.82.Final")
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
