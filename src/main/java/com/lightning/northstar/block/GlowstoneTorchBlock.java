@@ -35,14 +35,17 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE));
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return AABB;
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(WATERLOGGED);
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = this.defaultBlockState();
@@ -54,6 +57,7 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
     }
 
 
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if (OxygenStuff.hasOxygen(pCurrentPos, ((Level) pLevel).dimension())) {
@@ -61,15 +65,18 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
         return pFacing == Direction.DOWN && !this.canSurvive(pState, pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return canSupportCenter(pLevel, pPos.below(), Direction.UP);
     }
 
+    @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         double d0 = (double) pPos.getX() + 0.5D;
         double d1 = (double) pPos.getY() + 0.7D;

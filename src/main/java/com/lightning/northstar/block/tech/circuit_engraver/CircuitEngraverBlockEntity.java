@@ -11,17 +11,18 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,13 +64,13 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity implements En
 
     @Override
     public boolean tryProcessOnBelt(TransportedItemStack input, List<ItemStack> outputList, boolean simulate) {
-        Optional<EngravingRecipe> recipe = getRecipe(input.stack);
+        Optional<RecipeHolder<EngravingRecipe>> recipe = getRecipe(input.stack);
         if (!recipe.isPresent())
             return false;
         if (simulate)
             return true;
         EngravingBehaviour.particleItems.add(input.stack);
-        List<ItemStack> outputs = RecipeApplier.applyRecipeOn(level, canProcessInBulk() ? input.stack : ItemHandlerHelper.copyStackWithSize(input.stack, 1), recipe.get());
+        List<ItemStack> outputs = RecipeApplier.applyRecipeOn(level, canProcessInBulk() ? input.stack : input.stack.copyWithCount(1), recipe.get());
 
         for (ItemStack created : outputs) {
             if (!created.isEmpty()) {
@@ -119,7 +120,7 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity implements En
     @Override
     public boolean tryProcessInWorld(ItemEntity itemEntity, boolean simulate) {
         ItemStack item = itemEntity.getItem();
-        Optional<EngravingRecipe> recipe = getRecipe(item);
+        Optional<RecipeHolder<EngravingRecipe>> recipe = getRecipe(item);
         if (!recipe.isPresent())
             return false;
         if (simulate)
@@ -128,10 +129,10 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity implements En
         ItemStack itemCreated = ItemStack.EMPTY;
         EngravingBehaviour.particleItems.add(item);
         if (canProcessInBulk() || item.getCount() == 1) {
-            RecipeApplier.applyRecipeOn(itemEntity, recipe.get());
+            RecipeApplier.applyRecipeOn(itemEntity, recipe.get().value());
             itemCreated = itemEntity.getItem().copy();
         } else {
-            for (ItemStack result : RecipeApplier.applyRecipeOn(level, ItemHandlerHelper.copyStackWithSize(item, 1),
+            for (ItemStack result : RecipeApplier.applyRecipeOn(level, item.copyWithCount(1),
                     recipe.get())) {
                 if (itemCreated.isEmpty())
                     itemCreated = result.copy();
@@ -148,13 +149,10 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity implements En
 
     private static final RecipeWrapper engraverInv = new RecipeWrapper(new ItemStackHandler(1));
 
-    public Optional<EngravingRecipe> getRecipe(ItemStack item) {
-        Optional<EngravingRecipe> assemblyRecipe =
-                SequencedAssemblyRecipe.getRecipe(level, item, NorthstarRecipeTypes.ENGRAVING.getType(), EngravingRecipe.class);
+    public Optional<RecipeHolder<EngravingRecipe>> getRecipe(ItemStack item) {
+        Optional<RecipeHolder<EngravingRecipe>> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(level, item, NorthstarRecipeTypes.ENGRAVING.getType(), EngravingRecipe.class);
         if (assemblyRecipe.isPresent())
             return assemblyRecipe;
-
-        engraverInv.setItem(0, item);
         return NorthstarRecipeTypes.ENGRAVING.find(engraverInv, level);
     }
 
@@ -179,17 +177,19 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity implements En
     }
 
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
 
+        compound.putBoolean("Running", engravingBehaviour.running);
+        compound.putInt("Ticks", engravingBehaviour.runningTicks);
     }
 
     @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
+
         engravingBehaviour.running = compound.getBoolean("Running");
         engravingBehaviour.runningTicks = compound.getInt("Ticks");
-        super.read(compound, clientPacket);
     }
-
 
 }

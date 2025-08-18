@@ -4,13 +4,13 @@ import com.lightning.northstar.Northstar;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Locale;
 import java.util.function.Supplier;
@@ -32,8 +32,7 @@ public enum NorthstarParticles {
     private final ParticleEntry<?> entry;
 
     <D extends ParticleOptions> NorthstarParticles(Supplier<? extends ICustomParticleData<D>> typeFactory) {
-        String name = name().toLowerCase(Locale.ROOT);
-        entry = new ParticleEntry<>(name, typeFactory);
+        entry = new ParticleEntry<>(name().toLowerCase(Locale.ROOT), typeFactory);
     }
 
     public static void register(IEventBus modEventBus) {
@@ -55,11 +54,11 @@ public enum NorthstarParticles {
     }
 
     private static class ParticleEntry<D extends ParticleOptions> {
-        private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Northstar.MOD_ID);
+        private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(Registries.PARTICLE_TYPE, Northstar.MOD_ID);
 
         private final String name;
         private final Supplier<? extends ICustomParticleData<D>> typeFactory;
-        private final RegistryObject<ParticleType<D>> object;
+        private final DeferredHolder<ParticleType<?>, ParticleType<D>> object;
 
         public ParticleEntry(String name, Supplier<? extends ICustomParticleData<D>> typeFactory) {
             this.name = name;
@@ -69,8 +68,7 @@ public enum NorthstarParticles {
 
         @OnlyIn(Dist.CLIENT)
         public void registerFactory(RegisterParticleProvidersEvent event) {
-            typeFactory.get()
-                .register(object.get(), event);
+            typeFactory.get().register(object.get(), event);
         }
 
     }

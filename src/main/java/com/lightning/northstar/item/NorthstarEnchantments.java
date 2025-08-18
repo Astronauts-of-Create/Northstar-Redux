@@ -1,23 +1,61 @@
 package com.lightning.northstar.item;
 
-import com.lightning.northstar.item.enchantments.FrostbiteEnchantment;
-import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.enchantment.Enchantment.Rarity;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
-
-import static com.lightning.northstar.Northstar.REGISTRATE;
+import com.lightning.northstar.Northstar;
+import com.lightning.northstar.item.enchantments.FrostbiteEffect;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 
 public class NorthstarEnchantments {
 
-    public static final RegistryEntry<FrostbiteEnchantment> FROSTBITE = REGISTRATE
-            .object("frostbite")
-            .enchantment(EnchantmentCategory.WEAPON, FrostbiteEnchantment::new)
-            .addSlots(EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)
-            .lang("Frostbite")
-            .rarity(Rarity.VERY_RARE)
-            .register();
+    public static final ResourceKey<Enchantment>
+            FROSTBITE = key("frostbite");
 
-    public static void register() {}
+    private static ResourceKey<Enchantment> key(String name) {
+        return ResourceKey.create(Registries.ENCHANTMENT, Northstar.asResource(name));
+    }
+
+    public static void bootstrap(BootstrapContext<Enchantment> context) {
+        HolderGetter<Item> itemHolderGetter = context.lookup(Registries.ITEM);
+
+        register(
+                context,
+                FROSTBITE,
+                Enchantment.enchantment(
+                        Enchantment.definition(
+                                itemHolderGetter.getOrThrow(ItemTags.SWORDS),
+                                10,
+                                3,
+                                Enchantment.dynamicCost(0, 10),
+                                Enchantment.dynamicCost(25, 10),
+                                1,
+                                EquipmentSlotGroup.MAINHAND, EquipmentSlotGroup.OFFHAND
+                        )
+                ).exclusiveWith(
+                        HolderSet.direct(context.lookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.FIRE_ASPECT))
+                ).withEffect(
+                        EnchantmentEffectComponents.POST_ATTACK,
+                        EnchantmentTarget.ATTACKER,
+                        EnchantmentTarget.VICTIM,
+                        new FrostbiteEffect()
+                )
+        );
+    }
+
+    private static void register(BootstrapContext<Enchantment> context, ResourceKey<Enchantment> key, Enchantment.Builder builder) {
+        context.register(key, builder.build(key.location()));
+    }
+
+    public static void bootstrapEffects(BootstrapContext<MapCodec<? extends EnchantmentEntityEffect>> context) {
+        context.register(ResourceKey.create(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Northstar.asResource("frostbite")), FrostbiteEffect.CODEC);
+    }
 
 }

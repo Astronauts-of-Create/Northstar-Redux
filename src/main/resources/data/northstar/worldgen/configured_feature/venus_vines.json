@@ -15,10 +15,8 @@
     },
     "size": {
       "type": "minecraft:uniform",
-      "value": {
-        "min_inclusive": 6,
-        "max_inclusive": 20
-      }
+      "min_inclusive": 6,
+      "max_inclusive": 20
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.lightning.northstar.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,11 +20,19 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public class MercuryCactusBlock extends PipeBlock {
 
+    public static final MapCodec<MercuryCactusBlock> CODEC = simpleCodec(MercuryCactusBlock::new);
+
     public MercuryCactusBlock(BlockBehaviour.Properties pProperties) {
         super(0.3125F, pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, Boolean.FALSE).setValue(EAST, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE).setValue(WEST, Boolean.FALSE).setValue(UP, Boolean.FALSE).setValue(DOWN, Boolean.FALSE));
     }
 
+    @Override
+    protected MapCodec<? extends PipeBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.getStateForPlacement(pContext.getLevel(), pContext.getClickedPos());
     }
@@ -44,9 +53,10 @@ public class MercuryCactusBlock extends PipeBlock {
                 .setValue(WEST, blockstate5.is(this) || blockstate5.isSolidRender(pLevel, pPos.west()));
     }
 
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         BlockState newState = this.defaultBlockState();
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BlockPos blockpos = pCurrentPos.relative(direction);
             BlockState blockstate1 = pLevel.getBlockState(blockpos);
             if (blockstate1.is(this) || blockstate1.isSolidRender(pLevel, blockpos)) {
@@ -57,22 +67,25 @@ public class MercuryCactusBlock extends PipeBlock {
 
     }
 
+    @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         BlockState newState = this.updateShape(pState, Direction.UP, pState, pLevel, pPos, pPos);
-        if (! pState.canSurvive(pLevel, pPos)) {
+        if (!pState.canSurvive(pLevel, pPos)) {
 // kind of debating whether i should keep this or not
 //            pLevel.destroyBlock(pPos, true);
         }
         pLevel.setBlock(pPos, newState, 3);
     }
 
+    @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         entity.hurt(level.damageSources().cactus(), 1.0F);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         BlockState blockstate = pLevel.getBlockState(pPos.below());
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BlockPos blockpos = pPos.relative(direction);
             BlockState blockstate1 = pLevel.getBlockState(blockpos);
             if (blockstate1.is(this) || blockstate1.isSolidRender(pLevel, blockpos)) {
@@ -83,6 +96,7 @@ public class MercuryCactusBlock extends PipeBlock {
         return blockstate.is(this) || blockstate.isSolidRender(pLevel, pPos);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
     }

@@ -8,9 +8,7 @@
     "sky_color": 15857065,
     "fog_color": 14538752,
     "water_color": 4159204,
-    "water_fog_color": 329011,
-    "particle": {
-    }
+    "water_fog_color": 329011
   },
   "spawners": {
     "monster": [
@@ -48,7 +46,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "minecraft:lake_lava_underground"
     ],

@@ -36,10 +36,12 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(DIRECTION, Direction.UP).setValue(WATERLOGGED, Boolean.FALSE).setValue(POWER, 1));
     }
 
+    @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         updateColumn(pLevel, pPos, pState, pLevel.getBlockState(pPos.relative(pState.getValue(DIRECTION).getOpposite())));
     }
 
+    @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         double d0 = (double) pPos.getX();
         double d1 = (double) pPos.getY();
@@ -107,7 +109,7 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
         if (!pEntity.fireImmune()) {
             pEntity.setRemainingFireTicks(pEntity.getRemainingFireTicks() + 1);
             if (pEntity.getRemainingFireTicks() == 0) {
-                pEntity.setSecondsOnFire(8);
+                pEntity.setRemainingFireTicks(8);
             }
         }
 
@@ -140,10 +142,12 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
         }
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(DIRECTION, WATERLOGGED, POWER);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         Direction direction = pState.getValue(DIRECTION);
         BlockPos blockpos = pPos.relative(direction.getOpposite());
@@ -156,23 +160,28 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
                 pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get());
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(DIRECTION, pContext.getClickedFace());
     }
 
+    @Override
     public BlockState rotate(BlockState pState, Rotation pRotation) {
         return pState.setValue(DIRECTION, pRotation.rotate(pState.getValue(DIRECTION)));
     }
 
+    @Override
     public PushReaction getPistonPushReaction(BlockState pState) {
         return PushReaction.DESTROY;
     }
 
+    @Override
     public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
         pLevel.scheduleTick(pPos, this, 0);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         pLevel.scheduleTick(pCurrentPos, this, 1);

@@ -1,64 +1,46 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
+import com.lightning.northstar.content.NorthstarPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 
 public class TemperatureRegulatorEditPacket extends BlockEntityConfigurationPacket<TemperatureRegulatorBlockEntity> {
 
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
-    private int sizeChangeX;
-    private int sizeChangeY;
-    private int sizeChangeZ;
+    public static final StreamCodec<ByteBuf, TemperatureRegulatorEditPacket> STREAM_CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, packet -> packet.pos,
+            BlockPos.STREAM_CODEC, packet -> packet.offset,
+            BlockPos.STREAM_CODEC, packet -> packet.size,
+            ByteBufCodecs.INT, packet -> packet.temp,
+            ByteBufCodecs.BOOL, packet -> packet.envFill,
+            TemperatureRegulatorEditPacket::new
+    );
+
+    private BlockPos offset;
+    private BlockPos size;
     private int temp;
     private boolean envFill;
 
-    public TemperatureRegulatorEditPacket(FriendlyByteBuf buffer) {
-        super(buffer);
-    }
-
-    public TemperatureRegulatorEditPacket(BlockPos pos, int offX, int offY, int offZ, int sizeX, int sizeY, int sizeZ, int tempChange, boolean envFill) {
+    public TemperatureRegulatorEditPacket(BlockPos pos, BlockPos offset, BlockPos size, int temp, boolean envFill) {
         super(pos);
-        this.offsetX = offX;
-        this.offsetY = offY;
-        this.offsetZ = offZ;
-        this.sizeChangeX = sizeX;
-        this.sizeChangeY = sizeY;
-        this.sizeChangeZ = sizeZ;
-        this.temp = tempChange;
+        this.offset = offset;
+        this.size = size;
+        this.temp = temp;
         this.envFill = envFill;
     }
 
     @Override
-    protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(offsetX);
-        buffer.writeVarInt(offsetY);
-        buffer.writeVarInt(offsetZ);
-        buffer.writeVarInt(sizeChangeX);
-        buffer.writeVarInt(sizeChangeY);
-        buffer.writeVarInt(sizeChangeZ);
-        buffer.writeVarInt(temp);
-        buffer.writeBoolean(envFill);
+    public PacketTypeProvider getTypeProvider() {
+        return NorthstarPackets.UPDATE_TEMPERATURE_REGULATOR;
     }
 
     @Override
-    protected void readSettings(FriendlyByteBuf buffer) {
-        offsetX = buffer.readVarInt();
-        offsetY = buffer.readVarInt();
-        offsetZ = buffer.readVarInt();
-        sizeChangeX = buffer.readVarInt();
-        sizeChangeY = buffer.readVarInt();
-        sizeChangeZ = buffer.readVarInt();
-        temp = buffer.readVarInt();
-        envFill = buffer.readBoolean();
-    }
-
-    @Override
-    protected void applySettings(TemperatureRegulatorBlockEntity be) {
-        be.changeTemp(temp);
-        be.changeSize(sizeChangeX, sizeChangeY, sizeChangeZ, offsetX, offsetY, offsetZ, envFill);
+    protected void applySettings(ServerPlayer player, TemperatureRegulatorBlockEntity entity) {
+        entity.changeTemp(temp);
+        entity.changeSize(size.getX(), size.getY(), size.getZ(), offset.getX(), offset.getY(), offset.getZ(), envFill);
     }
 
 }

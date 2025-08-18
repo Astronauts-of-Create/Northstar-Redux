@@ -2,34 +2,37 @@ package com.lightning.northstar.block;
 
 import com.lightning.northstar.content.NorthstarBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.PlantType;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.util.TriState;
 
-import javax.annotation.Nullable;
+public class MarsSoilBlock extends Block {
 
-public class MarsSoilBlock extends Block{
-    
     public MarsSoilBlock(Properties properties) {
         super(properties);
     }
+
     @Override
-    @Nullable
-    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
-        if (toolAction.equals(ToolActions.HOE_TILL) && context.getLevel().getBlockState(context.getClickedPos().above()).isAir()) {
+    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+        if (itemAbility.equals(ItemAbilities.HOE_TILL) && context.getLevel().getBlockState(context.getClickedPos().above()).isAir()) {
             return NorthstarBlocks.MARS_FARMLAND.get().defaultBlockState();
         }
-        return null;
-    }
-    @Override
-    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, net.minecraft.core.Direction facing, net.minecraftforge.common.IPlantable plantable) {
-        net.minecraftforge.common.PlantType plantType = plantable.getPlantType(world, pos.relative(facing));
-        return plantType != PlantType.CROP && plantType != PlantType.WATER;
+        return super.getToolModifiedState(state, context, itemAbility, simulate);
     }
 
+    @Override
+    public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant) {
+        if (plant.getBlock() instanceof CropBlock || plant.is(BlockTags.CROPS)) {
+            return TriState.FALSE;
+        }
+        return super.canSustainPlant(state, level, soilPosition, facing, plant);
+    }
 
 }

@@ -1,13 +1,16 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.entity.goals.LayEggInNestGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -38,11 +41,10 @@ import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -52,8 +54,8 @@ import java.util.function.BiConsumer;
 
 public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationSystem {
 
-    private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", 0.2D, AttributeModifier.Operation.ADDITION);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = Northstar.asResource("attacking");
+    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID, 0.2D, AttributeModifier.Operation.ADD_VALUE);
     private static final EntityDataAccessor<Integer> CLIENT_ANGER_LEVEL = SynchedEntityData.defineId(MarsWormEntity.class, EntityDataSerializers.INT);
 
     private final AnimatableInstanceCache animatableCache = GeckoLibUtil.createInstanceCache(this);
@@ -73,7 +75,8 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
 
     public MarsWormEntity(EntityType<? extends MarsWormEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.setMaxUpStep(1.0F);
+
+        getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1);
 
         dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
         vibrationUser = new VibrationUser();
@@ -146,7 +149,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         }
 
         @Override
-        public boolean canReceiveVibration(ServerLevel level, BlockPos pos, GameEvent event, Context context) {
+        public boolean canReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> event, Context context) {
             if (!isNoAi() && !isDeadOrDying() && !getBrain().hasMemoryValue(MemoryModuleType.VIBRATION_COOLDOWN) && level.getWorldBorder().isWithinBounds(pos) && !isRemoved() && level() == level) {
                 Entity entity = context.sourceEntity();
                 if (entity instanceof LivingEntity livingentity) {
@@ -160,7 +163,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         }
 
         @Override
-        public void onReceiveVibration(ServerLevel level, BlockPos pos, GameEvent event, @Nullable Entity entity, @Nullable Entity player, float distance) {
+        public void onReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> event, @Nullable Entity entity, @Nullable Entity player, float distance) {
             //System.out.println("Big Bazinga 24");
             if (!isDeadOrDying()) {
                 brain.setMemoryWithExpiry(MemoryModuleType.VIBRATION_COOLDOWN, Unit.INSTANCE, 40L);
@@ -207,9 +210,10 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
             return false;
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CLIENT_ANGER_LEVEL, 0);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CLIENT_ANGER_LEVEL, 0);
     }
 
     public int getClientAngerLevel() {
@@ -312,6 +316,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         super.tick();
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("aggro", aggro);
@@ -322,6 +327,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         pCompound.putInt("angerTimer", angerTimer);
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("aggro")) {
@@ -335,6 +341,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
     }
 
 
+    @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         boolean flag = super.hurt(pSource, pAmount);
         if (!this.level().isClientSide && !this.isNoAi()) {
@@ -351,14 +358,15 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         return flag;
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {
-            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                 attributeinstance.addTransientModifier(SPEED_MODIFIER_ATTACKING);
             }
 
-        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
             attributeinstance.removeModifier(SPEED_MODIFIER_ATTACKING);
         }
 
@@ -388,6 +396,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         return NorthstarSounds.MARS_WORM_HURT.get();
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         super.getDeathSound();
         return NorthstarSounds.MARS_WORM_DEATH.get();

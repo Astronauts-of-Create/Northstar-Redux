@@ -4,11 +4,11 @@ import com.google.common.base.Objects;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.tterrag.registrate.util.RegistrateDistExecutor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
 
 import java.util.UUID;
 
@@ -35,7 +35,7 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
 
         rce.setControllingPlayer(player.getUUID());
         if (player.level().isClientSide)
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsHandler.startControlling(rce, localPos));
+            RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsHandler.startControlling(rce, localPos));
         return true;
     }
 

@@ -3,6 +3,7 @@ package com.lightning.northstar.block;
 import com.lightning.northstar.block.entity.VenusExhaustBlockEntity;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.particle.SulfurPoofParticleData;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -17,8 +18,15 @@ import javax.annotation.Nullable;
 
 public class VenusExhaustBlock extends BaseEntityBlock implements IBE<VenusExhaustBlockEntity> {
 
-    public VenusExhaustBlock(Properties pProperties) {
-        super(pProperties);
+    private static final MapCodec<VenusExhaustBlock> CODEC = simpleCodec(VenusExhaustBlock::new);
+
+    public VenusExhaustBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     public static void makeParticles(Level level, BlockPos pos) {
@@ -39,11 +47,13 @@ public class VenusExhaustBlock extends BaseEntityBlock implements IBE<VenusExhau
         }
     }
 
+    @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, NorthstarBlockEntityTypes.VENUS_EXHAUST.get(), VenusExhaustBlockEntity::particleTick);
     }
 
+    @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }

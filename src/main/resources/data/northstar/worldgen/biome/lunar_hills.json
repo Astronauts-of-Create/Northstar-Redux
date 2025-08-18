@@ -39,7 +39,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:moon_andesite_blob",
       "northstar:moon_ore_copper",

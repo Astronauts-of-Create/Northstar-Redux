@@ -4,6 +4,7 @@ import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.entity.MoonLunargradeEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,6 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 
 public class LunargradeSpit extends Projectile {
 
@@ -33,11 +35,12 @@ public class LunargradeSpit extends Projectile {
            /**
             * Called to update the entity's position/logic.
             */
+    @Override
     public void tick() {
         super.tick();
         Vec3 vec3 = this.getDeltaMovement();
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-        if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult))
+        if (hitresult.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hitresult))
             this.onHit(hitresult);
         double newX = this.getX() + vec3.x;
         double newY = this.getY() + vec3.y;
@@ -60,6 +63,7 @@ public class LunargradeSpit extends Projectile {
            /**
             * Called when the arrow hits an entity
             */
+    @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         Entity entity = this.getOwner();
@@ -69,6 +73,7 @@ public class LunargradeSpit extends Projectile {
 
     }
 
+    @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
         if (!this.level().isClientSide) {
@@ -77,9 +82,11 @@ public class LunargradeSpit extends Projectile {
 
     }
 
-    protected void defineSynchedData() {
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
+    @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         double d0 = pPacket.getXa();

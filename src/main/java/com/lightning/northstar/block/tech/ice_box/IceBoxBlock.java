@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,12 +36,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenchable {
 
@@ -64,34 +62,28 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
         return InteractionResult.SUCCESS;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(handIn);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return onBlockEntityUseItemOn(level, pos, be -> {
+            if (!stack.isEmpty()) {
+                if (FluidHelper.tryEmptyItemIntoBE(level, player, hand, stack, be))
+                    return ItemInteractionResult.SUCCESS;
+                if (FluidHelper.tryFillItemFromBE(level, player, hand, stack, be))
+                    return ItemInteractionResult.SUCCESS;
 
-        return onBlockEntityUse(worldIn, pos, be -> {
-            if (!heldItem.isEmpty()) {
-                if (FluidHelper.tryEmptyItemIntoBE(worldIn, player, handIn, heldItem, be))
-                    return InteractionResult.SUCCESS;
-                if (FluidHelper.tryFillItemFromBE(worldIn, player, handIn, heldItem, be))
-                    return InteractionResult.SUCCESS;
+                if (GenericItemEmptying.canItemBeEmptied(level, stack)
+                        || GenericItemFilling.canItemBeFilled(level, stack))
+                    return ItemInteractionResult.SUCCESS;
 
-                if (GenericItemEmptying.canItemBeEmptied(worldIn, heldItem)
-                        || GenericItemFilling.canItemBeFilled(worldIn, heldItem))
-                    return InteractionResult.SUCCESS;
-                if (heldItem.getItem()
-                        .equals(Items.SPONGE)
-                        && !be.getCapability(ForgeCapabilities.FLUID_HANDLER)
-                        .map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
-                        .orElse(FluidStack.EMPTY)
-                        .isEmpty()) {
-                    return InteractionResult.SUCCESS;
+
+                if (stack.getItem().equals(Items.SPONGE) &&
+                        be.fluidCapability.drain(Integer.MAX_VALUE, FluidAction.EXECUTE).isEmpty()) {
+                    return ItemInteractionResult.SUCCESS;
                 }
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
 
-            IItemHandlerModifiable inv = be.itemCapability.orElse(new ItemStackHandler(1));
+            IItemHandlerModifiable inv = be.itemCapability;
             boolean success = false;
             for (int slot = 0; slot < inv.getSlots(); slot++) {
                 ItemStack stackInSlot = inv.getStackInSlot(slot);
@@ -103,22 +95,22 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
                 success = true;
             }
             if (success)
-                worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
                         1f + Create.RANDOM.nextFloat());
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         });
     }
 
     @Override
-    public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
-        super.updateEntityAfterFallOn(worldIn, entityIn);
-        if (!NorthstarTechBlocks.ICE_BOX.has(worldIn.getBlockState(entityIn.blockPosition())))
+    public void updateEntityAfterFallOn(BlockGetter level, Entity entityIn) {
+        super.updateEntityAfterFallOn(level, entityIn);
+        if (!NorthstarTechBlocks.ICE_BOX.has(level.getBlockState(entityIn.blockPosition())))
             return;
         if (!(entityIn instanceof ItemEntity itemEntity))
             return;
         if (!entityIn.isAlive())
             return;
-        withBlockEntityDo(worldIn, entityIn.blockPosition(), be -> {
+        withBlockEntityDo(level, entityIn.blockPosition(), be -> {
 
             // Tossed items bypass the quarter-stack limit
             be.inputInventory.withMaxStackSize(64);
@@ -141,7 +133,7 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return AllShapes.BASIN_BLOCK_SHAPE;
     }
 
@@ -153,8 +145,8 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        IBE.onRemove(state, worldIn, pos, newState);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        IBE.onRemove(state, level, pos, newState);
     }
 
     @Override
@@ -163,8 +155,8 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        return getBlockEntityOptional(worldIn, pos).map(IceBoxBlockEntity::getInputInventory)
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
+        return getBlockEntityOptional(level, pos).map(IceBoxBlockEntity::getInputInventory)
                 .map(ItemHelper::calcRedstoneFromInventory)
                 .orElse(0);
     }
@@ -180,7 +172,8 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
+
 }

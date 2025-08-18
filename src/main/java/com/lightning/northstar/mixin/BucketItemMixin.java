@@ -21,6 +21,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.common.SoundActions;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,13 +32,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 
 @Mixin(BucketItem.class)
-public abstract class BucketItemMixin extends Item{    
+public abstract class BucketItemMixin extends Item {
+
     @Shadow
     @Final
-    private Fluid content;
+    public Fluid content;
+
     public BucketItemMixin(Properties pProperties) {
         super(pProperties);
     }
+
     @SuppressWarnings("deprecation")
 //     @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
 //    at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
@@ -55,65 +59,66 @@ public abstract class BucketItemMixin extends Item{
             }
         }
     }
+
     @SuppressWarnings("deprecation")
     @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
-    at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
-    cancellable = true)
+            at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
+            cancellable = true)
     private void emptyContentsReal(@Nullable Player pPlayer, Level pLevel, BlockPos pPos, @Nullable BlockHitResult blockHitResult, ItemStack container, CallbackInfoReturnable<Boolean> info) {
 //        System.out.println("YOooo buckets are real");
         BucketItem item = (BucketItem) (Object) this;
- //       System.out.println(item.getFluid());
+        //       System.out.println(item.content);
         int temp = TemperatureStuff.getTemp(pPos, pLevel);
 //        System.out.println(temp);
         BlockState blockstate = pLevel.getBlockState(pPos);
-//        System.out.println(item.getFluid());
-        if(item.getFluid() == null)
+//        System.out.println(item.content);
+        if (item.content == null)
             return;
-        int boilingpoint = TemperatureStuff.getBoilingPoint(item.getFluid().defaultFluidState());
-        int freezingpoint = TemperatureStuff.getFreezingPoint(item.getFluid().defaultFluidState());
+        int boilingpoint = TemperatureStuff.getBoilingPoint(item.content.defaultFluidState());
+        int freezingpoint = TemperatureStuff.getFreezingPoint(item.content.defaultFluidState());
         Block block = pLevel.getBlockState(pPos).getBlock();
-        if (!(item.getFluid() instanceof FlowingFluid)) {
+        if (!(item.content instanceof FlowingFluid)) {
             return;
         } else if (pLevel.dimensionType().ultraWarm() && temp < boilingpoint && temp > freezingpoint) {
-            if(pLevel.getBlockState(pPos).is(Blocks.AIR) || pLevel.getBlockState(pPos).canBeReplaced(content)) {
-                if (!pLevel.setBlock(pPos, item.getFluid().defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
+            if (pLevel.getBlockState(pPos).is(Blocks.AIR) || pLevel.getBlockState(pPos).canBeReplaced(content)) {
+                if (!pLevel.setBlock(pPos, item.content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
                     return;
                 } else {
-                    this.playEmptySound(pPlayer, pLevel, pPos, item.getFluid());
+                    this.playEmptySound(pPlayer, pLevel, pPos, item.content);
                     info.setReturnValue(true);
                 }
-            }else if(block instanceof LiquidBlockContainer && ((LiquidBlockContainer)block).canPlaceLiquid(pLevel,pPos,blockstate,content)) {
-                ((LiquidBlockContainer)block).placeLiquid(pLevel, pPos, blockstate, ((FlowingFluid)this.content).getSource(false));
-                this.playEmptySound(pPlayer, pLevel, pPos, item.getFluid());
+            } else if (block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(pPlayer, pLevel, pPos, blockstate, content)) {
+                ((LiquidBlockContainer) block).placeLiquid(pLevel, pPos, blockstate, ((FlowingFluid) this.content).getSource(false));
+                this.playEmptySound(pPlayer, pLevel, pPos, item.content);
                 info.setReturnValue(true);
             }
-        } else if (temp < freezingpoint && item.getFluid().is(FluidTags.WATER) && pLevel.getBlockState(pPos).is(Blocks.AIR)) {
+        } else if (temp < freezingpoint && item.content.is(FluidTags.WATER) && pLevel.getBlockState(pPos).is(Blocks.AIR)) {
             if (!pLevel.setBlock(pPos, Blocks.ICE.defaultBlockState(), 11)) {
                 return;
             } else {
-                this.playEmptySound(pPlayer, pLevel, pPos, item.getFluid());
+                this.playEmptySound(pPlayer, pLevel, pPos, item.content);
                 info.setReturnValue(true);
             }
-        }
-        else if(temp > boilingpoint) {
+        } else if (temp > boilingpoint) {
             int i = pPos.getX();
             int j = pPos.getY();
             int k = pPos.getZ();
             pLevel.playSound(pPlayer, pPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.8F);
 
-            for(int l = 0; l < 8; ++l) {
-               pLevel.addParticle(ParticleTypes.LARGE_SMOKE, (double)i + Math.random(), (double)j + Math.random(), (double)k + Math.random(), 0.0D, 0.0D, 0.0D);
+            for (int l = 0; l < 8; ++l) {
+                pLevel.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0D, 0.0D, 0.0D);
             }
             info.setReturnValue(true);
 
         }
     }
-    
-    
+
+
     @SuppressWarnings("deprecation")
     protected void playEmptySound(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, Fluid content) {
-        SoundEvent soundevent = content.getFluidType().getSound(pPlayer, pLevel, pPos, net.minecraftforge.common.SoundActions.BUCKET_EMPTY);
-        if(soundevent == null) soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+        SoundEvent soundevent = content.getFluidType().getSound(pPlayer, pLevel, pPos, SoundActions.BUCKET_EMPTY);
+        if (soundevent == null)
+            soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
         pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
         pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
     }

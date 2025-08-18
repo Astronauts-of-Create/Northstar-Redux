@@ -1,46 +1,33 @@
 package com.lightning.northstar;
 
-import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsHandler;
-import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
-import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class NorthstarClient {
 
-    public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
+    public static void onCtorClient(IEventBus modEventBus) {
         modEventBus.addListener(NorthstarParticles::registerFactories);
 
         PonderIndex.addPlugin(new NorthstarPonderPlugin());
-    }
-
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        MenuScreens.register(NorthstarMenuTypes.TELESCOPE_MENU.get(), TelescopeScreen::new);
-        MenuScreens.register(NorthstarMenuTypes.ASTRONOMY_TABLE_MENU.get(), AstronomyTableScreen::new);
-        MenuScreens.register(NorthstarMenuTypes.ROCKET_STATION.get(), RocketStationScreen::new);
     }
 
     @SubscribeEvent
@@ -65,19 +52,14 @@ public class NorthstarClient {
         ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.METHANE.get(), RenderType.translucent());
     }
 
-    @EventBusSubscriber(Dist.CLIENT)
-    public static class ForgeBusEvents {
-        @SubscribeEvent
-        public static void onTick(ClientTickEvent event) {
-            if (event.phase == Phase.START) {
-                RocketControlsHandler.tick();
-            }
-        }
+    @SubscribeEvent
+    public static void onTick(ClientTickEvent.Pre event) {
+        RocketControlsHandler.tick();
+    }
 
-        @SubscribeEvent
-        public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_oxygen", RemainingOxygenOverlay.INSTANCE);
-        }
+    @SubscribeEvent
+    public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Northstar.asResource("remaining_oxygen"), RemainingOxygenOverlay.INSTANCE);
     }
 
 }

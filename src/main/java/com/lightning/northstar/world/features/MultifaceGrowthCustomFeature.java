@@ -19,6 +19,7 @@ public class MultifaceGrowthCustomFeature extends Feature<MultifaceGrowthConfigu
         super(pCodec);
     }
 
+    @Override
     public boolean place(FeaturePlaceContext<MultifaceGrowthConfiguration> pContext) {
           WorldGenLevel worldgenlevel = pContext.level();
           BlockPos blockpos = pContext.origin();

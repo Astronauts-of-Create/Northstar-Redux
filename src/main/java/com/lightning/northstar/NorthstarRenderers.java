@@ -5,16 +5,16 @@ import com.lightning.northstar.entity.projectiles.renderers.LunargradeSpitRender
 import com.lightning.northstar.entity.projectiles.renderers.VenusScorpionSpitRenderer;
 import com.lightning.northstar.entity.renderers.*;
 import com.lightning.northstar.entity.variants.renderers.FrozenZombieRenderer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
 public class NorthstarRenderers {
 
     @SubscribeEvent
-    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(NorthstarEntityTypes.VENUS_MIMIC.get(), VenusMimicRenderer::new);
         event.registerEntityRenderer(NorthstarEntityTypes.VENUS_SCORPION.get(), VenusScorpionRenderer::new);
         event.registerEntityRenderer(NorthstarEntityTypes.VENUS_STONE_BULL.get(), VenusStoneBullRenderer::new);

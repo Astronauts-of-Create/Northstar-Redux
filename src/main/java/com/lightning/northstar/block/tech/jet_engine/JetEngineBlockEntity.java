@@ -14,9 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggl
 
     private static final int MAX_SIZE = 5;
 
-    protected LazyOptional<IFluidHandler> fluidCapability;
+    protected IFluidHandler fluidCapability;
     protected boolean forceFluidLevelUpdate;
     protected FluidTank tankInventory;
     protected BlockPos controller;
@@ -133,6 +132,7 @@ public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggl
         sendData();
     }
 
+    @Override
     public void removeController(boolean keepFluids) {
         if (level.isClientSide)
             return;

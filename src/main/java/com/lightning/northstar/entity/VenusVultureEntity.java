@@ -41,13 +41,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -134,11 +130,12 @@ public class VenusVultureEntity extends Monster implements GeoAnimatable {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(FLYING, (byte) 1);
-        this.entityData.define(IS_LANDING, (byte) 0);
-        this.entityData.define(IS_TAKING_OFF, (byte) 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+
+        builder.define(FLYING, (byte) 1);
+        builder.define(IS_LANDING, (byte) 0);
+        builder.define(IS_TAKING_OFF, (byte) 0);
     }
 
     @Override
@@ -225,6 +222,7 @@ public class VenusVultureEntity extends Monster implements GeoAnimatable {
         }
     }
 
+    @Override
     public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (this.isFood(itemstack)) {
@@ -304,6 +302,7 @@ public class VenusVultureEntity extends Monster implements GeoAnimatable {
         }
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("flying", this.isFlying());
@@ -312,6 +311,7 @@ public class VenusVultureEntity extends Monster implements GeoAnimatable {
         pCompound.putInt("timeForPathFinding", this.timeForPathFinding);
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("flying")) {
@@ -394,6 +394,7 @@ public class VenusVultureEntity extends Monster implements GeoAnimatable {
         super.registerGoals();
     }
 
+    @Override
     public boolean doHurtTarget(Entity pEntity) {
         this.level().broadcastEntityEvent(this, (byte) 4);
         this.playSound(SoundEvents.RAVAGER_ATTACK, 1.0F, 1.0F);

@@ -39,7 +39,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:mercury_crater",
       "northstar:mercury_crater_big",

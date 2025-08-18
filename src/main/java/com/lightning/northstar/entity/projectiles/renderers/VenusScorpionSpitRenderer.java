@@ -13,36 +13,38 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class VenusScorpionSpitRenderer extends EntityRenderer<VenusScorpionSpit> {
-       private static final ResourceLocation ACID_SPIT_LOCATION = Northstar.asResource("textures/entity/acid_spit.png");
-       private final LlamaSpitModel<VenusScorpionSpit> model;
+    private static final ResourceLocation ACID_SPIT_LOCATION = Northstar.asResource("textures/entity/acid_spit.png");
+    private final LlamaSpitModel<VenusScorpionSpit> model;
 
-       public VenusScorpionSpitRenderer(EntityRendererProvider.Context pContext) {
-          super(pContext);
-          this.model = new LlamaSpitModel<>(pContext.bakeLayer(ModelLayers.LLAMA_SPIT));
-       }
+    public VenusScorpionSpitRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext);
+        this.model = new LlamaSpitModel<>(pContext.bakeLayer(ModelLayers.LLAMA_SPIT));
+    }
 
-       public void render(VenusScorpionSpit pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
-          pMatrixStack.pushPose();
-          pMatrixStack.translate(0.0D, (double)0.15F, 0.0D);
-          pMatrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot()) - 90.0F));
-          pMatrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot())));
-          this.model.setupAnim(pEntity, pPartialTicks, 0.0F, -0.1F, 0.0F, 0.0F);
-          VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(ACID_SPIT_LOCATION));
-          this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-          pMatrixStack.popPose();
-          super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
-       }
+    @Override
+    public void render(VenusScorpionSpit pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+        pMatrixStack.pushPose();
+        pMatrixStack.translate(0.0D, (double) 0.15F, 0.0D);
+        pMatrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot()) - 90.0F));
+        pMatrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot())));
+        this.model.setupAnim(pEntity, pPartialTicks, 0.0F, -0.1F, 0.0F, 0.0F);
+        VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(ACID_SPIT_LOCATION));
+        this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
+        pMatrixStack.popPose();
+        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+    }
 
-       /**
-        * Returns the location of an entity's texture.
-        */
-       @Override
-       public ResourceLocation getTextureLocation(VenusScorpionSpit pEntity) {
-          return ACID_SPIT_LOCATION;
-       }
+    /**
+     * Returns the location of an entity's texture.
+     */
+    @Override
+    public ResourceLocation getTextureLocation(VenusScorpionSpit pEntity) {
+        return ACID_SPIT_LOCATION;
+    }
+
 }

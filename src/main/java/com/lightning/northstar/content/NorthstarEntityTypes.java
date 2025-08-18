@@ -17,74 +17,73 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityType.EntityFactory;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class NorthstarEntityTypes {
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Northstar.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, Northstar.MOD_ID);
 
     //actual animals / entities
-
-
+    
     // venus
-    public static final RegistryObject<EntityType<VenusMimicEntity>> VENUS_MIMIC = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<VenusMimicEntity>> VENUS_MIMIC = buildEntity(
             VenusMimicEntity::new, VenusMimicEntity.class, 1F, 1F, "venus_mimic", MobCategory.MONSTER, true, 8);
 
-    public static final RegistryObject<EntityType<VenusScorpionEntity>> VENUS_SCORPION = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<VenusScorpionEntity>> VENUS_SCORPION = buildEntity(
             VenusScorpionEntity::new, VenusScorpionEntity.class, 0.8F, 1.5F, "venus_scorpion", MobCategory.MONSTER, true, 8);
 
-    public static final RegistryObject<EntityType<VenusStoneBullEntity>> VENUS_STONE_BULL = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<VenusStoneBullEntity>> VENUS_STONE_BULL = buildEntity(
             VenusStoneBullEntity::new, VenusStoneBullEntity.class, 1.85F, 1.5F, "venus_stone_bull", MobCategory.MONSTER, true, 8);
 
-    public static final RegistryObject<EntityType<VenusVultureEntity>> VENUS_VULTURE = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<VenusVultureEntity>> VENUS_VULTURE = buildEntity(
             VenusVultureEntity::new, VenusVultureEntity.class, 0.8f, 0.9f, "venus_vulture", MobCategory.CREATURE, true, 16);
 
     //mars
-    public static final RegistryObject<EntityType<MarsWormEntity>> MARS_WORM = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MarsWormEntity>> MARS_WORM = buildEntity(
             MarsWormEntity::new, MarsWormEntity.class, 1.5f, 0.75f, "mars_worm", MobCategory.MONSTER, false, 8);
 
-    public static final RegistryObject<EntityType<MarsToadEntity>> MARS_TOAD = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MarsToadEntity>> MARS_TOAD = buildEntity(
             MarsToadEntity::new, MarsToadEntity.class, 0.7f, 0.5f, "mars_toad", MobCategory.MONSTER, false, 8);
 
-    public static final RegistryObject<EntityType<MarsCobraEntity>> MARS_COBRA = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MarsCobraEntity>> MARS_COBRA = buildEntity(
             MarsCobraEntity::new, MarsCobraEntity.class, 1f, 0.7f, "mars_cobra", MobCategory.MONSTER, false, 8);
 
-    public static final RegistryObject<EntityType<MarsMothEntity>> MARS_MOTH = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MarsMothEntity>> MARS_MOTH = buildEntity(
             MarsMothEntity::new, MarsMothEntity.class, 0.8f, 0.9f, "mars_moth", MobCategory.MONSTER, false, 8);
 
     //moon
-    public static final RegistryObject<EntityType<MoonLunargradeEntity>> MOON_LUNARGRADE = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MoonLunargradeEntity>> MOON_LUNARGRADE = buildEntity(
             MoonLunargradeEntity::new, MoonLunargradeEntity.class, 0.9f, 0.7f, "moon_lunargrade", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MoonSnailEntity>> MOON_SNAIL = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MoonSnailEntity>> MOON_SNAIL = buildEntity(
             MoonSnailEntity::new, MoonSnailEntity.class, 0.5f, 0.5f, "moon_snail", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MoonEelEntity>> MOON_EEL = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MoonEelEntity>> MOON_EEL = buildEntity(
             MoonEelEntity::new, MoonEelEntity.class, 0.5f, 0.3f, "moon_eel", MobCategory.MONSTER, false, 8);
 
 
-    public static final RegistryObject<EntityType<FrozenZombieEntity>> FROZEN_ZOMBIE = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<FrozenZombieEntity>> FROZEN_ZOMBIE = buildEntity(
             FrozenZombieEntity::new, FrozenZombieEntity.class, 0.6F, 1.95F, "frozen_zombie", MobCategory.MONSTER, false, 8);
 
     //mercury
-    public static final RegistryObject<EntityType<MercuryRaptorEntity>> MERCURY_RAPTOR = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MercuryRaptorEntity>> MERCURY_RAPTOR = buildEntity(
             MercuryRaptorEntity::new, MercuryRaptorEntity.class, 0.7f, 1.4f, "mercury_raptor", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MercuryRoachEntity>> MERCURY_ROACH = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MercuryRoachEntity>> MERCURY_ROACH = buildEntity(
             MercuryRoachEntity::new, MercuryRoachEntity.class, 0.6f, 0.5f, "mercury_roach", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MercuryTortoiseEntity>> MERCURY_TORTOISE = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<MercuryTortoiseEntity>> MERCURY_TORTOISE = buildEntity(
             MercuryTortoiseEntity::new, MercuryTortoiseEntity.class, 1f, 0.9f, "mercury_tortoise", MobCategory.MONSTER, false, 8);
 
 
     // misc
 
-    public static final RegistryObject<EntityType<LunargradeSpit>> LUNARGRADE_SPIT = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<LunargradeSpit>> LUNARGRADE_SPIT = buildEntity(
             LunargradeSpit::new, LunargradeSpit.class, 0.25f, 0.25f, "lunargrade_spit", MobCategory.MISC, false, 8);
-    public static final RegistryObject<EntityType<VenusScorpionSpit>> VENUS_SCORPION_SPIT = buildEntity(
+    public static final DeferredHolder<EntityType<?>, EntityType<VenusScorpionSpit>> VENUS_SCORPION_SPIT = buildEntity(
             VenusScorpionSpit::new, VenusScorpionSpit.class, 0.25f, 0.25f, "venus_scorpion_spit", MobCategory.MISC, false, 8);
 
     // contraptions
@@ -94,8 +93,8 @@ public class NorthstarEntityTypes {
                     .visual(() -> ContraptionVisual::new)
                     .register();
 
-    public static <T extends Entity> RegistryObject<EntityType<T>> buildEntity(EntityType.EntityFactory<T> entity,
-                                                                               Class<T> entityClass, float width, float height, String name, MobCategory category, boolean fireImmune, int clientRange) {
+    public static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> buildEntity(EntityFactory<T> entity,
+                                                                                              Class<T> entityClass, float width, float height, String name, MobCategory category, boolean fireImmune, int clientRange) {
         if (fireImmune) {
             return ENTITIES.register(name,
                     () -> EntityType.Builder.of(entity, category).fireImmune().sized(width, height).clientTrackingRange(clientRange).build(name));

@@ -3,6 +3,7 @@ package com.lightning.northstar.client.renderer.armor;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.content.NorthstarItems;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.mixin.accessor.EntityRenderDispatcherAccessor;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
@@ -72,7 +73,7 @@ public class SpaceSuitLayerRenderer<T extends LivingEntity, M extends EntityMode
     public static void registerOnAll(EntityRenderDispatcher renderManager) {
         for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap().values())
             registerOn(renderer);
-        for (EntityRenderer<?> renderer : renderManager.renderers.values())
+        for (EntityRenderer<?> renderer : ((EntityRenderDispatcherAccessor) renderManager).create$getRenderers().values())
             registerOn(renderer);
     }
 

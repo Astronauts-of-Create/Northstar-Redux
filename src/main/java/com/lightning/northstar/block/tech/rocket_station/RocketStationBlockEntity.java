@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
+import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.contraptions.RocketContraption;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
@@ -24,7 +25,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
@@ -41,11 +44,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -57,7 +58,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
     protected AssemblyException lastException;
     public TrackTargetingBehaviour<GlobalStation> edgePoint;
     protected ItemStackHandler inventory;
-    protected LazyOptional<IItemHandlerModifiable> itemCapability;
+    protected IItemHandlerModifiable itemCapability;
     public String name = "Bing Bong's Big Bonanza";
 
     protected int failedCarriageIndex;
@@ -91,7 +92,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
     public RocketStationBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         inventory = new ItemStackHandler();
-        itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inventory));
+        itemCapability = new CombinedInvWrapper(inventory);
     }
 
     @Override
@@ -126,8 +127,8 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         i++;
         ItemStack item = container.getItem(0);
         if (item.getItem() == NorthstarItems.STAR_MAP.get() || item.getItem() == NorthstarItems.RETURN_TICKET.get()) {
-            if (item.getTagElement("Planet") != null)
-                target = NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(item.getTagElement("Planet").toString()));
+            if (item.has(NorthstarDataComponents.PLANET))
+                target = NorthstarPlanets.getPlanetDimension(item.get(NorthstarDataComponents.PLANET));
         }
         if (getBlockState().getValue(RocketStationBlock.ASSEMBLING)) {
             assembleNextTick = true;
@@ -369,23 +370,20 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
 
     // this is extremely buggy for some reason, this NEEDS to be fixed before release
     //not sure what's making it so buggy but it saves really inconsistently despite sharing the code of the oxygen filler which works fine
+
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
-        compound.put("item", container.getItem(0).serializeNBT());
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(tag, registries, clientPacket);
+
+        tag.put("item", container.getItem(0).save(registries));
     }
 
     @Override
-    public void writeSafe(CompoundTag compound) {
-        super.writeSafe(compound);
-        compound.put("item", container.getItem(0).serializeNBT());
-    }
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(tag, registries, clientPacket);
 
-    @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
-        if (compound.contains("item", 10)) {
-            container.setItem(0, ItemStack.of(compound.getCompound("item")));
+        if (tag.contains("item", Tag.TAG_COMPOUND)) {
+            container.setItem(0, ItemStack.parseOptional(registries, tag.getCompound("item")));
         }
     }
 
@@ -394,12 +392,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         lastException = exception;
         sendData();
     }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return super.getCapability(cap, side);
-    }
-
 
     @SuppressWarnings("unused")
     private boolean shouldAssemble() {

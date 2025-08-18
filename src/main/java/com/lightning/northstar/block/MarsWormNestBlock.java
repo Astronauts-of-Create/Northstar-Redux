@@ -87,12 +87,13 @@ public class MarsWormNestBlock extends Block {
         }
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return canSupportCenter(pLevel, pPos.below(), Direction.UP);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 

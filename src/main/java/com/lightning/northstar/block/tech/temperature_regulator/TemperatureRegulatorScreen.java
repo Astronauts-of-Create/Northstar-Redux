@@ -1,7 +1,6 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.world.TemperatureStuff;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -10,9 +9,11 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -304,12 +305,11 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
     @Override
     public void removed() {
-        TemperatureRegulatorEditPacket packet = getConfigurationPacket();
-        NorthstarPackets.getChannel().sendToServer(packet);
+        CatnipServices.NETWORK.sendToServer(getConfigurationPacket());
     }
 
     protected TemperatureRegulatorEditPacket getConfigurationPacket() {
-        return new TemperatureRegulatorEditPacket(this.blockEntity.getBlockPos(), offsetX, offsetY, offsetZ, sizeX, sizeY, sizeZ, temp, envFill);
+        return new TemperatureRegulatorEditPacket(this.blockEntity.getBlockPos(), new BlockPos(offsetX, offsetY, offsetZ), new BlockPos(sizeX, sizeY, sizeZ), temp, envFill);
     }
 
     @Override

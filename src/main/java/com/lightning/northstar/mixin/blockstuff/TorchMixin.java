@@ -33,7 +33,7 @@ public class TorchMixin {
         }
     }
     
-    @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
+    //@Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
     public void updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, 
     LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos, CallbackInfoReturnable<BlockState> info) {
         try {

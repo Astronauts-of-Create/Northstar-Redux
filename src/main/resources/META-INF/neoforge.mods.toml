@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[0,)"
 license = "MIT"
 issueTrackerURL = "https://github.com/Astronauts-of-Create/Northstar-Redux/issues"
 
@@ -18,30 +18,33 @@ description = '''
 Inspired by Micdoodle's Galacticraft, Northstar seeks to return players to the stars with the power of the Create mod. 
 '''
 
+[[mixins]]
+config = "northstar.mixins.json"
+
 [[dependencies.northstar]]
-modId = "forge"
-mandatory = true
-versionRange = "[43,)"
+modId = "neoforge"
+type = "required"
+versionRange = "[19,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.northstar]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20.1]"
+type = "required"
+versionRange = "[1.21.1]"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.northstar]]
 modId = "create"
-mandatory = true
+type = "required"
 versionRange = "[6.0,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.northstar]]
 modId = "geckolib"
-mandatory = true
+type = "required"
 versionRange = "[4.7,5.0)"
 ordering = "NONE"
 side = "BOTH"

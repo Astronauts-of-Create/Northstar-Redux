@@ -39,7 +39,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:rare_lava_lake",
       "northstar:moon_andesite_blob",

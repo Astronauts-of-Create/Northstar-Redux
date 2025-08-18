@@ -15,17 +15,13 @@
     },
     "radius": {
       "type": "minecraft:uniform",
-      "value": {
-        "min_inclusive": 9,
-        "max_inclusive": 18
-      }
+      "min_inclusive": 9,
+      "max_inclusive": 18
     },
     "depth": {
       "type": "minecraft:uniform",
-      "value": {
-        "min_inclusive": 4,
-        "max_inclusive": 5
-      }
+      "min_inclusive": 4,
+      "max_inclusive": 5
     },
     "half_height": 2,
     "can_delete": "#northstar:natural_mars_blocks"

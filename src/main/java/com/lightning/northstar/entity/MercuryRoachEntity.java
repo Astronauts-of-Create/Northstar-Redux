@@ -1,9 +1,11 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.entity.goals.RunToGroupGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -26,18 +28,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.UUID;
 
 public class MercuryRoachEntity extends Monster implements GeoAnimatable {
 
-    private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", 0.2D, AttributeModifier.Operation.ADDITION);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = Northstar.asResource("attacking");
+    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID, 0.2D, AttributeModifier.Operation.ADD_VALUE);
 
     private final AnimatableInstanceCache animatableCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -46,7 +45,8 @@ public class MercuryRoachEntity extends Monster implements GeoAnimatable {
 
     public MercuryRoachEntity(EntityType<? extends MercuryRoachEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        this.setMaxUpStep(1f);
+
+        getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1);
     }
 
     // region GeoAnimatable
@@ -117,14 +117,15 @@ public class MercuryRoachEntity extends Monster implements GeoAnimatable {
         super.tick();
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {
-            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                 attributeinstance.addTransientModifier(SPEED_MODIFIER_ATTACKING);
             }
 
-        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
             attributeinstance.removeModifier(SPEED_MODIFIER_ATTACKING);
         }
 

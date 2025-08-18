@@ -1,9 +1,11 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.entity.projectiles.VenusScorpionSpit;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -27,22 +29,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
-import java.util.UUID;
 
 public class VenusScorpionEntity extends Monster implements GeoAnimatable, RangedAttackMob {
 
-    private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", 0.05D, AttributeModifier.Operation.ADDITION);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = Northstar.asResource("attacking");
+    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID, 0.05, AttributeModifier.Operation.ADD_VALUE);
 
     private final AnimatableInstanceCache animatableCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -110,14 +107,15 @@ public class VenusScorpionEntity extends Monster implements GeoAnimatable, Range
         super.tick();
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {
-            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                 attributeinstance.addTransientModifier(SPEED_MODIFIER_ATTACKING);
             }
 
-        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
             attributeinstance.removeModifier(SPEED_MODIFIER_ATTACKING);
         }
 
@@ -173,14 +171,17 @@ public class VenusScorpionEntity extends Monster implements GeoAnimatable, Range
             this.setFlags(EnumSet.of(Goal.Flag.LOOK));
         }
 
+        @Override
         public boolean canUse() {
             return true;
         }
 
+        @Override
         public boolean requiresUpdateEveryTick() {
             return true;
         }
 
+        @Override
         public void tick() {
             if (this.shooter.getTarget() == null) {
                 Vec3 vec3 = this.shooter.getDeltaMovement();
@@ -211,6 +212,7 @@ public class VenusScorpionEntity extends Monster implements GeoAnimatable, Range
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
          */
+        @Override
         public boolean canUse() {
             return this.shooter.getTarget() != null;
         }
@@ -218,6 +220,7 @@ public class VenusScorpionEntity extends Monster implements GeoAnimatable, Range
         /**
          * Execute a one shot task or start executing a continuous task
          */
+        @Override
         public void start() {
             this.chargeTime = 0;
         }
@@ -225,13 +228,16 @@ public class VenusScorpionEntity extends Monster implements GeoAnimatable, Range
         /**
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
+        @Override
         public void stop() {
         }
 
+        @Override
         public boolean requiresUpdateEveryTick() {
             return true;
         }
 
+        @Override
         public void tick() {
             LivingEntity livingentity = this.shooter.getTarget();
             if (livingentity != null && !shooter.getNavigation().isInProgress()) {

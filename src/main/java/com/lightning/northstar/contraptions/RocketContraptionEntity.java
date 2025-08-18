@@ -1,13 +1,12 @@
 package com.lightning.northstar.contraptions;
 
+import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -18,21 +17,22 @@ import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMoveme
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+import com.tterrag.registrate.util.RegistrateDistExecutor;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -47,18 +47,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
+public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityWithComplexSpawn {
 
     double clientOffsetDiff;
     double axisMotion;
@@ -113,20 +109,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         sequencedOffsetLimit = maxOffset;
     }
 
-
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    public void readSpawnData(RegistryFriendlyByteBuf buf) {
+        super.readSpawnData(buf);
 
-    @Override
-    public void readSpawnData(FriendlyByteBuf additionalData) {
-        CompoundTag nbt = additionalData.readAnySizeNbt();
+        CompoundTag nbt = buf.readNbt();
         if (nbt != null) {
             readAdditional(nbt, true);
         }
     }
-
 
     @Override
     protected void tickContraption() {
@@ -165,12 +156,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (!this.level().isClientSide) {
             if (this.tickCount % 40 == 0) {
-                NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                        new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime, launched, landing, blasting, slowing, activeLaunch));
+                CatnipServices.NETWORK.sendToClientsTrackingEntity(this, new RocketContraptionSyncPacket(getId(), position(), lift_vel, launchtime, launched, landing, blasting, slowing, activeLaunch));
             }
             if (this.landing) {
-                NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                        new RocketContraptionQuickSyncPacket(slowing, this.getId()));
+                CatnipServices.NETWORK.sendToClientsTrackingEntity(this, new RocketContraptionQuickSyncPacket(getId(), slowing));
             }
         }
 
@@ -228,9 +217,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             if (Math.abs(final_lift_vel) > 0.5f) {
                 int volume = NorthstarPlanets.getPlanetAtmosphereCost(level().dimension()) / 400;
                 //this is so stupid
-                int final_vol = volume < 1 ? 1 : volume;
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                        () -> () -> tickAirSound(final_vol));
+                RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound(Math.max(volume, 1)));
             }
         }
 
@@ -351,7 +338,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         rce.setPos(packet.pos.x, packet.pos.y, packet.pos.z);
         rce.lift_vel = packet.lift_vel;
-        rce.launchtime = packet.launchtime;
+        rce.launchtime = packet.launchTime;
 
         rce.launched = packet.launched;
         rce.landing = packet.landing;
@@ -371,9 +358,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     public ItemStack createReturnTicket(RocketContraptionEntity entity) {
         ItemStack result = new ItemStack(NorthstarItems.RETURN_TICKET.get());
-        result.setHoverName(Component.translatable("item.northstar.return_ticket" + "_" + NorthstarPlanets.getPlanetName(entity.home)).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-        CompoundTag tag = result.getOrCreateTagElement("Planet");
-        tag.putString("name", NorthstarPlanets.getPlanetName(entity.home));
+        result.set(DataComponents.CUSTOM_NAME, Component.translatable("item.northstar.return_ticket" + "_" + NorthstarPlanets.getPlanetName(entity.home)).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
+        result.set(NorthstarDataComponents.PLANET, NorthstarPlanets.getPlanetName(entity.home));
         return result;
     }
 
@@ -546,13 +532,13 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         serverPrevPos = position();
     }
 
+    @Override
     public RocketContraption getContraption() {
         return (RocketContraption) this.contraption;
     }
 
 
-    @SuppressWarnings("unused")
-    private void removeAndSaveEntity(RocketContraptionEntity entity, boolean portal) {
+    /*private void removeAndSaveEntity(RocketContraptionEntity entity, boolean portal) {
         Contraption contraption = entity.getContraption();
         if (contraption != null) {
             Map<UUID, Integer> mapping = contraption.getSeatMapping();
@@ -584,13 +570,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         serialisedEntity.remove("Passengers");
         serialisedEntity.getCompound("Contraption")
                 .remove("Passengers");
-    }
+    }*/
 
 
     @Override
     public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
-        AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                new ContraptionBlockChangedPacket(this.getId(), localPos, newInfo.state()));
+        CatnipServices.NETWORK.sendToClientsTrackingEntity(this, new ContraptionBlockChangedPacket(this.getId(), localPos, newInfo.state()));
     }
 
     @Override
@@ -601,8 +586,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     }
 
     @Override
-    protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
-        super.writeAdditional(compound, spawnPacket);
+    protected void writeAdditional(CompoundTag compound, HolderLookup.Provider registries, boolean spawnPacket) {
+        super.writeAdditional(compound, registries, spawnPacket);
+
         if (sequencedOffsetLimit >= 0)
             compound.putDouble("SequencedOffsetLimit", sequencedOffsetLimit);
 
@@ -630,6 +616,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         compound.putFloat("final_lift_vel", final_lift_vel);
     }
 
+    @Override
     protected void readAdditional(CompoundTag compound, boolean spawnData) {
         super.readAdditional(compound, spawnData);
         sequencedOffsetLimit =
@@ -711,11 +698,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     public void teleportTo(double p_70634_1_, double p_70634_3_, double p_70634_5_) {
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void lerpTo(double x, double y, double z, float yw, float pt, int inc, boolean t) {
     }
 
     @Override

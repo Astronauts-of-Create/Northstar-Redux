@@ -22,10 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
+@EventBusSubscriber(modid = Northstar.MOD_ID)
 public class TemperatureStuff {
 
     public static Map<Map<BlockPos, Integer>, ResourceKey<Level>> temperatureSources = new HashMap<>();
@@ -44,10 +43,11 @@ public class TemperatureStuff {
     public static boolean debugMode = false;
 
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.LevelTickEvent event) {
-        if (!event.level.isClientSide)
+    public static void onWorldTick(LevelTickEvent.Pre event) {
+        Level level = event.getLevel();
+        if (!level.isClientSide)
             return;
-        long t = event.level.getGameTime();
+        long t = level.getGameTime();
         if (loadBuffer <= 70)
             loadBuffer++;
 
@@ -57,11 +57,11 @@ public class TemperatureStuff {
                 for (Entry<Map<BlockPos, Integer>, ResourceKey<Level>> blocks : temperatureSources.entrySet()) {
                     if (blocks == null)
                         continue;
-                    if (blocks.getValue() == event.level.dimension()) {
+                    if (blocks.getValue() == level.dimension()) {
                         for (BlockPos pos : blocks.getKey().keySet()) {
                             if (pos == null)
                                 continue;
-                            event.level.addParticle(ParticleTypes.FLAME, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0, 0);
+                            level.addParticle(ParticleTypes.FLAME, pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0, 0);
                         }
                     }
 

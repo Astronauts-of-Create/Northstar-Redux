@@ -1,8 +1,10 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
+import com.simibubi.create.AllTags;
 import net.createmod.catnip.lang.Lang;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -19,10 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.Collections;
 
 public class NorthstarTags {
 
@@ -32,26 +30,6 @@ public class NorthstarTags {
         NorthstarItemTags.init();
         NorthstarEntityTags.init();
         NorthstarBiomeTags.init();
-    }
-
-    public static <T> TagKey<T> optionalTag(IForgeRegistry<T> registry, ResourceLocation id) {
-        return registry.tags().createOptionalTagKey(id, Collections.emptySet());
-    }
-
-    public static <T> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
-        return optionalTag(registry, ResourceLocation.fromNamespaceAndPath("forge", path));
-    }
-
-    public static TagKey<Block> forgeBlockTag(String path) {
-        return forgeTag(ForgeRegistries.BLOCKS, path);
-    }
-
-    public static TagKey<Item> forgeItemTag(String path) {
-        return forgeTag(ForgeRegistries.ITEMS, path);
-    }
-
-    public static TagKey<Fluid> forgeFluidTag(String path) {
-        return forgeTag(ForgeRegistries.FLUIDS, path);
     }
 
     public enum NameSpace {
@@ -81,6 +59,7 @@ public class NorthstarTags {
         TIER_1_ROCKET_FUEL(NameSpace.MOD),
         TIER_2_ROCKET_FUEL(NameSpace.MOD),
         TIER_3_ROCKET_FUEL(NameSpace.MOD),
+        OXYGEN(NameSpace.FORGE),
         IS_OXY(NameSpace.MOD);
 
         public final TagKey<Fluid> tag;
@@ -105,7 +84,7 @@ public class NorthstarTags {
         NorthstarFluidTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.FLUIDS, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.FLUID, id);
             } else {
                 tag = FluidTags.create(id);
             }
@@ -164,7 +143,7 @@ public class NorthstarTags {
         NorthstarBlockTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.BLOCKS, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.BLOCK, id);
             } else {
                 tag = BlockTags.create(id);
             }
@@ -219,7 +198,7 @@ public class NorthstarTags {
         NorthstarItemTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.ITEMS, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.ITEM, id);
             } else {
                 tag = ItemTags.create(id);
             }
@@ -268,7 +247,7 @@ public class NorthstarTags {
         NorthstarEntityTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.ENTITY_TYPES, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.ENTITY_TYPE, id);
             } else {
                 tag = TagKey.create(Registries.ENTITY_TYPE, id);
             }
@@ -297,35 +276,35 @@ public class NorthstarTags {
         }
 
         NorthstarBiomeTags(NameSpace namespace) {
-            this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+            this(namespace, namespace.alwaysDatagenDefault);
         }
 
         NorthstarBiomeTags(NameSpace namespace, String path) {
-            this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+            this(namespace, path, namespace.alwaysDatagenDefault);
         }
 
-        NorthstarBiomeTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-            this(namespace, null, optional, alwaysDatagen);
+        NorthstarBiomeTags(NameSpace namespace, boolean alwaysDatagen) {
+            this(namespace, null, alwaysDatagen);
         }
 
-        NorthstarBiomeTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+        NorthstarBiomeTags(NameSpace namespace, String path, boolean alwaysDatagen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
-            if (optional) {
-                tag = optionalTag(ForgeRegistries.BIOMES, id);
-            } else {
-                tag = TagKey.create(Registries.BIOME, id);
-            }
+            tag = TagKey.create(Registries.BIOME, id);
             this.alwaysDatagen = alwaysDatagen;
-        }
-
-        public boolean matches(Biome biome) {
-            Holder<Biome> bio = Holder.direct(biome);
-            return bio.is(tag);
         }
 
         private static void init() {
         }
 
+    }
+
+    public static TagKey<Fluid> forgeFluidTag(String path) {
+        return forgeTag(BuiltInRegistries.FLUID, path);
+    }
+
+    public static <T> TagKey<T> forgeTag(Registry<T> registry, String path) {
+        // TODO: what is it on neoforge
+        return AllTags.optionalTag(registry, ResourceLocation.fromNamespaceAndPath("forge", path));
     }
 
 }

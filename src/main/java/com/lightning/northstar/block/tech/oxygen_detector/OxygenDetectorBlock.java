@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.oxygen_detector;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,11 +20,19 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class OxygenDetectorBlock extends DirectionalBlock implements IBE<OxygenDetectorBlockEntity> {
+
+    public static final MapCodec<OxygenDetectorBlock> CODEC = simpleCodec(OxygenDetectorBlock::new);
+
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public OxygenDetectorBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(POWERED, Boolean.FALSE));
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override

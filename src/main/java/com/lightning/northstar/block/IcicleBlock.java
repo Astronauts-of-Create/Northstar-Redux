@@ -62,6 +62,7 @@ public class IcicleBlock extends PointedDripstoneBlock implements Fallable, Simp
         }
     }
 
+    @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (isStalagmite(pState) && !this.canSurvive(pState, pLevel, pPos)) {
             pLevel.destroyBlock(pPos, true);

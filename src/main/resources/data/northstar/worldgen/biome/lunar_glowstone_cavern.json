@@ -17,7 +17,8 @@
     "particle": {
       "options": {
         "type": "northstar:glowstone_particle"
-      }
+      },
+      "probability": 1
     }
   },
   "spawners": {
@@ -50,7 +51,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:rare_lava_lake",
       "northstar:moon_andesite_blob",

@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -16,21 +17,31 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class RocketControlsBlock extends HorizontalDirectionalBlock implements IWrenchable, IBE<RocketControlsBlockEntity> {
+
+    public static final MapCodec<RocketControlsBlock> CODEC = simpleCodec(RocketControlsBlock::new);
+
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 20.0D, 16.0D);
-    
+
     public RocketControlsBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
     }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
+    }
+
     @Override
     protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder.add(FACING));
     }
-    
+
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }
-    
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState state = defaultBlockState();
@@ -39,14 +50,15 @@ public class RocketControlsBlock extends HorizontalDirectionalBlock implements I
         state = state.setValue(FACING, horizontalDirection.getOpposite());
         return state;
     }
+
     @Override
     public Class<RocketControlsBlockEntity> getBlockEntityClass() {
         return RocketControlsBlockEntity.class;
     }
+
     @Override
     public BlockEntityType<? extends RocketControlsBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.ROCKET_CONTROLS.get();
     }
 
-    
 }

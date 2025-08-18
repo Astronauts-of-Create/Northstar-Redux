@@ -2,6 +2,7 @@ package com.lightning.northstar.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +28,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MarsRootBlock extends MultifaceBlock {
+
+    private static final MapCodec<MarsRootBlock> CODEC = simpleCodec(MarsRootBlock::new);
+
     public static final BooleanProperty UP = PipeBlock.UP;
     public static final BooleanProperty DOWN = PipeBlock.DOWN;
     public static final BooleanProperty NORTH = PipeBlock.NORTH;
@@ -51,6 +55,11 @@ public class MarsRootBlock extends MultifaceBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(UP, Boolean.FALSE).setValue(DOWN, Boolean.FALSE).setValue(NORTH, Boolean.FALSE)
                 .setValue(EAST, Boolean.FALSE).setValue(SOUTH, Boolean.FALSE).setValue(WEST, Boolean.FALSE));
         this.shapesCache = ImmutableMap.copyOf(this.stateDefinition.getPossibleStates().stream().collect(Collectors.toMap(Function.identity(), MarsRootBlock::calculateShape)));
+    }
+
+    @Override
+    protected MapCodec<? extends MultifaceBlock> codec() {
+        return CODEC;
     }
 
     private static VoxelShape calculateShape(BlockState p_57906_) {
@@ -81,6 +90,7 @@ public class MarsRootBlock extends MultifaceBlock {
         return voxelshape.isEmpty() ? Shapes.block() : voxelshape;
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return this.shapesCache.get(pState);
     }
@@ -194,6 +204,7 @@ public class MarsRootBlock extends MultifaceBlock {
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific direction passed in.
      */
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         BlockState blockstate = this.getUpdatedState(pState, pLevel, pCurrentPos);
         return !this.hasFaces(blockstate) ? Blocks.AIR.defaultBlockState() : blockstate;
@@ -227,6 +238,7 @@ public class MarsRootBlock extends MultifaceBlock {
 
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
     }

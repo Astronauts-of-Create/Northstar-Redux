@@ -1,55 +1,43 @@
 package com.lightning.northstar.block.tech.telescope;
 
-import com.lightning.northstar.content.NorthstarMenuTypes;
-import net.minecraft.network.FriendlyByteBuf;
+import com.simibubi.create.foundation.gui.menu.MenuBase;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.SlotItemHandler;
 
-public class TelescopeMenu extends AbstractContainerMenu {
+public class TelescopeMenu extends MenuBase<TelescopeBlockEntity> {
 
-    public final TelescopeBlockEntity blockEntity;
-    private final Level level;
-    private ContainerData data = null;
-    public Inventory inv;
-
-    public TelescopeMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+    public TelescopeMenu(MenuType<TelescopeMenu> type, int id, Inventory inventory, RegistryFriendlyByteBuf extraData) {
+        super(type, id, inventory, extraData);
     }
 
-    public TelescopeMenu(int id, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(NorthstarMenuTypes.TELESCOPE_MENU.get(), id);
-        checkContainerSize(inv, 3);
-        blockEntity = (TelescopeBlockEntity) entity;
-        this.level = inv.player.level();
-        this.data = data;
-        this.inv = inv;
-
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 12, 15));
-            this.addSlot(new SlotItemHandler(handler, 1, 86, 15));
-            this.addSlot(new SlotItemHandler(handler, 2, 86, 60));
-        });
-        addDataSlots(data);
+    public TelescopeMenu(MenuType<?> type, int id, Inventory inv, TelescopeBlockEntity contentHolder) {
+        super(type, id, inv, contentHolder);
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        // TODO Auto-generated method stub
+    public ItemStack quickMoveStack(Player player, int index) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected TelescopeBlockEntity createOnClient(RegistryFriendlyByteBuf extraData) {
         return null;
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        // TODO Auto-generated method stub
-        return true;
+    protected void initAndReadInventory(TelescopeBlockEntity contentHolder) {
+
+    }
+
+    @Override
+    protected void addSlots() {
+    }
+
+    @Override
+    protected void saveData(TelescopeBlockEntity contentHolder) {
     }
 
 }

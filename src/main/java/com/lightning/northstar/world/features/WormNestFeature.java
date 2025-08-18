@@ -22,6 +22,7 @@ public class WormNestFeature extends Feature<StructureFeatureConfig>  {
     public WormNestFeature(Codec<StructureFeatureConfig> pCodec) {
         super(pCodec);
     }
+    @Override
     public boolean place(FeaturePlaceContext<StructureFeatureConfig> pContext) {
         RandomSource randomsource = pContext.random();
         WorldGenLevel worldgenlevel = pContext.level();

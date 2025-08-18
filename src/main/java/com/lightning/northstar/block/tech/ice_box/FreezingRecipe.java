@@ -1,33 +1,30 @@
 package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.item.SmartInventory;
-import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.createmod.catnip.data.Iterate;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
+public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
 
     //im gonna cry I just want this to work
     public static boolean match(IceBoxBlockEntity iceBox, Recipe<?> recipe) {
@@ -57,8 +54,8 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
 
     private static boolean apply(IceBoxBlockEntity icebox, Recipe<?> recipe, boolean test) {
         boolean isFreezingRecipe = recipe instanceof FreezingRecipe;
-        IItemHandler availableItems = icebox.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        IFluidHandler availableFluids = icebox.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
+        IItemHandler availableItems = icebox.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, icebox.getBlockPos(), icebox.getBlockState(), icebox, null);
+        IFluidHandler availableFluids = icebox.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, icebox.getBlockPos(), icebox.getBlockState(), icebox, null);
 
         if (availableItems == null || availableFluids == null)
             return false;
@@ -135,13 +132,13 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
                     recipeOutputItems.addAll(FreezingRecipe.rollResults());
                     recipeOutputFluids.addAll(FreezingRecipe.getFluidResults());
                     recipeOutputItems.addAll(FreezingRecipe.getRemainingItems(icebox.getInputInventory()));
-                } else {
+                } /*else {
                     recipeOutputItems.add(recipe.getResultItem(icebox.getLevel().registryAccess()));
 
                     if (recipe instanceof CraftingRecipe craftingRecipe) {
                         recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
                     }
-                }
+                }*/
             }
 
             if (!icebox.acceptOutputs(recipeOutputItems, recipeOutputFluids, simulate))
@@ -185,8 +182,7 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
     }
 
     @Override
-    public boolean matches(SmartInventory pContainer, Level pLevel) {
-        // TODO Auto-generated method stub
+    public boolean matches(RecipeInput input, Level world) {
         return false;
     }
 

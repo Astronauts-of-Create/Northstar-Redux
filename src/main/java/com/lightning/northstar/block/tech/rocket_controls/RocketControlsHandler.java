@@ -1,10 +1,10 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.CreateLang;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -18,13 +18,11 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.ref.WeakReference;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Vector;
+import java.util.*;
 
 public class RocketControlsHandler {
 
-    public static Collection<Integer> currentlyPressed = new HashSet<>();
+    public static Set<Integer> currentlyPressed = new HashSet<>();
 
     public static int PACKET_RATE = 5;
     private static int packetCooldown;
@@ -50,15 +48,13 @@ public class RocketControlsHandler {
 
     }
 
-    @SuppressWarnings("resource")
     public static void stopControlling() {
         ControlsUtil.getControls()
                 .forEach(kb -> kb.setDown(ControlsUtil.isActuallyPressed(kb)));
         RocketContraptionEntity contrapEntity = entityRef.get();
 
         if (!currentlyPressed.isEmpty() && contrapEntity != null)
-            NorthstarPackets.getChannel().sendToServer(new RocketControlsInputPacket(currentlyPressed, false,
-                    contrapEntity.getId(), controlsPos, true));
+            CatnipServices.NETWORK.sendToServer(new RocketControlsInputPacket(new ArrayList<>(currentlyPressed), false, contrapEntity.getId(), controlsPos, true));
 
         packetCooldown = 0;
         entityRef = new WeakReference<>(null);
@@ -85,12 +81,12 @@ public class RocketControlsHandler {
         }
         if (launchtime % 20 == 0 && player != null && entity != null && launchtime != -20) {
             player.displayClientMessage(Component.literal(String.valueOf(launchtime / 20)).withStyle(ChatFormatting.AQUA), true);
-            player.level().playSound(player, player.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.get(), SoundSource.BLOCKS, 10, launchtime / 20 == 0 ? 10 : 1);
+            player.level().playSound(player, player.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.BLOCKS, 10, launchtime / 20 == 0 ? 10 : 1);
         }
 
         if (player != null && entity != null) {
             if (entity.landing && entity.getY() < entity.level().getMaxBuildHeight() + 500) {
-                if (!entity.getControllingPlayer().isEmpty()) {
+                if (entity.getControllingPlayer().isPresent()) {
                     if (entity.getControllingPlayer().get() == player.getUUID()) {
                         player.displayClientMessage(CreateLang.translateDirect("contraption.controls.landing_warning").withStyle(ChatFormatting.RED), true);
                     }
@@ -111,13 +107,12 @@ public class RocketControlsHandler {
                 .getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
             BlockPos pos = controlsPos;
             stopControlling();
-            NorthstarPackets.getChannel()
-                    .sendToServer(new RocketControlsInputPacket(currentlyPressed, false, entity.getId(), pos, true));
+            CatnipServices.NETWORK.sendToServer(new RocketControlsInputPacket(new ArrayList<>(currentlyPressed), false, entity.getId(), pos, true));
             return;
         }
 
-        Vector<KeyMapping> controls = ControlsUtil.getControls();
-        Collection<Integer> pressedKeys = new HashSet<>();
+        List<KeyMapping> controls = ControlsUtil.getControls();
+        Set<Integer> pressedKeys = new HashSet<>();
         for (int i = 0; i < controls.size(); i++) {
             if (ControlsUtil.isActuallyPressed(controls.get(i)))
                 pressedKeys.add(i);
@@ -133,14 +128,13 @@ public class RocketControlsHandler {
 
         // Released Keys
         if (!releasedKeys.isEmpty()) {
-            NorthstarPackets.getChannel()
-                    .sendToServer(new RocketControlsInputPacket(releasedKeys, false, entity.getId(), controlsPos, false));
+            CatnipServices.NETWORK.sendToServer(new RocketControlsInputPacket(new ArrayList<>(currentlyPressed), false, entity.getId(), controlsPos, false));
 //            AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
         }
 
         // Newly Pressed Keys
         if (!newKeys.isEmpty()) {
-            NorthstarPackets.getChannel().sendToServer(new RocketControlsInputPacket(newKeys, true, entity.getId(), controlsPos, false));
+            CatnipServices.NETWORK.sendToServer(new RocketControlsInputPacket(new ArrayList<>(currentlyPressed), true, entity.getId(), controlsPos, false));
             packetCooldown = PACKET_RATE;
 //            AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
         }
@@ -148,8 +142,7 @@ public class RocketControlsHandler {
         // Keepalive Pressed Keys
         if (packetCooldown == 0) {
 //            if (!pressedKeys.isEmpty()) {
-            NorthstarPackets.getChannel()
-                    .sendToServer(new RocketControlsInputPacket(pressedKeys, true, entity.getId(), controlsPos, false));
+            CatnipServices.NETWORK.sendToServer(new RocketControlsInputPacket(new ArrayList<>(pressedKeys), true, entity.getId(), controlsPos, false));
             packetCooldown = PACKET_RATE;
 //            }
         }

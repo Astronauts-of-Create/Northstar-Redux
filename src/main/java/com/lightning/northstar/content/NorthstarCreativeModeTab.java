@@ -5,18 +5,16 @@ import com.lightning.northstar.world.OxygenStuff;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -27,46 +25,41 @@ public class NorthstarCreativeModeTab {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Northstar.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> ITEMS = CREATIVE_TABS
-            .register("northstar_items", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ITEMS = CREATIVE_TABS
+            .register("items", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.northstar.items"))
                     .icon(() -> new ItemStack(NorthstarItems.MARTIAN_STEEL.get()))
                     .displayItems(createItemDisplay(NorthstarCreativeModeTab.ITEMS))
                     .build());
 
-    public static final RegistryObject<CreativeModeTab> BLOCKS = CREATIVE_TABS
-            .register("northstar_blocks", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> BLOCKS = CREATIVE_TABS
+            .register("blocks", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.northstar.blocks"))
                     .icon(() -> new ItemStack(NorthstarBlocks.MARTIAN_STEEL_BLOCK.get()))
                     .displayItems(createItemDisplay(NorthstarCreativeModeTab.BLOCKS))
                     .build());
 
-    public static final RegistryObject<CreativeModeTab> TECH = CREATIVE_TABS
-            .register("northstar_tech", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TECH = CREATIVE_TABS
+            .register("tech", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.northstar.tech"))
                     .icon(() -> new ItemStack(NorthstarBlocks.TELESCOPE.get()))
                     .displayItems(createItemDisplay(NorthstarCreativeModeTab.TECH))
                     .build());
 
     private static void registerItem(CreativeModeTab.Output event, String planet) {
-        ItemStack earth = new ItemStack(NorthstarItems.STAR_MAP.get());
-        earth.setHoverName(Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-        CompoundTag earthTag = earth.getOrCreateTagElement("Planet");
-        earthTag.putString("name", planet);
-        event.accept(earth);
+        ItemStack stack = new ItemStack(NorthstarItems.STAR_MAP.get());
+        stack.set(DataComponents.CUSTOM_NAME, Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
+        stack.set(NorthstarDataComponents.PLANET, planet);
+        event.accept(stack);
     }
 
     private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
         ItemStack stack = new ItemStack(item);
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt("Oxygen", OxygenStuff.maximumOxy);
-        ListTag lore = new ListTag();
-        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + OxygenStuff.maximumOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
-        stack.getOrCreateTagElement("display").put("Lore", lore);
+        stack.set(NorthstarDataComponents.OXYGEN, OxygenStuff.maximumOxy);
         event.accept(stack);
     }
 
-    private static CreativeModeTab.DisplayItemsGenerator createItemDisplay(RegistryObject<CreativeModeTab> tab) {
+    private static CreativeModeTab.DisplayItemsGenerator createItemDisplay(DeferredHolder<CreativeModeTab, CreativeModeTab> tab) {
         return (parameters, output) -> {
             Map<Item, Consumer<CreativeModeTab.Output>> builders = Map.of(
                     NorthstarItems.STAR_MAP.get(), out -> {
@@ -80,9 +73,9 @@ public class NorthstarCreativeModeTab {
                     NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get())
             );
 
-            for (RegistryEntry<Item> item : REGISTRATE.getAll(Registries.ITEM)) {
+            for (RegistryEntry<Item, Item> item : REGISTRATE.getAll(Registries.ITEM)) {
                 if (CreateRegistrate.isInCreativeTab(item, tab)) {
-                    output.accept(item.get());
+                    output.accept(item.get(), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 
                     Consumer<CreativeModeTab.Output> factory = builders.get(item.get());
                     if (factory != null) {

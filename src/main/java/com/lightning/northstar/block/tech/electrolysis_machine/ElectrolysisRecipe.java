@@ -1,28 +1,13 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
-public class ElectrolysisRecipe extends ProcessingRecipe<RecipeWrapper>  {
-
-    static int counter = 0;
-
-    public static ElectrolysisRecipe create(FluidIngredient from, FluidStack toL, FluidStack toR, String name) {
-        ResourceLocation recipeId = Northstar.asResource(name);
-        return new ProcessingRecipeBuilder<>(ElectrolysisRecipe::new, recipeId)
-            .withFluidIngredients(from)
-            .withFluidOutputs(toL, toR)
-            .build();
-    }
+public class ElectrolysisRecipe extends StandardProcessingRecipe<RecipeWrapper> {
 
     protected ElectrolysisRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {
         super(type, params);

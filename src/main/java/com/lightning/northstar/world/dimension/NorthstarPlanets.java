@@ -4,14 +4,13 @@ import com.lightning.northstar.Northstar;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import javax.annotation.Nullable;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
+@EventBusSubscriber(modid = Northstar.MOD_ID)
 public class NorthstarPlanets {     
     
     private static final double EARTH_GRAV = 1;
@@ -167,8 +166,8 @@ public class NorthstarPlanets {
     static long time;
 
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.LevelTickEvent event){
-        time = (long) (event.level.getGameTime() * 2);
+    public static void onWorldTick(LevelTickEvent.Pre event){
+        time = event.getLevel().getGameTime() * 2L;
         //mercury!!!! yeah cool
         double mercury_radian = mercury_orbit_speed * time;
         mercury_x = (mercury_origin_x + (Math.cos(mercury_radian)* mercury_orbit_radius_x));
@@ -428,14 +427,6 @@ public class NorthstarPlanets {
 
 
         return 1;
-    }
-    
-    public static String targetGetter(String thing) {
-        String newthing = "";
-        for(int i = 0;i < thing.length(); i++) {
-            if(i > 6 && i < thing.length() - 2) {newthing += thing.charAt(i);}
-        }
-        return newthing;
     }
 
     public static boolean isInOrbit(ResourceKey<Level> level) {

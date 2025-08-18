@@ -1,19 +1,15 @@
 package com.lightning.northstar.world;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class WeatherStuff {
 
     public enum WeatherCondition {
@@ -23,15 +19,6 @@ public class WeatherStuff {
     }
 
     public static Map<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> managedPlanets = new HashMap<>();
-
-//    @SubscribeEvent
-//    public static void onWorldTick(TickEvent.LevelTickEvent event){
-//        for(Entry<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> entries:    managedPlanets.entrySet()) {
-//            for(Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>> entries2 : entries.getKey()) {
-//                
-//            }
-//        }
-//    }
 
     public static void init() {
         managedPlanets.put(null, NorthstarDimensions.MARS_DIM_KEY);

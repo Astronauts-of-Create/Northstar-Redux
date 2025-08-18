@@ -1,35 +1,38 @@
 package com.lightning.northstar.contraptions;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import com.lightning.northstar.content.NorthstarPackets;
+import com.tterrag.registrate.util.RegistrateDistExecutor;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.api.distmarker.Dist;
 
-public class RocketContraptionQuickSyncPacket extends SimplePacketBase {
+public class RocketContraptionQuickSyncPacket implements ClientboundPacketPayload {
+
+    public static final StreamCodec<ByteBuf, RocketContraptionQuickSyncPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, packet -> packet.contraptionEntityId,
+            ByteBufCodecs.BOOL, packet -> packet.slowing,
+            RocketContraptionQuickSyncPacket::new
+    );
+
     public int contraptionEntityId;
-    boolean slowing;
+    public boolean slowing;
 
-    public RocketContraptionQuickSyncPacket(boolean vActiveLaunch, int id) {
-        slowing = vActiveLaunch;
-        contraptionEntityId = id;
-    }
-    public RocketContraptionQuickSyncPacket(FriendlyByteBuf buffer) {
-        slowing = buffer.readBoolean();
-        contraptionEntityId = buffer.readInt();
+    public RocketContraptionQuickSyncPacket(int contraptionEntityId, boolean slowing) {
+        this.contraptionEntityId = contraptionEntityId;
+        this.slowing = slowing;
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(slowing);
-        buffer.writeInt(contraptionEntityId);
+    public void handle(LocalPlayer player) {
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketContraptionEntity.handleQuickSyncPacket(this));
     }
 
     @Override
-    public boolean handle(Context context) {
-        context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> RocketContraptionEntity.handleQuickSyncPacket(this)));
-        return true;
+    public PacketTypeProvider getTypeProvider() {
+        return NorthstarPackets.ROCKET_QUICK_SYNC_PACKET;
     }
 
 }

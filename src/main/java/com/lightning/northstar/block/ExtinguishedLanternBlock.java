@@ -45,6 +45,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         this.registerDefaultState(this.stateDefinition.any().setValue(HANGING, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
@@ -59,14 +60,17 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         return null;
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return pState.getValue(HANGING) ? HANGING_AABB : AABB;
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HANGING, WATERLOGGED);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         Direction direction = getConnectedDirection(pState).getOpposite();
         return Block.canSupportCenter(pLevel, pPos.relative(direction), direction.getOpposite());
@@ -108,6 +112,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific direction passed in.
      */
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
         if (pState.getValue(WATERLOGGED)) {
@@ -117,6 +122,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         return getConnectedDirection(pState).getOpposite() == pDirection && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);

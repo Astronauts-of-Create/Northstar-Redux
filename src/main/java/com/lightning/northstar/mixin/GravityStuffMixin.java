@@ -4,10 +4,7 @@ import com.lightning.northstar.contraptions.RocketHandler;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.network.protocol.game.ClientboundChangeDifficultyPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
-import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,10 +17,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.portal.PortalForcer;
-import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -112,9 +108,9 @@ public class GravityStuffMixin {
                 if (entity.level().dimension() == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {
                     ServerLevel destLevel = entity.level().getServer().getLevel(Level.OVERWORLD);
                     if (entity instanceof ServerPlayer player) {
-                        changePlayerDimension(destLevel, player, new PortalForcer(destLevel));
+                        changePlayerDimension(destLevel, player);
                     } else {
-                        changeDimensionCustom(destLevel, entity, new PortalForcer(destLevel));
+                        changeDimensionCustom(destLevel, entity);
                     }
                 }
             }
@@ -134,12 +130,12 @@ public class GravityStuffMixin {
     }
 
 
-    private static Entity changePlayerDimension(ServerLevel pDestination, ServerPlayer entity, net.minecraftforge.common.util.ITeleporter teleporter) {
-        if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
-        ((ServerPlayer) entity).isChangingDimension();
+    private static Entity changePlayerDimension(ServerLevel pDestination, ServerPlayer entity) {
+        if (!CommonHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
+        entity.isChangingDimension();
         ServerLevel serverlevel = (ServerLevel) entity.level();
         LevelData leveldata = pDestination.getLevelData();
-        entity.connection.send(new ClientboundRespawnPacket(pDestination.dimensionTypeId(), pDestination.dimension(), BiomeManager.obfuscateSeed(pDestination.getSeed()), entity.gameMode.getGameModeForPlayer(), entity.gameMode.getPreviousGameModeForPlayer(), pDestination.isDebug(), pDestination.isFlat(), (byte)3, entity.getLastDeathLocation(), entity.getPortalCooldown()));
+        entity.connection.send(new ClientboundRespawnPacket(new CommonPlayerSpawnInfo(pDestination.dimensionTypeRegistration(), pDestination.dimension(), BiomeManager.obfuscateSeed(pDestination.getSeed()), entity.gameMode.getGameModeForPlayer(), entity.gameMode.getPreviousGameModeForPlayer(), pDestination.isDebug(), pDestination.isFlat(), entity.getLastDeathLocation(), entity.getPortalCooldown()), (byte) 3));
         entity.connection.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
         PlayerList playerlist = entity.server.getPlayerList();
 
@@ -147,67 +143,37 @@ public class GravityStuffMixin {
         playerlist.sendPlayerPermissionLevel(entity);
         pDestination.removePlayerImmediately(entity, Entity.RemovalReason.CHANGED_DIMENSION);
         entity.revive();
-        PortalInfo portalinfo = new PortalInfo(entity.position(), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot());
-        Entity e = teleporter.placeEntity(entity, serverlevel, pDestination, entity.getYRot(), spawnPortal -> {//Forge: Start vanilla logic
-            serverlevel.getProfiler().push("moving");
-            serverlevel.getProfiler().pop();
-            serverlevel.getProfiler().push("placing");
-            entity.setServerLevel(pDestination);
-            pDestination.addDuringPortalTeleport(entity);
-            entity.setXRot(portalinfo.xRot);
-            entity.setYRot(portalinfo.yRot);
-            entity.moveTo(portalinfo.pos.x, 800, portalinfo.pos.z);
-            serverlevel.getProfiler().pop();
-            CriteriaTriggers.CHANGED_DIMENSION.trigger(entity, entity.level().dimension(), pDestination.dimension());
-            return entity;//forge: this is part of the ITeleporter patch
-        });//Forge: End vanilla logic
-        if (e != entity)
-            throw new java.lang.IllegalArgumentException(String.format(java.util.Locale.ENGLISH, "Teleporter %s returned not the player entity but instead %s, expected PlayerEntity %s", teleporter, e, entity));
+        CriteriaTriggers.CHANGED_DIMENSION.trigger(entity, entity.level().dimension(), pDestination.dimension());
         entity.connection.send(new ClientboundPlayerAbilitiesPacket(entity.getAbilities()));
         playerlist.sendLevelInfo(entity, pDestination);
         playerlist.sendAllPlayerInfo(entity);
 
         for (MobEffectInstance mobeffectinstance : entity.getActiveEffects()) {
-            entity.connection.send(new ClientboundUpdateMobEffectPacket(entity.getId(), mobeffectinstance));
+            entity.connection.send(new ClientboundUpdateMobEffectPacket(entity.getId(), mobeffectinstance, false));
 
         }
 
         return entity;
-
     }
 
-    private static Entity changeDimensionCustom(ServerLevel pDestination, Entity entity, net.minecraftforge.common.util.ITeleporter teleporter) {
-        if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
-        if (entity.level() instanceof ServerLevel && !entity.isRemoved()) {
-            entity.level().getProfiler().push("changeDimension");
+    private static Entity changeDimensionCustom(ServerLevel pDestination, Entity entity) {
+        if (!CommonHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
+        if (entity.level() instanceof ServerLevel level && !entity.isRemoved()) {
             int seatNumber = -12345;
-            entity.level().getProfiler().push("reposition");
 
-            System.out.println(entity);
+            Entity newentity = entity.getType().create(pDestination);
 
-            Entity transportedEntity = teleporter.placeEntity(entity, (ServerLevel) entity.level(), pDestination, entity.getYRot(), spawnPortal -> {
-
-                entity.level().getProfiler().popPush("reloading");
-                Entity newentity = entity.getType().create(pDestination);
-                System.out.println(newentity);
-                System.out.println(entity.getType());
-
-                if (newentity != null) {
-                    newentity.restoreFrom(entity);
-                    newentity.moveTo(entity.position().x, 800, entity.position().z, entity.getYRot(), entity.getXRot());
-                    newentity.setDeltaMovement(entity.getDeltaMovement());
-                    pDestination.addDuringTeleport(newentity);
-                }
-
-                return newentity;
-            });
+            if (newentity != null) {
+                newentity.restoreFrom(entity);
+                newentity.moveTo(entity.position().x, 800, entity.position().z, entity.getYRot(), entity.getXRot());
+                newentity.setDeltaMovement(entity.getDeltaMovement());
+                pDestination.addDuringTeleport(newentity);
+            }
 
             entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-            entity.level().getProfiler().pop();
-            ((ServerLevel) entity.level()).resetEmptyTime();
+            level.resetEmptyTime();
             pDestination.resetEmptyTime();
-            entity.level().getProfiler().pop();
-            return transportedEntity;
+            return newentity;
         } else {
             return null;
         }

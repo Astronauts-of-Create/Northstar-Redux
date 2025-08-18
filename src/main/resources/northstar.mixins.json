@@ -5,12 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BucketItemMixin",
-    "CompassMixin",
     "ContraptionTestMixin",
     "GravityStuffMixin",
-    "MobMixin",
+    "LivingEntityMixin",
     "OxygenAndTempEntityMixin",
-    "PlayerMixin",
     "ServerLevelMixin",
     "WindmillBearingBlockEntityMixin",
     "blockstuff.CampfireBlockMixin",

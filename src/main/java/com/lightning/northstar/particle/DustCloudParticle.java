@@ -40,6 +40,7 @@ public class DustCloudParticle extends SimpleAnimatedParticle {
         this.setAlpha(0.2f);
     }
 
+    @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
@@ -54,6 +55,7 @@ public class DustCloudParticle extends SimpleAnimatedParticle {
         setSprite(sprites.get(index, 8));
     }
 
+    @Override
     public float getQuadSize(float pScaleFactor) {
         float f = ((float) this.age + pScaleFactor) / (float) this.lifetime;
         return this.quadSize * (1.0F - f * f * 0.5F);
@@ -66,6 +68,7 @@ public class DustCloudParticle extends SimpleAnimatedParticle {
             this.spriteSet = animatedSprite;
         }
 
+        @Override
         public Particle createParticle(DustCloudParticleData data, ClientLevel worldIn, double x, double y, double z,
                                        double xSpeed, double ySpeed, double zSpeed) {
             return new DustCloudParticle(worldIn, x, y, z, zSpeed, zSpeed, zSpeed, this.spriteSet);

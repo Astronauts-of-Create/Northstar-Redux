@@ -1,5 +1,6 @@
 package com.lightning.northstar.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -17,6 +18,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class VenusTallMyceliumBlock extends BushBlock {
+
+    private static final MapCodec<VenusTallMyceliumBlock> CODEC = simpleCodec(VenusTallMyceliumBlock::new);
+
     protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
     protected static final VoxelShape CEILING_SHAPE = Block.box(2.0D, 3.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
@@ -26,10 +30,17 @@ public class VenusTallMyceliumBlock extends BushBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(IS_ON_CEILING, false));
     }
 
+    @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(IS_ON_CEILING);
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if(pState.getValue(IS_ON_CEILING)){
             return CEILING_SHAPE;
@@ -37,6 +48,7 @@ public class VenusTallMyceliumBlock extends BushBlock {
         else return SHAPE;
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         if(pState.getValue(IS_ON_CEILING)) {
             BlockPos blockpos = pPos.above();
@@ -44,7 +56,7 @@ public class VenusTallMyceliumBlock extends BushBlock {
             if (blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK)) {
                 return true;
             } else {
-                return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.DOWN, this);
+                return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.DOWN, pState).isTrue();
             }
         }else {
             BlockPos blockpos = pPos.below();
@@ -52,10 +64,11 @@ public class VenusTallMyceliumBlock extends BushBlock {
             if (blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK)) {
                 return true;
             } else {
-                return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.UP, this);
+                return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.UP, pState).isTrue();
             }
         }
     }
+    @Override
     protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return pState.isSolidRender(pLevel, pPos);
     }

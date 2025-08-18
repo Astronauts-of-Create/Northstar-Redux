@@ -9,6 +9,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -39,6 +40,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         super(typeIn, pos, state);
     }
 
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
@@ -183,34 +185,36 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
     }
 
     @Override
-    public void write(CompoundTag tag, boolean clientPacket) {
-        tag.putInt("sizeX", sizeX);
-        tag.putInt("sizeY", sizeY);
-        tag.putInt("sizeZ", sizeZ);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
 
-        tag.putInt("offsetX", offsetX);
-        tag.putInt("offsetY", offsetY);
-        tag.putInt("offsetZ", offsetZ);
+        compound.putInt("sizeX", sizeX);
+        compound.putInt("sizeY", sizeY);
+        compound.putInt("sizeZ", sizeZ);
 
-        tag.putBoolean("envFill", envFill);
+        compound.putInt("offsetX", offsetX);
+        compound.putInt("offsetY", offsetY);
+        compound.putInt("offsetZ", offsetZ);
 
-        tag.putInt("temp", this.temp);
-        super.write(tag, clientPacket);
+        compound.putBoolean("envFill", envFill);
+
+        compound.putInt("temp", this.temp);
     }
 
     @Override
-    protected void read(CompoundTag tag, boolean clientPacket) {
-        sizeX = tag.getInt("sizeX");
-        sizeY = tag.getInt("sizeY");
-        sizeZ = tag.getInt("sizeZ");
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
 
-        offsetX = tag.getInt("offsetX");
-        offsetY = tag.getInt("offsetY");
-        offsetZ = tag.getInt("offsetZ");
+        sizeX = compound.getInt("sizeX");
+        sizeY = compound.getInt("sizeY");
+        sizeZ = compound.getInt("sizeZ");
 
-        envFill = tag.getBoolean("envFill");
+        offsetX = compound.getInt("offsetX");
+        offsetY = compound.getInt("offsetY");
+        offsetZ = compound.getInt("offsetZ");
 
-        temp = tag.getInt("temp");
-        super.read(tag, clientPacket);
+        envFill = compound.getBoolean("envFill");
+
+        temp = compound.getInt("temp");
     }
 }

@@ -27,12 +27,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import net.minecraft.world.level.portal.DimensionTransition;
+import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -123,8 +124,8 @@ public class RocketContraption extends TranslatingContraption {
                 // though I can't figure that out so this may have to do
 
                 if (rsbe.container.getItem(0).is(NorthstarItems.RETURN_TICKET.get())) {
-                    if (rsbe.container.getItem(0).getTagElement("Planet") != null) {
-                        if (NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(rsbe.container.getItem(0).getTagElement("Planet").toString())) == dest)
+                    if (rsbe.container.getItem(0).has(NorthstarDataComponents.PLANET)) {
+                        if (NorthstarPlanets.getPlanetDimension(rsbe.container.getItem(0).get(NorthstarDataComponents.PLANET)) == dest)
                             this.isUsingTicket = true;
                         this.isUsingTicket = true;
                     }
@@ -233,9 +234,9 @@ public class RocketContraption extends TranslatingContraption {
         System.out.println(target.isLoaded(entity.blockPosition()));
         for (Entity e : entity.getPassengers()) {
             System.out.println(e);
-            e.changeDimension(target);
+            e.changeDimension(new DimensionTransition(target, e, DimensionTransition.DO_NOTHING));
         }
-        entity.changeDimension(target);
+        entity.changeDimension(new DimensionTransition(target, entity, DimensionTransition.DO_NOTHING));
         entity.getContraption().getContraptionWorld();
         entity.level().getProfiler().pop();
     }

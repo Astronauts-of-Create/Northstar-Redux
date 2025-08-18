@@ -55,12 +55,12 @@ public class InterplanetaryNavigatorBlock extends Block implements SimpleWaterlo
     }
 
     @Override
-    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+    public BlockState playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         if (!pLevel.isClientSide && pPlayer.isCreative()) {
             preventCreativeDropFromBottomPart(pLevel, pPos, pState, pPlayer);
         }
 
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+        return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
     protected static void preventCreativeDropFromBottomPart(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {

@@ -4,17 +4,17 @@ import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.lightning.northstar.item.client.SpaceSuitFirstPersonRenderer;
 import com.simibubi.create.content.trains.CameraDistanceModifier;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent event) {
+    public static void onTick(ClientTickEvent.Pre event) {
         if (!isGameActive())
             return;
         SpaceSuitFirstPersonRenderer.clientTick();
@@ -37,9 +37,8 @@ public class ClientEvents {
         CameraDistanceModifier.zoomOut(6);
     }
 
-
-    @SuppressWarnings("resource")
     protected static boolean isGameActive() {
         return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
     }
+
 }

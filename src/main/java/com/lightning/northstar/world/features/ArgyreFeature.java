@@ -90,6 +90,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
         return pTrunkHeight;
     }
 
+    @Override
     protected void setBlock(LevelWriter pLevel, BlockPos pPos, BlockState pState) {
         setBlockKnownShape(pLevel, pPos, pState);
     }
@@ -101,6 +102,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
      *
      * @param pContext A context object with a reference to the level and the position the feature is being placed at
      */
+    @Override
     public final boolean place(FeaturePlaceContext<AlienTreeConfig> pContext) {
         WorldGenLevel worldgenlevel = pContext.level();
         RandomSource randomsource = pContext.random();

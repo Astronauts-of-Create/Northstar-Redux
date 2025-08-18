@@ -9,7 +9,7 @@ import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.ForgeCatnipServices;
+import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -22,9 +22,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> {
 
@@ -47,7 +46,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
         RandomSource r = RandomSource.create(pos.hashCode());
         Vec3 baseVector = new Vec3(.125, level, 0);
 
-        IItemHandlerModifiable inv = iceBox.itemCapability.orElse(new ItemStackHandler());
+        IItemHandlerModifiable inv = iceBox.itemCapability;
         int itemCount = 0;
         for (int slot = 0; slot < inv.getSlots(); slot++)
             if (!inv.getStackInSlot(slot)
@@ -162,7 +161,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
                 float partial = Mth.clamp(units / totalUnits, 0, 1);
                 xMax += partial * 12 / 16f;
 
-                ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false, false);
+                NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false, false);
 
                 xMin = xMax;
             }

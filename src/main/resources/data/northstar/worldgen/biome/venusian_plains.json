@@ -46,7 +46,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:venus_gravel_cluster",
       "minecraft:lake_lava_underground",
@@ -69,6 +69,6 @@
       "northstar:venus_sulfuric_acid_lake",
       "northstar:venus_sulfuric_acid_lake_surface"
     ],
-    []
+    [ ]
   ]
 }

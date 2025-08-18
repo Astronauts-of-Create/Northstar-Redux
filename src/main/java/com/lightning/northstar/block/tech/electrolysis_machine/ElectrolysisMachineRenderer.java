@@ -4,11 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import net.createmod.catnip.platform.ForgeCatnipServices;
+import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.util.Mth;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ElectrolysisMachineRenderer extends SmartBlockEntityRenderer<ElectrolysisMachineBlockEntity>  {
 
@@ -57,7 +57,7 @@ public class ElectrolysisMachineRenderer extends SmartBlockEntityRenderer<Electr
                     float partial = Mth.clamp(units / totalUnits, 0, 1);
                     xMax += partial * 12 / 16f;
 
-                    ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false, false);
+                    NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false, false);
 
                     xMin = xMax;
                 }

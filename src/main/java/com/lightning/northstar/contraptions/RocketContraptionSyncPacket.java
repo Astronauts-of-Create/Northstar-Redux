@@ -1,67 +1,55 @@
 package com.lightning.northstar.contraptions;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
-import net.minecraft.network.FriendlyByteBuf;
+import com.lightning.northstar.content.NorthstarPackets;
+import com.tterrag.registrate.util.RegistrateDistExecutor;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.neoforged.api.distmarker.Dist;
 
-public class RocketContraptionSyncPacket extends SimplePacketBase {
-    RocketContraptionEntity entity;
+public class RocketContraptionSyncPacket implements ClientboundPacketPayload {
+
+    public static final StreamCodec<ByteBuf, RocketContraptionSyncPacket> STREAM_CODEC = null;/*StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, packet -> packet.contraptionEntityId,
+            Vec3.STREAM_CODEC, packet -> packet.pos,
+            ByteBufCodecs.FLOAT, packet -> packet.lift_vel,
+            ByteBufCodecs.VAR_INT, packet -> packet.launchtime,
+            ByteBufCodecs.BOOL, packet -> packet.stopControlling,
+            RocketContraptionSyncPacket::new
+    );*/
+
     public int contraptionEntityId;
-    Vec3 pos;
-    float lift_vel;
-    int launchtime;
-    boolean launched;
-    boolean landing;
-    boolean blasting;
-    boolean slowing;
-    boolean activeLaunch;
+    public Vec3 pos;
+    public float lift_vel;
+    public int launchTime;
+    public boolean launched;
+    public boolean landing;
+    public boolean blasting;
+    public boolean slowing;
+    public boolean activeLaunch;
 
-    public RocketContraptionSyncPacket(Vec3 syncedPos, float lift_vel2, int id,  int vLaunchtime, boolean vLaunched, boolean vLanding, boolean vBlasting, boolean vSlowing, boolean vActiveLaunch) {
-        pos = syncedPos;
-        lift_vel = lift_vel2;
-        contraptionEntityId = id;
-        launchtime = vLaunchtime;
-        launched = vLaunched;
-        landing = vLanding;
-        blasting = vBlasting;
-        slowing = vSlowing;
-        activeLaunch = vActiveLaunch;
-    }
-    public RocketContraptionSyncPacket(FriendlyByteBuf buffer) {
-        pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-        lift_vel = buffer.readFloat();
-        contraptionEntityId = buffer.readInt();
-        launchtime = buffer.readInt();
-        launched = buffer.readBoolean();
-        landing = buffer.readBoolean();
-        blasting = buffer.readBoolean();
-        slowing = buffer.readBoolean();
-        activeLaunch = buffer.readBoolean();
+    public RocketContraptionSyncPacket(int contraptionEntityId, Vec3 pos, float lift_vel, int launchTime, boolean launched, boolean landing, boolean blasting, boolean slowing, boolean activeLaunch) {
+        this.contraptionEntityId = contraptionEntityId;
+        this.pos = pos;
+        this.lift_vel = lift_vel;
+        this.launchTime = launchTime;
+        this.launched = launched;
+        this.landing = landing;
+        this.blasting = blasting;
+        this.slowing = slowing;
+        this.activeLaunch = activeLaunch;
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeDouble(pos.x);
-        buffer.writeDouble(pos.y);
-        buffer.writeDouble(pos.z);
-        buffer.writeFloat(lift_vel);
-        buffer.writeInt(contraptionEntityId);
-        buffer.writeInt(launchtime);
-        buffer.writeBoolean(launched);
-        buffer.writeBoolean(landing);
-        buffer.writeBoolean(blasting);
-        buffer.writeBoolean(slowing);
-        buffer.writeBoolean(activeLaunch);
+    public void handle(LocalPlayer player) {
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketContraptionEntity.handleSyncPacket(this));
     }
 
     @Override
-    public boolean handle(Context context) {
-        context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> RocketContraptionEntity.handleSyncPacket(this)));
-        return true;
+    public PacketTypeProvider getTypeProvider() {
+        return NorthstarPackets.ROCKET_SYNC_PACKET;
     }
 
 }

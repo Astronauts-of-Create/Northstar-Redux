@@ -1,40 +1,44 @@
 package com.lightning.northstar.contraptions;
 
+import com.lightning.northstar.content.NorthstarPackets;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
+import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.UUID;
 
-public class RocketControlPacket extends SimplePacketBase {
-    int rce;
-    UUID playerID;
-    BlockPos localControlsPos;
+public class RocketControlPacket implements ClientboundPacketPayload {
 
-    public RocketControlPacket(UUID player, int rce2, BlockPos controlsPos) {
-        playerID = player;
-        rce = rce2;
-        localControlsPos = controlsPos;
-    }
-    public RocketControlPacket(FriendlyByteBuf buffer) {
-        playerID = buffer.readUUID();
-        localControlsPos = buffer.readBlockPos();
-        rce = buffer.readInt();
-    }
+    public static final StreamCodec<ByteBuf, RocketControlPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT, packet -> packet.rce,
+            UUIDUtil.STREAM_CODEC, packet -> packet.playerID,
+            BlockPos.STREAM_CODEC, packet -> packet.localControlsPos,
+            RocketControlPacket::new
+    );
 
-    @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeUUID(playerID);
-        buffer.writeBlockPos(localControlsPos);
-        buffer.writeInt(rce);
+    public int rce;
+    public UUID playerID;
+    public BlockPos localControlsPos;
+
+    public RocketControlPacket(int rce, UUID playerID, BlockPos localControlsPos) {
+        this.rce = rce;
+        this.playerID = playerID;
+        this.localControlsPos = localControlsPos;
     }
 
     @Override
-    public boolean handle(Context context) {
+    public void handle(LocalPlayer player) {
         RocketHandler.CONTROL_QUEUE.put(Pair.of(playerID, localControlsPos), rce);
-        return true;
+    }
+
+    @Override
+    public PacketTypeProvider getTypeProvider() {
+        return NorthstarPackets.ROCKET_CONTROL_PACKET;
     }
 
 }

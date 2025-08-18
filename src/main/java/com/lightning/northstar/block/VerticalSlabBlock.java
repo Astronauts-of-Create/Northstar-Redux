@@ -1,8 +1,10 @@
 package com.lightning.northstar.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -23,31 +25,41 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterloggedBlock {
+
+    public static final MapCodec<VerticalSlabBlock> CODEC = simpleCodec(VerticalSlabBlock::new);
+
     public static final EnumProperty<VerticalSlabTypes> TYPE = EnumProperty.create("type", VerticalSlabTypes.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     protected static final VoxelShape NORTH_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
     protected static final VoxelShape SOUTH_SHAPE = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape EAST_SHAPE = Block.box(8.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape WEST_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 8.0D, 16.0D, 16.0D);
-
 
     public VerticalSlabBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
         this.registerDefaultState(this.defaultBlockState().setValue(TYPE, VerticalSlabTypes.NORTH).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public boolean useShapeForLightOcclusion(BlockState pState) {
         return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE;
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(TYPE, WATERLOGGED);
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return switch (pState.getValue(TYPE)) {
             case DOUBLE -> Shapes.block();
@@ -58,6 +70,7 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         };
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockPos blockpos = pContext.getClickedPos();
@@ -79,6 +92,7 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         }
     }
 
+    @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
         ItemStack itemstack = pUseContext.getItemInHand();
         VerticalSlabTypes slabtype = pState.getValue(TYPE);
@@ -99,21 +113,23 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         }
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     public boolean placeLiquid(LevelAccessor pLevel, BlockPos pPos, BlockState pState, FluidState pFluidState) {
         return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.placeLiquid(pLevel, pPos, pState, pFluidState) : false;
     }
 
-    public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
-        return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(pLevel, pPos, pState, pFluid) : false;
+    @Override
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
+        return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(player, pLevel, pPos, pState, pFluid) : false;
     }
 
-
-    @SuppressWarnings("deprecation")
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if (pState.getValue(WATERLOGGED)) {
             pLevel.scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));

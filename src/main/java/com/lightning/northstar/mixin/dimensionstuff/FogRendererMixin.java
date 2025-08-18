@@ -19,8 +19,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,7 +50,7 @@ public abstract class FogRendererMixin {
             if (player_dim == NorthstarDimensions.MARS_DIM_KEY)
             {float playerEyeLevel = (float) Minecraft.getInstance().player.getEyePosition(3).y;
             if (playerEyeLevel > 400) {info.cancel();
-                  Vector3f fogColor = net.minecraftforge.client.ForgeHooksClient.getFogColor(pActiveRenderInfo, pPartialTicks, pLevel, pRenderDistanceChunks, pBossColorModifier, fogRed, fogGreen, fogBlue);
+                  Vector3f fogColor = ClientHooks.getFogColor(pActiveRenderInfo, pPartialTicks, pLevel, pRenderDistanceChunks, pBossColorModifier, fogRed, fogGreen, fogBlue);
 
                   fogRed = (float) (fogColor.x() - ((playerEyeLevel - 400) / 300));
                   fogGreen = (float) (fogColor.y() - ((playerEyeLevel - 400) / 300));
@@ -60,7 +61,7 @@ public abstract class FogRendererMixin {
 
                   RenderSystem.clearColor(fogRed, fogGreen, fogBlue, 0.0F);}else {
               info.cancel();
-                Vector3f fogColor = net.minecraftforge.client.ForgeHooksClient.getFogColor(pActiveRenderInfo, pPartialTicks, pLevel, pRenderDistanceChunks, pBossColorModifier, fogRed, fogGreen, fogBlue);
+                Vector3f fogColor = ClientHooks.getFogColor(pActiveRenderInfo, pPartialTicks, pLevel, pRenderDistanceChunks, pBossColorModifier, fogRed, fogGreen, fogBlue);
 
                 fogRed = (float) fogColor.x();
                 fogGreen = (float) fogColor.y();
@@ -76,7 +77,7 @@ public abstract class FogRendererMixin {
                 if (playerEyeLevel > 450) {info.cancel();
                    ClientLevel level = Minecraft.getInstance().level;
                    Vec3 toad = level.getSkyColor(Minecraft.getInstance().player.getEyePosition(3), pPartialTicks);
-                  Vector3f fogColor = net.minecraftforge.client.ForgeHooksClient.getFogColor(pActiveRenderInfo, pPartialTicks, pLevel, pRenderDistanceChunks, pBossColorModifier, fogRed, fogGreen, fogBlue);
+                  Vector3f fogColor = ClientHooks.getFogColor(pActiveRenderInfo, pPartialTicks, pLevel, pRenderDistanceChunks, pBossColorModifier, fogRed, fogGreen, fogBlue);
 
                   fogRed = (float) (toad.x() - ((playerEyeLevel - 500) / 250));
                   fogGreen = (float) (toad.y() - ((playerEyeLevel - 500) / 250));
@@ -150,7 +151,7 @@ public abstract class FogRendererMixin {
                    RenderSystem.setShaderFogStart(-8.0F);
                   RenderSystem.setShaderFogEnd(fog_dist);
                   RenderSystem.setShaderFogShape(FogShape.SPHERE);
-                  net.minecraftforge.client.ForgeHooksClient.onFogRender(FogMode.FOG_TERRAIN, FogType.WATER, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.SPHERE);
+                  ClientHooks.onFogRender(FogMode.FOG_TERRAIN, FogType.WATER, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.SPHERE);
           }
 
             Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
@@ -202,7 +203,7 @@ public abstract class FogRendererMixin {
             fogGreen = (float) fogColor.y();
             fogBlue = (float) fogColor.z();}
 
-             net.minecraftforge.client.ForgeHooksClient.onFogRender(FogMode.FOG_TERRAIN, FogType.NONE, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.CYLINDER);
+             ClientHooks.onFogRender(FogMode.FOG_TERRAIN, FogType.NONE, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.CYLINDER);
 
             RenderSystem.clearColor(fogRed, fogGreen, fogBlue, 0.0F);}
         if (player_dim == Level.OVERWORLD)
@@ -254,7 +255,7 @@ public abstract class FogRendererMixin {
             
               RenderSystem.setShaderFogStart(-8.0F);
               RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-              net.minecraftforge.client.ForgeHooksClient.onFogRender(FogMode.FOG_TERRAIN, FogType.NONE, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.CYLINDER);
+              ClientHooks.onFogRender(FogMode.FOG_TERRAIN, FogType.NONE, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.CYLINDER);
             
             
 
@@ -311,7 +312,7 @@ public abstract class FogRendererMixin {
             fogGreen = (float) fogColor.y();
             fogBlue = (float) fogColor.z();
             
-            net.minecraftforge.client.ForgeHooksClient.onFogRender(FogMode.FOG_TERRAIN, FogType.NONE, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.CYLINDER);
+            ClientHooks.onFogRender(FogMode.FOG_TERRAIN, FogType.NONE, pCamera, pPartialTicks, Minecraft.getInstance().options.getEffectiveRenderDistance(), -8, 96, FogShape.CYLINDER);
 
             if(fogtype == FogType.NONE && fluidInCam == Fluids.EMPTY) {
             RenderSystem.setShaderFogStart(-8.0F);

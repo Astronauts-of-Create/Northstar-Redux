@@ -19,6 +19,7 @@ public class StructureFeature extends Feature<StructureFeatureConfig>  {
     public StructureFeature(Codec<StructureFeatureConfig> pCodec) {
         super(pCodec);
     }
+    @Override
     public boolean place(FeaturePlaceContext<StructureFeatureConfig> pContext) {
         System.out.println(pContext.origin());
         RandomSource randomsource = pContext.random();

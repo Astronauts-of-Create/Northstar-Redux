@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_generator;
 
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags;
@@ -15,23 +16,22 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
+
     public int maxOxy;
     public int minOxy;
     public Set<BlockPos> OXYGEN_BLOBS = new HashSet<>();
@@ -40,6 +40,14 @@ public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IH
 
     public OxygenGeneratorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+    }
+
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, NorthstarBlockEntityTypes.OXYGEN_GENERATOR.get(), (be, face) -> {
+            if (face == be.getBlockState().getValue(OxygenGeneratorBlock.HORIZONTAL_FACING).getOpposite())
+                return be.tank.getCapability();
+            return null;
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -106,7 +114,6 @@ public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IH
         entity.OXYGEN_BLOBS.clear();
     }
 
-
     public void drain(int amount) {
         this.tank.getPrimaryHandler().drain(amount, FluidAction.EXECUTE);
     }
@@ -162,15 +169,6 @@ public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IH
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         tank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 1, 10000, true);
         behaviours.add(tank);
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenGeneratorBlock.HORIZONTAL_FACING).getOpposite())
-            return tank.getCapability()
-                    .cast();
-        tank.getCapability().cast();
-        return super.getCapability(cap, side);
     }
 
 }

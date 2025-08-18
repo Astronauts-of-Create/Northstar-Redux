@@ -2,6 +2,7 @@ package com.lightning.northstar.block.crops;
 
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -29,6 +30,8 @@ import javax.annotation.Nullable;
 
 public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
 
+    public static final MapCodec<MartianFlowerBlock> CODEC = simpleCodec(MartianFlowerBlock::new);
+
     public static final int MAX_AGE = 2;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D);
@@ -37,6 +40,11 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         super(properties);
 
         registerDefaultState(stateDefinition.any().setValue(getAgeProperty(), 2));
+    }
+
+    @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return CODEC;
     }
 
     public Item getSeedItem() {
@@ -66,10 +74,12 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         return pState.getValue(this.getAgeProperty()) >= this.getMaxAge();
     }
 
+    @Override
     public boolean isRandomlyTicking(BlockState pState) {
         return !this.isMaxAge(pState);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (!pLevel.isAreaLoaded(pPos, 1)) return;
@@ -89,6 +99,7 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         return pState.getValue(this.getAgeProperty());
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(AGE);
     }
@@ -103,7 +114,7 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return !isMaxAge(state);
     }
 

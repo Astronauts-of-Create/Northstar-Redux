@@ -29,10 +29,11 @@ public class CustomIceBlock extends HalfTransparentBlock {
         super(pProperties);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pTe, ItemStack pStack) {
         super.playerDestroy(pLevel, pPlayer, pPos, pState, pTe, pStack);
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, pStack) == 0) {
+        if (EnchantmentHelper.getItemEnchantmentLevel(pLevel.holderOrThrow(Enchantments.SILK_TOUCH), pStack) == 0) {
             if (pLevel.dimensionType().ultraWarm()) {
                 pLevel.removeBlock(pPos, false);
                 return;
@@ -49,6 +50,7 @@ public class CustomIceBlock extends HalfTransparentBlock {
     /**
      * Performs a random tick on a block.
      */
+    @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (TemperatureStuff.getBoilingPoint(fluid.defaultFluidState()) > TemperatureStuff.getTemp(pPos, pLevel)) {
             this.evaporate(pState, pLevel, pPos);

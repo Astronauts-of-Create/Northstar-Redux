@@ -15,26 +15,32 @@ public class FrozenZombieEntity extends Zombie {
         super(pEntityType, pLevel);
     }
 
+    @Override
     protected boolean isSunSensitive() {
         return false;
     }
 
+    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.HUSK_AMBIENT;
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource) {
         return SoundEvents.HUSK_HURT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.HUSK_DEATH;
     }
 
+    @Override
     protected SoundEvent getStepSound() {
         return SoundEvents.HUSK_STEP;
     }
 
+    @Override
     public boolean doHurtTarget(Entity pEntity) {
         boolean flag = super.doHurtTarget(pEntity);
         if (flag && pEntity instanceof LivingEntity) {
@@ -44,10 +50,12 @@ public class FrozenZombieEntity extends Zombie {
         return flag;
     }
 
+    @Override
     protected boolean convertsInWater() {
         return false;
     }
 
+    @Override
     protected ItemStack getSkull() {
         return ItemStack.EMPTY;
     }

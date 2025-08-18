@@ -3,9 +3,9 @@ package com.lightning.northstar.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.material.Fluids;
 
 import javax.annotation.Nullable;
 
-public class GrateBlock extends AbstractGlassBlock implements SimpleWaterloggedBlock {
+public class GrateBlock extends TransparentBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public GrateBlock(Properties pProperties) {
@@ -23,6 +23,7 @@ public class GrateBlock extends AbstractGlassBlock implements SimpleWaterloggedB
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         LevelAccessor levelaccessor = pContext.getLevel();
@@ -30,11 +31,13 @@ public class GrateBlock extends AbstractGlassBlock implements SimpleWaterloggedB
         return this.defaultBlockState().setValue(WATERLOGGED, levelaccessor.getFluidState(blockpos).getType() == Fluids.WATER);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(WATERLOGGED);
     }

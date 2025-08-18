@@ -7,6 +7,7 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class RocketStationPonder {
 
@@ -32,7 +33,7 @@ public class RocketStationPonder {
         Selection navigator = util.select().fromTo(8, 9, 6, 8, 10, 6);
 
         AABB glue1 = new AABB(util.grid().at(3, 1, 3));
-        AABB glue2 = new AABB(util.grid().at(3, 1, 3), util.grid().at(11, 18, 11));
+        AABB glue2 = new AABB(Vec3.atLowerCornerOf(util.grid().at(3, 1, 3)), Vec3.atLowerCornerWithOffset(util.grid().at(11, 18, 11), 1, 1, 1));
 
         scene.world().showSection(util.select().everywhere(), Direction.DOWN);
         scene.idle(20);

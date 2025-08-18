@@ -43,6 +43,7 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         this.eastAabb = Block.box(0.0D, (double)pOffset, (double)pOffset, (double)pSize, (double)(16 - pOffset), (double)(16 - pOffset));
         this.westAabb = Block.box((double)(16 - pSize), (double)pOffset, (double)pOffset, 16.0D, (double)(16 - pOffset), (double)(16 - pOffset));
     }
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return switch (pState.getValue(FACING)) {
             case NORTH -> this.northAabb;
@@ -54,6 +55,7 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         };
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         Direction direction = pState.getValue(FACING);
         BlockPos blockpos = pPos.relative(direction.getOpposite());
@@ -66,6 +68,7 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         * returns its solidified counterpart.
         * Note that this method should ideally consider only the specific direction passed in.
         */
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
         BlockPos.MutableBlockPos blockpos = pCurrentPos.mutable();
@@ -82,6 +85,7 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         return pDirection == pState.getValue(FACING).getOpposite() && ! pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
     }
 
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         LevelAccessor levelaccessor = pContext.getLevel();
@@ -114,11 +118,13 @@ public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
         return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(WATERLOGGED, FACING);
     }

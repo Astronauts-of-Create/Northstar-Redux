@@ -62,7 +62,7 @@ public class ServerLevelMixin {
         if (optional.isPresent()) {
            return optional.get();
         } else {
-           AABB aabb = (new AABB(blockpos, new BlockPos(blockpos.getX(), level.getMaxBuildHeight(), blockpos.getZ()))).inflate(3.0D);
+           AABB aabb = new AABB(Vec3.atCenterOf(blockpos), Vec3.atCenterOf(new BlockPos(blockpos.getX(), level.getMaxBuildHeight(), blockpos.getZ()))).inflate(3.0D);
            List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, aabb, (p_184067_) -> p_184067_ != null && p_184067_.isAlive() && level.canSeeSky(p_184067_.blockPosition()));
            if (!list.isEmpty()) {
               return list.get(level.random.nextInt(list.size())).blockPosition();

@@ -5,12 +5,12 @@ plugins {
     id("dev.architectury.loom") version "1.9.+"
 }
 
-version = "0.2.7-SNAPSHOT+1.20.1" // https://semver.org/
+version = "0.2.7-SNAPSHOT+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -20,8 +20,7 @@ architectury {
 }
 
 loom {
-    forge {
-        mixinConfig("northstar.mixins.json")
+    neoForge {
     }
 }
 
@@ -30,6 +29,7 @@ repositories {
     maven("https://modmaven.dev/")
     maven("https://maven.tterrag.com/")
     maven("https://maven.createmod.net")
+    maven("https://maven.neoforged.net/releases")
     maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") // Ponder
     maven("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/") { // GeckoLib
         content {
@@ -38,40 +38,52 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
+    maven("https://mvn.devos.one/snapshots")
     maven("https://maven.pkg.github.com/copycats-plus/copycats") {
         credentials {
             username = project.property("github.packages.username") as? String
             password = project.property("github.packages.password") as? String
         }
     }
+    maven("https://maven.ftb.dev/releases")
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
+        }
+    }
+    maven("https://api.modrinth.com/maven") {
+        content {
+            includeGroup("maven.modrinth")
         }
     }
 }
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
-    "forge"(libs.forge)
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
+    })
+    "neoForge"(libs.neoforge)
 
     annotationProcessor(libs.mixinextras.common)
-    implementation(libs.mixinextras.forge)
+    implementation(libs.mixinextras.neoforge)
 
-    modImplementation(variantOf(libs.create) { classifier("slim") })
-    modImplementation(libs.ponder.forge)
+    modImplementation(variantOf(libs.create) { classifier("slim") }) {
+        exclude(group = "maven.modrinth", module = "journeymap")
+    }
+    modImplementation(libs.ponder.neoforge)
     modImplementation(libs.registrate)
-    modCompileOnly(libs.flywheel.forge.api)
-    modRuntimeOnly(libs.flywheel.forge)
+    modCompileOnly(libs.flywheel.neoforge.api)
+    modRuntimeOnly(libs.flywheel.neoforge)
 
-    modImplementation(libs.geckolib.forge)
+    modImplementation(libs.geckolib.neoforge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
-    modImplementation(libs.jei.forge)
-    modImplementation(libs.copycats)
+    modImplementation(libs.jei.neoforge)
+    //modImplementation(libs.copycats)
 
-    modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
+    modLocalRuntime(files(file("run/mods-obf-1.21.1").listFiles() ?: emptyArray<File>()))
 }
 
 tasks.processResources {
@@ -102,4 +114,5 @@ tasks.processResources {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+    options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
 }

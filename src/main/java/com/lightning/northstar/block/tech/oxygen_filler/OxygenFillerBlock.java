@@ -10,7 +10,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,23 +28,21 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
         super(properties);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack heldItem = player.getItemInHand(hand);
         System.out.println(heldItem);
 
-        return onBlockEntityUse(world, pos, be -> {
+        return onBlockEntityUseItemOn(level, pos, be -> {
             ItemStack mainItemStack = be.container.getItem(0);
             player.getInventory().placeItemBackInInventory(mainItemStack);
             player.getInventory().removeItem(heldItem);
             be.container.setItem(0, heldItem);
             if (!mainItemStack.isEmpty())
-                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
+                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
 
             be.notifyUpdate();
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         });
     }
 

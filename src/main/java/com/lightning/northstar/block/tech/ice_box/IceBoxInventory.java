@@ -2,7 +2,6 @@ package com.lightning.northstar.block.tech.ice_box;
 
 import com.simibubi.create.foundation.item.SmartInventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class IceBoxInventory extends SmartInventory {
 
@@ -20,7 +19,7 @@ public class IceBoxInventory extends SmartInventory {
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         // Only insert if no other slot already has a stack of this item
         for (int i = 0; i < getSlots(); i++)
-            if (i != slot && ItemHandlerHelper.canItemStacksStack(stack, inv.getStackInSlot(i)))
+            if (i != slot && ItemStack.isSameItemSameComponents(stack, inv.getStackInSlot(i)))
                 return stack;
         return super.insertItem(slot, stack, simulate);
     }

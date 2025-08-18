@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_concentrator;
 
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -9,21 +10,19 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
 
     public int airLevel;
@@ -42,6 +41,13 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
         super(typeIn, pos, state);
     }
 
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, NorthstarBlockEntityTypes.OXYGEN_CONCENTRATOR.get(), (be, face) -> {
+            if (face == be.getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING).getOpposite())
+                return be.tank.getCapability();
+            return null;
+        });
+    }
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
@@ -134,31 +140,19 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
     }
 
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
+
         compound.putInt("Air", airLevel);
         compound.putInt("Timer", airTimer);
     }
 
     @Override
-    public void writeSafe(CompoundTag compound) {
-        super.writeSafe(compound);
-    }
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
 
-    @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
         airLevel = compound.getInt("Air");
         airTimer = compound.getInt("Timer");
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING).getOpposite())
-            return tank.getCapability()
-                    .cast();
-        tank.getCapability().cast();
-        return super.getCapability(cap, side);
     }
 
 }

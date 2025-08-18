@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.ice_box;
 
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.world.TemperatureStuff;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
@@ -25,31 +26,29 @@ import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,8 +65,8 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     protected SmartFluidTankBehaviour outputTank;
     private FilteringBehaviour filtering;
 
-    protected LazyOptional<IItemHandlerModifiable> itemCapability;
-    protected LazyOptional<IFluidHandler> fluidCapability;
+    protected IItemHandlerModifiable itemCapability;
+    protected IFluidHandler fluidCapability;
 
     private Couple<SmartInventory> invs;
     private Couple<SmartFluidTankBehaviour> tanks;
@@ -89,7 +88,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         outputInventory = new IceBoxInventory(9, this).forbidInsertion()
                 .withMaxStackSize(64);
         contentsChanged = true;
-        itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(inputInventory, outputInventory));
+        itemCapability = new CombinedInvWrapper(inputInventory, outputInventory);
 
         invs = Couple.create(inputInventory, outputInventory);
         tanks = Couple.create(inputTank, outputTank);
@@ -100,35 +99,39 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         wrapper = new RecipeWrapper(inputInventory);
     }
 
-    @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
-        inputInventory.deserializeNBT(compound.getCompound("InputItems"));
-        outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
-
-        if (!clientPacket)
-            return;
-
-        NBTHelper.iterateCompoundList(compound.getList("VisualizedItems", Tag.TAG_COMPOUND),
-                c -> visualizedOutputItems.add(IntAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.of(c))));
-        NBTHelper.iterateCompoundList(compound.getList("VisualizedFluids", Tag.TAG_COMPOUND),
-                c -> visualizedOutputFluids
-                        .add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.loadFluidStackFromNBT(c))));
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, NorthstarBlockEntityTypes.ICE_BOX.get(), (be, face) -> be.itemCapability);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, NorthstarBlockEntityTypes.ICE_BOX.get(), (be, face) -> be.fluidCapability);
     }
 
     @Override
-    public void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
-        compound.put("InputItems", inputInventory.serializeNBT());
-        compound.put("OutputItems", outputInventory.serializeNBT());
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(tag, registries, clientPacket);
+
+        inputInventory.deserializeNBT(registries, tag.getCompound("InputItems"));
+        outputInventory.deserializeNBT(registries, tag.getCompound("OutputItems"));
 
         if (!clientPacket)
             return;
 
-        compound.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> ia.getValue()
-                .serializeNBT()));
-        compound.put("VisualizedFluids", NBTHelper.writeCompoundList(visualizedOutputFluids, ia -> ia.getValue()
-                .writeToNBT(new CompoundTag())));
+        NBTHelper.iterateCompoundList(tag.getList("VisualizedItems", Tag.TAG_COMPOUND),
+                c -> visualizedOutputItems.add(IntAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.parseOptional(registries, c))));
+        NBTHelper.iterateCompoundList(tag.getList("VisualizedFluids", Tag.TAG_COMPOUND),
+                c -> visualizedOutputFluids.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.parseOptional(registries, c))));
+    }
+
+    @Override
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(tag, registries, clientPacket);
+
+        tag.put("InputItems", inputInventory.serializeNBT(registries));
+        tag.put("OutputItems", outputInventory.serializeNBT(registries));
+
+        if (!clientPacket)
+            return;
+
+        tag.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> (CompoundTag) ia.getValue().save(registries)));
+        tag.put("VisualizedFluids", NBTHelper.writeCompoundList(visualizedOutputFluids, ia -> (CompoundTag) ia.getValue().save(registries)));
         visualizedOutputItems.clear();
         visualizedOutputFluids.clear();
     }
@@ -153,19 +156,18 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             BlockEntity be = level.getBlockEntity(worldPosition.below()
                     .relative(direction));
 
-            InvManipulationBehaviour inserter =
-                    be == null ? null : BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
-            IItemHandler targetInv = be == null ? null :
-                    be.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite()).orElse(inserter == null ? null : inserter.getInventory());
-            IFluidHandler targetTank = be == null ? null :
-                    be.getCapability(ForgeCapabilities.FLUID_HANDLER, direction.getOpposite()).orElse(null);
+            InvManipulationBehaviour inserter = be == null ? null : BlockEntityBehaviour.get(level, be.getBlockPos(), InvManipulationBehaviour.TYPE);
+            IItemHandler targetInv = be == null ? null : level.getCapability(Capabilities.ItemHandler.BLOCK, be.getBlockPos(), be.getBlockState(), be, direction.getOpposite());
+            if (targetInv == null && inserter != null)
+                targetInv = inserter.getInventory();
+            IFluidHandler targetTank = be == null ? null : level.getCapability(Capabilities.FluidHandler.BLOCK, be.getBlockPos(), be.getBlockState(), be, direction.getOpposite());
             boolean externalTankNotPresent = targetTank == null;
 
             if (!outputItems.isEmpty() && targetInv == null)
                 return false;
             if (!outputFluids.isEmpty() && externalTankNotPresent) {
                 // Special case - fluid outputs but output only accepts items
-                targetTank = outputTank.getCapability().orElse(null);
+                targetTank = outputTank.getCapability();
                 if (targetTank == null)
                     return false;
                 if (!acceptFluidOutputsIntoIceBox(outputFluids, simulate, targetTank))
@@ -177,8 +179,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         }
 
         IItemHandler targetInv = outputInventory;
-        IFluidHandler targetTank = outputTank.getCapability()
-                .orElse(null);
+        IFluidHandler targetTank = outputTank.getCapability();
 
         if (targetInv == null && !outputItems.isEmpty())
             return false;
@@ -244,11 +245,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         behaviours.add(inputTank);
         behaviours.add(outputTank);
 
-        fluidCapability = LazyOptional.of(() -> {
-            LazyOptional<? extends IFluidHandler> inputCap = inputTank.getCapability();
-            LazyOptional<? extends IFluidHandler> outputCap = outputTank.getCapability();
-            return new CombinedTankWrapper(outputCap.orElse(null), inputCap.orElse(null));
-        });
+        fluidCapability = new CombinedTankWrapper(inputTank.getCapability(), outputTank.getCapability());
     }
 
     public float getTotalFluidUnits(float partialTicks) {
@@ -317,7 +314,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             }
         }
 //        }
-        IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
+        IItemHandlerModifiable items = itemCapability;
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack itemStack = items.getStackInSlot(i);
             visualizedOutputItems.add(IntAttached.withZero(itemStack));
@@ -362,16 +359,6 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     public void destroy() {
         super.destroy();
         ItemHelper.dropContents(level, worldPosition, inputInventory);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return itemCapability.cast();
-        if (cap == ForgeCapabilities.FLUID_HANDLER)
-            return fluidCapability.cast();
-        return super.getCapability(cap, side);
     }
 
     @Override
@@ -421,8 +408,8 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         CreateLang.translate("gui.goggles.ice_box_contents")
                 .forGoggles(tooltip);
 
-        IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
-        IFluidHandler fluids = fluidCapability.orElse(null);
+        IItemHandlerModifiable items = itemCapability;
+        IFluidHandler fluids = fluidCapability;
         boolean isEmpty = true;
 
         for (int i = 0; i < items.getSlots(); i++) {
@@ -521,9 +508,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (isEmpty())
             return matchingRecipes;
 
-        IItemHandler availableItems = this
-                .getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .orElse(null);
+        IItemHandler availableItems = itemCapability;
         if (availableItems == null)
             return matchingRecipes;
 
@@ -535,8 +520,9 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
                 .orElse(true))
             return new ArrayList<>();
 
-        List<Recipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
-        return list.stream()
+        return RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters)
+                .stream()
+                .map(RecipeHolder::value)
                 .filter(this::matchFreezingRecipe)
                 .sorted((r1, r2) -> r2.getIngredients()
                         .size()
@@ -546,15 +532,15 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
     }
 
 
-    protected <C extends Container> boolean matchStaticFilters(Recipe<C> recipe) {
-        return recipe.getType() == NorthstarRecipeTypes.FREEZING.getType();
+    protected boolean matchStaticFilters(RecipeHolder<? extends Recipe<?>> recipe) {
+        return recipe.value().getType() == NorthstarRecipeTypes.FREEZING.getType();
     }
 
     protected Object getRecipeCacheKey() {
         return freezingRecipesKey;
     }
 
-    protected <C extends Container> boolean matchFreezingRecipe(Recipe<C> recipe) {
+    protected boolean matchFreezingRecipe(Recipe<?> recipe) {
         if (recipe == null)
             return false;
         return FreezingRecipe.match(this, recipe);

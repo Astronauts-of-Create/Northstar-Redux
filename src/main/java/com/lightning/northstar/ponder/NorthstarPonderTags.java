@@ -14,7 +14,7 @@ public class NorthstarPonderTags {
             SPACE_EXPLORATION = Northstar.asResource("space_exploration");
 
     public static void register(@NotNull PonderTagRegistrationHelper<ResourceLocation> helper) {
-        PonderTagRegistrationHelper<RegistryEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        PonderTagRegistrationHelper<RegistryEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         helper.registerTag(SPACE_EXPLORATION)
                 .addToIndex()

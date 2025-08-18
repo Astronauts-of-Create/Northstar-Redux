@@ -2,12 +2,13 @@ package com.lightning.northstar.block.crops;
 
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.player.Player;
@@ -28,9 +29,13 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.EventHooks;
 
-@SuppressWarnings("deprecation")
 public class MartianStrawberryBushBlock extends BushBlock implements BonemealableBlock {
+
+    public static final MapCodec<MartianStrawberryBushBlock> CODEC = simpleCodec(MartianStrawberryBushBlock::new);
+
     public static final int MAX_AGE = 5;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_7;
     private static final VoxelShape SAPLING_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
@@ -41,6 +46,12 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0));
     }
 
+    @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if (pState.getValue(AGE) == 0) {
             return SAPLING_SHAPE;
@@ -49,6 +60,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         }
     }
 
+    @Override
     protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return pState.is(NorthstarBlocks.MARS_FARMLAND.get());
     }
@@ -76,6 +88,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     /**
      * @return whether this block needs random ticking.
      */
+    @Override
     public boolean isRandomlyTicking(BlockState pState) {
         return !this.isMaxAge(pState);
     }
@@ -83,6 +96,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     /**
      * Performs a random tick on a block.
      */
+    @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (!pLevel.isAreaLoaded(pPos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
@@ -90,9 +104,9 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
             int i = this.getAge(pState);
             if (i < this.getMaxAge()) {
                 float f = getGrowthSpeed(this, pLevel, pPos);
-                if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(pLevel, pPos, pState, pRandom.nextInt((int) (25.0F / f) + 1) == 0)) {
+                if (CommonHooks.canCropGrow(pLevel, pPos, pState, pRandom.nextInt((int) (25.0F / f) + 1) == 0)) {
                     pLevel.setBlock(pPos, this.getStateForAge(i + 1), 2);
-                    net.minecraftforge.common.ForgeHooks.onCropsGrowPost(pLevel, pPos, pState);
+                    CommonHooks.fireCropGrowPost(pLevel, pPos, pState);
                 }
             }
         }
@@ -100,19 +114,17 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        int i = pState.getValue(AGE);
-        boolean flag = i == 5;
-        if (!flag && pPlayer.getItemInHand(pHand).is(Items.BONE_MEAL)) {
-            return InteractionResult.PASS;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (state.getValue(AGE) <= 5 && player.getItemInHand(hand).is(Items.BONE_MEAL)) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (pState.getValue(AGE) == 5) {
-            pLevel.setBlock(pPos, pState.setValue(AGE, 3), 8);
-            popResource(pLevel, pPos, new ItemStack(NorthstarItems.MARTIAN_STRAWBERRY.get(), pLevel.getRandom().nextInt(1, 3)));
+        if (state.getValue(AGE) == 5) {
+            world.setBlock(pos, state.setValue(AGE, 3), 8);
+            popResource(world, pos, new ItemStack(NorthstarItems.MARTIAN_STRAWBERRY.get(), world.getRandom().nextInt(1, 3)));
         }
 
-        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+        return ItemInteractionResult.sidedSuccess(world.isClientSide());
     }
 
     public void growCrops(Level pLevel, BlockPos pPos, BlockState pState) {
@@ -137,7 +149,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
             for (int j = -1; j <= 1; ++j) {
                 float f1 = 0.0F;
                 BlockState blockstate = pLevel.getBlockState(blockpos.offset(i, 0, j));
-                if (blockstate.canSustainPlant(pLevel, blockpos.offset(i, 0, j), net.minecraft.core.Direction.UP, (net.minecraftforge.common.IPlantable) pBlock)) {
+                if (blockstate.canSustainPlant(pLevel, blockpos.offset(i, 0, j), net.minecraft.core.Direction.UP, blockstate).isTrue()) {
                     f1 = 1.0F;
                     if (blockstate.isFertile(pLevel, pPos.offset(i, 0, j))) {
                         f1 = 3.0F;
@@ -170,12 +182,14 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         return f;
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return (pLevel.getRawBrightness(pPos, 0) >= 8 || pLevel.canSeeSky(pPos)) && super.canSurvive(pState, pLevel, pPos);
     }
 
+    @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
-        if (pEntity instanceof Ravager && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(pLevel, pEntity)) {
+        if (pEntity instanceof Ravager && EventHooks.canEntityGrief(pLevel, pEntity)) {
             pLevel.destroyBlock(pPos, true, pEntity);
         }
 
@@ -193,18 +207,22 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     /**
      * @return whether bonemeal can be used on this block
      */
-    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
+    @Override
+    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState) {
         return !this.isMaxAge(pState);
     }
 
+    @Override
     public boolean isBonemealSuccess(Level pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         return true;
     }
 
+    @Override
     public void performBonemeal(ServerLevel pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         this.growCrops(pLevel, pPos, pState);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(AGE);
     }

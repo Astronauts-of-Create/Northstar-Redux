@@ -21,7 +21,7 @@ public class NorthstarPonderPlugin implements PonderPlugin {
 
     @Override
     public void registerScenes(@NotNull PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        PonderSceneRegistrationHelper<ItemProviderEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
+        PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         // FIXME: those register under northstar and are missing the translation keys
         /*HELPER.forComponents(NorthstarTechBlocks.IRON_COGWHEEL)

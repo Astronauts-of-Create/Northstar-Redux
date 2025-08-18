@@ -2,7 +2,6 @@ package com.lightning.northstar.data;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.world.features.MercuryCactusFeature;
 import com.lightning.northstar.world.features.NorthstarFeatures;
 import com.lightning.northstar.world.features.configuration.AlienTreeConfig;
 import com.lightning.northstar.world.features.configuration.GlowstoneBranchConfig;
@@ -13,7 +12,7 @@ import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.ConstantInt;
@@ -54,7 +53,7 @@ public class NorthstarConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_branch"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_UPSIDE_DOWN_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_upside_down_branch"));
 
-    public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
+    public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         HolderGetter<Block> block = context.lookup(Registries.BLOCK);
 
         context.register(COILER, new ConfiguredFeature<>(Feature.TREE,
@@ -162,7 +161,7 @@ public class NorthstarConfiguredFeatures {
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));
 
-        context.register(MERCURY_CACTUS, new ConfiguredFeature<>((MercuryCactusFeature) NorthstarFeatures.MERCURY_CACTUS.get(), new NoneFeatureConfiguration()));
+        context.register(MERCURY_CACTUS, new ConfiguredFeature<>(NorthstarFeatures.MERCURY_CACTUS.get(), new NoneFeatureConfiguration()));
 
         context.register(CRIMSITE_COLUMN, new ConfiguredFeature<>((Feature<StoneColumnConfiguration>) NorthstarFeatures.STONE_COLUMN.get(),
                 new StoneColumnConfiguration(36, UniformInt.of(3, 6), UniformFloat.of(0.4F, 2.0F), 0.45F, UniformFloat.of(0.3F, 0.9F),

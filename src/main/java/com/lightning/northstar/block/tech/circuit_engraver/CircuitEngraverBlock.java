@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +26,7 @@ public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERED, false).setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
-    
+
     @Override
     protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(POWERED);
@@ -47,13 +46,13 @@ public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<
     @Override
     public Axis getRotationAxis(BlockState state) {
         return state.getValue(HORIZONTAL_FACING)
-            .getAxis();
+                .getAxis();
     }
 
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return face.getAxis() == state.getValue(HORIZONTAL_FACING)
-            .getAxis();
+                .getAxis();
     }
 
     @Override
@@ -63,20 +62,21 @@ public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<
             return defaultBlockState().setValue(HORIZONTAL_FACING, prefferedSide);
         return super.getStateForPlacement(context);
     }
-    
+
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
+
     @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
 //        System.out.println("GREEN GOBLN");
 //        System.out.println(pLevel.getBlockState(pCurrentPos.above()));
         if (pLevel.getBlockState(pCurrentPos.above()) == NorthstarTechBlocks.LASER.getDefaultState().setValue(LaserBlock.DIRECTION, Direction.DOWN)) {
             return pState.setValue(POWERED, true);
-        }else
-        {return pState.setValue(POWERED, false);}
+        } else {
+            return pState.setValue(POWERED, false);
+        }
     }
 
-    
 }

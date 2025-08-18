@@ -42,6 +42,7 @@ public class BuddingCrystalBlock extends AmethystBlock {
        /**
         * Performs a random tick on a block.
         */
+       @Override
        public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
           if (pRandom.nextInt(5) == 0) {
              Direction direction = DIRECTIONS[pRandom.nextInt(DIRECTIONS.length)];

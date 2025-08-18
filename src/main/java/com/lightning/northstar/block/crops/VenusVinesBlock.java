@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.CommonHooks;
 
 import javax.annotation.Nullable;
 
@@ -35,40 +36,43 @@ public class VenusVinesBlock extends Block implements BonemealableBlock {
         super(prop);
         this.registerDefaultState(this.stateDefinition.any().setValue(IS_TIP, true).setValue(AGE, 1));
     }
-    
+
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if(pState.getValue(IS_TIP))
+        if (pState.getValue(IS_TIP))
             return TIP_SHAPE;
         return SHAPE;
     }
-    
+
+    @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rando) {
-        if (state.getValue(AGE) < 25 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(level, pos.relative(Direction.DOWN), level.getBlockState(pos.relative(Direction.DOWN)),rando.nextDouble() < 0.5f)) {
+        if (state.getValue(AGE) < 25 && CommonHooks.canCropGrow(level, pos.relative(Direction.DOWN), level.getBlockState(pos.relative(Direction.DOWN)), rando.nextDouble() < 0.5f)) {
             BlockPos blockpos = pos.relative(Direction.DOWN);
             if (level.getBlockState(blockpos).isAir()) {
                 level.setBlockAndUpdate(blockpos, this.getGrowIntoState(state, level.random));
-                net.minecraftforge.common.ForgeHooks.onCropsGrowPost(level, blockpos, level.getBlockState(blockpos));
+                CommonHooks.fireCropGrowPost(level, blockpos, level.getBlockState(blockpos));
             }
         }
     }
-    
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(IS_TIP);builder.add(AGE);
+        builder.add(IS_TIP);
+        builder.add(AGE);
     }
-    
+
     protected BlockState getGrowIntoState(BlockState pState, RandomSource pRandom) {
-        if(pRandom.nextInt(4) == 0 && pState.is(NorthstarBlocks.VENUS_VINES.get())) {
+        if (pRandom.nextInt(4) == 0 && pState.is(NorthstarBlocks.VENUS_VINES.get())) {
             return NorthstarBlocks.GLOWING_VENUS_VINES.get().defaultBlockState();
-        }if(pState.is(NorthstarBlocks.GLOWING_VENUS_VINES.get()) && pRandom.nextInt(2) != 0) {
+        }
+        if (pState.is(NorthstarBlocks.GLOWING_VENUS_VINES.get()) && pRandom.nextInt(2) != 0) {
             return NorthstarBlocks.VENUS_VINES.get().defaultBlockState();
         }
         return pState.cycle(AGE);
     }
 
-    
-    
     @Override
-    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
+    public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState) {
         return pState.getValue(IS_TIP);
     }
 
@@ -85,30 +89,33 @@ public class VenusVinesBlock extends Block implements BonemealableBlock {
         blockpos = blockpos.relative(Direction.DOWN);
         i = Math.min(i + 1, 25);
     }
+
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
-        if(pLevel.getBlockState(pCurrentPos.above()).isAir()) {
+        if (pLevel.getBlockState(pCurrentPos.above()).isAir()) {
             return Blocks.AIR.defaultBlockState();
-            
-        }else if(!(pLevel.getBlockState(pCurrentPos.below()).is(NorthstarBlocks.VENUS_VINES.get()) || pLevel.getBlockState(pCurrentPos.below()).is(NorthstarBlocks.GLOWING_VENUS_VINES.get()))){
+
+        } else if (!(pLevel.getBlockState(pCurrentPos.below()).is(NorthstarBlocks.VENUS_VINES.get()) || pLevel.getBlockState(pCurrentPos.below()).is(NorthstarBlocks.GLOWING_VENUS_VINES.get()))) {
             return this.defaultBlockState().setValue(IS_TIP, true);
-        }else
+        } else
             return this.defaultBlockState().setValue(IS_TIP, false);
     }
-    
+
+    @Override
     public boolean propagatesSkylightDown(BlockState pState, BlockGetter pReader, BlockPos pPos) {
-          return true;
+        return true;
     }
-    
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        if(pContext.getLevel().getBlockState(pContext.getClickedPos().above()).isAir())
+        if (pContext.getLevel().getBlockState(pContext.getClickedPos().above()).isAir())
             return Blocks.AIR.defaultBlockState();
         BlockState belowstate = pContext.getLevel().getBlockState(pContext.getClickedPos().below());
-        
-        if(!(belowstate.is(NorthstarBlocks.VENUS_VINES.get()) || belowstate.is(NorthstarBlocks.GLOWING_VENUS_VINES.get()))) {
+
+        if (!(belowstate.is(NorthstarBlocks.VENUS_VINES.get()) || belowstate.is(NorthstarBlocks.GLOWING_VENUS_VINES.get()))) {
             return this.defaultBlockState().setValue(IS_TIP, true);
-        }else
+        } else
             return this.defaultBlockState().setValue(IS_TIP, false);
     }
 

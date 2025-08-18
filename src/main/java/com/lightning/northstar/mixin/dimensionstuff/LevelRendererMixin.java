@@ -1,41 +1,20 @@
 package com.lightning.northstar.mixin.dimensionstuff;
 
-import javax.annotation.Nullable;
-
-
-import com.lightning.northstar.content.NorthstarSounds;
-import com.mojang.math.Axis;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.DustCloudParticleData;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -54,12 +33,26 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Mixin;
 
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+// This file had more errors than everything else combined when changing to 1.21.1
+// It's probably been the most painful to port and likely contains bugs
+// It doesn't matter if it breaks as it's gonna get replaced anyways
+// Mostly fixed with the replace all tool, I'm sure the spaghetti float arithmetic and casting won't cause any issues :D
+// Whoever wrote it (Furiosity) is fucking insane, please don't be like him. Use METHODS NOT COPY AND PASTE
 @OnlyIn(Dist.CLIENT)
 @Mixin(LevelRenderer.class)
-public class LevelRendererMixin {
+public abstract class LevelRendererMixin {
     private static final ResourceLocation EARTH_CLOSE = Northstar.asResource("textures/environment/earth_close.png");
     private static final ResourceLocation EARTH_FAR = Northstar.asResource("textures/environment/earth_far.png");
     private static final ResourceLocation MOON_CLOSE = Northstar.asResource("textures/environment/moon_close.png");
@@ -109,10 +102,11 @@ public class LevelRendererMixin {
     private ClientLevel level;
     @Shadow
     private Minecraft minecraft;
+
     private float f_alpha = 1;
     private int ticks;
     private int rainSoundTime;
-    private double dust_bounce = 0.01;
+    private float dust_bounce = 0.01f;
     float sc = 1;
 
     private static final Vector3f VENUS_DIFFUSE_1 = new Vector3f(0.2F, -1.0F, -0.7F).normalize();
@@ -129,7 +123,8 @@ public class LevelRendererMixin {
 //	}
 
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
-    private void renderWeather(LightTexture pLightTexture, float pPartialTick, double pCamX, double pCamY, double pCamZ, CallbackInfo info) {
+    private void renderWeather(LightTexture lightTexture, float partialTick, double camXd, double camYd, double camZd, CallbackInfo info) {
+        float camX = (float) camXd, camY = (float) camYd, camZ = (float) camZd;
         if (this.minecraft != null) {
             float playerEyeLevel = (float) this.minecraft.player.getEyePosition().y;
             if (playerEyeLevel > 450) {
@@ -141,9 +136,9 @@ public class LevelRendererMixin {
         if (player_dim == NorthstarDimensions.MARS_DIM_KEY) {
             info.cancel();
 //		Minecraft.getInstance().level.setRainLevel(15);
-            float rain_det = this.minecraft.level.getRainLevel(pPartialTick);
+            float rain_det = this.minecraft.level.getRainLevel(partialTick);
             if (!(rain_det <= 0.0F)) {
-                pLightTexture.turnOnLightLayer();
+                lightTexture.turnOnLightLayer();
                 RenderSystem.setShader(GameRenderer::getPositionColorShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.depthMask(false);
@@ -152,24 +147,25 @@ public class LevelRendererMixin {
                 Camera pCamera = Minecraft.getInstance().gameRenderer.getMainCamera();
                 GameRenderer gRenderer = Minecraft.getInstance().gameRenderer;
                 Vec3 vec3 = pCamera.getPosition();
-                double fog_x = vec3.x();
-                double fog_y = vec3.y();
-                FogRenderer.setupColor(pCamera, pPartialTick, this.minecraft.level, this.minecraft.options.getEffectiveRenderDistance(), gRenderer.getDarkenWorldAmount(pPartialTick));
+                float fog_x = (float) vec3.x();
+                float fog_y = (float) vec3.y();
+                FogRenderer.setupColor(pCamera, partialTick, this.minecraft.level, this.minecraft.options.getEffectiveRenderDistance(), gRenderer.getDarkenWorldAmount(partialTick));
                 FogRenderer.levelFogColor();
                 boolean flag2 = this.minecraft.level.effects().isFoggyAt(Mth.floor(fog_x), Mth.floor(fog_y)) || this.minecraft.gui.getBossOverlay().shouldCreateWorldFog();
-                FogRenderer.setupFog(pCamera, FogRenderer.FogMode.FOG_TERRAIN, this.minecraft.options.getEffectiveRenderDistance() / 5, flag2, pPartialTick);
+                FogRenderer.setupFog(pCamera, FogRenderer.FogMode.FOG_TERRAIN, this.minecraft.options.getEffectiveRenderDistance() / 5, flag2, partialTick);
 
 
                 FogRenderer.setupNoFog();
                 RenderSystem.depthMask(true);
                 RenderSystem.disableBlend();
-                pLightTexture.turnOnLightLayer();
+                lightTexture.turnOnLightLayer();
                 Level level = this.minecraft.level;
-                int i = Mth.floor(pCamX);
-                int j = Mth.floor(pCamY);
-                int k = Mth.floor(pCamZ);
+                int i = Mth.floor(camX);
+                int j = Mth.floor(camY);
+                int k = Mth.floor(camZ);
                 Tesselator tesselator = Tesselator.getInstance();
-                BufferBuilder bufferbuilder = tesselator.getBuilder();
+                BufferBuilder bufferbuilder = null;
+
                 RenderSystem.disableCull();
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
@@ -182,7 +178,7 @@ public class LevelRendererMixin {
 
                 RenderSystem.depthMask(Minecraft.useShaderTransparency());
                 int i1 = -1;
-                float f1 = (float) this.ticks + pPartialTick;
+                float f1 = (float) this.ticks + partialTick;
                 RenderSystem.setShader(GameRenderer::getParticleShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
@@ -190,9 +186,9 @@ public class LevelRendererMixin {
                 for (int j1 = k - l; j1 <= k + l; ++j1) {
                     for (int k1 = i - l; k1 <= i + l; ++k1) {
                         int l1 = (j1 - k + 8) * 32 + k1 - i + 8;
-                        double d0 = (double) this.rainSizeX[l1] * 1.25D;
-                        double d1 = (double) this.rainSizeZ[l1] * 1.25D;
-                        blockpos$mutableblockpos.set((double) k1, pCamY, (double) j1);
+                        float d0 = this.rainSizeX[l1] * 1.25f;
+                        float d1 = this.rainSizeZ[l1] * 1.25f;
+                        blockpos$mutableblockpos.set((float) k1, camY, (float) j1);
                         Biome biome = level.getBiome(blockpos$mutableblockpos).value();
                         if (!biome.hasPrecipitation()) {
                             int i2 = level.getHeight(Heightmap.Types.MOTION_BLOCKING, k1, j1);
@@ -211,23 +207,23 @@ public class LevelRendererMixin {
                                 l2 = j;
                             }
                             if (j2 != k2) {
-                                RandomSource randomsource = RandomSource.create((long) (k1 * k1 * 3121 + k1 * 45238971 ^ j1 * j1 * 418711 + j1 * 13761));
+                                RandomSource randomsource = RandomSource.create(k1 * k1 * 3121 + k1 * 45238971 ^ j1 * j1 * 418711 + j1 * 13761);
                                 blockpos$mutableblockpos.set(k1, j2, j1);
                                 if ((biome.warmEnoughToRain(blockpos$mutableblockpos))) {
                                     if (i1 != 0) {
                                         if (i1 >= 0) {
-                                            tesselator.end();
+                                            BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                                         }
 
                                         i1 = 0;
                                         RenderSystem.setShaderTexture(0, MARS_DUST);
-                                        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+                                        bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
                                     }
 
                                     int i3 = this.ticks + k1 * k1 * 3121 + k1 * 45238971 + j1 * j1 * 418711 + j1 * 13761 & 31;
-                                    float f2 = -((float) i3 + pPartialTick) / 32.0F * (0.75F);
-                                    //double d2 = (double)k1 + 0.5D - pCamX;
-                                    //double d4 = (double)j1 + 0.5D - pCamZ;
+                                    float f2 = -((float) i3 + partialTick) / 32.0F * (0.75F);
+                                    //float d2 = (float)k1 + 0.5f - pCamX;
+                                    //float d4 = (float)j1 + 0.5f - camZ;
                                     // float f3 = (float)Math.sqrt(d2 * d2 + d4 * d4) / (float)l;
                                     // float f4 = ((1.0F - f3 * f3) * 0.5F + 0.5F) * rain_det;
                                     if (dust_bounce > 0) {
@@ -238,25 +234,25 @@ public class LevelRendererMixin {
                                     blockpos$mutableblockpos.set(k1, l2, j1);
                                     RenderSystem.setShaderColor(2.0F, 1.178F, 0.698f, 0.5f);
                                     int j3 = 0;
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + -10.5D, (double) k2 - pCamY, (double) j1 - pCamZ - d1 + 10.5D).uv(0.0F + f2, 0).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 10.5D, (double) k2 - pCamY, (double) j1 - pCamZ + d1 + -10.5D).uv(1.0F + f2, (float) (0 + dust_bounce / 2)).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 10.5D, (double) j2 - pCamY, (double) j1 - pCamZ + d1 + -10.5D).uv(1.0F + f2, (float) (1 + dust_bounce / 2)).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + -10.5D, (double) j2 - pCamY, (double) j1 - pCamZ - d1 + 10.5D).uv(0.0F + f2, 1).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
+                                    bufferbuilder.addVertex((float) k1 - camX - d0 + -10.5f, (float) k2 - camY, (float) j1 - camZ - d1 + 10.5f).setUv(0.0F + f2, 0).setColor(1.0F, 1.0F, 1.0F, 0.2f).setUv2(0, 0);
+                                    bufferbuilder.addVertex((float) k1 - camX + d0 + 10.5f, (float) k2 - camY, (float) j1 - camZ + d1 + -10.5f).setUv(1.0F + f2, 0 + dust_bounce / 2).setColor(1.0F, 1.0F, 1.0F, 0.2f).setUv2(0, 0);
+                                    bufferbuilder.addVertex((float) k1 - camX + d0 + 10.5f, (float) j2 - camY, (float) j1 - camZ + d1 + -10.5f).setUv(1.0F + f2, 1 + dust_bounce / 2).setColor(1.0F, 1.0F, 1.0F, 0.2f).setUv2(0, 0);
+                                    bufferbuilder.addVertex((float) k1 - camX - d0 + -10.5f, (float) j2 - camY, (float) j1 - camZ - d1 + 10.5f).setUv(0.0F + f2, 1).setColor(1.0F, 1.0F, 1.0F, 0.2f).setUv2(0, 0);
                                 } else {
                                     if (i1 != 1) {
                                         if (i1 >= 0) {
-                                            tesselator.end();
+                                            BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                                         }
 
                                         i1 = 1;
                                         RenderSystem.setShaderTexture(0, SNOW_LOCATION);
-                                        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+                                        bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
                                     }
-                                    float f5 = -((float) (this.ticks & 511) + pPartialTick) / 512.0F;
-                                    float f6 = (float) (randomsource.nextDouble() + (double) f1 * 0.01D * (double) ((float) randomsource.nextGaussian()));
-                                    float f7 = (float) (randomsource.nextDouble() + (double) (f1 * (float) randomsource.nextGaussian()) * 0.001D);
-                                    double d3 = (double) k1 + 0.5D - pCamX;
-                                    double d5 = (double) j1 + 0.5D - pCamZ;
+                                    float f5 = -((float) (this.ticks & 511) + partialTick) / 512.0F;
+                                    float f6 = randomsource.nextFloat() + f1 * 0.01f * (float) randomsource.nextGaussian();
+                                    float f7 = randomsource.nextFloat() + (f1 * (float) randomsource.nextGaussian()) * 0.001f;
+                                    float d3 = k1 + 0.5f - camX;
+                                    float d5 = j1 + 0.5f - camZ;
                                     float f8 = (float) Math.sqrt(d3 * d3 + d5 * d5) / (float) l;
                                     float f9 = ((1.0F - f8 * f8) * 0.3F + 0.5F) * rain_det;
                                     blockpos$mutableblockpos.set(k1, l2, j1);
@@ -265,10 +261,10 @@ public class LevelRendererMixin {
                                     int i4 = k3 & '\uffff';
                                     int j4 = (l3 * 3 + 240) / 4;
                                     int k4 = (i4 * 3 + 240) / 4;
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + 0.5D, (double) k2 - pCamY, (double) j1 - pCamZ - d1 + 0.5D).uv(0.0F + f6, (float) j2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 0.5D, (double) k2 - pCamY, (double) j1 - pCamZ + d1 + 0.5D).uv(1.0F + f6, (float) j2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 0.5D, (double) j2 - pCamY, (double) j1 - pCamZ + d1 + 0.5D).uv(1.0F + f6, (float) k2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + 0.5D, (double) j2 - pCamY, (double) j1 - pCamZ - d1 + 0.5D).uv(0.0F + f6, (float) k2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
+                                    bufferbuilder.addVertex((float) k1 - camX - d0 + 0.5f, (float) k2 - camY, (float) j1 - camZ - d1 + 0.5f).setUv(0.0F + f6, (float) j2 * 0.25F + f5 + f7).setColor(1.0F, 1.0F, 1.0F, f9).setUv2(k4, j4);
+                                    bufferbuilder.addVertex((float) k1 - camX + d0 + 0.5f, (float) k2 - camY, (float) j1 - camZ + d1 + 0.5f).setUv(1.0F + f6, (float) j2 * 0.25F + f5 + f7).setColor(1.0F, 1.0F, 1.0F, f9).setUv2(k4, j4);
+                                    bufferbuilder.addVertex((float) k1 - camX + d0 + 0.5f, (float) j2 - camY, (float) j1 - camZ + d1 + 0.5f).setUv(1.0F + f6, (float) k2 * 0.25F + f5 + f7).setColor(1.0F, 1.0F, 1.0F, f9).setUv2(k4, j4);
+                                    bufferbuilder.addVertex((float) k1 - camX - d0 + 0.5f, (float) j2 - camY, (float) j1 - camZ - d1 + 0.5f).setUv(0.0F + f6, (float) k2 * 0.25F + f5 + f7).setColor(1.0F, 1.0F, 1.0F, f9).setUv2(k4, j4);
                                 }
                             }
                         }
@@ -277,13 +273,13 @@ public class LevelRendererMixin {
                 }
 
                 if (i1 >= 0) {
-                    tesselator.end();
+                    BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 }
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.enableCull();
                 RenderSystem.disableBlend();
-                //pLightTexture.turnOffLightLayer();
+                //lightTexture.turnOffLightLayer();
 
             }
 
@@ -292,15 +288,15 @@ public class LevelRendererMixin {
         if (player_dim == NorthstarDimensions.VENUS_DIM_KEY) {
             info.cancel();
 //		Minecraft.getInstance().level.setRainLevel(2);
-            float rain_det = this.minecraft.level.getRainLevel(pPartialTick);
+            float rain_det = this.minecraft.level.getRainLevel(partialTick);
             if (!(rain_det <= 0.0F)) {
-                pLightTexture.turnOnLightLayer();
+                lightTexture.turnOnLightLayer();
                 Level level = this.minecraft.level;
-                int i = Mth.floor(pCamX);
-                int j = Mth.floor(pCamY);
-                int k = Mth.floor(pCamZ);
+                int i = Mth.floor(camX);
+                int j = Mth.floor(camY);
+                int k = Mth.floor(camZ);
                 Tesselator tesselator = Tesselator.getInstance();
-                BufferBuilder bufferbuilder = tesselator.getBuilder();
+                BufferBuilder bufferbuilder = null;
                 RenderSystem.disableCull();
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
@@ -319,9 +315,9 @@ public class LevelRendererMixin {
                 for (int j1 = k - l; j1 <= k + l; ++j1) {
                     for (int k1 = i - l; k1 <= i + l; ++k1) {
                         int l1 = (j1 - k + 16) * 32 + k1 - i + 16;
-                        double d0 = (double) this.rainSizeX[l1] * 0.5D;
-                        double d1 = (double) this.rainSizeZ[l1] * 0.5D;
-                        blockpos$mutableblockpos.set((double) k1, pCamY, (double) j1);
+                        float d0 = this.rainSizeX[l1] * 0.5f;
+                        float d1 = this.rainSizeZ[l1] * 0.5f;
+                        blockpos$mutableblockpos.set((float) k1, camY, (float) j1);
                         Biome biome = level.getBiome(blockpos$mutableblockpos).value();
                         if (!biome.hasPrecipitation()) {
                             int i2 = level.getHeight(Heightmap.Types.MOTION_BLOCKING, k1, j1);
@@ -341,31 +337,35 @@ public class LevelRendererMixin {
                             }
 
                             if (j2 != k2) {
-                                RandomSource randomsource = RandomSource.create((long) (k1 * k1 * 3121 + k1 * 45238971 ^ j1 * j1 * 418711 + j1 * 13761));
+                                RandomSource randomsource = RandomSource.create(k1 * k1 * 3121 + k1 * 45238971 ^ j1 * j1 * 418711 + j1 * 13761);
                                 blockpos$mutableblockpos.set(k1, j2, j1);
                                 if (biome.warmEnoughToRain(blockpos$mutableblockpos)) {
                                     if (i1 != 0) {
                                         if (i1 >= 0) {
-                                            tesselator.end();
+                                            BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                                         }
 
                                         i1 = 0;
                                         RenderSystem.setShaderTexture(0, ACID_RAIN);
-                                        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+                                        bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
                                     }
 
                                     int i3 = this.ticks + k1 * k1 * 3121 + k1 * 45238971 + j1 * j1 * 418711 + j1 * 13761 & 31;
-                                    float f2 = -((float) i3 + pPartialTick) / 32.0F * (3.0F + randomsource.nextFloat());
-                                    double d2 = (double) k1 + 0.5D - pCamX;
-                                    double d4 = (double) j1 + 0.5D - pCamZ;
+                                    float f2 = -((float) i3 + partialTick) / 32.0F * (3.0F + randomsource.nextFloat());
+                                    float d2 = (float) k1 + 0.5f - camX;
+                                    float d4 = (float) j1 + 0.5f - camZ;
                                     float f3 = (float) Math.sqrt(d2 * d2 + d4 * d4) / (float) l;
                                     float f4 = ((1.0F - f3 * f3) * 0.5F + 0.5F) * rain_det;
                                     blockpos$mutableblockpos.set(k1, l2, j1);
                                     int j3 = LevelRenderer.getLightColor(level, blockpos$mutableblockpos);
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + 0.5D, (double) k2 - pCamY, (double) j1 - pCamZ - d1 + 0.5D).uv(0.0F, (float) j2 * 0.25F + f2).color(1.0F, 1.0F, 1.0F, f4).uv2(j3).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 0.5D, (double) k2 - pCamY, (double) j1 - pCamZ + d1 + 0.5D).uv(1.0F, (float) j2 * 0.25F + f2).color(1.0F, 1.0F, 1.0F, f4).uv2(j3).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 0.5D, (double) j2 - pCamY, (double) j1 - pCamZ + d1 + 0.5D).uv(1.0F, (float) k2 * 0.25F + f2).color(1.0F, 1.0F, 1.0F, f4).uv2(j3).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + 0.5D, (double) j2 - pCamY, (double) j1 - pCamZ - d1 + 0.5D).uv(0.0F, (float) k2 * 0.25F + f2).color(1.0F, 1.0F, 1.0F, f4).uv2(j3).endVertex();
+                                    int k4 = j3 >> 16 & '\uffff';
+                                    int l4 = j3 & '\uffff';
+                                    int l3 = (k4 * 3 + 240) / 4;
+                                    int i4 = (l4 * 3 + 240) / 4;
+                                    bufferbuilder.addVertex((float) k1 - camX - d0 + 0.5f, (float) k2 - camY, (float) j1 - camZ - d1 + 0.5f).setUv(0.0F, (float) j2 * 0.25F + f2).setColor(1.0F, 1.0F, 1.0F, f4).setUv2(l3, i4);
+                                    bufferbuilder.addVertex((float) k1 - camX + d0 + 0.5f, (float) k2 - camY, (float) j1 - camZ + d1 + 0.5f).setUv(1.0F, (float) j2 * 0.25F + f2).setColor(1.0F, 1.0F, 1.0F, f4).setUv2(l3, i4);
+                                    bufferbuilder.addVertex((float) k1 - camX + d0 + 0.5f, (float) j2 - camY, (float) j1 - camZ + d1 + 0.5f).setUv(1.0F, (float) k2 * 0.25F + f2).setColor(1.0F, 1.0F, 1.0F, f4).setUv2(l3, i4);
+                                    bufferbuilder.addVertex((float) k1 - camX - d0 + 0.5f, (float) j2 - camY, (float) j1 - camZ - d1 + 0.5f).setUv(0.0F, (float) k2 * 0.25F + f2).setColor(1.0F, 1.0F, 1.0F, f4).setUv2(l3, i4);
                                 }
                             }
                         }
@@ -373,13 +373,13 @@ public class LevelRendererMixin {
                 }
 
                 if (i1 >= 0) {
-                    tesselator.end();
+                    BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 }
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.enableCull();
                 RenderSystem.disableBlend();
-                //pLightTexture.turnOffLightLayer();
+                //lightTexture.turnOffLightLayer();
             }
         }
 
@@ -428,17 +428,17 @@ public class LevelRendererMixin {
                             if (this.minecraft.options.particles().get() == ParticleStatus.MINIMAL) {
                                 break;
                             }
-                            double d0 = randomsource.nextDouble();
-                            double d1 = randomsource.nextDouble();
+                            float d0 = randomsource.nextFloat();
+                            float d1 = randomsource.nextFloat();
                             BlockState blockstate = levelreader.getBlockState(blockpos1);
                             FluidState fluidstate = levelreader.getFluidState(blockpos1);
                             VoxelShape voxelshape = blockstate.getCollisionShape(levelreader, blockpos1);
-                            double d2 = voxelshape.max(Direction.Axis.Y, d0, d1);
-                            double d3 = (double) fluidstate.getHeight(levelreader, blockpos1);
-                            double d4 = Math.max(d2, d3);
+                            float d2 = (float) voxelshape.max(Direction.Axis.Y, d0, d1);
+                            float d3 = fluidstate.getHeight(levelreader, blockpos1);
+                            float d4 = Math.max(d2, d3);
                             if (level.random.nextInt(10) == 0) {
                                 ParticleOptions particleoptions = new DustCloudParticleData();
-                                this.minecraft.level.addParticle(particleoptions, (double) blockpos1.getX() + d0, (double) blockpos1.getY() + d4 + level.random.nextInt(4), (double) blockpos1.getZ() + d1, 0.0D, 0.0D, 0.0D);
+                                this.minecraft.level.addParticle(particleoptions, (float) blockpos1.getX() + d0, (float) blockpos1.getY() + d4 + level.random.nextInt(4), (float) blockpos1.getZ() + d1, 0.0f, 0.0f, 0.0f);
                             }
                         }
                     }
@@ -478,16 +478,16 @@ public class LevelRendererMixin {
                             if (this.minecraft.options.particles().get() == ParticleStatus.MINIMAL) {
                                 break;
                             }
-                            double d0 = randomsource.nextDouble();
-                            double d1 = randomsource.nextDouble();
+                            float d0 = randomsource.nextFloat();
+                            float d1 = randomsource.nextFloat();
                             BlockState blockstate = levelreader.getBlockState(blockpos1);
                             FluidState fluidstate = levelreader.getFluidState(blockpos1);
                             VoxelShape voxelshape = blockstate.getCollisionShape(levelreader, blockpos1);
-                            double d2 = voxelshape.max(Direction.Axis.Y, d0, d1);
-                            double d3 = (double) fluidstate.getHeight(levelreader, blockpos1);
-                            double d4 = Math.max(d2, d3);
+                            float d2 = (float) voxelshape.max(Direction.Axis.Y, d0, d1);
+                            float d3 = fluidstate.getHeight(levelreader, blockpos1);
+                            float d4 = Math.max(d2, d3);
                             ParticleOptions particleoptions = ParticleTypes.SMOKE;
-                            this.minecraft.level.addParticle(particleoptions, (double) blockpos1.getX() + d0, (double) blockpos1.getY() + d4, (double) blockpos1.getZ() + d1, 0.0D, 0.0D, 0.0D);
+                            this.minecraft.level.addParticle(particleoptions, (float) blockpos1.getX() + d0, (float) blockpos1.getY() + d4, (float) blockpos1.getZ() + d1, 0.0f, 0.0f, 0.0f);
                         }
                     }
                     if (blockpos1 != null && randomsource.nextInt(3) < this.rainSoundTime++) {
@@ -507,131 +507,128 @@ public class LevelRendererMixin {
     @Inject(method = "createStars", at = @At("TAIL"))
     private void createStars(CallbackInfo ci) {
         //stars 2
-        Tesselator tesselator2 = Tesselator.getInstance();
-        BufferBuilder bufferbuilder2 = tesselator2.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionShader);
         if (this.starBuffer2 != null) {
             this.starBuffer2.close();
         }
 
         this.starBuffer2 = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        BufferBuilder.RenderedBuffer bufferbuilder$renderedbuffer2 = this.drawStars2(bufferbuilder2);
         this.starBuffer2.bind();
-        this.starBuffer2.upload(bufferbuilder$renderedbuffer2);
+        this.starBuffer2.upload(drawStars2());
         VertexBuffer.unbind();
         //stars 3
-        Tesselator tesselator3 = Tesselator.getInstance();
-        BufferBuilder bufferbuilder3 = tesselator3.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionShader);
         if (this.starBuffer3 != null) {
             this.starBuffer3.close();
         }
 
         this.starBuffer3 = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        BufferBuilder.RenderedBuffer bufferbuilder$renderedbuffer3 = this.drawStars3(bufferbuilder3);
+        MeshData bufferbuilder$renderedbuffer3 = this.drawStars3();
         this.starBuffer3.bind();
         this.starBuffer3.upload(bufferbuilder$renderedbuffer3);
         VertexBuffer.unbind();
     }
 
-    private BufferBuilder.RenderedBuffer drawStars2(BufferBuilder pBuilder) {
+    private MeshData drawStars2() {
         RandomSource randomsource = RandomSource.create(92410L);
-        pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        BufferBuilder pBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 //		System.out.println("big bingus");
         for (int i = 0; i < 2500; ++i) {
-            double d0 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
-            double d1 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
-            double d2 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
-            double d3 = (double) (0.15F + randomsource.nextFloat() * 0.1F);
-            double d4 = d0 * d0 + d1 * d1 + d2 * d2;
-            if (d4 < 1.0D && d4 > 0.01D) {
-                d4 = 1.0D / Math.sqrt(d4);
+            float d0 = randomsource.nextFloat() * 2.0F - 1.0F;
+            float d1 = randomsource.nextFloat() * 2.0F - 1.0F;
+            float d2 = randomsource.nextFloat() * 2.0F - 1.0F;
+            float d3 = 0.15F + randomsource.nextFloat() * 0.1F;
+            float d4 = d0 * d0 + d1 * d1 + d2 * d2;
+            if (d4 < 1.0f && d4 > 0.01f) {
+                d4 = (float) (1.0f / Math.sqrt(d4));
                 d0 *= d4;
                 d1 *= d4;
                 d2 *= d4;
-                double d5 = d0 * 100.0D;
-                double d6 = d1 * 100.0D;
-                double d7 = d2 * 100.0D;
-                double d8 = Math.atan2(d0, d2);
-                double d9 = Math.sin(d8);
-                double d10 = Math.cos(d8);
-                double d11 = Math.atan2(Math.sqrt(d0 * d0 + d2 * d2), d1);
-                double d12 = Math.sin(d11);
-                double d13 = Math.cos(d11);
-                double d14 = randomsource.nextDouble() * Math.PI * 2.0D;
-                double d15 = Math.sin(d14);
-                double d16 = Math.cos(d14);
+                float d5 = d0 * 100.0f;
+                float d6 = d1 * 100.0f;
+                float d7 = d2 * 100.0f;
+                float d8 = (float) Math.atan2(d0, d2);
+                float d9 = (float) Math.sin(d8);
+                float d10 = (float) Math.cos(d8);
+                float d11 = (float) Math.atan2(Math.sqrt(d0 * d0 + d2 * d2), d1);
+                float d12 = (float) Math.sin(d11);
+                float d13 = (float) Math.cos(d11);
+                float d14 = (float) (randomsource.nextFloat() * Math.PI * 2.0f);
+                float d15 = (float) Math.sin(d14);
+                float d16 = (float) Math.cos(d14);
 
                 for (int j = 0; j < 4; ++j) {
-                    double d18 = (double) ((j & 2) - 1) * d3;
-                    double d19 = (double) ((j + 1 & 2) - 1) * d3;
-                    double d21 = d18 * d16 - d19 * d15;
-                    double d22 = d19 * d16 + d18 * d15;
-                    double d23 = d21 * d12 + 0.0D * d13;
-                    double d24 = 0.0D * d12 - d21 * d13;
-                    double d25 = d24 * d9 - d22 * d10;
-                    double d26 = d22 * d9 + d24 * d10;
-                    pBuilder.vertex(d5 + d25, d6 + d23, d7 + d26).endVertex();
+                    float d18 = (float) ((j & 2) - 1) * d3;
+                    float d19 = (float) ((j + 1 & 2) - 1) * d3;
+                    float d21 = d18 * d16 - d19 * d15;
+                    float d22 = d19 * d16 + d18 * d15;
+                    float d23 = d21 * d12 + 0.0f * d13;
+                    float d24 = 0.0f * d12 - d21 * d13;
+                    float d25 = d24 * d9 - d22 * d10;
+                    float d26 = d22 * d9 + d24 * d10;
+                    pBuilder.addVertex(d5 + d25, d6 + d23, d7 + d26);
                 }
             }
         }
 
-        return pBuilder.end();
+        return pBuilder.build();
     }
 
-    private BufferBuilder.RenderedBuffer drawStars3(BufferBuilder pBuilder) {
+    private MeshData drawStars3() {
         RandomSource randomsource = RandomSource.create(64094L);
-        pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        BufferBuilder pBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         for (int i = 0; i < 1800; ++i) {
-            double d0 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
-            double d1 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
-            double d2 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
-            double d3 = (double) (0.15F + randomsource.nextFloat() * 0.1F);
-            double d4 = d0 * d0 + d1 * d1 + d2 * d2;
-            if (d4 < 1.0D && d4 > 0.01D) {
-                d4 = 1.0D / Math.sqrt(d4);
+            float d0 = randomsource.nextFloat() * 2.0F - 1.0F;
+            float d1 = randomsource.nextFloat() * 2.0F - 1.0F;
+            float d2 = randomsource.nextFloat() * 2.0F - 1.0F;
+            float d3 = 0.15F + randomsource.nextFloat() * 0.1F;
+            float d4 = d0 * d0 + d1 * d1 + d2 * d2;
+            if (d4 < 1.0f && d4 > 0.01f) {
+                d4 = (float) (1.0f / Math.sqrt(d4));
                 d0 *= d4;
                 d1 *= d4;
                 d2 *= d4;
-                double d5 = d0 * 100.0D;
-                double d6 = d1 * 100.0D;
-                double d7 = d2 * 100.0D;
-                double d8 = Math.atan2(d0, d2);
-                double d9 = Math.sin(d8);
-                double d10 = Math.cos(d8);
-                double d11 = Math.atan2(Math.sqrt(d0 * d0 + d2 * d2), d1);
-                double d12 = Math.sin(d11);
-                double d13 = Math.cos(d11);
-                double d14 = randomsource.nextDouble() * Math.PI * 2.0D;
-                double d15 = Math.sin(d14);
-                double d16 = Math.cos(d14);
+                float d5 = d0 * 100.0f;
+                float d6 = d1 * 100.0f;
+                float d7 = d2 * 100.0f;
+                float d8 = (float) Math.atan2(d0, d2);
+                float d9 = (float) Math.sin(d8);
+                float d10 = (float) Math.cos(d8);
+                float d11 = (float) Math.atan2(Math.sqrt(d0 * d0 + d2 * d2), d1);
+                float d12 = (float) Math.sin(d11);
+                float d13 = (float) Math.cos(d11);
+                float d14 = (float) (randomsource.nextFloat() * Math.PI * 2.0f);
+                float d15 = (float) Math.sin(d14);
+                float d16 = (float) Math.cos(d14);
 
                 for (int j = 0; j < 4; ++j) {
-                    double d18 = (double) ((j & 2) - 1) * d3;
-                    double d19 = (double) ((j + 1 & 2) - 1) * d3;
-                    double d21 = d18 * d16 - d19 * d15;
-                    double d22 = d19 * d16 + d18 * d15;
-                    double d23 = d21 * d12 + 0.0D * d13;
-                    double d24 = 0.0D * d12 - d21 * d13;
-                    double d25 = d24 * d9 - d22 * d10;
-                    double d26 = d22 * d9 + d24 * d10;
-                    pBuilder.vertex(d5 + d25, d6 + d23, d7 + d26).endVertex();
+                    float d18 = (float) ((j & 2) - 1) * d3;
+                    float d19 = (float) ((j + 1 & 2) - 1) * d3;
+                    float d21 = d18 * d16 - d19 * d15;
+                    float d22 = d19 * d16 + d18 * d15;
+                    float d23 = d21 * d12 + 0.0f * d13;
+                    float d24 = 0.0f * d12 - d21 * d13;
+                    float d25 = d24 * d9 - d22 * d10;
+                    float d26 = d22 * d9 + d24 * d10;
+                    pBuilder.addVertex(d5 + d25, d6 + d23, d7 + d26);
                 }
             }
         }
 
-        return pBuilder.end();
+        return pBuilder.buildOrThrow();
     }
 
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
-    private void renderSky(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
+    private void renderSky(Matrix4f frustumMatrix, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean isFoggy, Runnable runnable, CallbackInfo info) {
         ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
+        PoseStack pPoseStack = new PoseStack();
+        pPoseStack.mulPose(frustumMatrix);
         if (this.minecraft != null) {
             float rain_det = 0;
             if (player_dim == NorthstarDimensions.MARS_DIM_KEY) {
                 info.cancel();
                 runnable.run();
-                BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+                BufferBuilder bufferbuilder = null;
                 Vec3 vec3 = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), pPartialTick);
                 float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
                 float f = (float) vec3.x;
@@ -688,17 +685,17 @@ public class LevelRendererMixin {
                     float f5 = afloat[1];
                     float f6 = afloat[2];
                     Matrix4f matrix4f = pPoseStack.last().pose();
-                    bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-                    bufferbuilder.vertex(matrix4f, 0.0F, 100.0F, 0.0F).color(f4, f5, f6, afloat[3]).endVertex();
+                    bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+                    bufferbuilder.addVertex(matrix4f, 0.0F, 100.0F, 0.0F).setColor(f4, f5, f6, afloat[3]);
 
                     for (int j = 0; j <= 16; ++j) {
                         float f7 = (float) j * ((float) Math.PI * 2F) / 16.0F;
                         float f8 = Mth.sin(f7);
                         float f9 = Mth.cos(f7);
-                        bufferbuilder.vertex(matrix4f, f8 * 120.0F, f9 * 120.0F, -f9 * 40.0F * afloat[3]).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
+                        bufferbuilder.addVertex(matrix4f, f8 * 120.0F, f9 * 120.0F, -f9 * 40.0F * afloat[3]).setColor(afloat[0], afloat[1], afloat[2], 0.0F);
                     }
 
-                    BufferUploader.drawWithShader(bufferbuilder.end());
+                    BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                     pPoseStack.popPose();
                 }
 
@@ -744,62 +741,62 @@ public class LevelRendererMixin {
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, PHOBOS_DEIMOS);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, 10 + PD, -100.0F, 5 + -PD).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, 10 + -PD, -100.0F, 5 + -PD).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, 10 + -PD, -100.0F, 5 + PD).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, 10 + PD, -100.0F, 5 + PD).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, 10 + PD, -100.0F, 5 + -PD).setUv(0.0F, 0.0F);
+                bufferbuilder.addVertex(matrix4f1, 10 + -PD, -100.0F, 5 + -PD).setUv(1.0F, 0.0F);
+                bufferbuilder.addVertex(matrix4f1, 10 + -PD, -100.0F, 5 + PD).setUv(1.0F, 1.0F);
+                bufferbuilder.addVertex(matrix4f1, 10 + PD, -100.0F, 5 + PD).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, BARE_SUN);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, SUN, 100.0F, SUN).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -SUN, 100.0F, SUN).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -SUN, 100.0F, -SUN).uv(1, 1).endVertex();
-                bufferbuilder.vertex(matrix4f1, SUN, 100.0F, -SUN).uv(0, 1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, SUN, 100.0F, SUN).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, -SUN, 100.0F, SUN).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, -SUN, 100.0F, -SUN).setUv(1, 1);
+                bufferbuilder.addVertex(matrix4f1, SUN, 100.0F, -SUN).setUv(0, 1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 RenderSystem.setShaderColor(sky_brightness, sky_brightness, sky_brightness, 1);
 
                 float EF = 3;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, 100, -40f + EF, 50 + EF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + EF, 50 + -EF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + -EF, 50 + -EF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -40f + -EF, 50 + EF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, 100, -40f + EF, 50 + EF).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, 100, -39 + EF, 50 + -EF).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, 100, -39 + -EF, 50 + -EF).setUv(1, -1);
+                bufferbuilder.addVertex(matrix4f1, 100, -40f + -EF, 50 + EF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 float MF = 1.5F;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, MOON_FAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, 100, -40f + MF, 55 + MF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39.5F + MF, 55 + -MF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39.5F + -MF, 55 + -MF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -40f + -MF, 55 + MF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, 100, -40f + MF, 55 + MF).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, 100, -39.5F + MF, 55 + -MF).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, 100, -39.5F + -MF, 55 + -MF).setUv(1, -1);
+                bufferbuilder.addVertex(matrix4f1, 100, -40f + -MF, 55 + MF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 float NS = 2.0F;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 float VF = 2;
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, -58.75F, -30f + VF, -80 + -VF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -60, -29.25f + VF, -80 + VF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -60, -29.25f + -VF, -80 + VF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, -58.75F, -30f + -VF, -80 + -VF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, -58.75F, -30f + VF, -80 + -VF).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, -60, -29.25f + VF, -80 + VF).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, -60, -29.25f + -VF, -80 + VF).setUv(1, -1);
+                bufferbuilder.addVertex(matrix4f1, -58.75F, -30f + -VF, -80 + -VF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 RenderSystem.depthMask(true);
                 pPoseStack.popPose();
                 pPoseStack.pushPose();
@@ -819,12 +816,12 @@ public class LevelRendererMixin {
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, MARS_CLOSE);
-                    bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder.vertex(matrix4f2, MC, -100.0F - mars_dist, -MC).uv(0.0F, 0.0F).endVertex();
-                    bufferbuilder.vertex(matrix4f2, -MC, -100.0F - mars_dist, -MC).uv(1.0F, 0.0F).endVertex();
-                    bufferbuilder.vertex(matrix4f2, -MC, -100.0F - mars_dist, MC).uv(1.0F, 1.0F).endVertex();
-                    bufferbuilder.vertex(matrix4f2, MC, -100.0F - mars_dist, MC).uv(0.0F, 1.0F).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder.end());
+                    bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder.addVertex(matrix4f2, MC, -100.0F - mars_dist, -MC).setUv(0.0F, 0.0F);
+                    bufferbuilder.addVertex(matrix4f2, -MC, -100.0F - mars_dist, -MC).setUv(1.0F, 0.0F);
+                    bufferbuilder.addVertex(matrix4f2, -MC, -100.0F - mars_dist, MC).setUv(1.0F, 1.0F);
+                    bufferbuilder.addVertex(matrix4f2, MC, -100.0F - mars_dist, MC).setUv(0.0F, 1.0F);
+                    BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 }
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.depthMask(true);
@@ -836,7 +833,7 @@ public class LevelRendererMixin {
                 if (playerEyeLevel > 450) {
                     info.cancel();
                     runnable.run();
-                    BufferBuilder bufferbuilder3 = Tesselator.getInstance().getBuilder();
+                    BufferBuilder bufferbuilder3 = null;
                     Vec3 vec3 = this.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), pPartialTick);
                     float f = (float) vec3.x;
                     float f1 = (float) vec3.y;
@@ -912,7 +909,7 @@ public class LevelRendererMixin {
                     }
 
 
-                    BufferBuilder bufferbuilder_earth_sky = Tesselator.getInstance().getBuilder();
+                    BufferBuilder bufferbuilder_earth_sky = null;
                     Matrix4f matrix4f_earth_sky = pPoseStack.last().pose();
                     float earth_sky_planet_brightness = (float) (this.level.getStarBrightness(pPartialTick) * 1.5) * (this.level.isRaining() && playerEyeLevel < 450 ? 0 : 1);
                     float northstar_brightness = earth_sky_planet_brightness * 2;
@@ -928,12 +925,12 @@ public class LevelRendererMixin {
                     RenderSystem.setShaderColor(northstar_brightness, northstar_brightness, northstar_brightness, northstar_brightness);
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                    bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+                    bufferbuilder_earth_sky = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                    BufferUploader.drawWithShader(bufferbuilder_earth_sky.buildOrThrow());
 
                     if (playerEyeLevel >= 450) {
                         RenderSystem.setShaderColor(1, 1, 1, 1);//System.out.println("we gamin");
@@ -944,21 +941,21 @@ public class LevelRendererMixin {
 
                     float VF = 2;
                     RenderSystem.setShaderTexture(0, VENUS_FAR);
-                    bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+                    bufferbuilder_earth_sky = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).setUv(0, 0);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).setUv(1, 0);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).setUv(1, -1);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).setUv(0, -1);
+                    BufferUploader.drawWithShader(bufferbuilder_earth_sky.buildOrThrow());
 
                     float MVF = 1;
                     RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
-                    bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+                    bufferbuilder_earth_sky = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).setUv(0, 0);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).setUv(1, 0);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).setUv(1, -1);
+                    bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).setUv(0, -1);
+                    BufferUploader.drawWithShader(bufferbuilder_earth_sky.buildOrThrow());
                     RenderSystem.disableBlend();
                     RenderSystem.depthMask(true);
                     RenderSystem.enableBlend();
@@ -973,12 +970,12 @@ public class LevelRendererMixin {
                     float f12 = 30.0F;
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, BARE_SUN);
-                    bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, -f12).uv(0.0F, 0.0F).endVertex();
-                    bufferbuilder3.vertex(matrix4f3, f12, 100.0F, -f12).uv(1.0F, 0.0F).endVertex();
-                    bufferbuilder3.vertex(matrix4f3, f12, 100.0F, f12).uv(1.0F, 1.0F).endVertex();
-                    bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, f12).uv(0.0F, 1.0F).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder3.end());
+                    bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, -f12).setUv(0.0F, 0.0F);
+                    bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, -f12).setUv(1.0F, 0.0F);
+                    bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, f12).setUv(1.0F, 1.0F);
+                    bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, f12).setUv(0.0F, 1.0F);
+                    BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                     f12 = 20.0F;
                     RenderSystem.setShaderTexture(0, MOON_LOC);
                     int k = this.level.getMoonPhase();
@@ -988,12 +985,12 @@ public class LevelRendererMixin {
                     float f14 = (float) (i1 + 0) / 2.0F;
                     float f15 = (float) (l + 1) / 4.0F;
                     float f16 = (float) (i1 + 1) / 2.0F;
-                    bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder3.vertex(matrix4f3, -f12, -100.0F, f12).uv(f15, f16).endVertex();
-                    bufferbuilder3.vertex(matrix4f3, f12, -100.0F, f12).uv(f13, f16).endVertex();
-                    bufferbuilder3.vertex(matrix4f3, f12, -100.0F, -f12).uv(f13, f14).endVertex();
-                    bufferbuilder3.vertex(matrix4f3, -f12, -100.0F, -f12).uv(f15, f14).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder3.end());
+                    bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder3.addVertex(matrix4f3, -f12, -100.0F, f12).setUv(f15, f16);
+                    bufferbuilder3.addVertex(matrix4f3, f12, -100.0F, f12).setUv(f13, f16);
+                    bufferbuilder3.addVertex(matrix4f3, f12, -100.0F, -f12).setUv(f13, f14);
+                    bufferbuilder3.addVertex(matrix4f3, -f12, -100.0F, -f12).setUv(f15, f14);
+                    BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                     RenderSystem.enableDepthTest();
                     pPoseStack.popPose();
                     float earth_alpha = (playerEyeLevel - 450) / 300;
@@ -1009,17 +1006,17 @@ public class LevelRendererMixin {
                         pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
                         pPoseStack.mulPose(Axis.XP.rotationDegrees(0));
                         Matrix4f matrix4f2 = pPoseStack.last().pose();
-                        BufferBuilder bufferbuilder2 = Tesselator.getInstance().getBuilder();
+                        BufferBuilder bufferbuilder2 = null;
                         RenderSystem.setShaderColor(1, 1, 1, earth_alpha);
                         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                         RenderSystem.setShader(GameRenderer::getPositionTexShader);
                         RenderSystem.setShaderTexture(0, EARTH_CLOSE);
-                        bufferbuilder2.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                        bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, -EC).uv(0.0F, 0.0F).endVertex();
-                        bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).uv(1.0F, 0.0F).endVertex();
-                        bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, EC).uv(1.0F, -1.0F).endVertex();
-                        bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, EC).uv(0.0F, -1.0F).endVertex();
-                        BufferUploader.drawWithShader(bufferbuilder2.end());
+                        bufferbuilder2 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                        bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, -EC).setUv(0.0F, 0.0F);
+                        bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).setUv(1.0F, 0.0F);
+                        bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, EC).setUv(1.0F, -1.0F);
+                        bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, EC).setUv(0.0F, -1.0F);
+                        BufferUploader.drawWithShader(bufferbuilder2.buildOrThrow());
                     }
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                     RenderSystem.depthMask(true);
@@ -1032,7 +1029,7 @@ public class LevelRendererMixin {
             if (player_dim == NorthstarDimensions.VENUS_DIM_KEY) {
                 info.cancel();
                 runnable.run();
-                BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+                BufferBuilder bufferbuilder = null;
                 float time = this.level.getTimeOfDay(pPartialTick);
                 float skydarken = Mth.cos(time * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
                 Vec3 skycolor = new Vec3(1F, 0.874F, 0.336F);
@@ -1092,16 +1089,16 @@ public class LevelRendererMixin {
                     float f5 = afloat[1];
                     float f6 = afloat[2];
                     Matrix4f matrix4f = pPoseStack.last().pose();
-                    bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-                    bufferbuilder.vertex(matrix4f, 0.0F, 100.0F, 0.0F).color(f4, f5, f6, afloat[3]).endVertex();
+                    bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+                    bufferbuilder.addVertex(matrix4f, 0.0F, 100.0F, 0.0F).setColor(f4, f5, f6, afloat[3]);
 
                     for (int j = 0; j <= 16; ++j) {
                         float f7 = (float) j * ((float) Math.PI * 2F) / 16.0F;
                         float f8 = Mth.sin(f7);
                         float f9 = Mth.cos(f7);
-                        bufferbuilder.vertex(matrix4f, f8 * 120.0F, f9 * 120.0F, -f9 * 40.0F * afloat[3]).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
+                        bufferbuilder.addVertex(matrix4f, f8 * 120.0F, f9 * 120.0F, -f9 * 40.0F * afloat[3]).setColor(afloat[0], afloat[1], afloat[2], 0.0F);
                     }
-                    BufferUploader.drawWithShader(bufferbuilder.end());
+                    BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                     pPoseStack.popPose();
                 }
 
@@ -1115,22 +1112,22 @@ public class LevelRendererMixin {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.25F);
                 RenderSystem.setShaderTexture(0, BLURRED_SUN);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, SUN, 100.0F, SUN).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -SUN, 100.0F, SUN).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -SUN, 100.0F, -SUN).uv(1, 1).endVertex();
-                bufferbuilder.vertex(matrix4f1, SUN, 100.0F, -SUN).uv(0, 1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, SUN, 100.0F, SUN).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, -SUN, 100.0F, SUN).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, -SUN, 100.0F, -SUN).setUv(1, 1);
+                bufferbuilder.addVertex(matrix4f1, SUN, 100.0F, -SUN).setUv(0, 1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 float sun_alpha = (playerEyeLevel - 600) / 300;
                 sun_alpha = Mth.clamp(sun_alpha, 0, 1);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, sun_alpha);
                 RenderSystem.setShaderTexture(0, BARE_SUN);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, SUN, 100.0F, SUN).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -SUN, 100.0F, SUN).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -SUN, 100.0F, -SUN).uv(1, 1).endVertex();
-                bufferbuilder.vertex(matrix4f1, SUN, 100.0F, -SUN).uv(0, 1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, SUN, 100.0F, SUN).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, -SUN, 100.0F, SUN).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, -SUN, 100.0F, -SUN).setUv(1, 1);
+                bufferbuilder.addVertex(matrix4f1, SUN, 100.0F, -SUN).setUv(0, 1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 float f11 = 0.5F - this.level.getRainLevel(pPartialTick);
                 float f10 = this.level.getStarBrightness(pPartialTick) * f11;
@@ -1185,31 +1182,31 @@ public class LevelRendererMixin {
                 float EF = 3;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, 100, -40f + EF, 50 + EF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + EF, 50 + -EF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + -EF, 50 + -EF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -40f + -EF, 50 + EF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, 100, -40f + EF, 50 + EF).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, 100, -39 + EF, 50 + -EF).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, 100, -39 + -EF, 50 + -EF).setUv(1, -1);
+                bufferbuilder.addVertex(matrix4f1, 100, -40f + -EF, 50 + EF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 float NS = 2.0F;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                bufferbuilder.addVertex(matrix4f1, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
                 float MVF = 1;
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder.addVertex(matrix4f1, -59.25f, -30f + MVF, -80 + -MVF).setUv(0, 0);
+                bufferbuilder.addVertex(matrix4f1, -60, -29.65f + MVF, -80 + MVF).setUv(1, 0);
+                bufferbuilder.addVertex(matrix4f1, -60, -29.65f + -MVF, -80 + MVF).setUv(1, -1);
+                bufferbuilder.addVertex(matrix4f1, -59.25f, -30f + -MVF, -80 + -MVF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 RenderSystem.depthMask(true);
                 pPoseStack.popPose();
                 pPoseStack.pushPose();
@@ -1229,12 +1226,12 @@ public class LevelRendererMixin {
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, VENUS_CLOSE);
-                    bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder.vertex(matrix4f2, VC, -100.0F - venus_dist, -VC).uv(0.0F, 0.0F).endVertex();
-                    bufferbuilder.vertex(matrix4f2, -VC, -100.0F - venus_dist, -VC).uv(1.0F, 0.0F).endVertex();
-                    bufferbuilder.vertex(matrix4f2, -VC, -100.0F - venus_dist, VC).uv(1.0F, 1.0F).endVertex();
-                    bufferbuilder.vertex(matrix4f2, VC, -100.0F - venus_dist, VC).uv(0.0F, 1.0F).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder.end());
+                    bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder.addVertex(matrix4f2, VC, -100.0F - venus_dist, -VC).setUv(0.0F, 0.0F);
+                    bufferbuilder.addVertex(matrix4f2, -VC, -100.0F - venus_dist, -VC).setUv(1.0F, 0.0F);
+                    bufferbuilder.addVertex(matrix4f2, -VC, -100.0F - venus_dist, VC).setUv(1.0F, 1.0F);
+                    bufferbuilder.addVertex(matrix4f2, VC, -100.0F - venus_dist, VC).setUv(0.0F, 1.0F);
+                    BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
                 }
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.depthMask(true);
@@ -1245,7 +1242,7 @@ public class LevelRendererMixin {
                 float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
                 info.cancel();
                 runnable.run();
-                BufferBuilder bufferbuilder3 = Tesselator.getInstance().getBuilder();
+                BufferBuilder bufferbuilder3 = null;
                 float f = 0;
                 float f1 = 0;
                 float f2 = 0;
@@ -1291,12 +1288,12 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 int VF = 2;
@@ -1305,19 +1302,19 @@ public class LevelRendererMixin {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, 100, -40f + VF, 50 + VF).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).setUv(1, -1);
+                bufferbuilder3.addVertex(matrix4f3, 100, -40f + -VF, 50 + VF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).setUv(1, -1);
+                bufferbuilder3.addVertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
 
@@ -1328,12 +1325,12 @@ public class LevelRendererMixin {
                 float f12 = 30.0F;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, BARE_SUN);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, -f12).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, f12, 100.0F, -f12).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, f12, 100.0F, f12).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, f12).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, -f12).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, -f12).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, f12).setUv(1.0F, 1.0F);
+                bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, f12).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.disableBlend();
 
                 pPoseStack.pushPose();
@@ -1346,12 +1343,12 @@ public class LevelRendererMixin {
                 float earth_sky_dist = 35;
                 float ECS = 45;
                 RenderSystem.setShaderTexture(0, EARTH_CLOSE);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f2, ECS, -100.0F - earth_sky_dist, -ECS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f2, -ECS, -100.0F - earth_sky_dist, -ECS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f2, -ECS, -100.0F - earth_sky_dist, ECS).uv(1.0F, -1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f2, ECS, -100.0F - earth_sky_dist, ECS).uv(0.0F, -1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f2, ECS, -100.0F - earth_sky_dist, -ECS).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f2, -ECS, -100.0F - earth_sky_dist, -ECS).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f2, -ECS, -100.0F - earth_sky_dist, ECS).setUv(1.0F, -1.0F);
+                bufferbuilder3.addVertex(matrix4f2, ECS, -100.0F - earth_sky_dist, ECS).setUv(0.0F, -1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
 
@@ -1369,17 +1366,17 @@ public class LevelRendererMixin {
                     pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
                     pPoseStack.mulPose(Axis.XP.rotationDegrees(0));
                     matrix4f2 = pPoseStack.last().pose();
-                    BufferBuilder bufferbuilder2 = Tesselator.getInstance().getBuilder();
+                    BufferBuilder bufferbuilder2 = null;
                     RenderSystem.setShaderColor(1, 1, 1, earth_alpha);
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, MOON_CLOSE);
-                    bufferbuilder2.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, -EC).uv(0.0F, 0.0F).endVertex();
-                    bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).uv(1.0F, 0.0F).endVertex();
-                    bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, EC).uv(1.0F, -1.0F).endVertex();
-                    bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, EC).uv(0.0F, -1.0F).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder2.end());
+                    bufferbuilder2 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, -EC).setUv(0.0F, 0.0F);
+                    bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).setUv(1.0F, 0.0F);
+                    bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, EC).setUv(1.0F, -1.0F);
+                    bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, EC).setUv(0.0F, -1.0F);
+                    BufferUploader.drawWithShader(bufferbuilder2.buildOrThrow());
                     pPoseStack.popPose();
                     RenderSystem.depthMask(true);
                 }
@@ -1434,7 +1431,7 @@ public class LevelRendererMixin {
                 float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
                 info.cancel();
                 runnable.run();
-                BufferBuilder bufferbuilder3 = Tesselator.getInstance().getBuilder();
+                BufferBuilder bufferbuilder3 = null;
                 float f = 0;
                 float f1 = 0;
                 float f2 = 0;
@@ -1480,12 +1477,12 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 int VF = 2;
@@ -1494,19 +1491,19 @@ public class LevelRendererMixin {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, 100, -40f + VF, 50 + VF).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).setUv(1, -1);
+                bufferbuilder3.addVertex(matrix4f3, 100, -40f + -VF, 50 + VF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).setUv(1, -1);
+                bufferbuilder3.addVertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
 
@@ -1517,12 +1514,12 @@ public class LevelRendererMixin {
                 float f12 = 30.0F;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, BARE_SUN);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, -f12).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, f12, 100.0F, -f12).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, f12, 100.0F, f12).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, f12).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, -f12).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, -f12).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, f12).setUv(1.0F, 1.0F);
+                bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, f12).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.disableBlend();
 
                 f12 = 20.0F;
@@ -1534,17 +1531,17 @@ public class LevelRendererMixin {
                 pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(0));
                 matrix4f2 = pPoseStack.last().pose();
-                BufferBuilder bufferbuilder2 = Tesselator.getInstance().getBuilder();
+                BufferBuilder bufferbuilder2 = null;
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, EARTH_CLOSE);
-                bufferbuilder2.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, -EC).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, EC).uv(1.0F, -1.0F).endVertex();
-                bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, EC).uv(0.0F, -1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder2.end());
+                bufferbuilder2 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, -EC).setUv(0.0F, 0.0F);
+                bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).setUv(1.0F, 0.0F);
+                bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, EC).setUv(1.0F, -1.0F);
+                bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, EC).setUv(0.0F, -1.0F);
+                BufferUploader.drawWithShader(bufferbuilder2.buildOrThrow());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
                 RenderSystem.depthMask(true);
@@ -1553,7 +1550,7 @@ public class LevelRendererMixin {
                 float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
                 info.cancel();
                 runnable.run();
-                BufferBuilder bufferbuilder3 = Tesselator.getInstance().getBuilder();
+                BufferBuilder bufferbuilder3 = null;
                 float f = 0;
                 float f1 = 0;
                 float f2 = 0;
@@ -1599,12 +1596,12 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                bufferbuilder3.addVertex(matrix4f3, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
 
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -1615,28 +1612,28 @@ public class LevelRendererMixin {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, 100, -40f + VF, 50 + VF).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).setUv(1, -1);
+                bufferbuilder3.addVertex(matrix4f3, 100, -40f + -VF, 50 + VF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -58f, -30f + EF, -80 + -EF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + EF, -80 + EF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -EF, -80 + EF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -58f, -30f + -EF, -80 + -EF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -58f, -30f + EF, -80 + -EF).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, -60, -29.65f + EF, -80 + EF).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, -60, -29.65f + -EF, -80 + EF).setUv(1, -1);
+                bufferbuilder3.addVertex(matrix4f3, -58f, -30f + -EF, -80 + -EF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, BARE_SUN);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, SUN, 100.0F, SUN).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -SUN, 100.0F, SUN).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -SUN, 100.0F, -SUN).uv(1, 1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, SUN, 100.0F, -SUN).uv(0, 1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, SUN, 100.0F, SUN).setUv(0, 0);
+                bufferbuilder3.addVertex(matrix4f3, -SUN, 100.0F, SUN).setUv(1, 0);
+                bufferbuilder3.addVertex(matrix4f3, -SUN, 100.0F, -SUN).setUv(1, 1);
+                bufferbuilder3.addVertex(matrix4f3, SUN, 100.0F, -SUN).setUv(0, 1);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
 
@@ -1646,12 +1643,12 @@ public class LevelRendererMixin {
                 float f12 = 30.0F;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, BARE_SUN);
-                bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, -f12).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, f12, 100.0F, -f12).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, f12, 100.0F, f12).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -f12, 100.0F, f12).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder3.end());
+                bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, -f12).setUv(0.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, -f12).setUv(1.0F, 0.0F);
+                bufferbuilder3.addVertex(matrix4f3, f12, 100.0F, f12).setUv(1.0F, 1.0F);
+                bufferbuilder3.addVertex(matrix4f3, -f12, 100.0F, f12).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
                 RenderSystem.disableBlend();
 
                 Matrix4f matrix4f2 = pPoseStack.last().pose();
@@ -1671,17 +1668,17 @@ public class LevelRendererMixin {
                     pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
                     pPoseStack.mulPose(Axis.XP.rotationDegrees(0));
                     matrix4f2 = pPoseStack.last().pose();
-                    BufferBuilder bufferbuilder2 = Tesselator.getInstance().getBuilder();
+                    BufferBuilder bufferbuilder2 = null;
                     RenderSystem.setShaderColor(1, 1, 1, earth_alpha);
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     RenderSystem.setShader(GameRenderer::getPositionTexShader);
                     RenderSystem.setShaderTexture(0, MERCURY_CLOSE);
-                    bufferbuilder2.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, -EC).uv(0.0F, 0.0F).endVertex();
-                    bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).uv(1.0F, 0.0F).endVertex();
-                    bufferbuilder2.vertex(matrix4f2, -EC, -100.0F - earth_dist, EC).uv(1.0F, -1.0F).endVertex();
-                    bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, EC).uv(0.0F, -1.0F).endVertex();
-                    BufferUploader.drawWithShader(bufferbuilder2.end());
+                    bufferbuilder2 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                    bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, -EC).setUv(0.0F, 0.0F);
+                    bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, -EC).setUv(1.0F, 0.0F);
+                    bufferbuilder2.addVertex(matrix4f2, -EC, -100.0F - earth_dist, EC).setUv(1.0F, -1.0F);
+                    bufferbuilder2.addVertex(matrix4f2, EC, -100.0F - earth_dist, EC).setUv(0.0F, -1.0F);
+                    BufferUploader.drawWithShader(bufferbuilder2.buildOrThrow());
                     pPoseStack.popPose();
                     RenderSystem.depthMask(true);
                 }
@@ -1694,18 +1691,19 @@ public class LevelRendererMixin {
     // THIS IS FOR WHEN THE PLAYER IS **NOT** LEAVING THE PLANET
     @SuppressWarnings("resource")
     @Inject(method = "renderSky", at = @At("TAIL"), cancellable = true)
-    private void renderSky2(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
+    private void renderSky2(Matrix4f frustumMatrix, Matrix4f projectionMatrix, float pPartialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
         if (this.minecraft != null) {
             ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
             if (player_dim == Level.OVERWORLD) {
                 float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
                 //venus off in the distance (cool)
+                PoseStack pPoseStack = new PoseStack();
+                pPoseStack.mulPose(frustumMatrix);
                 pPoseStack.pushPose();
                 pPoseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(this.level.getTimeOfDay(pPartialTick) * 360.0F));
 
 
-                BufferBuilder bufferbuilder_earth_sky = Tesselator.getInstance().getBuilder();
                 Matrix4f matrix4f_earth_sky = pPoseStack.last().pose();
                 float earth_sky_planet_brightness = (float) (this.level.getStarBrightness(pPartialTick) * 1.5) * (this.level.isRaining() && playerEyeLevel < 450 ? 0 : 1);
                 float northstar_brightness = earth_sky_planet_brightness * 2;
@@ -1721,12 +1719,12 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderColor(northstar_brightness, northstar_brightness, northstar_brightness, northstar_brightness);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+                BufferBuilder bufferbuilder_earth_sky = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + NS, -NS).setUv(0.0F, 0.0F);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + NS, NS).setUv(1.0F, 0.0F);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + -NS, NS).setUv(1.0F, 1.0F);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -100, -30 + -NS, -NS).setUv(0.0F, 1.0F);
+                BufferUploader.drawWithShader(bufferbuilder_earth_sky.buildOrThrow());
 
                 if (playerEyeLevel >= 450) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);//System.out.println("we gamin");
@@ -1737,21 +1735,21 @@ public class LevelRendererMixin {
 
                 float VF = 2;
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
-                bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+                bufferbuilder_earth_sky = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).setUv(0, 0);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).setUv(1, 0);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).setUv(1, -1);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder_earth_sky.buildOrThrow());
 
                 float MVF = 1;
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
-                bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+                bufferbuilder_earth_sky = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).setUv(0, 0);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).setUv(1, 0);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).setUv(1, -1);
+                bufferbuilder_earth_sky.addVertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).setUv(0, -1);
+                BufferUploader.drawWithShader(bufferbuilder_earth_sky.buildOrThrow());
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.disableBlend();
                 RenderSystem.depthMask(true);
@@ -1763,10 +1761,10 @@ public class LevelRendererMixin {
     }
 
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
-    public void renderClouds(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, double pCamX, double pCamY, double pCamZ, CallbackInfo info) {
+    public void renderClouds(PoseStack poseStack, Matrix4f frustumMatrix, Matrix4f projectionMatrix, float partialTick, double camX, double camY, double camZ, CallbackInfo info) {
         ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
         if (this.minecraft != null) {
-            float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
+            float playerEyeLevel = (float) this.minecraft.player.getEyePosition(partialTick).y;
             if (player_dim == NorthstarDimensions.MARS_DIM_KEY) {
                 info.cancel();
             }
@@ -1781,98 +1779,13 @@ public class LevelRendererMixin {
             }
             if (player_dim == Level.OVERWORLD && playerEyeLevel > 500) {
                 info.cancel();
-            }
-            if (player_dim == NorthstarDimensions.VENUS_DIM_KEY && !(playerEyeLevel > 500)) {
-                info.cancel();
-                if (level.effects().renderClouds(level, ticks, pPartialTick, pPoseStack, pCamX, pCamY, pCamZ, pProjectionMatrix))
-                    return;
-                float f = this.level.effects().getCloudHeight();
-                if (!Float.isNaN(f)) {
-                    RenderSystem.disableCull();
-                    RenderSystem.enableBlend();
-                    RenderSystem.enableDepthTest();
-                    RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                    RenderSystem.depthMask(true);
-                    double d1 = (double) (((float) this.ticks + pPartialTick) * 0.03F);
-                    double d2 = (pCamX + d1) / 12.0D;
-                    double d3 = (double) (f - (float) pCamY + 0.33F);
-                    double d4 = pCamZ / 12.0D + (double) 0.33F;
-                    d2 -= (double) (Mth.floor(d2 / 2048.0D) * 2048);
-                    d4 -= (double) (Mth.floor(d4 / 2048.0D) * 2048);
-                    float f3 = (float) (d2 - (double) Mth.floor(d2));
-                    float f4 = (float) (d3 / 4.0D - (double) Mth.floor(d3 / 4.0D)) * 4.0F;
-                    float f5 = (float) (d4 - (double) Mth.floor(d4));
-                    float time = level.getTimeOfDay(pPartialTick);
-                    float cloudcolor = Mth.cos(time * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
-                    cloudcolor = Mth.clamp(cloudcolor, 0.25F, 1.0F);
-                    Vec3 vec3 = new Vec3(0.5058F * cloudcolor, 0.5176F * cloudcolor, 0.0352F * cloudcolor);
-                    int i = (int) Math.floor(d2);
-                    int j = (int) Math.floor(d3 / 4.0D);
-                    int k = (int) Math.floor(d4);
-                    if (i != this.prevCloudX || j != this.prevCloudY || k != this.prevCloudZ || this.minecraft.options.getCloudsType() != this.prevCloudsType || this.prevCloudColor.distanceToSqr(vec3) > 2.0E-4D) {
-                        this.prevCloudX = i;
-                        this.prevCloudY = j;
-                        this.prevCloudZ = k;
-                        this.prevCloudColor = vec3;
-                        this.prevCloudsType = this.minecraft.options.getCloudsType();
-                        this.generateClouds = true;
-                    }
-                    if (this.generateClouds) {
-                        this.generateClouds = false;
-                        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-                        if (this.cloudBuffer != null) {
-                            this.cloudBuffer.close();
-                        }
-                        this.cloudBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-                        BufferBuilder.RenderedBuffer bufferbuilder$renderedbuffer = this.buildClouds(bufferbuilder, d2, d3, d4, vec3, 1);
-                        this.cloudBuffer.bind();
-                        this.cloudBuffer.upload(bufferbuilder$renderedbuffer);
-                        VertexBuffer.unbind();
-
-//		            this.cloudBuffer2 = new VertexBuffer();
-//		            BufferBuilder.RenderedBuffer bufferbuilder$renderedbuffer2 = this.buildClouds(bufferbuilder, d2 + 50, d3 + 50, d4 + 50, vec3,   2);
-//		            this.cloudBuffer2.bind();
-//		            this.cloudBuffer2.upload(bufferbuilder$renderedbuffer2);
-//		            VertexBuffer.unbind();
-                    }
-
-                    RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
-                    RenderSystem.setShaderTexture(0, CLOUDS_LOCATION);
-                    FogRenderer.levelFogColor();
-                    pPoseStack.pushPose();
-                    pPoseStack.scale(12.0F, 1.0F, 12.0F);
-                    pPoseStack.translate((double) (-f3), (double) f4, (double) (-f5));
-                    if (this.cloudBuffer != null) {
-                        this.cloudBuffer.bind();
-                        int l = this.prevCloudsType == CloudStatus.FANCY ? 0 : 1;
-
-                        for (int i1 = l; i1 < 2; ++i1) {
-                            if (i1 == 0) {
-                                RenderSystem.colorMask(false, false, false, false);
-                            } else {
-                                RenderSystem.colorMask(true, true, true, true);
-                            }
-
-                            ShaderInstance shaderinstance = RenderSystem.getShader();
-                            this.cloudBuffer.drawWithShader(pPoseStack.last().pose(), pProjectionMatrix, shaderinstance);
-//		               this.cloudBuffer2.drawWithShader(pPoseStack.last().pose(), pProjectionMatrix, shaderinstance);
-                        }
-
-                        VertexBuffer.unbind();
-                    }
-
-                    pPoseStack.popPose();
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    RenderSystem.enableCull();
-                    RenderSystem.disableBlend();
-                }
             } else if (player_dim == NorthstarDimensions.VENUS_DIM_KEY && playerEyeLevel > 500) {
                 info.cancel();
             }
         }
     }
 
-    private BufferBuilder.RenderedBuffer buildClouds(BufferBuilder pBuilder, double pX, double pY, double pZ, Vec3 pCloudColor, float offset) {
+    private MeshData buildClouds(float pX, float pY, float pZ, Vec3 pCloudColor, float offset) {
         float f3 = (float) Mth.floor(pX) * 0.00390625F;
         float f4 = (float) Mth.floor(pZ) * 0.00390625F;
         float f5 = (float) pCloudColor.x;
@@ -1887,61 +1800,61 @@ public class LevelRendererMixin {
         float f14 = f5 * 0.8F;
         float f15 = f6 * 0.8F;
         float f16 = f7 * 0.8F;
-        RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
-        pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR_NORMAL);
-        float f17 = (float) Math.floor(pY / 4.0D) * 4.0F;
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        BufferBuilder pBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR_NORMAL);
+        float f17 = (float) Math.floor(pY / 4.0f) * 4.0F;
         if (this.prevCloudsType == CloudStatus.FANCY) {
             for (int k = -3; k <= 4; ++k) {
                 for (int l = -3; l <= 4; ++l) {
                     float f18 = (float) (k * 8);
                     float f19 = (float) (l * 8);
                     if (f17 > -5.0F) {
-                        pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 0.0F), (double) (f19 + 8.0F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f11, f12, f13, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
-                        pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 0.0F), (double) (f19 + 8.0F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f11, f12, f13, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
-                        pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 0.0F), (double) (f19 + 0.0F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f11, f12, f13, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
-                        pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 0.0F), (double) (f19 + 0.0F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f11, f12, f13, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
+                        pBuilder.addVertex(f18 + 0.0F, f17 + 0.0F, f19 + 8.0F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f11, f12, f13, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
+                        pBuilder.addVertex(f18 + 8.0F, f17 + 0.0F, f19 + 8.0F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f11, f12, f13, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
+                        pBuilder.addVertex(f18 + 8.0F, f17 + 0.0F, f19 + 0.0F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f11, f12, f13, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
+                        pBuilder.addVertex(f18 + 0.0F, f17 + 0.0F, f19 + 0.0F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f11, f12, f13, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
                     }
 
                     if (f17 <= 5.0F) {
-                        pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 4.0F - 9.765625E-4F), (double) (f19 + 8.0F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, 1.0F, 0.0F).endVertex();
-                        pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 4.0F - 9.765625E-4F), (double) (f19 + 8.0F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, 1.0F, 0.0F).endVertex();
-                        pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 4.0F - 9.765625E-4F), (double) (f19 + 0.0F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, 1.0F, 0.0F).endVertex();
-                        pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 4.0F - 9.765625E-4F), (double) (f19 + 0.0F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, 1.0F, 0.0F).endVertex();
+                        pBuilder.addVertex(f18 + 0.0F, f17 + 4.0F - 9.765625E-4F, f19 + 8.0F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, 1.0F, 0.0F);
+                        pBuilder.addVertex(f18 + 8.0F, f17 + 4.0F - 9.765625E-4F, f19 + 8.0F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, 1.0F, 0.0F);
+                        pBuilder.addVertex(f18 + 8.0F, f17 + 4.0F - 9.765625E-4F, f19 + 0.0F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, 1.0F, 0.0F);
+                        pBuilder.addVertex(f18 + 0.0F, f17 + 4.0F - 9.765625E-4F, f19 + 0.0F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, 1.0F, 0.0F);
                     }
 
                     if (k > -1) {
                         for (int i1 = 0; i1 < 8; ++i1) {
-                            pBuilder.vertex((double) (f18 + (float) i1 + 0.0F), (double) (f17 + 0.0F), (double) (f19 + 8.0F)).uv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(-1.0F, 0.0F, 0.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + (float) i1 + 0.0F), (double) (f17 + 4.0F), (double) (f19 + 8.0F)).uv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(-1.0F, 0.0F, 0.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + (float) i1 + 0.0F), (double) (f17 + 4.0F), (double) (f19 + 0.0F)).uv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(-1.0F, 0.0F, 0.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + (float) i1 + 0.0F), (double) (f17 + 0.0F), (double) (f19 + 0.0F)).uv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(-1.0F, 0.0F, 0.0F).endVertex();
+                            pBuilder.addVertex(f18 + (float) i1 + 0.0F, f17 + 0.0F, f19 + 8.0F).setUv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(-1.0F, 0.0F, 0.0F);
+                            pBuilder.addVertex(f18 + (float) i1 + 0.0F, f17 + 4.0F, f19 + 8.0F).setUv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(-1.0F, 0.0F, 0.0F);
+                            pBuilder.addVertex(f18 + (float) i1 + 0.0F, f17 + 4.0F, f19 + 0.0F).setUv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(-1.0F, 0.0F, 0.0F);
+                            pBuilder.addVertex(f18 + (float) i1 + 0.0F, f17 + 0.0F, f19 + 0.0F).setUv((f18 + (float) i1 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(-1.0F, 0.0F, 0.0F);
                         }
                     }
 
                     if (k <= 1) {
                         for (int j2 = 0; j2 < 8; ++j2) {
-                            pBuilder.vertex((double) (f18 + (float) j2 + 1.0F - 9.765625E-4F), (double) (f17 + 0.0F), (double) (f19 + 8.0F)).uv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(1.0F, 0.0F, 0.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + (float) j2 + 1.0F - 9.765625E-4F), (double) (f17 + 4.0F), (double) (f19 + 8.0F)).uv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(1.0F, 0.0F, 0.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + (float) j2 + 1.0F - 9.765625E-4F), (double) (f17 + 4.0F), (double) (f19 + 0.0F)).uv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(1.0F, 0.0F, 0.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + (float) j2 + 1.0F - 9.765625E-4F), (double) (f17 + 0.0F), (double) (f19 + 0.0F)).uv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).color(f8, f9, f10, 0.8F).normal(1.0F, 0.0F, 0.0F).endVertex();
+                            pBuilder.addVertex(f18 + (float) j2 + 1.0F - 9.765625E-4F, f17 + 0.0F, f19 + 8.0F).setUv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(1.0F, 0.0F, 0.0F);
+                            pBuilder.addVertex(f18 + (float) j2 + 1.0F - 9.765625E-4F, f17 + 4.0F, f19 + 8.0F).setUv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 8.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(1.0F, 0.0F, 0.0F);
+                            pBuilder.addVertex(f18 + (float) j2 + 1.0F - 9.765625E-4F, f17 + 4.0F, f19 + 0.0F).setUv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(1.0F, 0.0F, 0.0F);
+                            pBuilder.addVertex(f18 + (float) j2 + 1.0F - 9.765625E-4F, f17 + 0.0F, f19 + 0.0F).setUv((f18 + (float) j2 + 0.5F) * 0.00390625F + f3, (f19 + 0.0F) * 0.00390625F + f4).setColor(f8, f9, f10, 0.8F).setNormal(1.0F, 0.0F, 0.0F);
                         }
                     }
 
                     if (l > -1) {
                         for (int k2 = 0; k2 < 8; ++k2) {
-                            pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 4.0F), (double) (f19 + (float) k2 + 0.0F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, -1.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 4.0F), (double) (f19 + (float) k2 + 0.0F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, -1.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 0.0F), (double) (f19 + (float) k2 + 0.0F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, -1.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 0.0F), (double) (f19 + (float) k2 + 0.0F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, -1.0F).endVertex();
+                            pBuilder.addVertex(f18 + 0.0F, f17 + 4.0F, f19 + (float) k2 + 0.0F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, -1.0F);
+                            pBuilder.addVertex(f18 + 8.0F, f17 + 4.0F, f19 + (float) k2 + 0.0F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, -1.0F);
+                            pBuilder.addVertex(f18 + 8.0F, f17 + 0.0F, f19 + (float) k2 + 0.0F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, -1.0F);
+                            pBuilder.addVertex(f18 + 0.0F, f17 + 0.0F, f19 + (float) k2 + 0.0F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) k2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, -1.0F);
                         }
                     }
 
                     if (l <= 1) {
                         for (int l2 = 0; l2 < 8; ++l2) {
-                            pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 4.0F), (double) (f19 + (float) l2 + 1.0F - 9.765625E-4F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, 1.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 4.0F), (double) (f19 + (float) l2 + 1.0F - 9.765625E-4F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, 1.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + 8.0F), (double) (f17 + 0.0F), (double) (f19 + (float) l2 + 1.0F - 9.765625E-4F)).uv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, 1.0F).endVertex();
-                            pBuilder.vertex((double) (f18 + 0.0F), (double) (f17 + 0.0F), (double) (f19 + (float) l2 + 1.0F - 9.765625E-4F)).uv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).color(f14, f15, f16, 0.8F).normal(0.0F, 0.0F, 1.0F).endVertex();
+                            pBuilder.addVertex(f18 + 0.0F, f17 + 4.0F, f19 + (float) l2 + 1.0F - 9.765625E-4F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, 1.0F);
+                            pBuilder.addVertex(f18 + 8.0F, f17 + 4.0F, f19 + (float) l2 + 1.0F - 9.765625E-4F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, 1.0F);
+                            pBuilder.addVertex(f18 + 8.0F, f17 + 0.0F, f19 + (float) l2 + 1.0F - 9.765625E-4F).setUv((f18 + 8.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, 1.0F);
+                            pBuilder.addVertex(f18 + 0.0F, f17 + 0.0F, f19 + (float) l2 + 1.0F - 9.765625E-4F).setUv((f18 + 0.0F) * 0.00390625F + f3, (f19 + (float) l2 + 0.5F) * 0.00390625F + f4).setColor(f14, f15, f16, 0.8F).setNormal(0.0F, 0.0F, 1.0F);
                         }
                     }
                 }
@@ -1949,16 +1862,15 @@ public class LevelRendererMixin {
         } else {
             for (int l1 = -32; l1 < 32; l1 += 32) {
                 for (int i2 = -32; i2 < 32; i2 += 32) {
-                    pBuilder.vertex((double) (l1 + 0), (double) f17, (double) (i2 + 32)).uv((float) (l1 + 0) * 0.00390625F + f3, (float) (i2 + 32) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
-                    pBuilder.vertex((double) (l1 + 32), (double) f17, (double) (i2 + 32)).uv((float) (l1 + 32) * 0.00390625F + f3, (float) (i2 + 32) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
-                    pBuilder.vertex((double) (l1 + 32), (double) f17, (double) (i2 + 0)).uv((float) (l1 + 32) * 0.00390625F + f3, (float) (i2 + 0) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
-                    pBuilder.vertex((double) (l1 + 0), (double) f17, (double) (i2 + 0)).uv((float) (l1 + 0) * 0.00390625F + f3, (float) (i2 + 0) * 0.00390625F + f4).color(f5, f6, f7, 0.8F).normal(0.0F, -1.0F, 0.0F).endVertex();
+                    pBuilder.addVertex((float) (l1 + 0), f17, (float) (i2 + 32)).setUv((float) (l1 + 0) * 0.00390625F + f3, (float) (i2 + 32) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
+                    pBuilder.addVertex((float) (l1 + 32), f17, (float) (i2 + 32)).setUv((float) (l1 + 32) * 0.00390625F + f3, (float) (i2 + 32) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
+                    pBuilder.addVertex((float) (l1 + 32), f17, (float) (i2 + 0)).setUv((float) (l1 + 32) * 0.00390625F + f3, (float) (i2 + 0) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
+                    pBuilder.addVertex((float) (l1 + 0), f17, (float) (i2 + 0)).setUv((float) (l1 + 0) * 0.00390625F + f3, (float) (i2 + 0) * 0.00390625F + f4).setColor(f5, f6, f7, 0.8F).setNormal(0.0F, -1.0F, 0.0F);
                 }
             }
         }
 
-        return pBuilder.end();
+        return pBuilder.build();
     }
-
 
 }

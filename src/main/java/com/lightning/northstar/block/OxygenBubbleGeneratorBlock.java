@@ -2,20 +2,17 @@ package com.lightning.northstar.block;
 
 import com.lightning.northstar.block.entity.OxygenBubbleGeneratorBlockEntity;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,12 +27,19 @@ import javax.annotation.Nullable;
 
 public class OxygenBubbleGeneratorBlock extends BaseEntityBlock implements IBE<OxygenBubbleGeneratorBlockEntity> {
 
+    private static final MapCodec<OxygenBubbleGeneratorBlock> CODEC = simpleCodec(OxygenBubbleGeneratorBlock::new);
+
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public OxygenBubbleGeneratorBlock(Properties pProperties) {
-        super(pProperties);
+    public OxygenBubbleGeneratorBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -60,18 +64,6 @@ public class OxygenBubbleGeneratorBlock extends BaseEntityBlock implements IBE<O
         return createTickerHelper(type, NorthstarBlockEntityTypes.OXYGEN_BUBBLE_GENERATOR.get(),
                 OxygenBubbleGeneratorBlockEntity::tick);
     }
-
-
-    @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (pStack.hasCustomHoverName()) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof BeaconBlockEntity) {
-                ((BeaconBlockEntity) blockentity).setCustomName(pStack.getHoverName());
-            }
-        }
-    }
-
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -100,7 +92,7 @@ public class OxygenBubbleGeneratorBlock extends BaseEntityBlock implements IBE<O
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 

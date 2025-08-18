@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -13,16 +14,16 @@ import net.createmod.catnip.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.List;
 
@@ -39,6 +40,20 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     public ElectrolysisMachineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+    }
+
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,
+                NorthstarBlockEntityTypes.ELECTROLYSIS_MACHINE.get(),
+                (be, face) -> {
+                    if (face == Direction.UP)
+                        return be.inputTank.getCapability();
+                    if (face == be.getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getClockWise())
+                        return be.outputTankL.getCapability();
+                    if (face == be.getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getCounterClockWise())
+                        return be.outputTankR.getCapability();
+                    return null;
+                });
     }
 
     @Override
@@ -73,16 +88,15 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
         }
     }
 
-
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
         compound.putFloat("ProcessingTime", processingTime);
     }
 
     @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
         processingTime = compound.getFloat("ProcessingTime");
     }
 
@@ -144,17 +158,6 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
         if (totalUnits < 1)
             return 0;
         return totalUnits;
-    }
-
-    @Override
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if (isFluidHandlerCap(cap) && side == Direction.UP)
-            return inputTank.getCapability().cast();
-        if (isFluidHandlerCap(cap) && side == getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getClockWise())
-            return outputTankL.getCapability().cast();
-        if (isFluidHandlerCap(cap) && side == getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getCounterClockWise())
-            return outputTankR.getCapability().cast();
-        return super.getCapability(cap, side);
     }
 
 }

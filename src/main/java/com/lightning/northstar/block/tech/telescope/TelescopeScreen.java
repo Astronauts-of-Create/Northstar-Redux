@@ -2,7 +2,6 @@ package com.lightning.northstar.block.tech.telescope;
 
 import com.google.common.collect.Lists;
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -10,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -74,7 +74,7 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
         IconButton printButton = new IconButton(x - 33, y + 200, AllIcons.I_ADD);
         printButton.withCallback(() -> {
             if (selectedPlanet != null) {
-                NorthstarPackets.getChannel().sendToServer(TelescopePrintPacket.print(menu.blockEntity.getBlockPos(), selectedPlanet));
+                CatnipServices.NETWORK.sendToServer(new TelescopePrintPacket(menu.contentHolder.getBlockPos(), selectedPlanet));
                 //System.out.println("WE'VE BEEN CLICKED, SCATTER!!!!!");
             }
         });
@@ -95,7 +95,7 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
         int y = (height - imageHeight) / 2;
 
         graphics.enableScissor(x + 3, y + 3, x + imageWidth - 3, y + imageHeight - 3);
-        graphics.blitRepeating(BACKGROUND, x, y, imageWidth, imageHeight, (int) -scrollX, (int) -scrollY, imageWidth, imageHeight, 900, 900);
+        graphics.blit(BACKGROUND, x, y, imageWidth, imageHeight, (int) -scrollX, (int) -scrollY, imageWidth, imageHeight, 900, 900);
         renderPlanets(graphics, mouseX, mouseY, partialTick);
         graphics.disableScissor();
 
@@ -231,7 +231,7 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
     public boolean paperCheck() {
         boolean flag = false;
 
-        if (menu.inv != null) {
+        if (inv != null) {
             for (int p = 0; p < 36; p++) {
                 ItemStack items = inv.getItem(p);
                 Item item = items.getItem();

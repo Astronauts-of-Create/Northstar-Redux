@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarTags;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -10,21 +10,17 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity implements IHaveGoggleInformation {
 
     SmartFluidTankBehaviour tank;
@@ -33,6 +29,14 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+    }
+
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, NorthstarBlockEntityTypes.COMBUSTION_ENGINE.get(), (be, face) -> {
+            if (face == be.getBlockState().getValue(CombustionEngineBlock.HORIZONTAL_FACING))
+                return be.tank.getCapability();
+            return null;
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -81,25 +85,6 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         tank = SmartFluidTankBehaviour.single(this, 10000);
         behaviours.add(tank);
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING))
-            return tank.getCapability()
-                    .cast();
-        tank.getCapability().cast();
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void write(CompoundTag tag, boolean clientPacket) {
-        super.write(tag, clientPacket);
-    }
-
-    @Override
-    protected void read(CompoundTag tag, boolean clientPacket) {
-        super.read(tag, clientPacket);
     }
 
     @Override

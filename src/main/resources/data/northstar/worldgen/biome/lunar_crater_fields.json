@@ -39,7 +39,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:moon_crater_big",
       "northstar:moon_crater",

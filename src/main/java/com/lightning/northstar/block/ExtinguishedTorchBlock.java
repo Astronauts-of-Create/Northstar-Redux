@@ -36,11 +36,13 @@ public class ExtinguishedTorchBlock extends Block {
         return AABB;
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         return pFacing == Direction.DOWN && !this.canSurvive(pState, pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return canSupportCenter(pLevel, pPos.below(), Direction.UP);
     }

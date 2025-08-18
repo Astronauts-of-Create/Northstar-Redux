@@ -1,21 +1,16 @@
 package com.lightning.northstar.world;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.particle.GlowstoneParticleData;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -25,11 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -38,7 +31,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
+@EventBusSubscriber(modid = Northstar.MOD_ID)
 public class OxygenStuff {
     public static HashMap<BlockPos, Integer> oxygenBlocks = new HashMap<>();
     public static HashMap<Set<BlockPos>, ResourceKey<Level>> oxygenSources = new HashMap<>();
@@ -65,10 +58,10 @@ public class OxygenStuff {
     }
 
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.LevelTickEvent event) {
-        if (!event.level.isClientSide)
+    public static void onWorldTick(LevelTickEvent.Pre event) {
+        if (!event.getLevel().isClientSide)
             return;
-        long t = event.level.getGameTime();
+        long t = event.getLevel().getGameTime();
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_O)) {
             debugMode = true;
         } else {
@@ -77,9 +70,9 @@ public class OxygenStuff {
         if (t % 40 == 0 && debugMode) {
             try {
                 for (Entry<Set<BlockPos>, ResourceKey<Level>> blocks : oxygenSources.entrySet()) {
-                    if (blocks.getValue() == event.level.dimension()) {
+                    if (blocks.getValue() == event.getLevel().dimension()) {
                         for (BlockPos pos : blocks.getKey()) {
-                            event.level.addParticle(new GlowstoneParticleData(), pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0, 0);
+                            event.getLevel().addParticle(new GlowstoneParticleData(), pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0, 0, 0);
                         }
                     }
 
@@ -191,7 +184,7 @@ public class OxygenStuff {
 
     public static ItemStack getOxy(LivingEntity entity) {
         for (ItemStack items : entity.getArmorSlots()) {
-            if (items.is(NorthstarTags.NorthstarItemTags.OXYGEN_SOURCES.tag)) {
+            if (items.is(NorthstarItemTags.OXYGEN_SOURCES.tag)) {
                 return items;
             }
         }
@@ -204,14 +197,9 @@ public class OxygenStuff {
     public static void register() {
     }
 
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public static void onUpdateLivingEntity(LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onUpdateLivingEntity(LivingEntity entity) {
         Level world = entity.level();
         boolean tick = world.getGameTime() % 20 == 0;
-        if (world == null)
-            return;
         if (tick) {
             boolean creativeFlag = false;
             if (entity instanceof Player) {
@@ -226,9 +214,7 @@ public class OxygenStuff {
                 for (ItemStack armor : entity.getArmorSlots()) {
                     if (armor.is(NorthstarItemTags.OXYGEN_SEALING.tag))
                         sealedArmorCount++;
-                    if (armor.getTag() == null)
-                        continue;
-                    if (armor.getTag().contains("Oxygen") && (armor.is(NorthstarTags.NorthstarItemTags.OXYGEN_SOURCES.tag)) && armor.getTag().getInt("Oxygen") > 0 && !OxygenStuff.checkForAir(entity)) {
+                    if (armor.has(NorthstarDataComponents.OXYGEN) && (armor.is(NorthstarItemTags.OXYGEN_SOURCES.tag)) && armor.get(NorthstarDataComponents.OXYGEN) > 0 && !OxygenStuff.checkForAir(entity)) {
                         depleteOxy(armor);
                         oxyflag = true;
                     }
@@ -267,14 +253,7 @@ public class OxygenStuff {
     }
 
     public static void depleteOxy(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        ListTag lore = new ListTag();
-        int oxy = tag.getInt("Oxygen");
-        int newOxy = Mth.clamp(oxy - 1, 0, 5000);
-        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
-        tag.remove("Oxygen");
-        tag.putInt("Oxygen", newOxy);
-        stack.getOrCreateTagElement("display").put("Lore", lore);
+        stack.set(NorthstarDataComponents.OXYGEN, Mth.clamp(stack.get(NorthstarDataComponents.OXYGEN) - 1, 0, 5000));
     }
 
 }

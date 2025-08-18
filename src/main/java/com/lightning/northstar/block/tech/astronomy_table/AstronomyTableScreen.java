@@ -10,14 +10,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTableMenu> implements ContainerListener {
     private static final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/astronomy_table.png");
-    private static final Component DIFFERENT_PLANETS_TEXT = Component.translatable("northstar.gui.astronomy_table.different_planets");
-    private static final Component CLOSE_DATA_TEXT = Component.translatable("northstar.gui.astronomy_table.close_data");
 
     public AstronomyTableScreen(AstronomyTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -26,46 +24,42 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
     protected void subInit() {
     }
 
+    @Override
     protected void init() {
         super.init();
         this.subInit();
         this.menu.addSlotListener(this);
     }
 
+    @Override
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
     }
 
-    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics);
-        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+        super.render(graphics, mouseX, mouseY, partialTick);
         RenderSystem.disableBlend();
-        this.renderFg(graphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(graphics, pMouseX, pMouseY);
+        this.renderFg(graphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     protected void renderFg(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
 
     }
 
+    @Override
     protected void renderLabels(GuiGraphics graphics, int pX, int pY) {
         RenderSystem.disableBlend();
         super.renderLabels(graphics, pX, pY);
-        int j = 8453920;
-        Component component = null;
 
-        j = 16736352;
-        if (this.menu.dataTooFar) {
-            component = CLOSE_DATA_TEXT;
-        }
-        if (this.menu.differentPlanets) {
-            component = DIFFERENT_PLANETS_TEXT;
-        }
+        Component component = menu.errorMessage;
         if (component != null) {
             int k = this.imageWidth - 8 - this.font.width(component) - 2;
             graphics.fill(k - 2, 67, this.imageWidth - 8, 79, 1325400064);
-            graphics.drawString(font, component, k, 69, j, true);
+            graphics.drawString(font, component, k, 69, 16736352, true);
         }
 
     }
@@ -81,6 +75,7 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
         }
     }
 
+    @Override
     public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
     }
 
@@ -88,6 +83,7 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
      * Sends the contents of an inventory slot to the client-side Container. This doesn't have to match the actual
      * contents of that slot.
      */
+    @Override
     public void slotChanged(AbstractContainerMenu pContainerToSend, int pSlotInd, ItemStack pStack) {
     }
 }

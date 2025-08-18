@@ -2,11 +2,11 @@ package com.lightning.northstar.block.tech.rocket_station;
 
 import com.google.common.collect.Lists;
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarPackets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,8 +16,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -33,12 +33,14 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
     protected void subInit() {
     }
 
+    @Override
     protected void init() {
         super.init();
         this.subInit();
         this.menu.addSlotListener(this);
     }
 
+    @Override
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
@@ -46,7 +48,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
 
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.disableBlend();
         this.renderFg(graphics, pMouseX, pMouseY, pPartialTick);
@@ -75,7 +77,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         IconButton assemble = new IconButton(x + imageWidth - 10, y + imageHeight - 79, AllIcons.I_ADD);
         assemble.setToolTip(CreateLang.translateDirect("station.assemble_train"));
         assemble.withCallback(() -> {
-            NorthstarPackets.getChannel().sendToServer(RocketStationEditPacket.tryAssemble(menu.blockEntity.getBlockPos()));
+            CatnipServices.NETWORK.sendToServer(new RocketStationEditPacket(menu.blockEntity.getBlockPos(), true));
             removed();
             onClose();
         });
@@ -107,6 +109,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
 
     }
 
+    @Override
     protected void renderLabels(GuiGraphics pPoseStack, int pX, int pY) {
         RenderSystem.disableBlend();
         super.renderLabels(pPoseStack, pX, pY);
@@ -123,6 +126,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         }
     }
 
+    @Override
     public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
 
     }
@@ -131,6 +135,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
      * Sends the contents of an inventory slot to the client-side Container. This doesn't have to match the actual
      * contents of that slot.
      */
+    @Override
     public void slotChanged(AbstractContainerMenu pContainerToSend, int pSlotInd, ItemStack pStack) {
     }
 }

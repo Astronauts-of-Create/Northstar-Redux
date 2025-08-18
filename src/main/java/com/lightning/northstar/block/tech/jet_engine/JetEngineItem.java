@@ -5,16 +5,19 @@ import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class JetEngineItem extends BlockItem {
 
@@ -32,20 +35,21 @@ public class JetEngineItem extends BlockItem {
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(BlockPos p_195943_1_, Level p_195943_2_, Player p_195943_3_,
-                                                 ItemStack p_195943_4_, BlockState p_195943_5_) {
-        MinecraftServer minecraftserver = p_195943_2_.getServer();
+    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
+        MinecraftServer minecraftserver = level.getServer();
         if (minecraftserver == null)
             return false;
-        CompoundTag nbt = p_195943_4_.getTagElement("BlockEntityTag");
-        if (nbt != null) {
+        CustomData data = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (data != null) {
+            CompoundTag nbt = data.copyTag();
             nbt.remove("Luminosity");
             nbt.remove("Size");
             nbt.remove("Height");
             nbt.remove("Controller");
             nbt.remove("LastKnownPos");
+            stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
         }
-        return super.updateCustomBlockEntityTag(p_195943_1_, p_195943_2_, p_195943_3_, p_195943_4_, p_195943_5_);
+        return super.updateCustomBlockEntityTag(pos, level, player, stack, state);
     }
 
     private void tryMultiPlace(BlockPlaceContext ctx) {

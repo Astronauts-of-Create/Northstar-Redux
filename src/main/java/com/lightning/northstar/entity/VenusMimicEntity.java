@@ -1,11 +1,13 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -29,22 +31,20 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class VenusMimicEntity extends Monster implements GeoAnimatable {
 
-    private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", 0.2D, AttributeModifier.Operation.ADDITION);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = Northstar.asResource("attacking");
+    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID, 0.2D, AttributeModifier.Operation.ADD_VALUE);
 
     private final AnimatableInstanceCache animatableCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -214,16 +214,17 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
         }
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null && !this.hiding) {
-            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                 attributeinstance.addTransientModifier(SPEED_MODIFIER_ATTACKING);
                 attacking = true;
                 this.level().broadcastEntityEvent(this, (byte) 12);
             }
 
-        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+        } else if (attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
             attacking = false;
             this.level().broadcastEntityEvent(this, (byte) 13);
             attributeinstance.removeModifier(SPEED_MODIFIER_ATTACKING);
@@ -255,6 +256,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
         return super.doHurtTarget(pEntity);
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("isDeep", this.isDeep);
@@ -268,6 +270,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
         pCompound.putInt("tickCount", this.tickCount);
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("isDeep")) {
@@ -312,6 +315,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
         return NorthstarSounds.VENUS_MIMIC_HURT.get();
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         super.getDeathSound();
         return NorthstarSounds.VENUS_MIMIC_DEATH.get();
@@ -358,6 +362,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
         }
 
+        @Override
         public boolean canUse() {
             this.target = this.mimic.getTarget();
             if (!(this.target instanceof Player)) {
@@ -372,10 +377,12 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             }
         }
 
+        @Override
         public void start() {
             this.mimic.getNavigation().stop();
         }
 
+        @Override
         public void tick() {
             this.mimic.getLookControl().setLookAt(mimic.getX() + 20, mimic.getY(), mimic.getZ() + 20);
         }
@@ -404,20 +411,24 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             this.startAggroTargetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector((p_32578_) -> coberuh.isLookingAtMe((Player) p_32578_));
         }
 
+        @Override
         public boolean canUse() {
             this.pendingTarget = this.mimic.level().getNearestPlayer(this.startAggroTargetConditions, this.mimic);
             return this.pendingTarget != null;
         }
 
+        @Override
         public void start() {
             this.aggroTime = this.adjustedTickDelay(5);
         }
 
+        @Override
         public void stop() {
             this.pendingTarget = null;
             super.stop();
         }
 
+        @Override
         public boolean canContinueToUse() {
             if (this.pendingTarget != null) {
                 if (!this.mimic.isLookingAtMe(this.pendingTarget)) {
@@ -438,6 +449,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             }
         }
 
+        @Override
         public void tick() {
             if (this.mimic.getTarget() == null) {
                 super.setTarget((LivingEntity) null);

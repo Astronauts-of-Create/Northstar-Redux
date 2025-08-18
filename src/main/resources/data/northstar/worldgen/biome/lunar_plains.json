@@ -39,7 +39,7 @@
     ]
   },
   "features": [
-    [],
+    [ ],
     [
       "northstar:moon_crater",
       "northstar:rare_lava_lake",

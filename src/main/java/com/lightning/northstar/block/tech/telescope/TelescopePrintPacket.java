@@ -1,40 +1,28 @@
 package com.lightning.northstar.block.tech.telescope;
 
+import com.lightning.northstar.content.NorthstarPackets;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TelescopePrintPacket extends BlockEntityConfigurationPacket<TelescopeBlockEntity> {
 
-    private String planetname;
+    public static final StreamCodec<ByteBuf, TelescopePrintPacket> STREAM_CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, packet -> packet.pos,
+            ByteBufCodecs.STRING_UTF8, packet -> packet.planetName,
+            TelescopePrintPacket::new
+    );
 
+    private String planetName;
 
-    public TelescopePrintPacket(FriendlyByteBuf buffer) {
-        super(buffer);
-    }
-
-    public TelescopePrintPacket(BlockPos pos) {
+    public TelescopePrintPacket(BlockPos pos, String planetName) {
         super(pos);
-    }
-
-    public static TelescopePrintPacket print(BlockPos pos, String strin) {
-        TelescopePrintPacket packet = new TelescopePrintPacket(pos);
-        packet.planetname = strin;
-        return packet;
-    }
-
-    @Override
-    protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeComponent(Component.literal(planetname));
-    }
-
-    @Override
-    protected void readSettings(FriendlyByteBuf buffer) {
-        planetname = buffer.readComponent().getString();
+        this.planetName = planetName;
     }
 
     @Override
@@ -46,11 +34,12 @@ public class TelescopePrintPacket extends BlockEntityConfigurationPacket<Telesco
         if (!(blockState.getBlock() instanceof TelescopeBlock))
             return;
 
-        be.print(planetname, player);
+        be.print(planetName, player);
     }
 
     @Override
-    protected void applySettings(TelescopeBlockEntity be) {
+    public PacketTypeProvider getTypeProvider() {
+        return NorthstarPackets.TELESCOPE_PRINT;
     }
 
 }

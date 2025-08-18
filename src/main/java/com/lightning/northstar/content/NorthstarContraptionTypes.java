@@ -14,7 +14,7 @@ import static com.simibubi.create.AllContraptionTypes.BY_LEGACY_NAME;
 
 public class NorthstarContraptionTypes {
 
-    public static final ContraptionType ROCKET = register("northstar:rocket", RocketContraption::new).get();
+    public static final ContraptionType ROCKET = register("northstar:rocket", RocketContraption::new).value();
 
     private static Holder.Reference<ContraptionType> register(String name, Supplier<? extends Contraption> factory) {
         ContraptionType type = new ContraptionType(factory);

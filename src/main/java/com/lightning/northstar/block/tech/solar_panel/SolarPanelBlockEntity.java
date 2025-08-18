@@ -4,6 +4,7 @@ import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -63,16 +64,16 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
         return Mth.clamp(sunlightScore, -1, 1) * 8 / getSize();
         else return (float) ((Mth.clamp(sunlightScore, -1, 1) * 8 / getSize()) * NorthstarPlanets.getSunMultiplier(level.dimension()));
     }
-    @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
-        sunlightScore = compound.getInt("sunlightScore");
 
+    @Override
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
+        sunlightScore = compound.getInt("sunlightScore");
     }
 
     @Override
-    public void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
         compound.putInt("sunlightScore", sunlightScore);
     }
 
