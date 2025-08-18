@@ -25,16 +25,15 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class OxygenBubbleGeneratorBlock extends BaseEntityBlock implements IBE<OxygenBubbleGeneratorBlockEntity> {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public OxygenBubbleGeneratorBlock(Properties pProperties) {
-        super(pProperties);
+    public OxygenBubbleGeneratorBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
@@ -54,9 +53,8 @@ public class OxygenBubbleGeneratorBlock extends BaseEntityBlock implements IBE<O
         return NorthstarBlockEntityTypes.OXYGEN_BUBBLE_GENERATOR.get();
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, NorthstarBlockEntityTypes.OXYGEN_BUBBLE_GENERATOR.get(),
                 OxygenBubbleGeneratorBlockEntity::tick);
     }

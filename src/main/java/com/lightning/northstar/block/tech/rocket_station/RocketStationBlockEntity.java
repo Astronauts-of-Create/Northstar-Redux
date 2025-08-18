@@ -47,7 +47,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class RocketStationBlockEntity extends SmartBlockEntity implements IDisplayAssemblyExceptions, IControlContraption, MenuProvider {
@@ -297,11 +296,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
 //            System.out.println("Weight Cost: " + contraption.weightCost + "      Fuel Cost: " + fuelCost);
             exception(new AssemblyException(CreateLang.translateDirect("train_assembly.no_controls")), -1);
         }
-    }
-
-    @Nullable
-    public GlobalStation getStation() {
-        return edgePoint.getEdgePoint();
     }
 
     public boolean isAssembling() {

@@ -13,8 +13,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VenusTallMyceliumBlock extends BushBlock {
     protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
@@ -26,19 +25,21 @@ public class VenusTallMyceliumBlock extends BushBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(IS_ON_CEILING, false));
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(IS_ON_CEILING);
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if(pState.getValue(IS_ON_CEILING)){
+        if (pState.getValue(IS_ON_CEILING)) {
             return CEILING_SHAPE;
-        }
-        else return SHAPE;
+        } else return SHAPE;
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        if(pState.getValue(IS_ON_CEILING)) {
+        if (pState.getValue(IS_ON_CEILING)) {
             BlockPos blockpos = pPos.above();
             BlockState blockstate = pLevel.getBlockState(blockpos);
             if (blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK)) {
@@ -46,7 +47,7 @@ public class VenusTallMyceliumBlock extends BushBlock {
             } else {
                 return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.DOWN, this);
             }
-        }else {
+        } else {
             BlockPos blockpos = pPos.below();
             BlockState blockstate = pLevel.getBlockState(blockpos);
             if (blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK)) {
@@ -56,13 +57,16 @@ public class VenusTallMyceliumBlock extends BushBlock {
             }
         }
     }
+
+    @Override
     protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return pState.isSolidRender(pLevel, pPos);
     }
-    @Nullable
+
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         System.out.println(pContext.getClickedFace());
         return this.defaultBlockState().setValue(IS_ON_CEILING, pContext.getClickedFace() == Direction.DOWN);
     }
+
 }

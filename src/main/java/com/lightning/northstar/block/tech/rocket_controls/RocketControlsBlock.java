@@ -27,6 +27,7 @@ public class RocketControlsBlock extends HorizontalDirectionalBlock implements I
         super.createBlockStateDefinition(pBuilder.add(FACING));
     }
     
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }

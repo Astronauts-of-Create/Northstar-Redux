@@ -6,8 +6,7 @@ import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class LogBlock extends RotatedPillarBlock {
 
@@ -19,8 +18,7 @@ public class LogBlock extends RotatedPillarBlock {
     }
 
     @Override
-    @Nullable
-    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
+    public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
         if (toolAction.equals(ToolActions.AXE_STRIP) ) {
             return strippedVariant.defaultBlockState().setValue(AXIS, state.getValue(AXIS));
         }

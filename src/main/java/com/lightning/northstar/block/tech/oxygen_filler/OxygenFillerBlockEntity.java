@@ -54,6 +54,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
     protected LazyOptional<IItemHandlerModifiable> itemCapability;
     SmartFluidTankBehaviour tank;
     public Container container = new SimpleContainer(1) {
+          @Override
           public void setChanged() {
                  super.setChanged();
     //             OxygenFillerBlockEntity.this.slotsChanged(this);

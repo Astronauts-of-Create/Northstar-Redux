@@ -45,6 +45,7 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
         return state;
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }

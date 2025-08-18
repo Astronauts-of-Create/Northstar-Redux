@@ -60,9 +60,11 @@ public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements
             super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
         }
     }
+    @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return AABB;
     }

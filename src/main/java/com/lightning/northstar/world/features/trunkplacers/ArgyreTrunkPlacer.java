@@ -44,6 +44,7 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
               this.canGrowThrough = int7;
               this.spinFactor = UniformInt.of(1, 1);
            }
+           @Override
            protected TrunkPlacerType<?> type() {
               return TrunkPlacerType.DARK_OAK_TRUNK_PLACER;
            }

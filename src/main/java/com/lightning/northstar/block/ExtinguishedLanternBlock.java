@@ -31,8 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class ExtinguishedLanternBlock extends Block implements SimpleWaterloggedBlock {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
@@ -45,8 +44,8 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         this.registerDefaultState(this.stateDefinition.any().setValue(HANGING, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
         for (Direction direction : pContext.getNearestLookingDirections()) {
             if (direction.getAxis() == Direction.Axis.Y) {
@@ -59,14 +58,17 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         return null;
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return pState.getValue(HANGING) ? HANGING_AABB : AABB;
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HANGING, WATERLOGGED);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         Direction direction = getConnectedDirection(pState).getOpposite();
         return Block.canSupportCenter(pLevel, pPos.relative(direction), direction.getOpposite());
@@ -76,6 +78,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         return pState.getValue(HANGING) ? Direction.DOWN : Direction.UP;
     }
 
+    @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         boolean fireflag = false;
         if ((pPlayer.getItemInHand(pHand).getItem() == Items.FLINT_AND_STEEL || pPlayer.getItemInHand(pHand).getItem() == Items.FIRE_CHARGE) && OxygenStuff.hasOxygen(pPos, pLevel.dimension())) {
@@ -108,6 +111,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific direction passed in.
      */
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
         if (pState.getValue(WATERLOGGED)) {
@@ -117,11 +121,13 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
         return getConnectedDirection(pState).getOpposite() == pDirection && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
         return false;
     }

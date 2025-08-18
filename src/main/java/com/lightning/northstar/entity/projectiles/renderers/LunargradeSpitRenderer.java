@@ -26,6 +26,7 @@ public class LunargradeSpitRenderer extends EntityRenderer<LunargradeSpit> {
         this.model = new LlamaSpitModel<>(pContext.bakeLayer(ModelLayers.LLAMA_SPIT));
     }
 
+    @Override
     public void render(LunargradeSpit pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
         pMatrixStack.pushPose();
         pMatrixStack.translate(0.0D, (double) 0.15F, 0.0D);

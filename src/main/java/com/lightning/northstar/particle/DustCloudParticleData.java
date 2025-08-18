@@ -26,6 +26,7 @@ public class DustCloudParticleData implements ParticleOptions, ICustomParticleDa
     
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<DustCloudParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public DustCloudParticleData fromCommand(ParticleType<DustCloudParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class DustCloudParticleData implements ParticleOptions, ICustomParticleDa
             return new DustCloudParticleData(x, y, z);
         }
 
+        @Override
         public DustCloudParticleData fromNetwork(ParticleType<DustCloudParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new DustCloudParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

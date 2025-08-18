@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +81,7 @@ public class FrostBlock extends MultifaceBlock {
         return voxelshape.isEmpty() ? Shapes.block() : voxelshape;
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return this.shapesCache.get(pState);
     }
@@ -110,10 +111,8 @@ public class FrostBlock extends MultifaceBlock {
                 .setValue(FrostBlock.EAST, list.contains(Direction.EAST)).setValue(FrostBlock.WEST, list.contains(Direction.WEST));
     }
 
-    @SuppressWarnings("static-access")
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = pContext.getLevel().getBlockState(pContext.getClickedPos());
         boolean flag = blockstate.is(this);
         BlockState blockstate1 = flag ? blockstate : this.defaultBlockState();
@@ -121,7 +120,7 @@ public class FrostBlock extends MultifaceBlock {
         for (Direction direction : pContext.getNearestLookingDirections()) {
             BooleanProperty booleanproperty = getPropertyForFace(direction);
             boolean flag1 = flag && blockstate.getValue(booleanproperty);
-            if (!flag1 && this.canSupportAtFace(pContext.getLevel(), pContext.getClickedPos(), direction)) {
+            if (!flag1 && canSupportAtFace(pContext.getLevel(), pContext.getClickedPos(), direction)) {
                 return blockstate1.setValue(booleanproperty, Boolean.TRUE);
             }
 
@@ -186,6 +185,7 @@ public class FrostBlock extends MultifaceBlock {
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific direction passed in.
      */
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         BlockState blockstate = this.getUpdatedState(pState, pLevel, pCurrentPos);
         return !this.hasFaces(blockstate) ? Blocks.AIR.defaultBlockState() : blockstate;
@@ -219,6 +219,7 @@ public class FrostBlock extends MultifaceBlock {
 
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
     }

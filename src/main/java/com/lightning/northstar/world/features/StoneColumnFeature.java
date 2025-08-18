@@ -17,8 +17,8 @@ import net.minecraft.world.level.levelgen.feature.DripstoneUtils;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
@@ -32,6 +32,7 @@ public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
             * that they can safely generate into.
             * @param pContext A context object with a reference to the level and the position the feature is being placed at
             */
+           @Override
            public boolean place(FeaturePlaceContext<StoneColumnConfiguration> pContext) {
               WorldGenLevel worldgenlevel = pContext.level();
               BlockPos blockpos = pContext.origin();

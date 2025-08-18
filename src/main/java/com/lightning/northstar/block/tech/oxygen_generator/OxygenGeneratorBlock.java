@@ -46,6 +46,7 @@ public class OxygenGeneratorBlock extends HorizontalKineticBlock implements IBE<
         return face == Direction.DOWN;
     }
 
+    @Override
     public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
         return false;
     }

@@ -26,17 +26,20 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
     protected void subInit() {
     }
 
+    @Override
     protected void init() {
         super.init();
         this.subInit();
         this.menu.addSlotListener(this);
     }
 
+    @Override
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
     }
 
+    @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(graphics);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
@@ -49,6 +52,7 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
 
     }
 
+    @Override
     protected void renderLabels(GuiGraphics graphics, int pX, int pY) {
         RenderSystem.disableBlend();
         super.renderLabels(graphics, pX, pY);
@@ -81,6 +85,7 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
         }
     }
 
+    @Override
     public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
     }
 
@@ -88,6 +93,7 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
      * Sends the contents of an inventory slot to the client-side Container. This doesn't have to match the actual
      * contents of that slot.
      */
+    @Override
     public void slotChanged(AbstractContainerMenu pContainerToSend, int pSlotInd, ItemStack pStack) {
     }
 }

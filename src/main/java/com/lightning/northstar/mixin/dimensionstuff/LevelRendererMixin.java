@@ -1,10 +1,8 @@
 package com.lightning.northstar.mixin.dimensionstuff;
 
-import javax.annotation.Nullable;
-
-
 import com.lightning.northstar.content.NorthstarSounds;
 import com.mojang.math.Axis;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;

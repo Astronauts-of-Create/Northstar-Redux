@@ -17,10 +17,12 @@ public class CoilerFoliagePlacer extends FoliagePlacer {
       super(int1, int2);
    }
 
+   @Override
    protected FoliagePlacerType<?> type() {
       return FoliagePlacerType.ACACIA_FOLIAGE_PLACER;
    }
 
+   @Override
    protected void createFoliage(LevelSimulatedReader level, FoliagePlacer.FoliageSetter blocksetter, RandomSource pRandom, TreeConfiguration pConfig, int int1, FoliagePlacer.FoliageAttachment foliage, int int2, int int3, int int4) {
       boolean flag = foliage.doubleTrunk();
       BlockPos blockpos = foliage.pos().above(int4);
@@ -30,6 +32,7 @@ public class CoilerFoliagePlacer extends FoliagePlacer {
       this.placeLeavesRow(level, blocksetter, pRandom, pConfig, blockpos, int3 - 3, 1 -int2, flag);
    }
 
+   @Override
    public int foliageHeight(RandomSource pRandom, int p_225496_, TreeConfiguration p_225497_) {
       return 0;
    }
@@ -38,6 +41,7 @@ public class CoilerFoliagePlacer extends FoliagePlacer {
     * Skips certain positions based on the provided shape, such as rounding corners randomly.
     * The coordinates are passed in as absolute value, and should be within [0, {@code range}].
     */
+   @Override
    protected boolean shouldSkipLocation(RandomSource pRandom, int p_225489_, int p_225490_, int p_225491_, int p_225492_, boolean p_225493_) {
       if (p_225490_ == 0) {
          return (p_225489_ > 1 || p_225491_ > 1) && p_225489_ != 0 && p_225491_ != 0;

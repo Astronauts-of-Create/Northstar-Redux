@@ -38,6 +38,7 @@ import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
@@ -45,7 +46,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -207,6 +207,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
             return false;
     }
 
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(CLIENT_ANGER_LEVEL, 0);
@@ -312,6 +313,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         super.tick();
     }
 
+    @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("aggro", aggro);
@@ -322,6 +324,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         pCompound.putInt("angerTimer", angerTimer);
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (pCompound.contains("aggro")) {
@@ -335,6 +338,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
     }
 
 
+    @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         boolean flag = super.hurt(pSource, pAmount);
         if (!this.level().isClientSide && !this.isNoAi()) {
@@ -351,6 +355,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         return flag;
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {
@@ -388,6 +393,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         return NorthstarSounds.MARS_WORM_HURT.get();
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         super.getDeathSound();
         return NorthstarSounds.MARS_WORM_DEATH.get();

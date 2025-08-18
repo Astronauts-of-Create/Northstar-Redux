@@ -26,6 +26,7 @@ public class RocketSmokeParticleData implements ParticleOptions, ICustomParticle
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<RocketSmokeParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public RocketSmokeParticleData fromCommand(ParticleType<RocketSmokeParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class RocketSmokeParticleData implements ParticleOptions, ICustomParticle
             return new RocketSmokeParticleData(x, y, z);
         }
 
+        @Override
         public RocketSmokeParticleData fromNetwork(ParticleType<RocketSmokeParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new RocketSmokeParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

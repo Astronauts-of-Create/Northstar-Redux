@@ -23,8 +23,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterloggedBlock {
     public static final EnumProperty<VerticalSlabTypes> TYPE = EnumProperty.create("type", VerticalSlabTypes.class);
@@ -40,14 +39,17 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         this.registerDefaultState(this.defaultBlockState().setValue(TYPE, VerticalSlabTypes.NORTH).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
+    @Override
     public boolean useShapeForLightOcclusion(BlockState pState) {
         return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE;
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(TYPE, WATERLOGGED);
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return switch (pState.getValue(TYPE)) {
             case DOUBLE -> Shapes.block();
@@ -58,8 +60,8 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         };
     }
 
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockPos blockpos = pContext.getClickedPos();
         BlockState blockstate = pContext.getLevel().getBlockState(blockpos);
         if (blockstate.is(this)) {
@@ -79,6 +81,7 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         }
     }
 
+    @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
         ItemStack itemstack = pUseContext.getItemInHand();
         VerticalSlabTypes slabtype = pState.getValue(TYPE);
@@ -99,20 +102,24 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         }
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     public boolean placeLiquid(LevelAccessor pLevel, BlockPos pPos, BlockState pState, FluidState pFluidState) {
         return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.placeLiquid(pLevel, pPos, pState, pFluidState) : false;
     }
 
+    @Override
     public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
         return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(pLevel, pPos, pState, pFluid) : false;
     }
 
 
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if (pState.getValue(WATERLOGGED)) {
@@ -134,6 +141,7 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         return blockState.rotate(mirror.getRotation(VerticalSlabTypes.toDir(blockState.getValue(TYPE))));
     }
 
+    @Override
     public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
         return switch (pType) {
             case AIR, LAND -> false;

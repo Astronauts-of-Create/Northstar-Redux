@@ -25,6 +25,7 @@ public class OxygenBubbleGeneratorBlockEntity extends BlockEntity implements IHa
         super(type, pos, blockState);
     }
 
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }

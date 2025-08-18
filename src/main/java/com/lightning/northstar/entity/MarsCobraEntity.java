@@ -28,13 +28,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -139,6 +139,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
         super.tick();
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {
@@ -198,6 +199,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
         }
 
+        @Override
         public boolean canUse() {
             this.target = this.cobra.getTarget();
             if (!(this.target instanceof Player)) {
@@ -212,10 +214,12 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             }
         }
 
+        @Override
         public void start() {
             this.cobra.getNavigation().stop();
         }
 
+        @Override
         public void tick() {
             this.cobra.getLookControl().setLookAt(this.target.getX(), this.target.getEyeY(), this.target.getZ());
         }
@@ -244,22 +248,26 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             this.startAggroTargetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector((p_32578_) -> coberuh.isLookingAtMe((Player) p_32578_));
         }
 
+        @Override
         public boolean canUse() {
             this.pendingTarget = this.cobra.level().getNearestPlayer(this.startAggroTargetConditions, this.cobra);
             return this.pendingTarget != null;
         }
 
+        @Override
         public void start() {
             this.aggroTime = this.adjustedTickDelay(5);
             this.cobra.lookedAt++;
             ;
         }
 
+        @Override
         public void stop() {
             this.pendingTarget = null;
             super.stop();
         }
 
+        @Override
         public boolean canContinueToUse() {
             if (this.pendingTarget != null) {
                 if (!this.cobra.isLookingAtMe(this.pendingTarget)) {
@@ -280,6 +288,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             }
         }
 
+        @Override
         public void tick() {
             if (this.cobra.getTarget() == null) {
                 super.setTarget((LivingEntity) null);
@@ -296,7 +305,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
                 }
             }
             super.tick();
-
         }
     }
+
 }

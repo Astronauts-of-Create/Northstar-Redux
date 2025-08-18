@@ -20,6 +20,7 @@ public class GlowingOreFeature extends Feature<OreConfiguration> {
      * that they can safely generate into.
      * @param pContext A context object with a reference to the level and the position the feature is being placed at
      */
+    @Override
     public boolean place(FeaturePlaceContext<OreConfiguration> pContext) {
         OreConfiguration config = pContext.config();
         WorldGenLevel level = pContext.level();

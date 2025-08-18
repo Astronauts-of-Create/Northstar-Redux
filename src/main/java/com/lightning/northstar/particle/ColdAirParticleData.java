@@ -26,6 +26,7 @@ public class ColdAirParticleData implements ParticleOptions, ICustomParticleData
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<ColdAirParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public ColdAirParticleData fromCommand(ParticleType<ColdAirParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class ColdAirParticleData implements ParticleOptions, ICustomParticleData
             return new ColdAirParticleData(x, y, z);
         }
 
+        @Override
         public ColdAirParticleData fromNetwork(ParticleType<ColdAirParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new ColdAirParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

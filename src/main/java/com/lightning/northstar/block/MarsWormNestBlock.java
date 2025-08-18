@@ -87,6 +87,7 @@ public class MarsWormNestBlock extends Block {
         }
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return canSupportCenter(pLevel, pPos.below(), Direction.UP);
     }

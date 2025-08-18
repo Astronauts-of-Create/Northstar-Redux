@@ -46,6 +46,7 @@ public class MarsFarmlandBlock extends FarmBlock {
 
     }
 
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return !this.defaultBlockState().canSurvive(context.getLevel(), context.getClickedPos()) ? NorthstarBlocks.MARS_SOIL.get().defaultBlockState() : super.getStateForPlacement(context);
     }
@@ -60,6 +61,7 @@ public class MarsFarmlandBlock extends FarmBlock {
          if (!level.isClientSide && net.minecraftforge.common.ForgeHooks.onFarmlandTrample(level, pos, Blocks.DIRT.defaultBlockState(), p_153231_, entity)) { // Forge: Move logic to Entity#canTrample
     turntoMarsSoil(blockState, level, pos);}
                 }
+    @Override
     public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, RandomSource p_221142_) {
         int i = blockState.getValue(MOISTURE);
         if (!isNearWater(level, pos) && !level.isRainingAt(pos.above())) {

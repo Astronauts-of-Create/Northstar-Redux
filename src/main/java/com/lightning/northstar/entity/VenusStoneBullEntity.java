@@ -150,6 +150,7 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
         }
     }
 
+    @Override
     protected void customServerAiStep() {
         if (chargeTimer > 0)
             chargeTimer = Mth.clamp(chargeTimer, 0, chargeTimer - 1);
@@ -216,14 +217,17 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
             this.setFlags(EnumSet.of(Goal.Flag.LOOK));
         }
 
+        @Override
         public boolean canUse() {
             return true;
         }
 
+        @Override
         public boolean requiresUpdateEveryTick() {
             return true;
         }
 
+        @Override
         public void tick() {
             if (this.starer.charging)
                 return;

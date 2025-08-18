@@ -44,6 +44,7 @@ public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<Solar
         withBlockEntityDo(pLevel, pPos, SolarPanelBlockEntity::determineAndApplySunlightScore);
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return (pState.getValue(HORIZONTAL_FACING) == Direction.EAST) || (pState.getValue(HORIZONTAL_FACING) == Direction.WEST) ? SHAPE_EAST_WEST : SHAPE_NORTH_SOUTH;
     }

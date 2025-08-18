@@ -546,6 +546,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         serverPrevPos = position();
     }
 
+    @Override
     public RocketContraption getContraption() {
         return (RocketContraption) this.contraption;
     }
@@ -630,6 +631,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         compound.putFloat("final_lift_vel", final_lift_vel);
     }
 
+    @Override
     protected void readAdditional(CompoundTag compound, boolean spawnData) {
         super.readAdditional(compound, spawnData);
         sequencedOffsetLimit =

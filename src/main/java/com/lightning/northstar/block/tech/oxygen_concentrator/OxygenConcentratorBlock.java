@@ -46,6 +46,7 @@ public class OxygenConcentratorBlock extends HorizontalKineticBlock implements I
     public Axis getRotationAxis(BlockState state) {
         return Axis.Y;
     }
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return AABB;
     }

@@ -22,8 +22,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock {
     protected static final int AABB_STANDING_OFFSET = 2;
@@ -35,16 +34,18 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE));
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return AABB;
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(WATERLOGGED);
     }
 
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = this.defaultBlockState();
         FluidState fluidState = pContext.getLevel().getFluidState(pContext.getClickedPos());
         if (canSurvive(blockstate.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER), pContext.getLevel(), pContext.getClickedPos()))
@@ -54,6 +55,7 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
     }
 
 
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if (OxygenStuff.hasOxygen(pCurrentPos, ((Level) pLevel).dimension())) {
@@ -61,15 +63,18 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
         return pFacing == Direction.DOWN && !this.canSurvive(pState, pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return canSupportCenter(pLevel, pPos.below(), Direction.UP);
     }
 
+    @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         double d0 = (double) pPos.getX() + 0.5D;
         double d1 = (double) pPos.getY() + 0.7D;

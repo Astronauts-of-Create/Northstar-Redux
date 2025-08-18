@@ -11,8 +11,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class GlowstoneTorchItem extends BlockItem {
@@ -24,8 +24,8 @@ public class GlowstoneTorchItem extends BlockItem {
         this.wallBlock = NorthstarTechBlocks.GLOWSTONE_TORCH_WALL.get();
     }
 
-    @Nullable
-    protected BlockState getPlacementState(BlockPlaceContext context) {
+    @Override
+    protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
         BlockState blockstate = this.wallBlock.getStateForPlacement(context);
         BlockState blockstate1 = null;
         LevelReader levelreader = context.getLevel();
@@ -44,11 +44,13 @@ public class GlowstoneTorchItem extends BlockItem {
         return blockstate1 != null && levelreader.isUnobstructed(blockstate1, blockpos, CollisionContext.empty()) ? blockstate1 : null;
     }
 
+    @Override
     public void registerBlocks(Map<Block, Item> pBlockToItemMap, Item pItem) {
         super.registerBlocks(pBlockToItemMap, pItem);
         pBlockToItemMap.put(this.wallBlock, pItem);
     }
 
+    @Override
     public void removeFromBlockToItemMap(Map<Block, Item> blockToItemMap, Item itemIn) {
         super.removeFromBlockToItemMap(blockToItemMap, itemIn);
         blockToItemMap.remove(this.wallBlock);

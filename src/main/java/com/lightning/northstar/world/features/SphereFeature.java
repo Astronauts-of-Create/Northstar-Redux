@@ -36,6 +36,7 @@ public class SphereFeature extends Feature<SphereConfig>  {
         * that they can safely generate into.
         * @param context A context object with a reference to the level and the position the feature is being placed at
         */
+       @Override
        public boolean place(FeaturePlaceContext<SphereConfig> context) {
            SphereConfig config = context.config();
           RandomSource randomsource = context.random();

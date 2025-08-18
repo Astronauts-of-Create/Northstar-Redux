@@ -25,8 +25,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedBlock{
@@ -45,6 +45,7 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
         super(pProperties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(SHELVES, MIN_SHELVES));
     }
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return getShape(pState);
     }
@@ -65,17 +66,18 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
 
     
     
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         return pFacing.getOpposite() == pState.getValue(FACING) && ! pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
     }
     
+    @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
         return pUseContext.getItemInHand().is(this.asItem());
     }
-    
-    @Nullable
+
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = this.defaultBlockState();
         BlockState clickedState = pContext.getLevel().getBlockState(pContext.getClickedPos());
         System.out.println(clickedState.getBlock());
@@ -100,12 +102,14 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
         return null;
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
 
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         Direction direction = pState.getValue(FACING);
         BlockPos blockpos = pPos.relative(direction.getOpposite());
@@ -113,6 +117,7 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
         return blockstate.isFaceSturdy(pLevel, blockpos, direction);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING, WATERLOGGED, SHELVES);
     }

@@ -26,8 +26,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedBlock {
@@ -44,6 +44,7 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return getShape(pState);
     }
@@ -57,9 +58,8 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
         return pFacing.getOpposite() == pState.getValue(FACING) && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = this.defaultBlockState();
         FluidState fluidState = pContext.getLevel().getFluidState(pContext.getClickedPos());
         LevelReader levelreader = pContext.getLevel();
@@ -86,6 +86,7 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
     }
 
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         Direction direction = pState.getValue(FACING);
         BlockPos blockpos = pPos.relative(direction.getOpposite());
@@ -93,6 +94,7 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
         return blockstate.isFaceSturdy(pLevel, blockpos, direction);
     }
 
+    @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         Direction direction = pState.getValue(FACING);
         double d0 = (double) pPos.getX() + 0.5D;
@@ -103,6 +105,7 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
             pLevel.addParticle(new GlowstoneParticleData(), d0 + 0.27D * (double) direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING, WATERLOGGED);
     }

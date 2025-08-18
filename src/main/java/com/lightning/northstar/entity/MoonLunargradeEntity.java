@@ -80,6 +80,7 @@ public class MoonLunargradeEntity extends Monster implements GeoAnimatable, Rang
 
     // endregion
 
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(3, new RangedAttackGoal(this, 1.25D, 40, 20.0F));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.7D));
@@ -155,6 +156,7 @@ public class MoonLunargradeEntity extends Monster implements GeoAnimatable, Rang
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
+        @Override
         public boolean canContinueToUse() {
             if (this.mob instanceof MoonLunargradeEntity lunargrade) {
                 if (lunargrade.didSpit) {

@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DripstoneThickness;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class IcicleBlock extends PointedDripstoneBlock implements Fallable, SimpleWaterloggedBlock {
@@ -28,9 +28,8 @@ public class IcicleBlock extends PointedDripstoneBlock implements Fallable, Simp
         this.registerDefaultState(this.stateDefinition.any().setValue(TIP_DIRECTION, Direction.UP).setValue(THICKNESS, DripstoneThickness.TIP).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         LevelAccessor levelaccessor = pContext.getLevel();
         BlockPos blockpos = pContext.getClickedPos();
         Direction direction = pContext.getNearestLookingVerticalDirection().getOpposite();
@@ -62,6 +61,7 @@ public class IcicleBlock extends PointedDripstoneBlock implements Fallable, Simp
         }
     }
 
+    @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (isStalagmite(pState) && !this.canSurvive(pState, pLevel, pPos)) {
             pLevel.destroyBlock(pPos, true);
@@ -104,8 +104,7 @@ public class IcicleBlock extends PointedDripstoneBlock implements Fallable, Simp
         return isPointedDripstoneWithDirection(pState, Direction.UP);
     }
 
-    @Nullable
-    private static Direction calculateTipDirection(LevelReader pLevel, BlockPos pPos, Direction pDir) {
+    private static @Nullable Direction calculateTipDirection(LevelReader pLevel, BlockPos pPos, Direction pDir) {
         Direction direction;
         if (isValidPointedDripstonePlacement(pLevel, pPos, pDir)) {
             direction = pDir;

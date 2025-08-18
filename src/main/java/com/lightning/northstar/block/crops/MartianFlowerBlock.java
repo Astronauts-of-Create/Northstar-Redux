@@ -24,8 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
 
@@ -66,10 +65,12 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         return pState.getValue(this.getAgeProperty()) >= this.getMaxAge();
     }
 
+    @Override
     public boolean isRandomlyTicking(BlockState pState) {
         return !this.isMaxAge(pState);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (!pLevel.isAreaLoaded(pPos, 1)) return;
@@ -89,13 +90,13 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         return pState.getValue(this.getAgeProperty());
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(AGE);
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         Item playerItem = pContext.getPlayer().getItemInHand(pContext.getHand()).getItem();
         if (playerItem == this.getSeedItem())
             return this.defaultBlockState().setValue(AGE, 0);

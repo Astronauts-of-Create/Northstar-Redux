@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DripstoneThickness;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class PointedCrimsiteBlock extends PointedDripstoneBlock implements Fallable, SimpleWaterloggedBlock {
@@ -28,9 +28,8 @@ public class PointedCrimsiteBlock extends PointedDripstoneBlock implements Falla
          this.registerDefaultState(this.stateDefinition.any().setValue(TIP_DIRECTION, Direction.UP).setValue(THICKNESS, DripstoneThickness.TIP).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         LevelAccessor levelaccessor = pContext.getLevel();
         BlockPos blockpos = pContext.getClickedPos();
         Direction direction = pContext.getNearestLookingVerticalDirection().getOpposite();
@@ -61,6 +60,7 @@ public class PointedCrimsiteBlock extends PointedDripstoneBlock implements Falla
              }
         }
     }
+    @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
           if (isStalagmite(pState) && !this.canSurvive(pState, pLevel, pPos)) {
              pLevel.destroyBlock(pPos, true);

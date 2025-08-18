@@ -39,6 +39,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         super(typeIn, pos, state);
     }
 
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }

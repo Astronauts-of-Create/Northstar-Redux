@@ -19,6 +19,7 @@ public class GiantSkeletonFeature extends Feature<FossilFeatureConfiguration>  {
     public GiantSkeletonFeature(Codec<FossilFeatureConfiguration> pCodec) {
         super(pCodec);
     }
+    @Override
     public boolean place(FeaturePlaceContext<FossilFeatureConfiguration> pContext) {
           RandomSource randomsource = pContext.random();
           WorldGenLevel worldgenlevel = pContext.level();

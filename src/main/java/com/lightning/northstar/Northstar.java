@@ -58,11 +58,6 @@ public class Northstar {
         REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2))).andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
-
-    private void onRegister(RegisterEvent evt) {
-        NorthstarContraptionTypes.register();
-    }
-
     public Northstar(FMLJavaModLoadingContext modContext) {
         IEventBus modEventBus = modContext.getModEventBus();
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
@@ -106,10 +101,10 @@ public class Northstar {
         modEventBus.addListener(NorthstarDataGen::gatherData);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus, forgeEventBus));
+    }
 
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+    private void onRegister(RegisterEvent event) {
+        NorthstarContraptionTypes.register();
     }
 
     public static void init(FMLCommonSetupEvent event) {

@@ -15,10 +15,12 @@ public class LaserLenseBlock extends AbstractGlassBlock {
         super(pProperties);
     }
 
+    @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         LaserBlock.updateColumn(pLevel, pPos, pState);
     }
 
+    @Override
     public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
         pLevel.scheduleTick(pPos, this, 1);
     }
@@ -27,6 +29,7 @@ public class LaserLenseBlock extends AbstractGlassBlock {
         tick(pState, pLevel, pPos, pRandom);
     }
 
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         pLevel.scheduleTick(pCurrentPos, this, 1);
         return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
