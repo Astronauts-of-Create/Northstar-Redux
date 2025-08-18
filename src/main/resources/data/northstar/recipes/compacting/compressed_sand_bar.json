@@ -54,5 +54,6 @@
     {
       "item": "northstar:compressed_sand_bar"
     }
-  ]
+  ],
+  "heatRequirement": "heated"
 }
