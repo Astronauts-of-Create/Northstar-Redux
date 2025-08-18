@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.9.+"
 }
 
-version = "0.2.7-SNAPSHOT+1.20.1" // https://semver.org/
+version = "0.2.7-SNAPSHOT+1.20.1-create5" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -38,6 +38,7 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
+    maven("https://squiddev.cc/maven/")
     maven("https://maven.pkg.github.com/copycats-plus/copycats") {
         credentials {
             username = project.property("github.packages.username") as? String
@@ -59,17 +60,17 @@ dependencies {
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
 
-    modImplementation(variantOf(libs.create) { classifier("slim") })
-    modImplementation(libs.ponder.forge)
+    modImplementation(variantOf(libs.create) { classifier("slim") }) {
+        exclude(mapOf("group" to "dev.ftb.mods"))
+    }
+    //modImplementation(libs.ponder.forge)
     modImplementation(libs.registrate)
-    modCompileOnly(libs.flywheel.forge.api)
-    modRuntimeOnly(libs.flywheel.forge)
+    modImplementation(libs.flywheel.forge)
 
     modImplementation(libs.geckolib.forge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
-    modImplementation(libs.copycats)
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }

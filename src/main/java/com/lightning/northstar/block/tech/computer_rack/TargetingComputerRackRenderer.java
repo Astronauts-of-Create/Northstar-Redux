@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsBlock;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import net.createmod.catnip.render.CachedBuffers;
+import com.simibubi.create.foundation.render.CachedBufferer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -32,7 +32,7 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
 
         if (!be.container.getItem(0).isEmpty()) {
             ms.pushPose();
-            CachedBuffers.partialFacing(NorthstarPartialModels.CPU1, blockState, facing)
+            CachedBufferer.partialFacing(NorthstarPartialModels.CPU1, blockState, facing)
                     .light(light)
                     .renderInto(ms, vc);
             ms.popPose();
@@ -40,7 +40,7 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
 
         if (!be.container.getItem(1).isEmpty()) {
             ms.pushPose();
-            CachedBuffers.partialFacing(NorthstarPartialModels.CPU2, blockState, facing)
+            CachedBufferer.partialFacing(NorthstarPartialModels.CPU2, blockState, facing)
                     .light(light)
                     .renderInto(ms, vc);
             ms.popPose();
@@ -48,7 +48,7 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
 
         if (!be.container.getItem(2).isEmpty()) {
             ms.pushPose();
-            CachedBuffers.partialFacing(NorthstarPartialModels.CPU3, blockState, facing)
+            CachedBufferer.partialFacing(NorthstarPartialModels.CPU3, blockState, facing)
                     .light(light)
                     .renderInto(ms, vc);
             ms.popPose();
@@ -56,7 +56,7 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
 
         if (!be.container.getItem(3).isEmpty()) {
             ms.pushPose();
-            CachedBuffers.partialFacing(NorthstarPartialModels.CPU4, blockState, facing)
+            CachedBufferer.partialFacing(NorthstarPartialModels.CPU4, blockState, facing)
                     .light(light)
                     .renderInto(ms, vc);
             ms.popPose();
@@ -64,7 +64,7 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
 
         if (!be.container.getItem(4).isEmpty()) {
             ms.pushPose();
-            CachedBuffers.partialFacing(NorthstarPartialModels.CPU5, blockState, facing)
+            CachedBufferer.partialFacing(NorthstarPartialModels.CPU5, blockState, facing)
                     .light(light)
                     .renderInto(ms, vc);
             ms.popPose();
@@ -72,7 +72,7 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
 
         if (!be.container.getItem(5).isEmpty()) {
             ms.pushPose();
-            CachedBuffers.partialFacing(NorthstarPartialModels.CPU6, blockState, facing)
+            CachedBufferer.partialFacing(NorthstarPartialModels.CPU6, blockState, facing)
                     .light(light)
                     .renderInto(ms, vc);
             ms.popPose();

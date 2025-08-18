@@ -1,12 +1,12 @@
 package com.lightning.northstar.block.tech.oxygen_concentrator;
 
 import com.lightning.northstar.content.NorthstarFluids;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.lang.LangBuilder;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -93,29 +93,29 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("gui.goggles.kinetic_stats")
+        Lang.translate("gui.goggles.kinetic_stats")
                 .forGoggles(tooltip);
         addStressImpactStats(tooltip, calculateStressApplied());
 
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.translate("gui.goggles.oxygen_concentrator")
+        LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+        Lang.translate("gui.goggles.oxygen_concentrator")
                 .forGoggles(tooltip);
         FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
         if (!fluidStack.getFluid().getFluidType().isAir()) {
-            CreateLang.fluidName(fluidStack)
+            Lang.fluidName(fluidStack)
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         } else {
-            CreateLang.translate("gui.goggles.empty")
+            Lang.translate("gui.goggles.empty")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }
-        CreateLang.builder()
-                .add(CreateLang.number(fluidStack.getAmount())
+        Lang.builder()
+                .add(Lang.number(fluidStack.getAmount())
                         .add(mb)
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
                         .add(mb)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);

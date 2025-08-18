@@ -1,11 +1,11 @@
 package com.lightning.northstar.client.renderer.armor;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.content.NorthstarItems;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -55,7 +55,7 @@ public class SpaceSuitLayerRenderer<T extends LivingEntity, M extends EntityMode
 
         BlockState air = Blocks.AIR.defaultBlockState();
         RenderType renderType = Sheets.translucentCullBlockSheet();
-        SuperByteBuffer helmet = CachedBuffers.partial(model, air);
+        SuperByteBuffer helmet = CachedBufferer.partial(model, air);
 
         ms.pushPose();
 

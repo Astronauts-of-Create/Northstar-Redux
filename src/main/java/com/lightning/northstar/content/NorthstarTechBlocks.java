@@ -22,9 +22,9 @@ import com.lightning.northstar.block.tech.rocket_station.RocketStationBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockMovingInteraction;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlock;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlock;
-import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
-import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-import com.simibubi.create.api.stress.BlockStressValues;
+import com.simibubi.create.AllInteractionBehaviours;
+import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockModel;
 import com.simibubi.create.content.kinetics.simpleRelays.CogwheelBlockItem;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
@@ -57,8 +57,8 @@ public class NorthstarTechBlocks {
                     .noOcclusion())
             .transform(axeOrPickaxe())
             .blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
-            .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 128.0))
-            .onRegister(BlockStressValues.setGeneratorSpeed(SolarPanelBlock.getSpeedRange().getSecond(), true))
+            .transform(BlockStressDefaults.setCapacity(128.0))
+            .transform(BlockStressDefaults.setGeneratorSpeed(SolarPanelBlock::getSpeedRange))
             .item()
             .transform(customItemModel())
             .register();
@@ -91,7 +91,7 @@ public class NorthstarTechBlocks {
                     .isViewBlocking(NorthstarTechBlocks::never))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
+            .transform(BlockStressDefaults.setCapacity(8))
             .item(AssemblyOperatorBlockItem::new)
             .transform(customItemModel())
             .register();
@@ -106,7 +106,7 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             //.transform(CStress.setImpact(16.0))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
+            .transform(BlockStressDefaults.setCapacity(16))
             .simpleItem()
             .register();
 
@@ -132,7 +132,7 @@ public class NorthstarTechBlocks {
                     .strength(8, 8))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
+            .transform(BlockStressDefaults.setCapacity(16))
             .simpleItem()
             .register();
 
@@ -145,7 +145,7 @@ public class NorthstarTechBlocks {
                     .strength(8, 8))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
+            .transform(BlockStressDefaults.setCapacity(16))
             .simpleItem()
             .register();
 
@@ -159,8 +159,8 @@ public class NorthstarTechBlocks {
                     .strength(8, 8))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 256))
-            .onRegister(BlockStressValues.setGeneratorSpeed(CombustionEngineBlock.getSpeedRange().getSecond(), true))
+            .transform(BlockStressDefaults.setCapacity(256))
+            .transform(BlockStressDefaults.setGeneratorSpeed(CombustionEngineBlock::getSpeedRange))
             .simpleItem()
             .register();
 
@@ -171,7 +171,7 @@ public class NorthstarTechBlocks {
                     .noOcclusion()
                     .isViewBlocking(NorthstarTechBlocks::never))
             .transform(pickaxeOnly())
-            .onRegister(MovementBehaviour.movementBehaviour(new JetEngineMovementBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new JetEngineMovementBehaviour()))
             .item(JetEngineItem::new)
             .build()
             .register();
@@ -193,7 +193,7 @@ public class NorthstarTechBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
-            .onRegister(MovementBehaviour.movementBehaviour(new BasinMovementBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new BasinMovementBehaviour()))
             .item()
             .transform(customItemModel("_", "block"))
             .register();
@@ -215,7 +215,7 @@ public class NorthstarTechBlocks {
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
             .simpleItem()
-            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketStationBlockMovingInteraction()))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketStationBlockMovingInteraction()))
             .lang("Rocket Station")
             .register();
     public static final BlockEntry<RocketControlsBlock> ROCKET_CONTROLS = REGISTRATE
@@ -225,8 +225,8 @@ public class NorthstarTechBlocks {
                     .noOcclusion()
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
-            .onRegister(MovementBehaviour.movementBehaviour(new RocketControlsMovementBehaviour()))
-            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketControlsInteractionBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new RocketControlsMovementBehaviour()))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketControlsInteractionBehaviour()))
             .simpleItem()
             .lang("Rocket Controls")
             .register();
@@ -334,7 +334,7 @@ public class NorthstarTechBlocks {
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.METAL))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 0))
+            .transform(BlockStressDefaults.setCapacity(0))
             .blockstate(BlockStateGen.axisBlockProvider(false))
             .onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
             .item(CogwheelBlockItem::new)
@@ -346,7 +346,7 @@ public class NorthstarTechBlocks {
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.METAL))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 0))
+            .transform(BlockStressDefaults.setCapacity(0))
             .blockstate(BlockStateGen.axisBlockProvider(false))
             .onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
             .item(CogwheelBlockItem::new)

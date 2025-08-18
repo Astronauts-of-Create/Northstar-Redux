@@ -8,13 +8,12 @@ import com.lightning.northstar.entity.projectiles.VenusScorpionSpit;
 import com.lightning.northstar.entity.variants.FrozenZombieEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
-import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
+import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.createmod.catnip.lang.Lang;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
@@ -91,7 +90,6 @@ public class NorthstarEntityTypes {
 
     public static final EntityEntry<RocketContraptionEntity> ROCKET_CONTRAPTION =
             contraption("rocket_contraption", RocketContraptionEntity::new, () -> ContraptionEntityRenderer::new, 200, 40, false)
-                    .visual(() -> ContraptionVisual::new)
                     .register();
 
     public static <T extends Entity> RegistryObject<EntityType<T>> buildEntity(EntityType.EntityFactory<T> entity,

@@ -17,9 +17,9 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-import net.createmod.catnip.data.WorldAttached;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -295,7 +295,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
 //            System.out.println("No station or jet engine, Bruh!");
 //            System.out.println("Heat Cost: " + heatCost + "     Heat Shielding: " + heatShielding);
 //            System.out.println("Weight Cost: " + contraption.weightCost + "      Fuel Cost: " + fuelCost);
-            exception(new AssemblyException(CreateLang.translateDirect("train_assembly.no_controls")), -1);
+            exception(new AssemblyException(Lang.translateDirect("train_assembly.no_controls")), -1);
         }
     }
 

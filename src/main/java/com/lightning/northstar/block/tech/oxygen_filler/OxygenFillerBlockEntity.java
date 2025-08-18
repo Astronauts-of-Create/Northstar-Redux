@@ -6,14 +6,14 @@ import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.OxygenStuff;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.particle.AirParticleData;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.lang.LangBuilder;
-import net.createmod.catnip.math.VecHelper;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -192,42 +192,42 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
     }
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.translate("gui.goggles.oxygen_filler")
+        LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+        Lang.translate("gui.goggles.oxygen_filler")
             .forGoggles(tooltip);
         FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
         if(!fluidStack.getFluid().getFluidType().isAir()) {
-            CreateLang.fluidName(fluidStack)
+            Lang.fluidName(fluidStack)
             .style(ChatFormatting.GRAY)
             .forGoggles(tooltip);
         }else {
-            CreateLang.translate("gui.goggles.empty")
+            Lang.translate("gui.goggles.empty")
             .style(ChatFormatting.GRAY)
             .forGoggles(tooltip);
         }
-        CreateLang.builder()
-            .add(CreateLang.number(fluidStack.getAmount())
+        Lang.builder()
+            .add(Lang.number(fluidStack.getAmount())
                 .add(mb)
                 .style(ChatFormatting.GOLD))
             .text(ChatFormatting.GRAY, " / ")
-            .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+            .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
                 .add(mb)
                 .style(ChatFormatting.DARK_GRAY))
             .forGoggles(tooltip, 1);
         ItemStack itemStack = container.getItem(0);
         if(!itemStack.isEmpty()) {
-            CreateLang.builder()
-                .add(CreateLang.number(itemStack.getCount())
+            Lang.builder()
+                .add(Lang.number(itemStack.getCount())
                 .style(ChatFormatting.GRAY))
                 .text(ChatFormatting.DARK_GRAY, "x ")
-                .add(CreateLang.itemName(itemStack)
+                .add(Lang.itemName(itemStack)
                 .style(ChatFormatting.GRAY))
             .forGoggles(tooltip, 1);
             CompoundTag thing = itemStack.getTag();
             int currentOxy = thing.getInt("Oxygen");
             if(currentOxy != 0) {
-                CreateLang.builder()
-                .add(CreateLang.number(currentOxy)
+                Lang.builder()
+                .add(Lang.number(currentOxy)
                 .style(ChatFormatting.GRAY))
                 .add(mb)
                 .style(ChatFormatting.GRAY)

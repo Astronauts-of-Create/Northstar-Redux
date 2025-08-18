@@ -6,7 +6,7 @@ import com.lightning.northstar.content.NorthstarPackets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -73,7 +73,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         int y = (height - (imageHeight + (imageHeight / 2))) / 2;
 
         IconButton assemble = new IconButton(x + imageWidth - 10, y + imageHeight - 79, AllIcons.I_ADD);
-        assemble.setToolTip(CreateLang.translateDirect("station.assemble_train"));
+        assemble.setToolTip(Lang.translateDirect("station.assemble_train"));
         assemble.withCallback(() -> {
             NorthstarPackets.getChannel().sendToServer(RocketStationEditPacket.tryAssemble(menu.blockEntity.getBlockPos()));
             removed();
@@ -85,7 +85,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         if ((Math.abs(x + imageWidth - mouseX) < 9 && Math.abs(y + imageHeight - 79 + 9 - mouseY) < 9)) {
             List<Component> list = Lists.newArrayList();
             RenderSystem.colorMask(true, true, true, true);
-            list.add(CreateLang.translateDirect("northstar.gui.rocket_station.assemble").withStyle(ChatFormatting.WHITE));
+            list.add(Lang.translateDirect("northstar.gui.rocket_station.assemble").withStyle(ChatFormatting.WHITE));
 
             pPoseStack.renderComponentTooltip(font, list, mouseX, mouseY);
         }

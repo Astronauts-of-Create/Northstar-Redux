@@ -35,7 +35,7 @@ public class EngravingCategory extends CreateRecipeCategory<EngravingRecipe> {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 131 + 19 * i, 50)
                     .setBackground(getRenderedSlot(output), -1, -1)
                     .addItemStack(output.getStack())
-                    .addRichTooltipCallback(CreateRecipeCategory.addStochasticTooltip(output));
+                    .addTooltipCallback(CreateRecipeCategory.addStochasticTooltip(output));
             i++;
         }
     }

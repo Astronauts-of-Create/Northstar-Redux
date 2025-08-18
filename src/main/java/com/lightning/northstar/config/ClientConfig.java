@@ -1,6 +1,6 @@
 package com.lightning.northstar.config;
 
-import net.createmod.catnip.config.ConfigBase;
+import com.simibubi.create.foundation.config.ConfigBase;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientConfig extends ConfigBase {

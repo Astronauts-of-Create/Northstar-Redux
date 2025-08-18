@@ -1,15 +1,15 @@
 package com.lightning.northstar.block.tech.ice_box;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.animation.AnimationTickHolder;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.platform.ForgeCatnipServices;
+import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -75,7 +75,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
 
             Vec3 itemPosition = VecHelper.rotate(baseVector, anglePartition * itemCount, Axis.Y);
             ms.translate(itemPosition.x, itemPosition.y, itemPosition.z);
-            TransformStack.of(ms)
+            TransformStack.cast(ms)
                     .rotateY(anglePartition * itemCount + 35)
                     .rotateX(65);
 
@@ -117,7 +117,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
                 continue;
 
             ms.pushPose();
-            TransformStack.of(ms)
+            TransformStack.cast(ms)
                     .translate(outVec)
                     .translate(new Vec3(0, Math.max(-.55f, -(progress * progress * 2)), 0))
                     .translate(directionVec.scale(progress * .5f))
@@ -162,7 +162,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
                 float partial = Mth.clamp(units / totalUnits, 0, 1);
                 xMax += partial * 12 / 16f;
 
-                ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false, false);
+                FluidRenderer.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
 
                 xMin = xMax;
             }

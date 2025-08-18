@@ -1,6 +1,6 @@
 package com.lightning.northstar.config;
 
-import net.createmod.catnip.config.ConfigBase;
+import com.simibubi.create.foundation.config.ConfigBase;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,9 +49,10 @@ public class NorthstarConfigs {
     }
 
     public static void register(BiConsumer<ModConfig.Type, ForgeConfigSpec> register) {
-        client = register(ClientConfig::new, ModConfig.Type.CLIENT);
-        common = register(CommonConfig::new, ModConfig.Type.COMMON);
-        server = register(ServerConfig::new, ModConfig.Type.SERVER);
+        // configs are disabled because empty configurations cause a crash on create 5
+        //client = register(ClientConfig::new, ModConfig.Type.CLIENT);
+        //common = register(CommonConfig::new, ModConfig.Type.COMMON);
+        //server = register(ServerConfig::new, ModConfig.Type.SERVER);
 
         for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
             register.accept(pair.getKey(), pair.getValue().specification);

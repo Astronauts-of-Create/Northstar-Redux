@@ -1,5 +1,6 @@
 package com.lightning.northstar.contraptions;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
@@ -7,19 +8,19 @@ import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.VecHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -490,7 +491,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             if (collidedState.getBlock() instanceof CocoaBlock)
                 continue;
 
-            MovementBehaviour movementBehaviour = MovementBehaviour.REGISTRY.get(blockInfo.state());
+            MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state());
             if (movementBehaviour != null) {
                 if (movementBehaviour instanceof BlockBreakingMovementBehaviour behaviour) {
                     if (!behaviour.canBreak(world, colliderPos, collidedState) && !emptyCollider)
@@ -737,13 +738,13 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         matrixStack.translate(0, 0, 0);
 
-        TransformStack.of(matrixStack)
+        TransformStack.cast(matrixStack)
                 .nudge(getId())
-                .center()
+                .centre()
                 .rotateY(angleYaw)
                 .rotateZ(anglePitch)
                 .rotateY(angleInitialYaw)
-                .uncenter();
+                .unCentre();
     }
 
 }

@@ -8,8 +8,8 @@ import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegul
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.api.contraption.ContraptionType;
 import com.simibubi.create.content.contraptions.AssemblyException;
+import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;

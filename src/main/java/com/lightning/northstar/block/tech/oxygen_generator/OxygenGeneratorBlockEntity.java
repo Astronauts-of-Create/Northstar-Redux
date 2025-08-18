@@ -5,14 +5,14 @@ import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.particle.OxyFlowParticleData;
 import com.lightning.northstar.world.OxygenStuff;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
-import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-import net.createmod.catnip.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -113,43 +113,43 @@ public class OxygenGeneratorBlockEntity extends KineticBlockEntity implements IH
 
     @Override
     public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.translate("gui.goggles.oxygen_sealer")
+        LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+        Lang.translate("gui.goggles.oxygen_sealer")
                 .forGoggles(tooltip);
         FluidStack fluidStack = this.tank.getPrimaryHandler().getFluidInTank(0);
         if (!fluidStack.getFluid().getFluidType().isAir()) {
-            CreateLang.fluidName(fluidStack)
+            Lang.fluidName(fluidStack)
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         } else {
-            CreateLang.translate("gui.goggles.empty")
+            Lang.translate("gui.goggles.empty")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }
-        CreateLang.builder()
-                .add(CreateLang.number(fluidStack.getAmount())
+        Lang.builder()
+                .add(Lang.number(fluidStack.getAmount())
                         .add(mb)
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(this.tank.getPrimaryHandler().getTankCapacity(0))
+                .add(Lang.number(this.tank.getPrimaryHandler().getTankCapacity(0))
                         .add(mb)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
-        CreateLang.translate("gui.goggles.blocks_filled")
+        Lang.translate("gui.goggles.blocks_filled")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
-        CreateLang.number(this.OXYGEN_BLOBS.size())
+        Lang.number(this.OXYGEN_BLOBS.size())
                 .style(ChatFormatting.AQUA)
                 .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(this.maxOxy)
+                .add(Lang.number(this.maxOxy)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
         if (this.OXYGEN_BLOBS.isEmpty() && Mth.abs(speed) > 0 && this.tank.getPrimaryHandler().getFluidAmount() > 0) {
-            CreateLang.translate("gui.goggles.leak_detected")
+            Lang.translate("gui.goggles.leak_detected")
                     .style(ChatFormatting.DARK_RED)
                     .forGoggles(tooltip);
         } else if (this.OXYGEN_BLOBS.size() >= this.maxOxy && this.maxOxy != 0) {
-            CreateLang.translate("gui.goggles.leak_detected")
+            Lang.translate("gui.goggles.leak_detected")
                     .style(ChatFormatting.DARK_RED)
                     .forGoggles(tooltip);
         }

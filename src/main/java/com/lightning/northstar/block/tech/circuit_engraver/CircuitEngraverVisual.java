@@ -1,59 +1,59 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
+import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.RotatingInstance;
-import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
-import com.simibubi.create.foundation.render.AllInstanceTypes;
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import com.simibubi.create.content.kinetics.base.ShaftInstance;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 
-public class CircuitEngraverVisual extends SingleAxisRotatingVisual<CircuitEngraverBlockEntity> implements SimpleDynamicVisual {
+public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEntity> implements DynamicInstance {
 
-    private final RotatingInstance crystalHead;
-    private final RotatingInstance crystalLaser;
+    private final RotatingData crystalHead;
+    private final RotatingData crystalLaser;
 
-    public CircuitEngraverVisual(VisualizationContext context, CircuitEngraverBlockEntity entity, float partialTick) {
-        super(context, entity, partialTick, Models.partial(AllPartialModels.SHAFT));
+    public CircuitEngraverVisual(MaterialManager materialManager, CircuitEngraverBlockEntity entity) {
+        super(materialManager, entity);
 
-        crystalHead = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.CIRCUIT_ENGRAVER_HEAD))
+        crystalHead = materialManager
+                .defaultCutout()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(NorthstarPartialModels.CIRCUIT_ENGRAVER_HEAD, getRenderedBlockState())
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
 
-        crystalLaser = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER))
+        crystalLaser =  materialManager
+                .defaultCutout()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
     }
 
     @Override
-    public void beginFrame(Context ctx) {
+    public void beginFrame() {
         boolean running = blockEntity.engravingBehaviour.running;
-        float speed = blockEntity.getRenderedHeadRotationSpeed(ctx.partialTick());
+        float speed = blockEntity.getRenderedHeadRotationSpeed(AnimationTickHolder.getPartialTicks());
 
-        crystalHead.setPosition(getVisualPosition())
-                .setRotationalSpeed(speed * 0.5f)
-                .setChanged();
+        crystalHead.setPosition(getInstancePosition())
+                .setRotationalSpeed(speed * 0.5f);
 
-        crystalLaser.setVisible(running);
-        crystalLaser.setPosition(getVisualPosition())
-                .nudge(0, -0.16f, 0)
-                .setRotationalSpeed(speed / 1.5f)
-                .setChanged();
+        crystalLaser.setPosition(getInstancePosition())
+                .nudge(0, running ? -0.16f : 1e8f, 0)
+                .setRotationalSpeed(speed / 1.5f);
     }
 
     @Override
-    public void updateLight(float partialTick) {
-        super.updateLight(partialTick);
-        relight(crystalHead, crystalLaser);
+    public void updateLight() {
+        super.updateLight();
+        relight(pos, crystalHead, crystalLaser);
     }
 
     @Override
-    protected void _delete() {
-        super._delete();
+    public void remove() {
+        super.remove();
         crystalHead.delete();
         crystalLaser.delete();
     }

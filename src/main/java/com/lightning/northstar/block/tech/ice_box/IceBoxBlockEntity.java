@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.world.TemperatureStuff;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -16,12 +16,7 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.lang.LangBuilder;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.nbt.NBTHelper;
+import com.simibubi.create.foundation.utility.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -418,7 +413,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("gui.goggles.ice_box_contents")
+        Lang.translate("gui.goggles.ice_box_contents")
                 .forGoggles(tooltip);
 
         IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
@@ -429,30 +424,30 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             ItemStack stackInSlot = items.getStackInSlot(i);
             if (stackInSlot.isEmpty())
                 continue;
-            CreateLang.text("")
+            Lang.text("")
                     .add(Component.translatable(stackInSlot.getDescriptionId())
                             .withStyle(ChatFormatting.GRAY))
-                    .add(CreateLang.text(" x" + stackInSlot.getCount())
+                    .add(Lang.text(" x" + stackInSlot.getCount())
                             .style(ChatFormatting.GREEN))
                     .forGoggles(tooltip, 1);
             isEmpty = false;
         }
         if (fluids != null) {
-            LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
+            LangBuilder mb = Lang.translate("generic.unit.millibuckets");
             for (int b = 0; b < fluids.getTanks(); b++) {
                 FluidStack stackInSlot = fluids.getFluidInTank(b);
                 if (stackInSlot.isEmpty())
                     continue;
                 if (!stackInSlot.getFluid().getFluidType().isAir()) {
-                    CreateLang.fluidName(stackInSlot)
+                    Lang.fluidName(stackInSlot)
                             .style(ChatFormatting.GRAY)
                             .forGoggles(tooltip);
-                    CreateLang.builder()
-                            .add(CreateLang.number(stackInSlot.getAmount())
+                    Lang.builder()
+                            .add(Lang.number(stackInSlot.getAmount())
                                     .add(mb)
                                     .style(ChatFormatting.GOLD))
                             .text(ChatFormatting.GRAY, " / ")
-                            .add(CreateLang.number(fluids.getTankCapacity(b))
+                            .add(Lang.number(fluids.getTankCapacity(b))
                                     .add(mb)
                                     .style(ChatFormatting.DARK_GRAY))
                             .forGoggles(tooltip, 1);

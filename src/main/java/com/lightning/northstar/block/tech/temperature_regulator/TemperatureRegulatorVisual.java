@@ -1,74 +1,67 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
+import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
-import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.RotatingInstance;
-import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
-import com.simibubi.create.foundation.render.AllInstanceTypes;
-import dev.engine_room.flywheel.api.instance.Instance;
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import com.simibubi.create.content.kinetics.base.HalfShaftInstance;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import net.minecraft.core.Direction;
 
-import java.util.function.Consumer;
+public class TemperatureRegulatorVisual extends HalfShaftInstance<TemperatureRegulatorBlockEntity> implements DynamicInstance {
 
-public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<TemperatureRegulatorBlockEntity> implements SimpleDynamicVisual {
+    private final RotatingData warmSpinner;
+    private final RotatingData coldSpinner;
 
-    private final RotatingInstance warmSpinner;
-    private final RotatingInstance coldSpinner;
+    public TemperatureRegulatorVisual(MaterialManager materialManager, TemperatureRegulatorBlockEntity entity) {
+        super(materialManager, entity);
 
-    public TemperatureRegulatorVisual(VisualizationContext context, TemperatureRegulatorBlockEntity entity, float partialTick) {
-        super(context, entity, partialTick, Models.partial(AllPartialModels.SHAFT_HALF));
-
-        rotatingModel.rotateToFace(Direction.NORTH, Direction.Axis.Y);
-
-        warmSpinner = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.WARM_SPINNY))
+        warmSpinner = materialManager
+                .defaultSolid()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(NorthstarPartialModels.WARM_SPINNY)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
 
-        coldSpinner = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.COLD_SPINNY))
+        coldSpinner = materialManager
+                .defaultSolid()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(NorthstarPartialModels.COLD_SPINNY)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
     }
 
     @Override
-    public void beginFrame(Context context) {
+    protected Direction getShaftDirection() {
+        return Direction.DOWN;
+    }
+
+    @Override
+    public void beginFrame() {
         float speed = blockEntity.getSpeed();
-        boolean warm = blockEntity.temp >= NorthstarPlanets.getPlanetTemp(level.dimension());
+        boolean warm = blockEntity.temp >= NorthstarPlanets.getPlanetTemp(blockEntity.getLevel().dimension());
 
-        warmSpinner.setVisible(warm);
-        warmSpinner.setPosition(getVisualPosition())
-                .setRotationalSpeed(speed / 2)
-                .setChanged();
+        warmSpinner.setPosition(getInstancePosition())
+                .nudge(0, warm ? 0 : 1e8f, 0)
+                .setRotationalSpeed(speed / 2);
 
-        coldSpinner.setVisible(!warm);
-        coldSpinner.setPosition(getVisualPosition())
-                .setRotationalSpeed(speed / 2)
-                .setChanged();
+        coldSpinner.setPosition(getInstancePosition())
+                .nudge(0, warm ? 1e8f : 0, 0)
+                .setRotationalSpeed(speed / 2);
     }
 
     @Override
-    public void updateLight(float partialTick) {
-        super.updateLight(partialTick);
-        relight(warmSpinner, coldSpinner);
+    public void updateLight() {
+        super.updateLight();
+        relight(pos, warmSpinner, coldSpinner);
     }
 
     @Override
-    protected void _delete() {
-        super._delete();
+    public void remove() {
+        super.remove();
         warmSpinner.delete();
         coldSpinner.delete();
-    }
-
-    @Override
-    public void collectCrumblingInstances(Consumer<Instance> consumer) {
-        super.collectCrumblingInstances(consumer);
-        consumer.accept(warmSpinner);
-        consumer.accept(coldSpinner);
     }
 
 }

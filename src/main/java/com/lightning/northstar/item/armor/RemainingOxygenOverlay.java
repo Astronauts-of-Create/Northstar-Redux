@@ -2,8 +2,8 @@ package com.lightning.northstar.item.armor;
 
 import com.lightning.northstar.world.OxygenStuff;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.createmod.catnip.gui.element.GuiGameElement;
-import net.createmod.catnip.theme.Color;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;

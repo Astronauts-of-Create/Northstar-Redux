@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_generator;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+/*import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -55,4 +55,4 @@ public class OxygenGeneratorRenderer extends KineticBlockEntityRenderer<OxygenGe
         }
     }
 
-}
+}*/

@@ -1,7 +1,7 @@
 package com.lightning.northstar.particle;
 
 import com.simibubi.create.content.equipment.bell.BasicParticleData;
-import net.createmod.catnip.math.VecHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LevelRenderer;

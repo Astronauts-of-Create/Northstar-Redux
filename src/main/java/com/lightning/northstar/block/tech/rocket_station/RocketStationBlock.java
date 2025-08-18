@@ -3,7 +3,7 @@ package com.lightning.northstar.block.tech.rocket_station;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
-import net.createmod.catnip.data.Couple;
+import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,10 +1,10 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -56,7 +56,7 @@ public class OxygenFillerRenderer extends SmartBlockEntityRenderer<OxygenFillerB
                 break;
         }
 
-        TransformStack.of(ms).rotateY(AngleHelper.horizontalAngle(direction));
+        TransformStack.cast(ms).rotateY(AngleHelper.horizontalAngle(direction));
 
         RandomSource r = RandomSource.create(pos.hashCode());
 

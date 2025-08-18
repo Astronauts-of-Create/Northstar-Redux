@@ -2,14 +2,13 @@ package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.lang.Lang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -98,24 +97,24 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
         FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
 
         if (!fluidStack.getFluid().getFluidType().isAir()) {
-            CreateLang.translate(color)
-                    .add(CreateLang.fluidName(fluidStack))
+            Lang.translate(color)
+                    .add(Lang.fluidName(fluidStack))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         } else {
-            CreateLang.translate(color)
-                    .add(CreateLang.translate("gui.goggles.empty"))
+            Lang.translate(color)
+                    .add(Lang.translate("gui.goggles.empty"))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }
 
         Lang.builder(Northstar.MOD_ID)
-                .add(CreateLang.number(fluidStack.getAmount())
-                        .add(CreateLang.translate("generic.unit.millibuckets"))
+                .add(Lang.number(fluidStack.getAmount())
+                        .add(Lang.translate("generic.unit.millibuckets"))
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
-                        .add(CreateLang.translate("generic.unit.millibuckets"))
+                .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                        .add(Lang.translate("generic.unit.millibuckets"))
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
     }

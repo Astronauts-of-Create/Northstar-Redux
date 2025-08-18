@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import net.createmod.catnip.lang.Lang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;

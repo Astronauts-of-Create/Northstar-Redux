@@ -3,10 +3,10 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 import com.lightning.northstar.particle.SnowflakeParticleData;
 import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
-import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -154,28 +154,28 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
     @Override
     public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("gui.goggles.temperature_regulator")
+        Lang.translate("gui.goggles.temperature_regulator")
                 .forGoggles(tooltip);
-        CreateLang.translate("gui.goggles.blocks_filled")
+        Lang.translate("gui.goggles.blocks_filled")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
         if (envFill) {
-            CreateLang.builder()
-                    .add(CreateLang.number(TEMP_ZONES.size())
+            Lang.builder()
+                    .add(Lang.number(TEMP_ZONES.size())
                             .style(ChatFormatting.AQUA))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(maxSize)
+                    .add(Lang.number(maxSize)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
         } else {
-            CreateLang.builder()
-                    .add(CreateLang.number(sizeX)
+            Lang.builder()
+                    .add(Lang.number(sizeX)
                             .style(ChatFormatting.AQUA))
                     .text(ChatFormatting.DARK_GRAY, " x ")
-                    .add(CreateLang.number(sizeY)
+                    .add(Lang.number(sizeY)
                             .style(ChatFormatting.AQUA))
                     .text(ChatFormatting.DARK_GRAY, " x ")
-                    .add(CreateLang.number(sizeZ)
+                    .add(Lang.number(sizeZ)
                             .style(ChatFormatting.AQUA))
                     .forGoggles(tooltip, 1);
         }

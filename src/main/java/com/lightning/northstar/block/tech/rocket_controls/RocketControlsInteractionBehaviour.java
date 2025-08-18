@@ -2,8 +2,8 @@ package com.lightning.northstar.block.tech.rocket_controls;
 
 import com.google.common.base.Objects;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
-import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;

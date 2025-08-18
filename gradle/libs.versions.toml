@@ -1,13 +1,11 @@
 [versions]
-flywheel = "1.0.2"
+flywheel = "0.6.11-13"
 mixinextras = "0.4.1"
 ponder = "1.0.83"
 
 [libraries]
-create = "com.simibubi.create:create-1.20.1:6.0.6-205"
-copycats = "com.copycatsplus:copycats:3.0.2+mc.1.20.1-forge-build.258"
-flywheel-forge-api = { module = "dev.engine-room.flywheel:flywheel-forge-api-1.20.1", version.ref = "flywheel" }
-flywheel-forge = { module = "dev.engine-room.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
+create = "com.simibubi.create:create-1.20.1:0.5.1.j-55"
+flywheel-forge = { module = "com.jozufozu.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 forge = "net.minecraftforge:forge:1.20.1-47.4.0"
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"
 jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.112"

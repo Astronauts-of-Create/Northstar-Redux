@@ -4,7 +4,7 @@ import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.foundation.utility.ControlsUtil;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public class RocketControlsHandler {
         controlsPos = controllerLocalPos;
         displaytime = 0;
         Minecraft.getInstance().player.displayClientMessage(
-                CreateLang.translateDirect("contraption.controls.start_controlling", entity.getContraptionName()), true);
+                Lang.translateDirect("contraption.controls.start_controlling", entity.getContraptionName()), true);
 
     }
 
@@ -65,7 +65,7 @@ public class RocketControlsHandler {
         controlsPos = null;
         currentlyPressed.clear();
 
-        Minecraft.getInstance().player.displayClientMessage(CreateLang.translateDirect("contraption.controls.stop_controlling"),
+        Minecraft.getInstance().player.displayClientMessage(Lang.translateDirect("contraption.controls.stop_controlling"),
                 true);
     }
 
@@ -79,7 +79,7 @@ public class RocketControlsHandler {
             if (!entity.getControllingPlayer().isEmpty()) {
                 if (entity.getControllingPlayer().get() == player.getUUID()) {
                     player.displayClientMessage(
-                            CreateLang.translateDirect("contraption.controls.rocket_tut").withStyle(ChatFormatting.AQUA), true);
+                            Lang.translateDirect("contraption.controls.rocket_tut").withStyle(ChatFormatting.AQUA), true);
                 }
             }
         }
@@ -92,7 +92,7 @@ public class RocketControlsHandler {
             if (entity.landing && entity.getY() < entity.level().getMaxBuildHeight() + 500) {
                 if (!entity.getControllingPlayer().isEmpty()) {
                     if (entity.getControllingPlayer().get() == player.getUUID()) {
-                        player.displayClientMessage(CreateLang.translateDirect("contraption.controls.landing_warning").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(Lang.translateDirect("contraption.controls.landing_warning").withStyle(ChatFormatting.RED), true);
                     }
                 }
             }

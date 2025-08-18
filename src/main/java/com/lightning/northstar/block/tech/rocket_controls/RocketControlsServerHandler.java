@@ -1,8 +1,8 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
-import net.createmod.catnip.data.IntAttached;
-import net.createmod.catnip.data.WorldAttached;
+import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;

@@ -1,11 +1,11 @@
 package com.lightning.northstar.block.tech;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.lightning.northstar.Northstar;
 import com.simibubi.create.content.fluids.FluidTransportBehaviour;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -64,11 +64,11 @@ public class NorthstarPartialModels {
 
 
     private static PartialModel block(String path) {
-        return PartialModel.of(Northstar.asResource("block/" + path));
+        return new PartialModel(Northstar.asResource("block/" + path));
     }
 
     private static PartialModel armor(String path) {
-        return PartialModel.of(Northstar.asResource("entities/armor/" + path));
+        return new PartialModel(Northstar.asResource("entities/armor/" + path));
     }
 
     public static void register() {
