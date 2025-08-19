@@ -19,9 +19,6 @@
     },
     "L": {
       "item": "northstar:targeting_computer"
-    },
-    "S": {
-      "item": "create:shaft"
     }
   },
   "pattern": [
@@ -29,7 +26,7 @@
     "TFPFT",
     "TCLCT",
     "TFPFT",
-    "IISII"
+    "IIIII"
   ],
   "result": {
     "count": 1,
