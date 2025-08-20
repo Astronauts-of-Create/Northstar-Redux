@@ -8,7 +8,6 @@
 Make sure that no existing issue matches the bug or feature and that it isn't planned down below. [new GitHub issue](https://github.com/Astronauts-of-Create/Northstar-Redux/issues/new).
 
 ### Known issues:
-- Blocks are invisible when flywheel is off. Current solution: enable flywheel with `/flywheel backend flywheel:instancing` or `/flywheel backend flywheel:indirect`.
 - Not all entities might be affected by custom gravity (e.g. falling blocks).
 
 ### Planned:

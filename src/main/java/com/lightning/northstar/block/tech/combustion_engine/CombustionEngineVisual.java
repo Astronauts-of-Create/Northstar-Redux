@@ -10,6 +10,7 @@ import dev.engine_room.flywheel.lib.instance.InstanceTypes;
 import dev.engine_room.flywheel.lib.instance.OrientedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.AngleHelper;
 import org.joml.Quaternionf;
 
@@ -23,7 +24,6 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
     private final OrientedInstance piston4;
     private final OrientedInstance piston5;
     private final OrientedInstance piston6;
-    private float time = 0;
 
     public CombustionEngineVisual(VisualizationContext context, CombustionEngineBlockEntity entity, float partialTick) {
         super(context, entity, partialTick, Models.partial(AllPartialModels.SHAFT));
@@ -58,9 +58,7 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
 
     @Override
     public void beginFrame(Context ctx) {
-        if (!blockEntity.isOverStressed() && Math.abs(blockEntity.getSpeed()) > 0) {
-            time += blockEntity.getSpeed() * 0.002f;
-        }
+        float time = AnimationTickHolder.getRenderTime(level) * blockEntity.getSpeed() * 0.005f;
 
         piston1.position(getVisualPosition()).translatePosition(0, getPistonOffset(time), 0).setChanged();
         piston2.position(getVisualPosition()).translatePosition(0, getPistonOffset(time + 2), 0).setChanged();
@@ -98,8 +96,8 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
         consumer.accept(piston6);
     }
 
-    public float getPistonOffset(double time2) {
-        return (float) (Math.sin(time2) * 0.05f);
+    public static float getPistonOffset(double time) {
+        return (float) (Math.sin(time) * 0.05f);
     }
 
 }

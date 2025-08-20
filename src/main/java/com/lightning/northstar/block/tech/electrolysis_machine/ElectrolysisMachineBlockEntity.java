@@ -120,32 +120,6 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
                 .forGoggles(tooltip, 1);
     }
 
-    public float getTotalFluidUnits(float partialTicks) {
-        int renderedFluids = 0;
-        float totalUnits = 0;
-
-        SmartFluidTankBehaviour behaviour = inputTank;
-        if (behaviour == null)
-            return 0;
-        for (TankSegment tankSegment : behaviour.getTanks()) {
-            if (tankSegment.getRenderedFluid()
-                    .isEmpty())
-                continue;
-            float units = tankSegment.getTotalUnits(partialTicks);
-            if (units < 1)
-                continue;
-            totalUnits += units;
-            renderedFluids++;
-        }
-
-
-        if (renderedFluids == 0)
-            return 0;
-        if (totalUnits < 1)
-            return 0;
-        return totalUnits;
-    }
-
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (isFluidHandlerCap(cap) && side == Direction.UP)
