@@ -26,7 +26,6 @@ public class NorthstarItems {
         REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.ITEMS);
     }
 
-
     public static final ItemEntry<Item> OXYGEN_SEPARATOR = REGISTRATE
             .item("oxygen_separator", Item::new)
             .register();
