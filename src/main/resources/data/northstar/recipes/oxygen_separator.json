@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "ATA",
+    " A "
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:plates/iron"
+    },
+    "A": {
+      "item": "create:fluid_pipe"
+    },
+    "T": {
+      "item": "create:electron_tube"
+    }
+  },
+  "result": {
+    "item": "northstar:oxygen_separator",
+    "count": 2
+  }
+}

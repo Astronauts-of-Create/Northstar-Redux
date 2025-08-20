@@ -171,8 +171,16 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
+    // iron/titanium stuff
+    public static final BlockEntry<Block> TITANIUM_BLOCK = REGISTRATE.block("titanium_block", Block::new)
+            .initialProperties(SharedProperties::netheriteMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .strength(10f, 15f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
 
-    // iron stuff
     public static final BlockEntry<Block> IRON_SHEETMETAL = REGISTRATE
             .block("iron_sheetmetal", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)

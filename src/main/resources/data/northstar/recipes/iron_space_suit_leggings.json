@@ -10,7 +10,7 @@
       "tag": "forge:plates/iron"
     },
     "W": {
-      "tag": "minecraft:wool"
+      "item": "northstar:durable_fabric"
     },
     "P": {
       "item": "minecraft:iron_leggings"

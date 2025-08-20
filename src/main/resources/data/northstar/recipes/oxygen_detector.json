@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "AAA",
-    "CTC",
+    "ACA",
+    "ATA",
     "AWA"
   ],
   "key": {
