@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "northstar:hot_titanium_ingot"
   },
-  "loops": 2,
+  "loops": 1,
   "results": [
     {
       "chance": 100.0,
