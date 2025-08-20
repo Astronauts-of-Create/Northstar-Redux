@@ -1,0 +1,98 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "northstar:hot_titanium_ingot"
+  },
+  "loops": 2,
+  "results": [
+    {
+      "chance": 100.0,
+      "item": "northstar:titanium_ingot"
+    },
+    {
+      "chance": 5.0,
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "chance": 15.0,
+      "item": "create:sturdy_sheet"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        },
+        {
+          "item": "northstar:compressed_sand_bar"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        },
+        {
+          "amount": 250,
+          "fluid": "minecraft:lava"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ]
+    }
+  ],
+  "transitionalItem": {
+    "item": "northstar:incomplete_titanium_ingot"
+  }
+}
