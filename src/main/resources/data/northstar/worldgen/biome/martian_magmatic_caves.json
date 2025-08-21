@@ -58,12 +58,14 @@
     ],
     [
       "northstar:mars_andesite_blob",
+
       "northstar:mars_granite_blob",
       "northstar:mars_basalt_blob",
       "northstar:mars_crimsite_blob",
       "northstar:mars_soil_blob",
       "northstar:mars_tuff_blob",
       "northstar:mars_volcanic_ash_blob_large",
+      "northstar:mars_ore_titanium",
       "northstar:mars_ore_copper_large",
       "northstar:mars_ore_copper",
       "northstar:mars_ore_iron_large",
@@ -71,6 +73,7 @@
       "northstar:mars_ore_iron_small",
       "northstar:mars_ore_diamond",
       "northstar:mars_ore_gold",
+
       "northstar:mars_ore_quartz",
       "northstar:mars_ore_redstone",
       "northstar:mars_magma_blob",

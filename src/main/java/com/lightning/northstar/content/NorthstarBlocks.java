@@ -946,6 +946,16 @@ public class NorthstarBlocks {
             .register();
 
     //mars ores
+    public static final BlockEntry<Block> MARS_TITANIUM_ORE = REGISTRATE
+            .block("mars_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MARS_IRON_ORE = REGISTRATE
             .block("mars_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1263,6 +1273,16 @@ public class NorthstarBlocks {
 
 
     //moon ores
+    public static final BlockEntry<Block> MOON_TITANIUM_ORE = REGISTRATE
+            .block("moon_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MOON_IRON_ORE = REGISTRATE
             .block("moon_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1835,6 +1855,16 @@ public class NorthstarBlocks {
             .register();
 
     //venus ores
+    public static final BlockEntry<Block> VENUS_TITANIUM_ORE = REGISTRATE
+            .block("venus_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> VENUS_COAL_ORE = REGISTRATE
             .block("venus_coal_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -2140,6 +2170,17 @@ public class NorthstarBlocks {
             .register();
 
     //mercury ores
+    public static final BlockEntry<Block> MERCURY_TITANIUM_ORE = REGISTRATE
+            .block("mercury_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
+
     public static final BlockEntry<Block> MERCURY_IRON_ORE = REGISTRATE
             .block("mercury_iron_ore", Block::new)
             .initialProperties(() -> STONE)
