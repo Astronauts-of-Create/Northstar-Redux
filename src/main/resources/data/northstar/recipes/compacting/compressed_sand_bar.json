@@ -72,15 +72,12 @@
     },
     {
       "tag": "minecraft:sand"
-    },
-    {
-      "amount": 1000,
-      "fluid": "minecraft:lava"
     }
   ],
   "results": [
     {
       "item": "northstar:compressed_sand_bar"
     }
-  ]
+  ],
+  "heatRequirement": "heated"
 }

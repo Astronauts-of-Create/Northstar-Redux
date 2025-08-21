@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "northstar:hot_titanium_ingot"
   },
-  "loops": 3,
+  "loops": 8,
   "results": [
     {
       "chance": 100.0,
@@ -18,7 +18,7 @@
           "item": "northstar:incomplete_titanium_ingot"
         },
         {
-          "amount": 250,
+          "amount": 500,
           "fluid": "minecraft:lava"
         }
       ],
