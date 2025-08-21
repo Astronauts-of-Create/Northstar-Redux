@@ -74,6 +74,18 @@
       "tag": "minecraft:sand"
     },
     {
+      "tag": "minecraft:sand"
+    },
+    {
+      "tag": "minecraft:sand"
+    },
+    {
+      "tag": "minecraft:sand"
+    },
+    {
+      "tag": "minecraft:sand"
+    },
+    {
       "amount": 750,
       "fluid": "minecraft:lava"
     }
