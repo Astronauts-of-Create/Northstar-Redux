@@ -74,7 +74,7 @@
       "tag": "minecraft:sand"
     },
     {
-      "amount": 1000,
+      "amount": 750,
       "fluid": "minecraft:lava"
     }
   ],
