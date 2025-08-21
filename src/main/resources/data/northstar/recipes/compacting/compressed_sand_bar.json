@@ -2,76 +2,8 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
-    },
-    {
-      "tag": "minecraft:sand"
+      "amount": 2400,
+      "fluid": "northstar:molten_sand"
     }
   ],
   "results": [

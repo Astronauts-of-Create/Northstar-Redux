@@ -1,0 +1,24 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 300,
+      "fluid": "minecraft:lava"
+    },
+    {
+      "tag": "minecraft:sand"
+    },
+    {
+      "tag": "minecraft:sand"
+    },
+    {
+      "tag": "minecraft:sand"
+    }
+  ],
+  "results": [
+    {
+      "amount": 300,
+      "fluid": "northstar:molten_sand"
+    }
+  ]
+}

@@ -66,6 +66,23 @@
           "item": "northstar:incomplete_titanium_ingot"
         }
       ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        },
+        {
+          "amount": 1000,
+          "fluid": "minecraft:water"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:incomplete_titanium_ingot"
+        }
+      ]
     }
   ],
   "transitionalItem": {
