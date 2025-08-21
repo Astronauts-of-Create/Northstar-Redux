@@ -2,14 +2,13 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "amount": 2400,
-      "fluid": "northstar:molten_sand"
+      "amount": 6400,
+      "fluid": "northstar:wet_sand"
     }
   ],
   "results": [
     {
       "item": "northstar:compressed_sand_bar"
     }
-  ],
-  "heatRequirement": "heated"
+  ]
 }

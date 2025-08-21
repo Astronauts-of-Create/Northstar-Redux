@@ -18,7 +18,7 @@
           "item": "northstar:incomplete_titanium_ingot"
         },
         {
-          "amount": 500,
+          "amount": 750,
           "fluid": "minecraft:lava"
         }
       ],
@@ -74,7 +74,7 @@
           "item": "northstar:incomplete_titanium_ingot"
         },
         {
-          "amount": 1000,
+          "amount": 1500,
           "fluid": "minecraft:water"
         }
       ],

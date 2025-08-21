@@ -5,16 +5,19 @@
       "item": "minecraft:iron_ingot"
     },
     {
-      "item": "northstar:compressed_sand_bar"
+      "item": "create:zinc_ingot"
     },
     {
-      "item": "northstar:compressed_sand_bar"
-    },
-    {
-      "item": "northstar:compressed_sand_bar"
+      "item": "create:zinc_ingot"
     },
     {
       "item": "create:sturdy_sheet"
+    },
+    {
+      "item": "create:sturdy_sheet"
+    },
+    {
+      "item": "northstar:compressed_sand_bar"
     }
   ],
   "results": [

@@ -51,6 +51,10 @@ public class NorthstarItems {
             .item("titanium_nugget", Item::new)
             .register();
 
+    public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
+            .item("volcanic_ash_item", Item::new)
+            .register();
+
     //sand
     public static final ItemEntry<Item> COMPRESSED_SAND_BAR = REGISTRATE
             .item("compressed_sand_bar", Item::new)

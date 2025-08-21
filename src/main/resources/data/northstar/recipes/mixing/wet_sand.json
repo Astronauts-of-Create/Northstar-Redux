@@ -2,8 +2,8 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "amount": 300,
-      "fluid": "minecraft:lava"
+      "amount": 1000,
+      "fluid": "minecraft:water"
     },
     {
       "tag": "minecraft:sand"
@@ -18,7 +18,7 @@
   "results": [
     {
       "amount": 300,
-      "fluid": "northstar:molten_sand"
+      "fluid": "northstar:wet_sand"
     }
   ]
 }

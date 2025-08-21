@@ -65,10 +65,10 @@ public class NorthstarFluids {
             .tag(AllTags.forgeFluidTag("strawberry_ice_cream"))
             .register();
 
-    public static final FluidEntry<VirtualFluid> MOLTEN_SAND = REGISTRATE
-            .virtualFluid("molten_sand")
-            .lang("Molten Sand")
-            .tag(AllTags.forgeFluidTag("molten_sand"))
+    public static final FluidEntry<VirtualFluid> WET_SAND = REGISTRATE
+            .virtualFluid("wet_sand")
+            .lang("Wet Sand")
+            .tag(AllTags.forgeFluidTag("wet_sand"))
             .register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_HYDROGEN = REGISTRATE
