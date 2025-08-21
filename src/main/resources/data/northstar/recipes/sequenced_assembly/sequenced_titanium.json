@@ -3,38 +3,14 @@
   "ingredient": {
     "item": "northstar:hot_titanium_ingot"
   },
-  "loops": 1,
+  "loops": 3,
   "results": [
     {
       "chance": 100.0,
       "item": "northstar:titanium_ingot"
-    },
-    {
-      "chance": 5.0,
-      "item": "minecraft:iron_ingot"
-    },
-    {
-      "chance": 15.0,
-      "item": "create:sturdy_sheet"
     }
   ],
   "sequence": [
-    {
-      "type": "create:deploying",
-      "ingredients": [
-        {
-          "item": "northstar:incomplete_titanium_ingot"
-        },
-        {
-          "item": "northstar:compressed_sand_bar"
-        }
-      ],
-      "results": [
-        {
-          "item": "northstar:incomplete_titanium_ingot"
-        }
-      ]
-    },
     {
       "type": "create:filling",
       "ingredients": [

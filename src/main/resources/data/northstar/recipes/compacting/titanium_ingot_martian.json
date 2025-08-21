@@ -5,6 +5,9 @@
       "item": "minecraft:iron_ingot"
     },
     {
+      "item": "northstar:volcanic_ash"
+    },
+    {
       "item": "northstar:compressed_sand_bar"
     },
     {
@@ -12,6 +15,9 @@
     }
   ],
   "results": [
+    {
+      "item": "northstar:hot_titanium_ingot"
+    },
     {
       "item": "northstar:hot_titanium_ingot"
     }
