@@ -10,6 +10,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -31,13 +32,15 @@ public class NorthstarItems {
             .item("oxygen_separator", Item::new)
             .register();
 
-    //titanium
-    public static final ItemEntry<Item> HOT_TITANIUM_INGOT = REGISTRATE
-            .item("hot_titanium_ingot", Item::new)
+
+    //Titanium
+    public static final ItemEntry<Item> UNFINISHED_TITANIUM = REGISTRATE
+            .item("unfinished_titanium", Item::new)
             .register();
 
-    public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_TITANIUM_INGOT =
-            sequencedIngredient("incomplete_titanium_ingot");
+    public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
+            .item("raw_titanium_ore", Item::new)
+            .register();
 
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
             .item("titanium_ingot", Item::new)
@@ -56,13 +59,16 @@ public class NorthstarItems {
             .register();
 
     //sand
-    public static final ItemEntry<Item> COMPRESSED_SAND_BAR = REGISTRATE
-            .item("compressed_sand_bar", Item::new)
-            .register();
+//    public static final ItemEntry<Item> COMPRESSED_SAND_BAR = REGISTRATE
+//            .item("compressed_sand_bar", Item::new)
+//            .register();
+//
+//    public static final ItemEntry<Item> COMPRESSSED_SAND_TILE = REGISTRATE
+//            .item("compressed_sand_tile", Item::new)
+//            .register();
 
-    public static final ItemEntry<Item> COMPRESSSED_SAND_TILE = REGISTRATE
-            .item("compressed_sand_tile", Item::new)
-            .register();
+
+
     public static final ItemEntry<Item> DURABLE_FABRIC = REGISTRATE
             .item("durable_fabric", Item::new)
             .register();
@@ -365,6 +371,35 @@ public class NorthstarItems {
             .tag(AllTags.AllItemTags.SANDPAPER.tag)
             .properties(p -> p.defaultDurability(512))
             .register();
+
+    //Chlorine
+    public static final ItemEntry<Item> SALT = REGISTRATE
+            .item("salt", Item::new)
+            .register();
+
+    //An alternative to chlorine (pre-electrolysis)
+    public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
+            .item("sodium_catalyst", Item::new)
+            .register();
+
+    //minerals
+    public static final ItemEntry<Item> RUITILE_CONCENTRATE = REGISTRATE
+            .item("rutile_concentrate", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> ZINC_DUST = REGISTRATE
+            .item("zinc_dust", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> MINERAL_DEPOSITS = REGISTRATE
+            .item("mineral_deposits", Item::new)
+            .register();
+
+    public static final RegistryEntry<BucketItem> TITANIUM_TETRACHLORIDE_BUCKET =
+            REGISTRATE.item("tetrachloride_bucket",
+                            props -> new BucketItem(() -> NorthstarFluids.TITANIUM_TETRACHLORIDE.getSource(),
+                                    props.stacksTo(1).craftRemainder(Items.BUCKET)))
+                    .register();
 
     public static void register() {
     }

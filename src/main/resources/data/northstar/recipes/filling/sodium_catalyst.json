@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "northstar:salt"
+    },
+    {
+      "amount": 3000,
+      "fluid": "minecraft:lava",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "northstar:sodium_catalyst"
+    }
+  ]
+}

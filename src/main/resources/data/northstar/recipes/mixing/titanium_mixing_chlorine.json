@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 500,
+      "fluid": "northstar:hydrocarbon"
+    },
+    {
+      "amount": 500,
+      "fluid": "northstar:chlorine"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    }
+  ],
+  "results": [
+    {
+      "amount": 2500,
+      "fluid": "northstar:tetrachloride"
+    }
+  ],
+  "heatRequirement": "superheated"
+}

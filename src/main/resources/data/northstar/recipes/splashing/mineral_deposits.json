@@ -1,0 +1,18 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "northstar:mineral_deposits"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.02,
+      "item": "northstar:salt"
+    },
+    {
+      "chance": 0.40,
+      "item": "northstar:rutile_concentrate"
+    }
+  ]
+}

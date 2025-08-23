@@ -61,11 +61,27 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
         while (processingTime >= 256) {
             processingTime -= 256;
 
+            /**
+             * Process water
+             */
             if (inputTank.getPrimaryHandler().getFluid().getFluid() == Fluids.WATER.getSource()) {
                 if (outputTankR.getPrimaryHandler().getFluidAmount() <= 998 && outputTankR.getPrimaryHandler().getFluidAmount() <= 993 && inputTank.getPrimaryHandler().getFluidAmount() >= 10) {
                     inputTank.getPrimaryHandler().drain(new FluidStack(Fluids.WATER.getSource(), 10), FluidAction.EXECUTE);
                     outputTankL.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.HYDROGEN.get().getSource(), 2), FluidAction.EXECUTE);
                     outputTankR.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.OXYGEN.get().getSource(), 7), FluidAction.EXECUTE);
+                } else if (processingTime >= 256) {
+                    processingTime %= 256; // we can't process anymore for this tick as the tank is full, just ignore the rest
+                }
+            }
+            /**
+             * Process brine
+             */
+            else if (inputTank.getPrimaryHandler().getFluid().getFluid() == NorthstarFluids.BRINE.getSource()) {
+                if (outputTankR.getPrimaryHandler().getFluidAmount() <= 998 && outputTankR.getPrimaryHandler().getFluidAmount() <= 993
+                        && inputTank.getPrimaryHandler().getFluidAmount() >= 10) {
+                    inputTank.getPrimaryHandler().drain(new FluidStack(NorthstarFluids.BRINE.getSource(), 10), FluidAction.EXECUTE);
+                    outputTankL.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.CHLORINE.get().getSource(), 2), FluidAction.EXECUTE);
+                    outputTankR.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.CHLORINE.get().getSource(), 2), FluidAction.EXECUTE);
                 } else if (processingTime >= 256) {
                     processingTime %= 256; // we can't process anymore for this tick as the tank is full, just ignore the rest
                 }

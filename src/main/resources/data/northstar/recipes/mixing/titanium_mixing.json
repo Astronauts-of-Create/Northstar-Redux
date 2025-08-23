@@ -1,0 +1,40 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 500,
+      "fluid": "northstar:hydrocarbon"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "fluid": "northstar:tetrachloride"
+    }
+  ],
+  "heatRequirement": "superheated"
+}

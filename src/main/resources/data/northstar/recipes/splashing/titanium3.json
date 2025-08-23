@@ -1,0 +1,14 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "northstar:unfinished_titanium"
+    }
+  ],
+  "processingTime": 1000,
+  "results": [
+    {
+      "item": "northstar:raw_titanium_ore"
+    }
+  ]
+}
