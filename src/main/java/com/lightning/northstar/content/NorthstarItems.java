@@ -34,9 +34,9 @@ public class NorthstarItems {
 
 
     //Titanium
-    public static final ItemEntry<Item> UNFINISHED_TITANIUM = REGISTRATE
-            .item("unfinished_titanium", Item::new)
-            .register();
+//    public static final ItemEntry<Item> UNFINISHED_TITANIUM = REGISTRATE
+//            .item("unfinished_titanium", Item::new)
+//            .register();
 
     public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
             .item("raw_titanium_ore", Item::new)
