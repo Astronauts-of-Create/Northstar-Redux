@@ -2,27 +2,17 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "northstar:mars_sand"
+      "item": "northstar:moon_sand"
     }
   ],
-  "processingTime": 200,
+  "processingTime": 500,
   "results": [
     {
       "chance": 0.25,
       "item": "northstar:mineral_deposits"
     },
     {
-      "count": 3,
-      "item": "northstar:salt"
-    },
-    {
-      "chance": 0.75,
-      "count": 5,
-      "item": "northstar:salt"
-    },
-    {
       "chance": 0.25,
-      "count": 3,
       "item": "northstar:salt"
     }
   ]
