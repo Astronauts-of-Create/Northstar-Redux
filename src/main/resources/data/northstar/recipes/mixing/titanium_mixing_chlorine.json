@@ -2,23 +2,29 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "amount": 500,
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "create:zinc_ingot"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "create:zinc_ingot"
+    },
+    {
+      "amount": 250,
       "fluid": "northstar:hydrocarbon"
     },
     {
-      "amount": 500,
+      "amount": 750,
       "fluid": "northstar:chlorine"
-    },
-    {
-      "item": "northstar:rutile_concentrate"
-    },
-    {
-      "item": "northstar:rutile_concentrate"
     }
   ],
   "results": [
     {
-      "amount": 2500,
+      "amount": 2000,
       "fluid": "northstar:tetrachloride"
     }
   ],

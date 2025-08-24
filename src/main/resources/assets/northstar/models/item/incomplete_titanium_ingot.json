@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "northstar:item/incomplete_titanium_ingot"
+    "layer0": "northstar:item/titanium_incomplete"
   }
 }

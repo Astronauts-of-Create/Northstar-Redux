@@ -8,21 +8,17 @@
   "processingTime": 200,
   "results": [
     {
-      "chance": 0.25,
-      "item": "northstar:mineral_deposits"
-    },
-    {
-      "count": 3,
-      "item": "northstar:salt"
+      "chance": 0.15,
+      "item": "northstar:rutile_concentrate"
     },
     {
       "chance": 0.75,
-      "count": 5,
+      "count": 4,
       "item": "northstar:salt"
     },
     {
       "chance": 0.25,
-      "count": 3,
+      "count": 2,
       "item": "northstar:salt"
     }
   ]

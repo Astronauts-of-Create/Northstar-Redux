@@ -2,18 +2,18 @@
   "type": "create:crushing",
   "ingredients": [
     {
-      "item": "northstar:moon_sand"
+      "item": "create:limestone"
     }
   ],
-  "processingTime": 500,
+  "processingTime": 1000,
   "results": [
     {
-      "chance": 0.02,
+      "chance": 0.20,
       "item": "northstar:rutile_concentrate"
     },
     {
-      "chance": 0.1,
-      "item": "northstar:salt"
+      "chance": 0.10,
+      "item": "northstar:rutile_concentrate"
     }
   ]
 }

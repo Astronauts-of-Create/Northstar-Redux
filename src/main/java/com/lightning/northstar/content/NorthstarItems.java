@@ -28,15 +28,14 @@ public class NorthstarItems {
     }
 
 
-    public static final ItemEntry<Item> OXYGEN_SEPARATOR = REGISTRATE
-            .item("oxygen_separator", Item::new)
-            .register();
-
-
     //Titanium
-//    public static final ItemEntry<Item> UNFINISHED_TITANIUM = REGISTRATE
-//            .item("unfinished_titanium", Item::new)
+
+//    public static final ItemEntry<Item> HOT_TITANIUM_INGOT = REGISTRATE
+//            .item("hot_titanium_ingot", Item::new)
 //            .register();
+
+    public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_TITANIUM_INGOT
+            = sequencedIngredient("incomplete_titanium_ingot");
 
     public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
             .item("raw_titanium_ore", Item::new)
@@ -54,9 +53,6 @@ public class NorthstarItems {
             .item("titanium_nugget", Item::new)
             .register();
 
-    public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
-            .item("volcanic_ash_item", Item::new)
-            .register();
 
     //sand
 //    public static final ItemEntry<Item> COMPRESSED_SAND_BAR = REGISTRATE
@@ -68,14 +64,20 @@ public class NorthstarItems {
 //            .register();
 
 
-
     public static final ItemEntry<Item> DURABLE_FABRIC = REGISTRATE
             .item("durable_fabric", Item::new)
             .register();
 
-    //combustion_chambers
+    public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
+            .item("volcanic_ash_item", Item::new)
+            .register();
+
     public static final ItemEntry<Item> ROCKET_COMBUSTION_CHAMBER = REGISTRATE
             .item("rocket_combustion_chamber", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> OXYGEN_SEPARATOR = REGISTRATE
+            .item("oxygen_separator", Item::new)
             .register();
 
     public static final ItemEntry<Item> HARDENED_PRECISION_MECHANISM = REGISTRATE
@@ -385,14 +387,6 @@ public class NorthstarItems {
     //minerals
     public static final ItemEntry<Item> RUITILE_CONCENTRATE = REGISTRATE
             .item("rutile_concentrate", Item::new)
-            .register();
-
-    public static final ItemEntry<Item> ZINC_DUST = REGISTRATE
-            .item("zinc_dust", Item::new)
-            .register();
-
-    public static final ItemEntry<Item> MINERAL_DEPOSITS = REGISTRATE
-            .item("mineral_deposits", Item::new)
             .register();
 
     public static final RegistryEntry<BucketItem> TITANIUM_TETRACHLORIDE_BUCKET =
