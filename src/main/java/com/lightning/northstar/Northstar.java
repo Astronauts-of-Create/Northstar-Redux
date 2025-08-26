@@ -11,6 +11,7 @@ import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.item.NorthstarTooltipModifier;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.OxygenStuff;
 import com.lightning.northstar.world.TemperatureStuff;
@@ -59,7 +60,9 @@ public class Northstar {
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID);
 
     static {
-        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2))).andThen(TooltipModifier.mapNull(KineticStats.create(item))));
+        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2)))
+                .andThen(new NorthstarTooltipModifier())
+                .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
     public Northstar(FMLJavaModLoadingContext modContext) {

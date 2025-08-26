@@ -23,21 +23,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
 
     public int airLevel;
     public int airTimer;
 
-    SmartFluidTankBehaviour tank;
-//    public Container container = new SimpleContainer(1) {
-//          public void setChanged() {
-//                 super.setChanged();
-//                 OxygenConcentratorBlockEntity.this.slotsChanged(this);
+    public SmartFluidTankBehaviour tank;
 
-    /// /          }
-//    };
-//    protected ItemStackHandler inventory;
     public OxygenConcentratorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
     }
@@ -48,48 +40,6 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
         tank = SmartFluidTankBehaviour.single(this, 10000);
         behaviours.add(tank);
     }
-
-//     public void slotsChanged(Container pInventory) {
-//         if (pInventory == this.container) {
-//             ItemStack item = container.getItem(0);
-//             if (container.getItem(0).is(NorthstarItemTags.OXYGEN_SOURCES.tag)) {
-//                 CompoundTag thing = item.getTag();
-//                 ListTag lore = new ListTag();
-//                 int currentOxy = thing.getInt("Oxygen");
-//                 System.out.println(currentOxy);
-//                 if(currentOxy < OxygenStuff.maximumOxy) {
-//                     int oxytarget = OxygenStuff.maximumOxy - currentOxy;
-//                     int newoxy = currentOxy;
-//                     if(this.tank.getPrimaryHandler().getFluidAmount() > oxytarget) {
-//                         newoxy += oxytarget;
-//                         System.out.println("oxytarget " + oxytarget);
-//                         thing.putInt("Oxygen", newoxy);
-//                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
-//                         item.getOrCreateTagElement("display").put("Lore", lore);
-//                         item.setTag(thing);
-//                         System.out.println(thing);
-//                         this.tank.getPrimaryHandler().drain(
-//                         new FluidStack(NorthstarFluids.OXYGEN.get(), oxytarget), FluidAction.EXECUTE);
-//                         return;
-//                     }else
-//                     {
-//                         newoxy += this.tank.getPrimaryHandler().getFluidAmount();
-//                         System.out.println("oxytarget " + oxytarget);
-//                         thing.putInt("Oxygen", newoxy);
-//                         lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newoxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))).toString()));
-//                         item.getOrCreateTagElement("display").put("Lore", lore);
-//                         item.setTag(thing);
-//                         System.out.println(thing);
-//                         this.tank.getPrimaryHandler().drain(
-//                         new FluidStack(NorthstarFluids.OXYGEN.get(), this.tank.getPrimaryHandler().getFluidAmount()), FluidAction.EXECUTE);
-//                         return;
-//                     }
-
-
-//                 }
-//             }
-//         }
-//     }
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {

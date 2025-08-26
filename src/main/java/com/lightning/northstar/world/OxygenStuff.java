@@ -268,13 +268,10 @@ public class OxygenStuff {
 
     public static void depleteOxy(ItemStack stack) {
         CompoundTag tag = stack.getTag();
-        ListTag lore = new ListTag();
         int oxy = tag.getInt("Oxygen");
         int newOxy = Mth.clamp(oxy - 1, 0, 5000);
-        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + newOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
         tag.remove("Oxygen");
         tag.putInt("Oxygen", newOxy);
-        stack.getOrCreateTagElement("display").put("Lore", lore);
     }
 
 }

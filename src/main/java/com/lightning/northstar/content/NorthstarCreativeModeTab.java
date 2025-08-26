@@ -60,9 +60,6 @@ public class NorthstarCreativeModeTab {
         ItemStack stack = new ItemStack(item);
         CompoundTag tag = stack.getOrCreateTag();
         tag.putInt("Oxygen", OxygenStuff.maximumOxy);
-        ListTag lore = new ListTag();
-        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + OxygenStuff.maximumOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
-        stack.getOrCreateTagElement("display").put("Lore", lore);
         event.accept(stack);
     }
 
