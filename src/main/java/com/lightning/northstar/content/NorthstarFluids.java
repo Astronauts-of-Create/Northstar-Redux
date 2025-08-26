@@ -72,6 +72,11 @@ public class NorthstarFluids {
             .tag(AllTags.forgeFluidTag("strawberry_ice_cream"))
             .register();
 
+    public static final FluidEntry<VirtualFluid> SODIUM_HYDROXIDE = REGISTRATE
+            .virtualFluid("sodium_hydroxide")
+            .lang("Sodium Hydroxide")
+            .tag(AllTags.forgeFluidTag("sodium_hydroxide"))
+            .register();
 
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE =

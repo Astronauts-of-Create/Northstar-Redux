@@ -81,7 +81,7 @@ public class NorthstarJei implements IModPlugin {
                         .build("freezing", FreezingCategory::new),
 
                 electrolysis = builder(ElectrolysisRecipe.class)
-                        .addRecipes(() -> ElectrolysisCategory.RECIPES)
+                        .addTypedRecipes(NorthstarRecipeTypes.ELECTROLYSIS)
                         .catalyst(NorthstarTechBlocks.ELECTROLYSIS_MACHINE::get)
                         .itemIcon(NorthstarTechBlocks.ELECTROLYSIS_MACHINE.get())
                         .emptyBackground(177, 70)

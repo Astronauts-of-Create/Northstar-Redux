@@ -5,10 +5,10 @@
       "item": "northstar:rutile_concentrate"
     },
     {
-      "item": "create:zinc_ingot"
+      "item": "northstar:rutile_concentrate"
     },
     {
-      "item": "northstar:rutile_concentrate"
+      "item": "create:zinc_ingot"
     },
     {
       "item": "create:zinc_ingot"
@@ -18,7 +18,7 @@
       "fluid": "northstar:hydrocarbon"
     },
     {
-      "amount": 750,
+      "amount": 1000,
       "fluid": "northstar:chlorine"
     }
   ],

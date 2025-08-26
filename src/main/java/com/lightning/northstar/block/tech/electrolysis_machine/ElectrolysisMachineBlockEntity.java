@@ -1,13 +1,13 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarFluids;
+import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.ChatFormatting;
@@ -15,13 +15,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,10 +32,13 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
             OUTPUT1 = new BehaviourType<>("Output1"),
             OUTPUT2 = new BehaviourType<>("Output2");
 
+    private static final Object ELECTROLYSIS_RECIPE_KEY = new Object();
+
     protected SmartFluidTankBehaviour inputTank;
     protected SmartFluidTankBehaviour outputTankL;
     protected SmartFluidTankBehaviour outputTankR;
     protected float processingTime;
+    protected Recipe<?> currentRecipe;
 
     public ElectrolysisMachineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -55,40 +58,33 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
     public void tick() {
         super.tick();
 
+        if (!ElectrolysisRecipe.match(this, currentRecipe)) {
+            currentRecipe = RecipeFinder.get(ELECTROLYSIS_RECIPE_KEY, level, this::matchStaticFilters)
+                    .stream()
+                    .filter(r -> ElectrolysisRecipe.match(this, r))
+                    .findFirst()
+                    .orElse(null);
+        }
+        if (currentRecipe == null) {
+            return;
+        }
+
+
         processingTime += Math.abs(speed);
 
-        // simple loop, should work fine unless someone tweaks the configuration to reach millions of RPM (please don't do that)
-        while (processingTime >= 256) {
-            processingTime -= 256;
+        int toProcess = (int) (processingTime / 256);
+        processingTime %= 256;
 
-            /**
-             * Process water
-             */
-            if (inputTank.getPrimaryHandler().getFluid().getFluid() == Fluids.WATER.getSource()) {
-                if (outputTankR.getPrimaryHandler().getFluidAmount() <= 998 && outputTankR.getPrimaryHandler().getFluidAmount() <= 993 && inputTank.getPrimaryHandler().getFluidAmount() >= 10) {
-                    inputTank.getPrimaryHandler().drain(new FluidStack(Fluids.WATER.getSource(), 10), FluidAction.EXECUTE);
-                    outputTankL.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.HYDROGEN.get().getSource(), 2), FluidAction.EXECUTE);
-                    outputTankR.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.OXYGEN.get().getSource(), 7), FluidAction.EXECUTE);
-                } else if (processingTime >= 256) {
-                    processingTime %= 256; // we can't process anymore for this tick as the tank is full, just ignore the rest
-                }
-            }
-            /**
-             * Process brine
-             */
-            else if (inputTank.getPrimaryHandler().getFluid().getFluid() == NorthstarFluids.BRINE.getSource()) {
-                if (outputTankR.getPrimaryHandler().getFluidAmount() <= 998 && outputTankR.getPrimaryHandler().getFluidAmount() <= 993
-                        && inputTank.getPrimaryHandler().getFluidAmount() >= 10) {
-                    inputTank.getPrimaryHandler().drain(new FluidStack(NorthstarFluids.BRINE.getSource(), 10), FluidAction.EXECUTE);
-                    outputTankL.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.CHLORINE.get().getSource(), 2), FluidAction.EXECUTE);
-                    outputTankR.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.CHLORINE.get().getSource(), 2), FluidAction.EXECUTE);
-                } else if (processingTime >= 256) {
-                    processingTime %= 256; // we can't process anymore for this tick as the tank is full, just ignore the rest
-                }
+        for (int i = 0; i < toProcess; i++) {
+            if (!ElectrolysisRecipe.apply(this, currentRecipe, false)) {
+                break;
             }
         }
     }
 
+    protected <C extends Container> boolean matchStaticFilters(Recipe<C> recipe) {
+        return recipe.getType() == NorthstarRecipeTypes.ELECTROLYSIS.getType();
+    }
 
     @Override
     protected void write(CompoundTag compound, boolean clientPacket) {

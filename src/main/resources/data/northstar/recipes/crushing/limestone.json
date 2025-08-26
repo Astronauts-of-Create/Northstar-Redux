@@ -5,14 +5,11 @@
       "item": "create:limestone"
     }
   ],
-  "processingTime": 1000,
+  "processingTime": 500,
   "results": [
     {
-      "chance": 0.20,
-      "item": "northstar:rutile_concentrate"
-    },
-    {
-      "chance": 0.10,
+      "chance": 0.5,
+      "count": 2,
       "item": "northstar:rutile_concentrate"
     }
   ]

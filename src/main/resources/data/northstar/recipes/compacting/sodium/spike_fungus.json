@@ -1,0 +1,22 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+
+    {
+      "item": "northstar:spike_fungus_block"
+    },
+    {
+      "item": "northstar:spike_fungus_block"
+    },
+    {
+      "item": "northstar:spike_fungus_block"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "fluid": "northstar:sodium_hydroxide"
+    }
+  ],
+  "heatRequirement": "heated"
+}

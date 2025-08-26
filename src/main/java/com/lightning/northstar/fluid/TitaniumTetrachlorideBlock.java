@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.FluidState;
 
 import java.util.function.Supplier;
 
@@ -30,6 +31,7 @@ public class TitaniumTetrachlorideBlock extends LiquidBlock {
 //    public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
 //        return true;
 //    }
+
 
     @Override
     public boolean isRandomlyTicking(BlockState state) {

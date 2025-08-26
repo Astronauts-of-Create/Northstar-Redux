@@ -10,10 +10,6 @@
     {
       "chance": 0.02,
       "item": "northstar:rutile_concentrate"
-    },
-    {
-      "chance": 0.1,
-      "item": "northstar:salt"
     }
   ]
 }
