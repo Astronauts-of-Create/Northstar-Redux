@@ -7,7 +7,6 @@ import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -56,9 +55,7 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
             i++;
         }
         for (FluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
-                    .setBackground(getRenderedSlot(), -1, -1)
-                    .addIngredients(ForgeTypes.FLUID_STACK, fluidIngredient.getMatchingFluidStacks());
+            addFluidSlot(builder, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19, fluidIngredient);
             i++;
         }
 
@@ -80,11 +77,7 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
         for (FluidStack fluidResult : recipe.getFluidResults()) {
             int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
             int yPosition = -19 * (i / 2) + 51;
-
-            builder
-                    .addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
-                    .setBackground(getRenderedSlot(), -1, -1)
-                    .addIngredient(ForgeTypes.FLUID_STACK, fluidResult);
+            addFluidSlot(builder, xPosition, yPosition, fluidResult);
             i++;
         }
     }
