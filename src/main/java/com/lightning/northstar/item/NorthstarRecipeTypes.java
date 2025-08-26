@@ -1,6 +1,5 @@
 package com.lightning.northstar.item;
 
-import com.google.common.collect.ImmutableSet;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisRecipe;
@@ -25,7 +24,6 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
 
 public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
@@ -93,19 +91,6 @@ public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
         return world.getRecipeManager()
                 .getRecipeFor(getType(), inv, world);
     }
-
-    public static final Set<ResourceLocation> RECIPE_DENY_SET =
-            ImmutableSet.of(ResourceLocation.fromNamespaceAndPath("occultism", "spirit_trade"), ResourceLocation.fromNamespaceAndPath("occultism", "ritual"));
-
-    /*public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
-        RecipeSerializer<?> serializer = recipe.getSerializer();
-        if (RECIPE_DENY_SET.contains(RegisteredObjects.getKeyOrThrow(serializer)))
-            return true;
-        return recipe.getId()
-                .getPath()
-                .endsWith("_manual_only");
-    }*/
-
 
     private static class Registers {
         private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Northstar.MOD_ID);

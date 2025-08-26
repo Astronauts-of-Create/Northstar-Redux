@@ -11,6 +11,7 @@ import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.item.NorthstarTooltipModifier;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.OxygenStuff;
 import com.lightning.northstar.world.TemperatureStuff;
@@ -25,6 +26,8 @@ import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -37,6 +40,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
@@ -55,7 +60,9 @@ public class Northstar {
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID);
 
     static {
-        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2))).andThen(TooltipModifier.mapNull(KineticStats.create(item))));
+        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2)))
+                .andThen(new NorthstarTooltipModifier())
+                .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
     public Northstar(FMLJavaModLoadingContext modContext) {

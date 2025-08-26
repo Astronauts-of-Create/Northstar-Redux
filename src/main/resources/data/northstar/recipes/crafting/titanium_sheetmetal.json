@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "northstar:titanium_sheet"
+    }
+  },
+  "result": {
+    "item": "northstar:titanium_sheetmetal",
+    "count": 4
+  }
+}

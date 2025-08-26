@@ -28,18 +28,14 @@ public class NorthstarItems {
     }
 
 
+
     //Titanium
-
-//    public static final ItemEntry<Item> HOT_TITANIUM_INGOT = REGISTRATE
-//            .item("hot_titanium_ingot", Item::new)
-//            .register();
-
     public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_TITANIUM_INGOT
             = sequencedIngredient("incomplete_titanium_ingot");
 
     public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
             .item("raw_titanium_ore", Item::new)
-            .register();
+           .register();
 
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
             .item("titanium_ingot", Item::new)

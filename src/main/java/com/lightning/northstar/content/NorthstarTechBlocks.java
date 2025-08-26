@@ -251,8 +251,8 @@ public class NorthstarTechBlocks {
             .lang("Oxygen Detector")
             .register();
 
-    public static final BlockEntry<SpaceDoorBlock> IRON_SPACE_DOOR = REGISTRATE
-            .block("iron_space_door", p -> new SpaceDoorBlock(p, BlockSetType.IRON, false))
+    public static final BlockEntry<SpaceDoorBlock> TITANIUM_SPACE_DOOR = REGISTRATE
+            .block("titanium_space_door", p -> new SpaceDoorBlock(p, BlockSetType.IRON, false))
             .transform(BuilderTransformers.slidingDoor("train"))
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
                     .sound(SoundType.NETHERITE_BLOCK)
