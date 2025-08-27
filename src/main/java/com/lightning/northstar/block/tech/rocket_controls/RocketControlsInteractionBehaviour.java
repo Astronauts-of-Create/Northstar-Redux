@@ -4,9 +4,9 @@ import com.google.common.base.Objects;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,7 +40,7 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
             return true;
         } else {//If all players are not seated,return false
             Minecraft.getInstance().player.displayClientMessage(
-                    Lang.translateDirect("contraption.controls.sit_down", rce.getContraptionName()), true);
+                    Component.translatable("northstar.contraption.controls.sit_down", rce.getContraptionName()), true);
         }
         return false;
     }

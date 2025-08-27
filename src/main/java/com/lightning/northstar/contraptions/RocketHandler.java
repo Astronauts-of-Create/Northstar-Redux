@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraptions.packets.RocketControlPacket;
-import com.lightning.northstar.mixinInterfaces.EntityMixin_I;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
@@ -173,7 +172,7 @@ public class RocketHandler {
         //Change rocket dimension
         System.out.println("Changing dimension of (ship): " + rocket);
         Entity newRocket = changeDimensionCustom(destLevel, rocket, new PortalForcer(destLevel), seatMap, colliders, rocket.getContraption(), rocket, controller);
-        ((EntityMixin_I) newRocket).setRocketPassengerOffsets(shipOffsetMap);  //Make sure we dont lose the offset map
+        newRocket.setRocketPassengerOffsets(shipOffsetMap);  //Make sure we dont lose the offset map
         eventTickNumberCheck = eventTickNumber + 70;
     }
 
@@ -185,7 +184,7 @@ public class RocketHandler {
     private static void loadEntityData(Entity passenger, CompoundTag nbt, Map<UUID, Vec3> shipOffsetMap) {
         passenger.load(nbt); // restores same UUID + your custom data
         if (shipOffsetMap == null ||!shipOffsetMap.containsKey(passenger.getUUID())) {
-            Northstar.LOGGER.warn("Passenger " + passenger + " DOES NOT has a ship offset");
+            Northstar.LOGGER.warn("Passenger {} DOES NOT has a ship offset", passenger);
         }
     }
 

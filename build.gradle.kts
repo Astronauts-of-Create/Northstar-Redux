@@ -20,6 +20,7 @@ architectury {
 }
 
 loom {
+    accessWidenerPath = rootProject.file("src/main/resources/northstar.accessWidener")
     forge {
         mixinConfig("northstar.mixins.json")
     }

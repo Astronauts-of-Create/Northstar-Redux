@@ -53,7 +53,7 @@ public class RocketControlsClientHandler {
                     Lang.translateDirect("contraption.controls.start_controlling", rce.getContraptionName()), true);
         } else {
             Minecraft.getInstance().player.displayClientMessage(
-                    Lang.translateDirect("contraption.controls.rocket_tut").withStyle(ChatFormatting.AQUA), true);
+                    Component.translatable("northstar.contraption.controls.rocket_tut").withStyle(ChatFormatting.AQUA), true);
         }
     }
 
@@ -93,10 +93,8 @@ public class RocketControlsClientHandler {
             //Sync our visual launch time with the clients side (We dont want the number to fluctuate too much)
             if (Math.abs(rce.getLaunchTime() - launchtime) > 10) launchtime = rce.getLaunchTime();
             launchtime--;
-            if (launchtime % 20 == 0
-                    || launchtime == LAUNCH_COUNTDOWN_TIME
-                    || launchtime == 0) {
-                player.displayClientMessage(Component.literal("T-" + String.valueOf(launchtime / 20)).withStyle(ChatFormatting.AQUA), true);
+            if (launchtime == LAUNCH_COUNTDOWN_TIME || launchtime % 20 == 0) {
+                player.displayClientMessage(Component.literal("T-" + (launchtime / 20)).withStyle(ChatFormatting.AQUA), true);
                 player.level().playSound(player, player.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.get(), SoundSource.BLOCKS, 10, launchtime / 20 == 0 ? 10 : 1);
             }
         }
@@ -105,9 +103,9 @@ public class RocketControlsClientHandler {
             if (!rce.getControllingPlayer().isEmpty()) {
                 if (rce.getControllingPlayer().get() == player.getUUID()) {
                     if (rce.auto_land_mode) {
-                        player.displayClientMessage(Lang.translateDirect("contraption.controls.landing_norification").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(Component.translatable("northstar.contraption.controls.landing_notification").withStyle(ChatFormatting.RED), true);
                     } else {
-                        player.displayClientMessage(Lang.translateDirect("contraption.controls.landing_warning").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(Component.translatable("northstar.contraption.controls.landing_warning").withStyle(ChatFormatting.RED), true);
                     }
                 }
             }
