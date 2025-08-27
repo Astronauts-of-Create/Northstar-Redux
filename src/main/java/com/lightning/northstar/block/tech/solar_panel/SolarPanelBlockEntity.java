@@ -14,6 +14,10 @@ import java.util.List;
 
 public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
 
+    // 1 large water wheel can spin a mill at 128 (half) speed before it overstresses
+    // 22 torque can spin 2 grinders at full speed before it overstresses
+    private final static float TORQUE = (float) 22;
+
     public int sunlightScore;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -41,12 +45,11 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     public int getSunlightAtPosition(BlockPos pos) {
-        if (level.isNight()) {
+        if (level.isNight())
             return 0;
-        }
         if (level.getRawBrightness(pos.above(), -15) >= 16)
             return (int) (level.getRawBrightness(pos.above(), -15) * NorthstarPlanets.getSunMultiplier(level.dimension()));
-        else return 0;
+        return 0;
     }
 
     @Override
@@ -62,10 +65,7 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
 
     @Override
     public float getGeneratedSpeed() {
-        if (level == null)
-            return Mth.clamp(sunlightScore, -1, 1) * 8 / getSize();
-        else
-            return (float) ((Mth.clamp(sunlightScore, -1, 1) * 8 / getSize()) * NorthstarPlanets.getSunMultiplier(level.dimension()));
+        return (Mth.clamp(sunlightScore, -1, 1) * TORQUE) * NorthstarPlanets.getSunMultiplier(level == null ? null : level.dimension());
     }
 
     @Override

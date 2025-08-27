@@ -7,6 +7,8 @@ import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.createmod.catnip.math.VecHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.ParticleStatus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -20,7 +22,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
-public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IMultiBlockEntityContainer{
+public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation, IMultiBlockEntityContainer {
 
     private static final int MAX_SIZE = 5;
 
@@ -71,7 +73,7 @@ public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggl
             updateConnectivity();
         if (level.isClientSide) {
             if (!isVirtual() && this.getBlockState().getValue(JetEngineBlock.BOTTOM))
-                spawnParticles(1);
+                spawnParticles();
             return;
         }
         if (lastKnownPos == null)
@@ -81,23 +83,16 @@ public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggl
             return;
         }
     }
-    protected void spawnParticles(double burstMult) {
-        if (level == null)
-            return;
-        boolean empty = level.getBlockState(worldPosition.above())
-                .getCollisionShape(level, worldPosition.above())
-                .isEmpty();
+
+    protected void spawnParticles() {
+        ParticleStatus status = Minecraft.getInstance().options.particles().get();
+        if (level == null || status != ParticleStatus.ALL) return;
         RandomSource r = level.getRandom();
-
-        Vec3 c = VecHelper.getCenterOf(worldPosition);
-        Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
-            .multiply(1, 0, 1));
-
-
-        double yMotion = empty ? .0125f : r.nextDouble() * .0125f;
-        if (r.nextInt(2) == 0)
-        level.addParticle(new ColdAirParticleData(), v.x, v.y, v.z, 0, yMotion, 0);
-
+        if (r.nextInt(8) == 0) {
+            Vec3 v = VecHelper.getCenterOf(worldPosition);
+            double yMotion = r.nextDouble() * .0125f;
+            level.addParticle(new ColdAirParticleData(), v.x, v.y, v.z, 0, yMotion, 0);
+        }
     }
 
     @Override
@@ -119,7 +114,7 @@ public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggl
     @Override
     public boolean isController() {
         return controller == null || worldPosition.getX() == controller.getX()
-            && worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
+                && worldPosition.getY() == controller.getY() && worldPosition.getZ() == controller.getZ();
     }
 
     @Override
@@ -177,6 +172,7 @@ public class JetEngineBlockEntity extends SmartBlockEntity implements IHaveGoggl
         }
         setChanged();
     }
+
     @Override
     public int getMaxLength(Direction.Axis longAxis, int width) {
         if (longAxis == Direction.Axis.Y)

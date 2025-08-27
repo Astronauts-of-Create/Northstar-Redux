@@ -12,8 +12,8 @@ public class RocketFlameParticle  extends SimpleAnimatedParticle {
 
     protected RocketFlameParticle(ClientLevel world, double x, double y, double z, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet sprite) {
         super(world, x, y, z, sprite, world.random.nextFloat() * 1.2f);
-        this.quadSize *= 0.75F;
-        this.lifetime = 20;
+        this.quadSize *= 0.8F;
+        this.lifetime = 18;
         this.scale(15F);
         this.setSize(6F, 6F);
         double x_off = random.nextInt(2) * (random .nextBoolean() ? -1 : 1) * 0.01;
