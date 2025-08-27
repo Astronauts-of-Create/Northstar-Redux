@@ -2,6 +2,7 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.block.*;
 import com.lightning.northstar.block.crops.*;
+import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlock;
 import com.lightning.northstar.data.NorthstarConfiguredFeatures;
 import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
@@ -21,12 +22,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.ToIntFunction;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+import static net.minecraft.world.item.Items.registerBlock;
 import static net.minecraft.world.level.block.Blocks.*;
 
 public class NorthstarBlocks {
@@ -2435,6 +2438,17 @@ public class NorthstarBlocks {
             .transform(axeOrPickaxe())
             .item()
             .transform(customItemModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<AutoLanderBlock> AUTO_LANDER = REGISTRATE
+            .block("auto_lander", AutoLanderBlock::new)
+            .initialProperties(SharedProperties::netheriteMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.METAL)
+                    .strength(8f, 8f)
+                    .noOcclusion()
+                    .isViewBlocking(NorthstarBlocks::never))
             .simpleItem()
             .register();
 

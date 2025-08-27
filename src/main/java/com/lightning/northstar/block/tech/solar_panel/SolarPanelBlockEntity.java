@@ -57,12 +57,18 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
         setChanged();
     }
 
+    //1 large water wheel can spin a mill at 128 (half) speed before it overstresses
+    //22 torque can spin 2 grinders at full speed before it overstresses
+    final static float TORQUE = (float) 22;//8 was original
+
     @Override
     public float getGeneratedSpeed() {
-        if(level == null)
-        return Mth.clamp(sunlightScore, -1, 1) * 8 / getSize();
-        else return (float) ((Mth.clamp(sunlightScore, -1, 1) * 8 / getSize()) * NorthstarPlanets.getSunMultiplier(level.dimension()));
+        if (level == null)
+            return Mth.clamp(sunlightScore, -1, 1) * TORQUE;
+        else
+            return (float) ((Mth.clamp(sunlightScore, -1, 1) * TORQUE) * NorthstarPlanets.getSunMultiplier(level.dimension()));
     }
+
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);

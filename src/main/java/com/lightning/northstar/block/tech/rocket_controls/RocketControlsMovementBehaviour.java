@@ -63,9 +63,9 @@ public class RocketControlsMovementBehaviour  implements MovementBehaviour {
         if (!(entity instanceof RocketContraptionEntity cce))
             return;
 
-        if (RocketControlsHandler.getContraption() == entity && RocketControlsHandler.getControlsPos() != null
-            && RocketControlsHandler.getControlsPos().equals(context.localPos)) {
-            Collection<Integer> pressed = RocketControlsHandler.currentlyPressed;
+        if (RocketControlsClientHandler.getContraption() == entity && RocketControlsClientHandler.getControlsPos() != null
+            && RocketControlsClientHandler.getControlsPos().equals(context.localPos)) {
+            Collection<Integer> pressed = RocketControlsClientHandler.currentlyPressed;
             angles.equipAnimation.chase(1, .2f, LerpedFloat.Chaser.EXP);
             angles.steering.chase((pressed.contains(3) ? 0.5 : 0) + (pressed.contains(2) ? -0.5 : 0), 0.2f, LerpedFloat.Chaser.EXP);
             float f = pressed.contains(4) ? -1f : 1f;

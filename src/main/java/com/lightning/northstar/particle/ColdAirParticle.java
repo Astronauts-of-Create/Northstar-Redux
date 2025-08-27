@@ -14,7 +14,7 @@ public class ColdAirParticle extends SimpleAnimatedParticle {
     protected ColdAirParticle(ClientLevel world, double x, double y, double z, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet sprite) {
         super(world, x, y, z, sprite, world.random.nextFloat() * .1f);
         this.quadSize *= 0.75F;
-        this.lifetime = 90;
+        this.lifetime = 70;
         this.scale(3F);
         this.setSize(0.25F, 0.25F);
         double x_off = random.nextInt(2) * (random.nextBoolean() ? -1 : 1) * 0.01;

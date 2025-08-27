@@ -23,7 +23,7 @@ public class RocketControlsInputPacket extends SimplePacketBase {
     private boolean stopControlling;
 
     public RocketControlsInputPacket(Collection<Integer> activatedButtons, boolean press, int contraptionEntityId,
-        BlockPos controlsPos, boolean stopControlling) {
+                                     BlockPos controlsPos, boolean stopControlling) {
         this.contraptionEntityId = contraptionEntityId;
         this.activatedButtons = activatedButtons;
         this.press = press;
@@ -67,11 +67,12 @@ public class RocketControlsInputPacket extends SimplePacketBase {
                 return;
             if (stopControlling) {
                 rce.stopControlling(controlsPos);
+                rce.cancelLaunch();
                 return;
             }
 
             if (rce.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
-                .closerThan(player.position(), 16))
+                    .closerThan(player.position(), 16))
 //                System.out.println("Key press Detected!");
                 RocketControlsServerHandler.receivePressed(world, rce, controlsPos, uniqueID, activatedButtons, press);
         });
