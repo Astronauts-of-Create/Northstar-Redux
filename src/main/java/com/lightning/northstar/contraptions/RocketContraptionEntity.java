@@ -6,7 +6,6 @@ import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraptions.packets.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraptions.packets.RocketContraptionSyncPacket;
-import com.lightning.northstar.mixinInterfaces.EntityMixin_I;
 import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -81,6 +80,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     int cooldown = 0;
     int cooldownLength = 100;
     private int maxSpeed = 5;
+    /** In ticks */
     private int launchtime = 0;
     public int visualEngineCount = 0;
     private boolean activeLaunch = false;
@@ -106,11 +106,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     private List<Entity> entitiesWithinContraption = new ArrayList<>();
 
     public Map<UUID, Vec3> getPassengerOffsets() {
-        return ((EntityMixin_I) this).getRocketPassengerOffsets();
+        return this.getRocketPassengerOffsets();
     }
 
     public void setPassengerOffsets(Map<UUID, Vec3> set) {
-        ((EntityMixin_I) this).setRocketPassengerOffsets(set);
+        this.setRocketPassengerOffsets(set);
     }
 
     public List<Entity> getEntitiesWithinContraption() {
@@ -500,6 +500,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return true;
     }
 
+    /** In ticks */
     public final static int LAUNCH_COUNTDOWN_TIME = 220;
 
     public void startLaunchSequence() {
@@ -607,8 +608,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     }
 
     public void makeEntityPassenger(Entity passenger) {
-        EntityMixin_I p = (EntityMixin_I) passenger;
-        p.pinToVehicle(this); //When we pin the entity, we force them to be a passenger and create a position offset to lock them down
+        passenger.pinToVehicle(this); //When we pin the entity, we force them to be a passenger and create a position offset to lock them down
     }
 
     public List<Entity> makeEntitiesPassengers(List<Entity> entitiesInContraption) {

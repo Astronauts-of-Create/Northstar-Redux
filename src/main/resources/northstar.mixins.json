@@ -7,6 +7,7 @@
     "BucketItemMixin",
     "CompassMixin",
     "ContraptionTestMixin",
+    "EntityMixin",
     "GravityStuffMixin",
     "MobMixin",
     "OxygenAndTempEntityMixin",
@@ -26,8 +27,7 @@
     "gravitystuff.AbstractMinecartGravityMixin",
     "gravitystuff.BoatGravityMixin",
     "gravitystuff.ItemEntityGravityMixin",
-    "gravitystuff.ThrowableProjectileGravityMixin",
-    "EntityMixin"
+    "gravitystuff.ThrowableProjectileGravityMixin"
   ],
   "client": [
     "LivingEntityRendererMixin",
