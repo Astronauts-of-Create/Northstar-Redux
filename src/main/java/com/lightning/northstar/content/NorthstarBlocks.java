@@ -181,8 +181,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<Block> IRON_SHEETMETAL = REGISTRATE
-            .block("iron_sheetmetal", Block::new)
+    public static final BlockEntry<Block> TITANIUM_SHEETMETAL = REGISTRATE
+            .block("titanium_sheetmetal", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -191,8 +191,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<SlabBlock> IRON_SHEETMETAL_SLAB = REGISTRATE
-            .block("iron_sheetmetal_slab", SlabBlock::new)
+    public static final BlockEntry<SlabBlock> TITANIUM_SHEETMETAL_SLAB = REGISTRATE
+            .block("titanium_sheetmetal_slab", SlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -201,8 +201,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<VerticalSlabBlock> IRON_SHEETMETAL_VERTICAL_SLAB = REGISTRATE
-            .block("iron_sheetmetal_vertical_slab", VerticalSlabBlock::new)
+    public static final BlockEntry<VerticalSlabBlock> TITANIUM_SHEETMETAL_VERTICAL_SLAB = REGISTRATE
+            .block("titanium_sheetmetal_vertical_slab", VerticalSlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -211,8 +211,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<Block> IRON_PLATING = REGISTRATE
-            .block("iron_plating", Block::new)
+    public static final BlockEntry<Block> TITANIUM_PLATING = REGISTRATE
+            .block("titanium_plating", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -221,8 +221,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<SlabBlock> IRON_PLATING_SLAB = REGISTRATE
-            .block("iron_plating_slab", SlabBlock::new)
+    public static final BlockEntry<SlabBlock> TITANIUM_PLATING_SLAB = REGISTRATE
+            .block("titanium_plating_slab", SlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -231,8 +231,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<VerticalSlabBlock> IRON_PLATING_VERTICAL_SLAB = REGISTRATE
-            .block("iron_plating_vertical_slab", VerticalSlabBlock::new)
+    public static final BlockEntry<VerticalSlabBlock> TITANIUM_PLATING_VERTICAL_SLAB = REGISTRATE
+            .block("titanium_plating_vertical_slab", VerticalSlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -241,8 +241,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<StairBlock> IRON_PLATING_STAIRS = REGISTRATE
-            .block("iron_plating_stairs", p -> new StairBlock(() -> IRON_PLATING.get().defaultBlockState(), p))
+    public static final BlockEntry<StairBlock> TITANIUM_PLATING_STAIRS = REGISTRATE
+            .block("titanium_plating_stairs", p -> new StairBlock(() -> TITANIUM_PLATING.get().defaultBlockState(), p))
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -251,8 +251,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<RotatedPillarBlock> IRON_PILLAR = REGISTRATE
-            .block("iron_pillar", RotatedPillarBlock::new)
+    public static final BlockEntry<RotatedPillarBlock> TITANIUM_PILLAR = REGISTRATE
+            .block("titanium_pillar", RotatedPillarBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -261,8 +261,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<GrateBlock> IRON_GRATE = REGISTRATE
-            .block("iron_grate", GrateBlock::new)
+    public static final BlockEntry<GrateBlock> TITANIUM_GRATE = REGISTRATE
+            .block("titanium_grate", GrateBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)

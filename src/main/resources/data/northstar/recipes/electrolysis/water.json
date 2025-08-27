@@ -1,0 +1,19 @@
+{
+  "type": "northstar:electrolysis",
+  "ingredients": [
+    {
+      "fluid": "minecraft:water",
+      "amount": 10
+    }
+  ],
+  "results": [
+    {
+      "fluid": "northstar:oxygen",
+      "amount": 7
+    },
+    {
+      "fluid": "northstar:hydrogen",
+      "amount": 2
+    }
+  ]
+}

@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "northstar:iron_plating_slab",
+          "name": "northstar:titanium_plating_slab",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -16,7 +16,7 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "northstar:iron_plating_slab",
+                  "block": "northstar:titanium_plating_slab",
                   "properties": {
                     "type": "double"
                   }

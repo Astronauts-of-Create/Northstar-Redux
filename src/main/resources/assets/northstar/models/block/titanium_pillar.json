@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "northstar:block/titanium_pillar_top",
+    "side": "northstar:block/titanium_pillar"
+  }
+}
