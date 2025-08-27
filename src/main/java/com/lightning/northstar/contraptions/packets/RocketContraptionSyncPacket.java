@@ -1,5 +1,6 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraptions.packets;
 
+import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
@@ -8,18 +9,21 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class RocketContraptionSyncPacket extends SimplePacketBase {
-    RocketContraptionEntity entity;
     public int contraptionEntityId;
-    Vec3 pos;
-    float lift_vel;
-    int launchtime;
-    boolean launched;
-    boolean landing;
-    boolean blasting;
-    boolean slowing;
-    boolean activeLaunch;
+    public Vec3 pos;
+    public float lift_vel;
+    public int launchtime;
+    public boolean launched;
+    public boolean landing;
+    public boolean blasting;
+    public boolean slowing;
+    public boolean activeLaunch;
+//    public boolean auto_land_mode;
 
-    public RocketContraptionSyncPacket(Vec3 syncedPos, float lift_vel2, int id,  int vLaunchtime, boolean vLaunched, boolean vLanding, boolean vBlasting, boolean vSlowing, boolean vActiveLaunch) {
+    public RocketContraptionSyncPacket(Vec3 syncedPos, float lift_vel2, int id,
+                                       int vLaunchtime, boolean vLaunched,
+                                       boolean vLanding, boolean vBlasting,
+                                       boolean vSlowing, boolean vActiveLaunch) {
         pos = syncedPos;
         lift_vel = lift_vel2;
         contraptionEntityId = id;
@@ -30,6 +34,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         slowing = vSlowing;
         activeLaunch = vActiveLaunch;
     }
+
     public RocketContraptionSyncPacket(FriendlyByteBuf buffer) {
         pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         lift_vel = buffer.readFloat();
@@ -40,6 +45,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         blasting = buffer.readBoolean();
         slowing = buffer.readBoolean();
         activeLaunch = buffer.readBoolean();
+//        auto_land_mode = buffer.readBoolean();
     }
 
     @Override
@@ -55,6 +61,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         buffer.writeBoolean(blasting);
         buffer.writeBoolean(slowing);
         buffer.writeBoolean(activeLaunch);
+//        buffer.writeBoolean(auto_land_mode);
     }
 
     @Override

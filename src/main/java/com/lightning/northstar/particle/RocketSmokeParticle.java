@@ -12,8 +12,8 @@ public class RocketSmokeParticle  extends SimpleAnimatedParticle {
 
     protected RocketSmokeParticle(ClientLevel world, double x, double y, double z, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet sprite) {
         super(world, x, y, z, sprite, world.random.nextFloat() * 1.2f);
-        this.quadSize *= 0.75F;
-        this.lifetime = 40;
+        this.quadSize *= 1.5F;
+        this.lifetime = 30;
         this.scale(5F);
         this.setSize(1.2F, 1.2F);
         double x_off = random.nextInt(2) * (random .nextBoolean() ? -1 : 1) * 0.1;
@@ -39,8 +39,8 @@ public class RocketSmokeParticle  extends SimpleAnimatedParticle {
         setSprite(sprites.get(index, 8));
     }
     public float getQuadSize(float pScaleFactor) {
-        float f = ((float)this.age + pScaleFactor) / (float)this.lifetime;
-        return this.quadSize * (1.0F - f * f * 0.5F);
+        //float f = ((float)this.age + pScaleFactor) / (float)this.lifetime;
+        return this.quadSize;// * (1.0F - f * f * 0.5F);
     }
 
     public int getLightColor(float pPartialTick) {

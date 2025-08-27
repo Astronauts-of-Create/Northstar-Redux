@@ -49,6 +49,7 @@ public class RocketContraption extends TranslatingContraption {
     private boolean rocket_station = false;
     public boolean hasControls = false;
     public boolean hasInterplanetaryNavigation = false;
+    public boolean hasAutoLander = false;
     private boolean has_fuel = false;
     public boolean isUsingTicket;
     private int fuelAmount = 0;
@@ -130,6 +131,10 @@ public class RocketContraption extends TranslatingContraption {
                     }
                 }
             }
+        }
+        if (blockState.is(NorthstarBlocks.AUTO_LANDER.get())) {
+            System.out.println("AUTO LANDER");
+            this.hasAutoLander = true;
         }
         if (blockState.is(NorthstarBlocks.INTERPLANETARY_NAVIGATOR.get())) {
             this.hasInterplanetaryNavigation = true;

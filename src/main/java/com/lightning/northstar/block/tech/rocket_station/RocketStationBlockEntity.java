@@ -227,13 +227,13 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
                 interplanetaryFlag = false;
             }
         }
-
         if (interplanetaryFlag) {
             contraption.owner.displayClientMessage(Component.literal
                     ("Interplanetary travel requires a Interplanetary Navigator!").withStyle(ChatFormatting.RED), false);
         }
-
+       //Assuming we have everything we need to assemble, let's do it
         if (engines >= requiredJets && hasStation && hasFuel && fuelAmount > (fuelCost + contraption.weightCost) && heatShielding >= heatCost && oxygenSealed && !interplanetaryFlag && contraption.hasControls && contraption.dest != null && contraption.dest != this.level.dimension()) {
+           //Create the new contraption entity
             System.out.println(engines);
             contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
             RocketContraptionEntity movedContraption =
@@ -242,6 +242,8 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
             AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
             movedContraption.destination = target;
+            //Assign auto lander
+            movedContraption.auto_land_mode = contraption.hasAutoLander;
             movedContraption.home = this.level.dimension();
             RocketHandler.ROCKETS.add(movedContraption);
             System.out.println(level);

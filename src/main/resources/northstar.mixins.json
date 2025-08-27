@@ -26,7 +26,8 @@
     "gravitystuff.AbstractMinecartGravityMixin",
     "gravitystuff.BoatGravityMixin",
     "gravitystuff.ItemEntityGravityMixin",
-    "gravitystuff.ThrowableProjectileGravityMixin"
+    "gravitystuff.ThrowableProjectileGravityMixin",
+    "EntityMixin"
   ],
   "client": [
     "LivingEntityRendererMixin",

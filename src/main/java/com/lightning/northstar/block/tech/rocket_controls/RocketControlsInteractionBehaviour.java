@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -19,8 +21,6 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
         if (!(contraptionEntity instanceof RocketContraptionEntity rce))
             return false;
 
-//        System.out.println("Huhh????");
-
         UUID currentlyControlling = rce.getControllingPlayer().orElse(null);
 
         if (currentlyControlling != null) {
@@ -29,14 +29,20 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
                 return true;
         }
 
-//        System.out.println("I LIVED!!!!!!!!!");
+        //If we cant start controlling, return false
         if (!contraptionEntity.startControlling(localPos, player))
             return false;
 
-        rce.setControllingPlayer(player.getUUID());
-        if (player.level().isClientSide)
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsHandler.startControlling(rce, localPos));
-        return true;
+        if (rce.isAllPlayersSeated()) {
+            rce.setControllingPlayer(player.getUUID());
+            if (player.level().isClientSide)
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsClientHandler.startControlling(rce, localPos));
+            return true;
+        } else {//If all players are not seated,return false
+            Minecraft.getInstance().player.displayClientMessage(
+                    Lang.translateDirect("contraption.controls.sit_down", rce.getContraptionName()), true);
+        }
+        return false;
     }
 
 }

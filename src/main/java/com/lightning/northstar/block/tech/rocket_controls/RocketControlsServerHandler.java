@@ -55,7 +55,6 @@ public class RocketControlsServerHandler {
 
     public static void receivePressed(LevelAccessor world, RocketContraptionEntity entity, BlockPos controlsPos,
         UUID uniqueID, Collection<Integer> collect, boolean pressed) {
-//        System.out.println("ALERTA!!! ALERTA!!!");
         Map<UUID, ControlsContext> map = receivedInputs.get(world);
 
         if (map.containsKey(uniqueID) && map.get(uniqueID).entity != entity)
