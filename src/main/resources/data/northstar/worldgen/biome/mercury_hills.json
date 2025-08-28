@@ -43,11 +43,11 @@
     [
       "northstar:mercury_crater_sparse",
       "northstar:mercury_crater_big_sparse",
+      "northstar:mercury_ore_titanium",
       "northstar:mercury_ore_tungsten",
       "northstar:mercury_ore_tungsten_buried",
       "northstar:mercury_ore_tungsten_small",
       "northstar:mercury_ore_iron",
-      "northstar:mercury_ore_titanium",
       "northstar:mercury_ore_diamond",
       "northstar:mercury_ore_copper",
       "northstar:mercury_ore_gold",
