@@ -130,7 +130,6 @@ public class LevelRendererMixin {
 //		 {RenderSystem.setupLevelDiffuseLighting(VENUS_DIFFUSE_1, VENUS_DIFFUSE_2, pPoseStack.last().pose());}
 //	}
 
-    @SuppressWarnings("resource")
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
     private void renderWeather(LightTexture pLightTexture, float pPartialTick, double pCamX, double pCamY, double pCamZ, CallbackInfo info) {
         if (this.minecraft != null) {
@@ -360,7 +359,6 @@ public class LevelRendererMixin {
 
     }
 
-    @SuppressWarnings("resource")
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
     private void tickRain(Camera pCamera, CallbackInfo info) {
         if (this.minecraft != null) {
@@ -598,7 +596,6 @@ public class LevelRendererMixin {
         return pBuilder.end();
     }
 
-    @SuppressWarnings("resource")
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
     private void renderSky(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
         ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
@@ -1672,7 +1669,6 @@ public class LevelRendererMixin {
 
     //THIS IS FOR THE OVERWORLD ONLY, OTHERWISE IT (probably) WONT BE CALLED
     // THIS IS FOR WHEN THE PLAYER IS **NOT** LEAVING THE PLANET
-    @SuppressWarnings("resource")
     @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getStarBrightness(F)F"), cancellable = true)
     private void renderSkyStarsOverworld(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
         if (this.minecraft == null) {
@@ -1725,8 +1721,6 @@ public class LevelRendererMixin {
         BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
     }
 
-
-    @SuppressWarnings("resource")
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
     public void renderClouds(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, double pCamX, double pCamY, double pCamZ, CallbackInfo info) {
         ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
