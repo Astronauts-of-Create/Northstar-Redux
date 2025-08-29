@@ -32,7 +32,6 @@
   "client": [
     "LivingEntityRendererMixin",
     "PlayerFrostEffectMixin",
-    "dimensionstuff.DimensionSpecialEffectsMixin",
     "dimensionstuff.FogRendererMixin",
     "dimensionstuff.LevelRendererMixin"
   ],

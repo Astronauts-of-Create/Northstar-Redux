@@ -5,11 +5,14 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHa
 import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
 import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
+import com.lightning.northstar.client.renderer.effect.MarsEffects;
+import com.lightning.northstar.client.renderer.effect.VenusEffects;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
+import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -18,6 +21,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
@@ -41,6 +45,12 @@ public class NorthstarClient {
         MenuScreens.register(NorthstarMenuTypes.TELESCOPE_MENU.get(), TelescopeScreen::new);
         MenuScreens.register(NorthstarMenuTypes.ASTRONOMY_TABLE_MENU.get(), AstronomyTableScreen::new);
         MenuScreens.register(NorthstarMenuTypes.ROCKET_STATION.get(), RocketStationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
+        event.register(NorthstarDimensions.MARS_EFFECTS, new MarsEffects());
+        event.register(NorthstarDimensions.VENUS_EFFECTS, new VenusEffects());
     }
 
     @SubscribeEvent
