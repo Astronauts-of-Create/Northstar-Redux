@@ -96,7 +96,8 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
         BlockState blockState = iceBox.getBlockState();
         if (!(blockState.getBlock() instanceof IceBoxBlock))
             return;
-        Direction direction = blockState.getValue(IceBoxBlock.FACING);
+
+        Direction direction = blockState.getOptionalValue(IceBoxBlock.FACING).orElse(Direction.DOWN);
         if (direction == Direction.DOWN)
             return;
         Vec3 directionVec = Vec3.atLowerCornerOf(direction.getNormal());

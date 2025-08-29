@@ -62,7 +62,6 @@ public class NorthstarPartialModels {
         }
     }
 
-
     private static PartialModel block(String path) {
         return PartialModel.of(Northstar.asResource("block/" + path));
     }
@@ -73,5 +72,4 @@ public class NorthstarPartialModels {
 
     public static void register() {
     }
-
 }

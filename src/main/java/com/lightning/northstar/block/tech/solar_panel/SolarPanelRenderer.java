@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
+import java.util.Optional;
+
 public class SolarPanelRenderer extends KineticBlockEntityRenderer<SolarPanelBlockEntity> {
 
     public SolarPanelRenderer(BlockEntityRendererProvider.Context context) {
@@ -19,10 +21,12 @@ public class SolarPanelRenderer extends KineticBlockEntityRenderer<SolarPanelBlo
 
     @Override
     protected void renderSafe(SolarPanelBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        if (VisualizationManager.supportsVisualization(be.getLevel()))
-            return;
+        if (VisualizationManager.supportsVisualization(be.getLevel()))            return;
 
-        Direction facing = be.getBlockState().getValue(SolarPanelBlock.HORIZONTAL_FACING);
+        Optional<Direction> optionalValue = be.getBlockState().getOptionalValue(SolarPanelBlock.HORIZONTAL_FACING);
+        if(optionalValue.isEmpty()) return;
+
+        Direction facing = optionalValue.get();
         SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT, be.getBlockState(), facing);
         standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
     }

@@ -23,20 +23,22 @@ public class ElectrolysisMachineRenderer extends KineticBlockEntityRenderer<Elec
     @Override
     protected void renderSafe(ElectrolysisMachineBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         if (!VisualizationManager.supportsVisualization(be.getLevel())) {
+            //Render a single shaft
             SuperByteBuffer shaft = CachedBuffers.partialFacingVertical(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.SOUTH);
             standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
         }
 
-        TankSegment tank = be.getBehaviour(SmartFluidTankBehaviour.INPUT).getTanks()[0];
-        float level = tank.getFluidLevel().getValue(partialTicks);
-        ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(tank.getRenderedFluid(),
-                2f / 16f,
-                2f / 16f,
-                2f / 16f,
-                2f / 16f,
-                2f / 16f + 12f / 16f * level,
-                14f / 16f,
-                buffer, ms, light, false, false);
+        //Dont render fluid for a block that is opaque
+//        TankSegment tank = be.getBehaviour(SmartFluidTankBehaviour.INPUT).getTanks()[0];
+//        float level = tank.getFluidLevel().getValue(partialTicks);
+//        ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(tank.getRenderedFluid(),
+//                2f / 16f,
+//                2f / 16f,
+//                2f / 16f,
+//                2f / 16f,
+//                2f / 16f + 12f / 16f * level,
+//                14f / 16f,
+//                buffer, ms, light, false, false);
     }
 
 }

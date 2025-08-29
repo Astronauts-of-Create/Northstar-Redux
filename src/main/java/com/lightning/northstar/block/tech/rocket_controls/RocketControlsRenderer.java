@@ -17,6 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Optional;
+
 public class RocketControlsRenderer extends SafeBlockEntityRenderer<RocketControlsBlockEntity> {
 
     public RocketControlsRenderer(BlockEntityRendererProvider.Context context) {
@@ -25,7 +27,7 @@ public class RocketControlsRenderer extends SafeBlockEntityRenderer<RocketContro
     public static void render(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices,
                               MultiBufferSource buffer, float equipAnimation, float firstLever, float secondLever) {
         BlockState state = context.state;
-        Direction facing = state.getValue(RocketControlsBlock.FACING);
+        Direction facing = state.getOptionalValue(RocketControlsBlock.FACING).orElse(Direction.UP);
 
         float hAngle = 180 + AngleHelper.horizontalAngle(facing);
         PoseStack ms = matrices.getModel();
@@ -53,11 +55,14 @@ public class RocketControlsRenderer extends SafeBlockEntityRenderer<RocketContro
     @Override
     protected void renderSafe(RocketControlsBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light, int overlay) {
         BlockState state = be.getBlockState();
-        Direction facing = state.getValue(RocketControlsBlock.FACING);
+
+        Optional<Direction> optionalValue = state.getOptionalValue(RocketControlsBlock.FACING);
+
+        if (optionalValue.isEmpty()) return;
+        Direction facing = optionalValue.get();
 
         float hAngle = 180 + AngleHelper.horizontalAngle(facing);
         double yOffset = Mth.lerp(1 * 1, -0.15f, 0.05f);
-
         float vAngle = (float) Mth.clamp(1 * 70 - 25, -60, 60);
         SuperByteBuffer lever = CachedBuffers.partial(NorthstarPartialModels.CONTROL_LEVER, state);
         ms.pushPose();

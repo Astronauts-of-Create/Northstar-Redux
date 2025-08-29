@@ -22,38 +22,36 @@ public class CircuitEngraverRenderer extends KineticBlockEntityRenderer<CircuitE
     }
 
     @Override
-    protected void renderSafe(CircuitEngraverBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-            int light, int overlay) {
-        
-
-        final Axis boxAxis = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis();
-        final BlockPos pos = be.getBlockPos();
-        float time = AnimationTickHolder.getRenderTime(be.getLevel());
-
-        for (Direction direction : Iterate.directions) {
-            final Axis axis = direction.getAxis();
-            if (boxAxis == axis)
-                continue;
-
-            SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
-            float offset = getRotationOffsetForPosition(be, pos, axis);
-            float angle = (time * be.getSpeed() * 3f / 10) % 360;
-
-            if (be.getSpeed() != 0 && be.hasSource()) {
-                BlockPos source = be.source.subtract(be.getBlockPos());
-                Direction sourceFacing = Direction.getNearest(source.getX(), source.getY(), source.getZ());
-                if (sourceFacing.getAxis() == direction.getAxis())
-                    angle *= sourceFacing == direction ? 1 : -1;
-                else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
-                    angle *= -1;
-            }
-
-            angle += offset;
-            angle = angle / 180f * (float) Math.PI;
-
-            kineticRotationTransform(shaft, be, axis, angle, light);
-            shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
-        }
+    protected void renderSafe(CircuitEngraverBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+//This render safe code is just rendering shafts in all directions, it crashes the game if direction block state is not found
+//        final Axis boxAxis = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis();
+//        final BlockPos pos = be.getBlockPos();
+//        float time = AnimationTickHolder.getRenderTime(be.getLevel());
+//
+//        for (Direction direction : Iterate.directions) {
+//            final Axis axis = direction.getAxis();
+//            if (boxAxis == axis)
+//                continue;
+//
+//            SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
+//            float offset = getRotationOffsetForPosition(be, pos, axis);
+//            float angle = (time * be.getSpeed() * 3f / 10) % 360;
+//
+//            if (be.getSpeed() != 0 && be.hasSource()) {
+//                BlockPos source = be.source.subtract(be.getBlockPos());
+//                Direction sourceFacing = Direction.getNearest(source.getX(), source.getY(), source.getZ());
+//                if (sourceFacing.getAxis() == direction.getAxis())
+//                    angle *= sourceFacing == direction ? 1 : -1;
+//                else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
+//                    angle *= -1;
+//            }
+//
+//            angle += offset;
+//            angle = angle / 180f * (float) Math.PI;
+//
+//            kineticRotationTransform(shaft, be, axis, angle, light);
+//            shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+//        }
     }
 
 }

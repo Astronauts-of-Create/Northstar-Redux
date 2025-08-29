@@ -20,8 +20,7 @@ public class OxygenGeneratorRenderer extends KineticBlockEntityRenderer<OxygenGe
 
     @Override
     protected void renderSafe(OxygenGeneratorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        if (VisualizationManager.supportsVisualization(be.getLevel()))
-            return;
+        if (VisualizationManager.supportsVisualization(be.getLevel()))  return;
 
         SuperByteBuffer shaft = CachedBuffers.partialFacingVertical(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.SOUTH);
         standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));

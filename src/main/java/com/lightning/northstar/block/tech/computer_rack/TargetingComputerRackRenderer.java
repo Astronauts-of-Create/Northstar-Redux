@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Optional;
+
 public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<TargetingComputerRackBlockEntity> {
 
     private static final PartialModel[] MODELS = {
@@ -26,8 +28,11 @@ public class TargetingComputerRackRenderer extends SmartBlockEntityRenderer<Targ
     @Override
     protected void renderSafe(TargetingComputerRackBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         BlockState blockState = be.getBlockState();
-        Direction facing = blockState.getValue(TargetingComputerRackBlock.HORIZONTAL_FACING).getOpposite();
+        Optional<Direction> optionalValue = blockState.getOptionalValue(
+                TargetingComputerRackBlock.HORIZONTAL_FACING);
+        if(optionalValue.isEmpty()) return;
 
+        Direction facing = optionalValue.get().getOpposite();
         ms.pushPose();
         super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
         VertexConsumer vc = buffer.getBuffer(RenderType.solid());

@@ -39,38 +39,61 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
-    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-        credentials {
-            username = project.property("github.packages.username") as? String
-            password = project.property("github.packages.password") as? String
-        }
-    }
+//    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
+//        credentials {
+//            username = project.property("github.packages.username") as? String
+//            password = project.property("github.packages.password") as? String
+//        }
+//    }
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
         }
     }
+    maven("https://api.modrinth.com/maven/")
+    maven("https://maven.parchmentmc.org")
 }
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
-    "forge"(libs.forge)
 
+    //Using mincraft mojang AND parchment mappings
+    //https://parchmentmc.org/docs/getting-started
+    //https://docs.architectury.dev/plugin/get_started
+    //https://ldtteam.jfrog.io/artifactory/parchmentmc-public/org/parchmentmc/data/parchment-1.20.1/2023.09.03/
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+    })
+
+    "forge"(libs.forge)
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
 
+    modImplementation(libs.embeddium)//Embeddium (required by oculus)
+
+    //Oculus
+    //https://github.com/Asek3/Oculus/blob/1.16.5/build.gradle
+
+    //So frustrating, but after hours of work still cant get oculus to run as a dependency
+    //Not sure why It still says missing jcpp after including it
+    // https://mvnrepository.com/artifact/org.anarres/jcpp
+    modImplementation("org.anarres:jcpp:1.4.14")
+    modImplementation(libs.oculus)
+
+    //Create
     modImplementation(variantOf(libs.create) { classifier("slim") })
     modImplementation(libs.ponder.forge)
     modImplementation(libs.registrate)
     modCompileOnly(libs.flywheel.forge.api)
     modRuntimeOnly(libs.flywheel.forge)
 
+    // Geckolib
     modImplementation(libs.geckolib.forge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
-    modImplementation(libs.jei.forge)
-    modImplementation(libs.copycats)
+    modImplementation(libs.jei.forge)// JEI
+    //modImplementation(libs.copycats)// Copycats
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
@@ -81,15 +104,17 @@ tasks.processResources {
 
 tasks.jar {
     manifest {
-        attributes(mapOf(
-            "Specification-Title" to "northstar",
-            "Specification-Vendor" to "Redstonneur1256",
-            "Specification-Version" to version,
-            "Implementation-Title" to project.name,
-            "Implementation-Version" to version,
-            "Implementation-Vendor" to "Redstonneur1256",
-            "Implementation-Timestamp" to Instant.now().toString()
-        ))
+        attributes(
+            mapOf(
+                "Specification-Title" to "northstar",
+                "Specification-Vendor" to "Redstonneur1256",
+                "Specification-Version" to version,
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to version,
+                "Implementation-Vendor" to "Redstonneur1256",
+                "Implementation-Timestamp" to Instant.now().toString()
+            )
+        )
     }
 }
 

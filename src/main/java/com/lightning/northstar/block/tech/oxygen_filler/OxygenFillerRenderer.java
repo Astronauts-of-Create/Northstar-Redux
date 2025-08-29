@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.oxygen_filler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
@@ -28,6 +29,10 @@ public class OxygenFillerRenderer extends SmartBlockEntityRenderer<OxygenFillerB
     protected void renderSafe(OxygenFillerBlockEntity oxyFiller, float partialTicks, PoseStack ms, MultiBufferSource buffer,
                               int light, int overlay) {
         super.renderSafe(oxyFiller, partialTicks, ms, buffer, light, overlay);
+
+        //TODO: SHould we cancel if using shader?
+//        if (VisualizationManager.supportsVisualization(oxyFiller.getLevel())) return;
+
         ms.pushPose();
 
         BlockPos pos = oxyFiller.getBlockPos();
@@ -35,7 +40,8 @@ public class OxygenFillerRenderer extends SmartBlockEntityRenderer<OxygenFillerB
         BlockState blockState = oxyFiller.getBlockState();
         if (!(blockState.getBlock() instanceof OxygenFillerBlock))
             return;
-        Direction direction = blockState.getValue(OxygenFillerBlock.HORIZONTAL_FACING);
+
+        Direction direction = blockState.getOptionalValue(OxygenFillerBlock.HORIZONTAL_FACING).orElse(Direction.DOWN);
         if (direction == Direction.DOWN) {
             return;
         }
