@@ -39,12 +39,12 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
-//    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-//        credentials {
-//            username = project.property("github.packages.username") as? String
-//            password = project.property("github.packages.password") as? String
-//        }
-//    }
+    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
+        credentials {
+            username = project.property("github.packages.username") as? String
+            password = project.property("github.packages.password") as? String
+        }
+    }
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
@@ -75,8 +75,11 @@ dependencies {
     //Oculus
     //https://github.com/Asek3/Oculus/blob/1.16.5/build.gradle
 
-    //So frustrating, but after hours of work still cant get oculus to run as a dependency
-    //Not sure why It still says missing jcpp after including it
+    /**
+     * Oculus is essential to the buildscript going forward because we need to ensure the mod runs properly
+     * and looks like it should with shaders
+     */
+     //java.lang.NoClassDefFoundError: org/anarres/cpp/PreprocessorListener
     // https://mvnrepository.com/artifact/org.anarres/jcpp
     modImplementation("org.anarres:jcpp:1.4.14")
     modImplementation(libs.oculus)
@@ -93,7 +96,7 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)// JEI
-    //modImplementation(libs.copycats)// Copycats
+    modImplementation(libs.copycats)// Copycats
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
