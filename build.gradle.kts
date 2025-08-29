@@ -75,10 +75,6 @@ dependencies {
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
 
-tasks.processResources {
-    outputs.upToDateWhen { false }
-}
-
 tasks.jar {
     manifest {
         attributes(mapOf(
@@ -99,6 +95,7 @@ tasks.processResources {
     filesMatching(listOf("META-INF/mods.toml")) {
         expand(buildProps)
     }
+    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {
