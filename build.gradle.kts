@@ -70,19 +70,14 @@ dependencies {
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
 
-    modImplementation(libs.embeddium)//Embeddium (required by oculus)
+    modRuntimeOnly(libs.embeddium)//Embeddium (required by oculus)
 
     //Oculus
     //https://github.com/Asek3/Oculus/blob/1.16.5/build.gradle
-
-    /**
-     * Oculus is essential to the buildscript going forward because we need to ensure the mod runs properly
-     * and looks like it should with shaders
-     */
-     //java.lang.NoClassDefFoundError: org/anarres/cpp/PreprocessorListener
+    //java.lang.NoClassDefFoundError: org/anarres/cpp/PreprocessorListener
     // https://mvnrepository.com/artifact/org.anarres/jcpp
-    modImplementation("org.anarres:jcpp:1.4.14")
-    modImplementation(libs.oculus)
+    runtimeOnly("org.anarres:jcpp:1.4.14")
+    modRuntimeOnly(libs.oculus)
 
     //Create
     modImplementation(variantOf(libs.create) { classifier("slim") })
@@ -95,8 +90,8 @@ dependencies {
     modImplementation(libs.geckolib.forge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
-    modImplementation(libs.jei.forge)// JEI
-    modImplementation(libs.copycats)// Copycats
+    modImplementation(libs.jei.forge)
+    modImplementation(libs.copycats)
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }

@@ -28,17 +28,16 @@ public class ElectrolysisMachineRenderer extends KineticBlockEntityRenderer<Elec
             standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
         }
 
-        //Dont render fluid for a block that is opaque
-//        TankSegment tank = be.getBehaviour(SmartFluidTankBehaviour.INPUT).getTanks()[0];
-//        float level = tank.getFluidLevel().getValue(partialTicks);
-//        ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(tank.getRenderedFluid(),
-//                2f / 16f,
-//                2f / 16f,
-//                2f / 16f,
-//                2f / 16f,
-//                2f / 16f + 12f / 16f * level,
-//                14f / 16f,
-//                buffer, ms, light, false, false);
+        TankSegment tank = be.getBehaviour(SmartFluidTankBehaviour.INPUT).getTanks()[0];
+        float level = tank.getFluidLevel().getValue(partialTicks);
+        ForgeCatnipServices.FLUID_RENDERER.renderFluidBox(tank.getRenderedFluid(),
+                2f / 16f,
+                2f / 16f,
+                2f / 16f,
+                2f / 16f,
+                2f / 16f + 12f / 16f * level,
+                14f / 16f,
+                buffer, ms, light, false, false);
     }
 
 }

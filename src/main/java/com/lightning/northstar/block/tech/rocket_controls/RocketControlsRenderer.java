@@ -27,7 +27,7 @@ public class RocketControlsRenderer extends SafeBlockEntityRenderer<RocketContro
     public static void render(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices,
                               MultiBufferSource buffer, float equipAnimation, float firstLever, float secondLever) {
         BlockState state = context.state;
-        Direction facing = state.getOptionalValue(RocketControlsBlock.FACING).orElse(Direction.UP);
+        Direction facing = state.getValue(RocketControlsBlock.FACING);
 
         float hAngle = 180 + AngleHelper.horizontalAngle(facing);
         PoseStack ms = matrices.getModel();

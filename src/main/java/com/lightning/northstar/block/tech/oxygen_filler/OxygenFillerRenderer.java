@@ -29,10 +29,6 @@ public class OxygenFillerRenderer extends SmartBlockEntityRenderer<OxygenFillerB
     protected void renderSafe(OxygenFillerBlockEntity oxyFiller, float partialTicks, PoseStack ms, MultiBufferSource buffer,
                               int light, int overlay) {
         super.renderSafe(oxyFiller, partialTicks, ms, buffer, light, overlay);
-
-        //TODO: SHould we cancel if using shader?
-//        if (VisualizationManager.supportsVisualization(oxyFiller.getLevel())) return;
-
         ms.pushPose();
 
         BlockPos pos = oxyFiller.getBlockPos();
