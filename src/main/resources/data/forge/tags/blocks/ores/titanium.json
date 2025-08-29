@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "northstar:moon_deep_titanium_ore",
+    "northstar:mars_deep_titanium_ore",
+    "northstar:venus_deep_titanium_ore",
+    "northstar:mercury_deep_titanium_ore"
+  ]
+}
