@@ -55,11 +55,19 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+    maven("https://maven.parchmentmc.org/") {
+        content {
+            includeGroupByRegex("org\\.parchmentmc.*")
+        }
+    }
 }
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+    })
     "forge"(libs.forge)
 
     annotationProcessor(libs.mixinextras.common)

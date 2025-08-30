@@ -30,8 +30,7 @@ public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<
     
     @Override
     protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-        builder.add(POWERED);
-        super.createBlockStateDefinition(builder);
+        super.createBlockStateDefinition(builder.add(POWERED));
     }
 
     @Override
@@ -46,8 +45,7 @@ public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<
 
     @Override
     public Axis getRotationAxis(BlockState state) {
-        return state.getValue(HORIZONTAL_FACING)
-            .getAxis();
+        return state.getValue(HORIZONTAL_FACING).getAxis();
     }
 
     @Override
