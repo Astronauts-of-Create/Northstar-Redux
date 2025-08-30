@@ -3,18 +3,24 @@ package com.lightning.northstar.block.tech.combustion_engine;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.content.NorthstarTags;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
+import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -25,12 +31,40 @@ import java.util.List;
 
 public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity implements IHaveGoggleInformation {
 
+    public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     public SmartFluidTankBehaviour tank;
     public boolean powered = false;
     public int powerLevel = 0;
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 10000));
+
+        ValueBoxTransform slot = new ValueBoxTransform.Sided() {
+            @Override
+            protected boolean isSideActive(BlockState state, Direction direction) {
+                return direction == Direction.UP;
+            }
+
+            @Override
+            public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
+                return VecHelper.voxelSpace(8, 12, 8);
+            }
+
+            @Override
+            protected Vec3 getSouthLocation() {
+                return Vec3.ZERO;
+            }
+        };
+
+        movementDirection = new ScrollOptionBehaviour<>(WindmillBearingBlockEntity.RotationDirection.class,
+                CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this, slot);
+        movementDirection.withCallback($ -> reActivateSource = true);
+        behaviours.add(movementDirection);
     }
 
     @Override
@@ -68,12 +102,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public float getGeneratedSpeed() {
-        return powered ? 128 * (powerLevel / 8f) : 0;
-    }
-
-    @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 10000));
+        return powered ? 128 * (powerLevel / 8f) * (movementDirection.getValue() == 1 ? 1 : -1) : 0;
     }
 
     @Override
