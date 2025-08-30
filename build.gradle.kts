@@ -50,6 +50,11 @@ repositories {
             includeGroup("curse.maven")
         }
     }
+    maven("https://api.modrinth.com/maven") {
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 dependencies {
@@ -71,6 +76,10 @@ dependencies {
 
     modImplementation(libs.jei.forge)
     modImplementation(libs.copycats)
+
+    modRuntimeOnly(libs.embeddium)
+    modRuntimeOnly(libs.oculus)
+    forgeRuntimeLibrary(libs.jcpp)
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
