@@ -101,12 +101,6 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, NorthstarBlockEntityTypes.TELESCOPE.get(),
-                TelescopeBlockEntity::tick);
-    }
-
-    @Override
     public Class<TelescopeBlockEntity> getBlockEntityClass() {
         return TelescopeBlockEntity.class;
     }

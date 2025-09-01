@@ -3,14 +3,13 @@ package com.lightning.northstar.block.tech.telescope;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TelescopePrintPacket extends BlockEntityConfigurationPacket<TelescopeBlockEntity> {
 
-    private String planetname;
+    private String planetName;
 
 
     public TelescopePrintPacket(FriendlyByteBuf buffer) {
@@ -23,18 +22,18 @@ public class TelescopePrintPacket extends BlockEntityConfigurationPacket<Telesco
 
     public static TelescopePrintPacket print(BlockPos pos, String strin) {
         TelescopePrintPacket packet = new TelescopePrintPacket(pos);
-        packet.planetname = strin;
+        packet.planetName = strin;
         return packet;
     }
 
     @Override
     protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeComponent(Component.literal(planetname));
+        buffer.writeUtf(planetName);
     }
 
     @Override
     protected void readSettings(FriendlyByteBuf buffer) {
-        planetname = buffer.readComponent().getString();
+        planetName = buffer.readUtf();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class TelescopePrintPacket extends BlockEntityConfigurationPacket<Telesco
         if (!(blockState.getBlock() instanceof TelescopeBlock))
             return;
 
-        be.print(planetname, player);
+        be.print(planetName, player);
     }
 
     @Override

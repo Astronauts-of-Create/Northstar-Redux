@@ -459,8 +459,8 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RocketStationMenu(pContainerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+        return RocketStationMenu.create(id, inv, this);
     }
 
     @Override

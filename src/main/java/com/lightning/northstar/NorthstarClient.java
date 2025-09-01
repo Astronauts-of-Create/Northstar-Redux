@@ -1,21 +1,16 @@
 package com.lightning.northstar;
 
-import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHandler;
-import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
-import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
 import com.lightning.northstar.client.renderer.effect.VenusEffects;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -38,13 +33,6 @@ public class NorthstarClient {
         modEventBus.addListener(NorthstarParticles::registerFactories);
 
         PonderIndex.addPlugin(new NorthstarPonderPlugin());
-    }
-
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        MenuScreens.register(NorthstarMenuTypes.TELESCOPE_MENU.get(), TelescopeScreen::new);
-        MenuScreens.register(NorthstarMenuTypes.ASTRONOMY_TABLE_MENU.get(), AstronomyTableScreen::new);
-        MenuScreens.register(NorthstarMenuTypes.ROCKET_STATION.get(), RocketStationScreen::new);
     }
 
     @SubscribeEvent

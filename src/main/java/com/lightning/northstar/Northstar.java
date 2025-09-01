@@ -81,7 +81,7 @@ public class Northstar {
         NorthstarRecipeTypes.register(modEventBus);
         NorthstarParticles.register(modEventBus);
         NorthstarSounds.register(modEventBus);
-        NorthstarMenuTypes.register(modEventBus);
+        NorthstarMenuTypes.register();
         NorthstarPlanets.register();
         NorthstarDimensions.register();
         NorthstarEntityTypes.register(modEventBus);

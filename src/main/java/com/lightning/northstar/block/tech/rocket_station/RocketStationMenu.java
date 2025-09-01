@@ -3,73 +3,62 @@ package com.lightning.northstar.block.tech.rocket_station;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.simibubi.create.foundation.gui.menu.MenuBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-public class RocketStationMenu extends AbstractContainerMenu  {
-    public RocketStationBlockEntity blockEntity;
-    public Container container;
-    public Inventory inv;
-    public boolean dataTooFar;
-    public boolean differentPlanets;
+public class RocketStationMenu extends MenuBase<RocketStationBlockEntity> {
+
     public int fuelCost;
     public ResourceKey<Level> target;
 
-    protected final ContainerLevelAccess access;
-    protected final Player player;
-
-
-    public RocketStationMenu(int id, Inventory inv, FriendlyByteBuf thingo) {
-        this(NorthstarMenuTypes.ROCKET_STATION.get(), id, inv.player.level().getBlockEntity(thingo.readBlockPos()), inv, ContainerLevelAccess.NULL, new SimpleContainer(1));
+    public RocketStationMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+        super(type, id, inv, extraData);
     }
 
-    public RocketStationMenu(int id, Inventory inv, RocketStationBlockEntity entity) {
-        this(NorthstarMenuTypes.ROCKET_STATION.get(), id, entity, inv, ContainerLevelAccess.NULL, entity.container);
+    public RocketStationMenu(MenuType<?> type, int id, Inventory inv, RocketStationBlockEntity contentHolder) {
+        super(type, id, inv, contentHolder);
     }
-     public RocketStationMenu(@Nullable MenuType<?> pType, int pContainerId, BlockEntity entity, Inventory pPlayerInventory, ContainerLevelAccess pAccess, Container container) {
-          super(pType, pContainerId);
-          this.access = pAccess;
-          this.player = pPlayerInventory.player;
-          this.blockEntity = (RocketStationBlockEntity) entity;
-          this.container = container;
 
-          this.addSlot(new Slot(container, 0, 24, 47));
+    public static AbstractContainerMenu create(int id, Inventory inv, RocketStationBlockEntity be) {
+        return new RocketStationMenu(NorthstarMenuTypes.ROCKET_STATION.get(), id, inv, be);
+    }
 
-          for(int i = 0; i < 3; ++i) {
-             for(int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-             }
-          }
+    @Override
+    protected RocketStationBlockEntity createOnClient(FriendlyByteBuf extraData) {
+        if (Minecraft.getInstance().level.getBlockEntity(extraData.readBlockPos()) instanceof RocketStationBlockEntity be) {
+            return be;
+        }
+        return null;
+    }
 
-          for(int k = 0; k < 9; ++k) {
-             this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
-          }
-       }
-    protected boolean mayPickup(Player pPlayer, boolean pHasStack) {
-//        ItemStack item1 = this.blockEntity.container.getItem(0);
-//        if(item1.getItem() == NorthstarItems.STAR_MAP.get() || item1.getItem() == NorthstarItems.RETURN_TICKET.get()) {
-//            return true;
-//        }
-//        else return false;
-        return true;
+    @Override
+    protected void initAndReadInventory(RocketStationBlockEntity contentHolder) {
+    }
+
+    @Override
+    protected void addSlots() {
+        addSlot(new Slot(contentHolder.container, 0, 24, 47));
+        addPlayerSlots(8, 84);
+    }
+
+    @Override
+    protected void saveData(RocketStationBlockEntity contentHolder) {
+
     }
 
     public int fuelCalc() {
-        String home = NorthstarPlanets.getPlanetName(this.blockEntity.getLevel().dimension());
+        String home = NorthstarPlanets.getPlanetName(contentHolder.getLevel().dimension());
         String targ = NorthstarPlanets.getPlanetName(target);
 
         int home_x = (int) NorthstarPlanets.getPlanetX(home);
@@ -80,7 +69,7 @@ public class RocketStationMenu extends AbstractContainerMenu  {
 
         int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
         dif = Mth.roundToward(dif, 100) / 20;
-        int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(this.blockEntity.getLevel().dimension()) + 1000;
+        int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(contentHolder.getLevel().dimension()) + 1000;
         if (dif != 0) {
 //            System.out.println(dif);
         }
@@ -88,41 +77,17 @@ public class RocketStationMenu extends AbstractContainerMenu  {
     }
 
     @Override
-    public void slotsChanged(Container pInventory) {
-        ItemStack item = container.getItem(0);
-        if (container.getItem(0).getItem() == NorthstarItems.STAR_MAP.get() || container.getItem(0).getItem() == NorthstarItems.RETURN_TICKET.get()) {
-            if(item.getTagElement("Planet") != null)
-            target = NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(item.getTagElement("Planet").toString()));
+    public void slotsChanged(Container inventory) {
+        ItemStack item = contentHolder.container.getItem(0);
+        if (contentHolder.container.getItem(0).getItem() == NorthstarItems.STAR_MAP.get() || contentHolder.container.getItem(0).getItem() == NorthstarItems.RETURN_TICKET.get()) {
+            if (item.getTagElement("Planet") != null)
+                target = NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(item.getTagElement("Planet").toString()));
         }
         fuelCost = fuelCalc();
-//        System.out.println(fuelCost);
-//        System.out.println(target);
-    }
-    public void assemble() {
-        if (blockEntity != null)
-        {blockEntity.queueAssembly(this.player);blockEntity.tick(); System.out.println("AYYYYY");}
-        else {System.out.println("UGHHH");}
-
-
-    }
-
-     protected void onTake(Player p_150474_, ItemStack p_150475_) {
-          this.blockEntity.container.setItem(0, ItemStack.EMPTY);}
-
-    protected boolean isValidBlock(BlockState pState) {
-        return false;
-    }
-
-    protected boolean shouldQuickMoveToAdditionalSlot(ItemStack pStack) {
-        return false;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return this.access.evaluate((p_39785_, p_39786_) -> !this.isValidBlock(p_39785_.getBlockState(p_39786_)) ? false : pPlayer.distanceToSqr((double)p_39786_.getX() + 0.5D, (double)p_39786_.getY() + 0.5D, (double)p_39786_.getZ() + 0.5D) <= 64.0D, true);
-    }
-    @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 
