@@ -6,6 +6,7 @@ import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorBlockE
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.content.*;
+import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.contraption.ContraptionType;
@@ -13,7 +14,6 @@ import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
-import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,9 +27,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -50,9 +49,8 @@ public class RocketContraption extends TranslatingContraption {
     public boolean hasControls = false;
     public boolean hasInterplanetaryNavigation = false;
     public boolean hasAutoLander = false;
-    private boolean has_fuel = false;
     public boolean isUsingTicket;
-    private int fuelAmount = 0;
+    private float fuelAmount = 0;
     private int jet_engines = 0;
     private int visual_jet_engines = 0;
     public float computingPower = 0;
@@ -89,24 +87,22 @@ public class RocketContraption extends TranslatingContraption {
         return true;
     }
 
-    public void burnFuel() {
-        IFluidHandler rocketFuels = storage.getFluids();
-        fuelCost = (int) ((int) weightCost + ((fuelCost - (fuelCost * computingPower))));
-        if (owner != null)
-            for (int slot = 0; slot < rocketFuels.getTanks(); slot++) {
-                if (NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.matches(rocketFuels.getFluidInTank(slot).getFluid()) && rocketFuels.getFluidInTank(slot).getAmount() > fuelCost) {
-                    rocketFuels.drain(fuelCost, FluidAction.EXECUTE);
+    public void burnFuel(Level level) {
+        IFluidHandler tanks = storage.getFluids();
+
+        float fuelToBurn = weightCost + fuelCost * (1 - computingPower);
+        for (int slot = 0; slot < tanks.getTanks(); slot++) {
+            FluidStack stack = tanks.getFluidInTank(slot);
+            FuelType fuel = FuelType.getFuelType(level.registryAccess(), stack.getFluid());
+            if (fuel != null && stack.getAmount() >= fuel.rocketMultiplier()) {
+                float toBurn = Math.min(fuelToBurn / fuel.rocketMultiplier(), stack.getAmount());
+
+                stack.shrink((int) toBurn);
+                fuelToBurn -= toBurn;
+                if (fuelToBurn < 1)
                     return;
-                }
-                if (NorthstarTags.NorthstarFluidTags.TIER_2_ROCKET_FUEL.matches(rocketFuels.getFluidInTank(slot).getFluid()) && rocketFuels.getFluidInTank(slot).getAmount() > fuelCost) {
-                    rocketFuels.drain(Math.round(fuelCost / 2f), FluidAction.EXECUTE);
-                    return;
-                }
-                if (NorthstarTags.NorthstarFluidTags.TIER_3_ROCKET_FUEL.matches(rocketFuels.getFluidInTank(slot).getFluid()) && rocketFuels.getFluidInTank(slot).getAmount() > fuelCost) {
-                    rocketFuels.drain(Math.round(fuelCost / 4f), FluidAction.EXECUTE);
-                    return;
-                }
             }
+        }
     }
 
     @Override
@@ -164,39 +160,17 @@ public class RocketContraption extends TranslatingContraption {
             }
             assembledJets.add(toLocalPos(pos));
         }
-        if (AllBlocks.FLUID_TANK.has(blockState)) {
-            FluidTankBlockEntity tank = (FluidTankBlockEntity) world.getBlockEntity(pos);
-            IFluidTank fluid = tank.getTankInventory();
-            if (NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.matches(fluid.getFluid().getFluid())) {
-                if (fluid.getFluidAmount() != 0)
-                    fuelAmount += fluid.getFluidAmount();
-                has_fuel = true;
+        if (world.getBlockEntity(pos) instanceof FluidTankBlockEntity tank && Float.isFinite(fuelAmount)) {
+            FluidTank tankInventory = tank.getTankInventory();
+            for (int i = 0; i < tankInventory.getTanks(); i++) {
+                FuelType fuel = FuelType.getFuelType(world.registryAccess(), tankInventory.getFluidInTank(i).getFluid());
+                if (fuel != null) {
+                    fuelAmount += tankInventory.getFluidAmount() * fuel.rocketMultiplier();
+                }
             }
-            if (NorthstarTags.NorthstarFluidTags.TIER_2_ROCKET_FUEL.matches(fluid.getFluid().getFluid())) {
-                if (fluid.getFluidAmount() != 0)
-                    fuelAmount += fluid.getFluidAmount() * 2;
-                has_fuel = true;
-            }
-            if (NorthstarTags.NorthstarFluidTags.TIER_3_ROCKET_FUEL.matches(fluid.getFluid().getFluid())) {
-                if (fluid.getFluidAmount() != 0)
-                    fuelAmount += fluid.getFluidAmount() * 4;
-                has_fuel = true;
-            }
-        }
-        if (blockState.is(AllBlocks.CREATIVE_FLUID_TANK.get())) {
-            CreativeFluidTankBlockEntity tank = (CreativeFluidTankBlockEntity) world.getBlockEntity(pos);
-            IFluidTank fluid = tank.getTankInventory();
-            if (NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.matches(fluid.getFluid().getFluid())) {
-                fuelAmount = Integer.MAX_VALUE;
-                has_fuel = true;
-            }
-            if (NorthstarTags.NorthstarFluidTags.TIER_2_ROCKET_FUEL.matches(fluid.getFluid().getFluid())) {
-                fuelAmount = Integer.MAX_VALUE;
-                has_fuel = true;
-            }
-            if (NorthstarTags.NorthstarFluidTags.TIER_3_ROCKET_FUEL.matches(fluid.getFluid().getFluid())) {
-                fuelAmount = Integer.MAX_VALUE;
-                has_fuel = true;
+
+            if (blockState.is(AllBlocks.CREATIVE_FLUID_TANK.get())) {
+                fuelAmount = Float.POSITIVE_INFINITY;
             }
         }
         if (!blockState.is(Blocks.AIR) && !blockState.is(Blocks.CAVE_AIR)) {
@@ -267,11 +241,7 @@ public class RocketContraption extends TranslatingContraption {
         return visual_jet_engines;
     }
 
-    public boolean hasFuel() {
-        return has_fuel;
-    }
-
-    public int fuelAmount() {
+    public float fuelAmount() {
         return fuelAmount;
     }
 

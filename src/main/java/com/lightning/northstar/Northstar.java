@@ -6,6 +6,7 @@ import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;
+import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.data.NorthstarDataGen;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
@@ -33,11 +34,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
@@ -66,8 +69,6 @@ public class Northstar {
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
         GeckoLib.initialize();
-        REGISTRATE.registerEventListeners(modEventBus);
-        modEventBus.addListener(this::onRegister);
 
         NorthstarTags.register();
         NorthstarCreativeModeTab.register(modEventBus);
@@ -95,11 +96,15 @@ public class Northstar {
 
         RocketHandler.register();
 
+        REGISTRATE.registerEventListeners(modEventBus);
+        modEventBus.addListener(this::onRegisterRegistries);
+        modEventBus.addListener(this::onRegister);
+
         NorthstarConfigs.register(modContext::registerConfig);
         modEventBus.addListener(this::onLoadConfig);
         modEventBus.addListener(this::onReloadConfig);
 
-        modEventBus.addListener(Northstar::init);
+        modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerSpawnPlacements);
         modEventBus.addListener(NorthstarDataGen::gatherData);
 
@@ -110,7 +115,11 @@ public class Northstar {
         NorthstarContraptionTypes.register();
     }
 
-    public static void init(FMLCommonSetupEvent event) {
+    private void onRegisterRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(NorthstarRegistries.FUEL, FuelType.CODEC, FuelType.CODEC);
+    }
+
+    private void init(FMLCommonSetupEvent event) {
         NorthstarPackets.registerPackets();
 
         event.enqueueWork(() -> {

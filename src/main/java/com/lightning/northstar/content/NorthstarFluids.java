@@ -110,7 +110,6 @@ public class NorthstarFluids {
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .source(ForgeFlowingFluid.Source::new)
-            .tag(NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.tag)
             .bucket()
             .build()
             .register();
@@ -143,11 +142,9 @@ public class NorthstarFluids {
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .source(ForgeFlowingFluid.Source::new)
-            .tag(NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.tag)
             .bucket()
             .build()
             .register();
-
 
     public static void register() {
     }
