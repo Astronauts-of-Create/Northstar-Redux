@@ -63,7 +63,8 @@ public class SpaceSuitLayerRenderer<T extends LivingEntity, M extends EntityMode
         ms.translate(0.5, 1.45, -0.5);
         ms.scale(-1, -1, 1);
 
-        helmet.light(light)
+        helmet.forEntityRender()
+                .light(light)
                 .renderInto(ms, buffer.getBuffer(renderType));
 
         ms.popPose();
