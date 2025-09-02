@@ -80,7 +80,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     int cooldown = 0;
     int cooldownLength = 100;
     private int maxSpeed = 5;
-    /** In ticks */
+    /**
+     * In ticks
+     */
     private int launchtime = 0;
     public int visualEngineCount = 0;
     private boolean activeLaunch = false;
@@ -95,8 +97,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     Map<Integer, CompoundTag> serialisedPassengers;
     public WeakReference<RocketContraptionEntity> entity;
     List<UUID> clientSide_entitiesThatMustBeReseated = null;
+    public byte dissasemblyTicks = 0;
 
-    public int getLaunchTime(){
+    public int getLaunchTime() {
         return launchtime;
     }
 
@@ -167,6 +170,17 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 //                System.out.println("Launchtime: " + launchtime);
                 launchtime--;
             }
+
+            if (dissasemblyTicks > 0) {
+                setDeltaMovement(0, 0, 0);
+                dissasemblyTicks--;
+                System.out.println("Dissasembling in " + dissasemblyTicks + " ticks");
+                if (!level().isClientSide && dissasemblyTicks == 0) {
+                    disassemble();
+                }
+                return;
+            }
+
             if (level().isClientSide) {
                 clientOffsetDiff *= .75f;
                 updateClientMotion();
@@ -236,9 +250,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
             } else {
                 if (this.tickCount % 40 == 0) { //Send a packet containing data from server to client every 40 ticks
-                    NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                            new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime,
-                                    launchingMode, landingMode, blasting, slowing, activeLaunch));
+                    writeSyncPacket();
                 }
                 if (this.landingMode) {
                     NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
@@ -323,7 +335,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 }
             }
 
-
             double prevAxisMotion = axisMotion;
             if (level().isClientSide) {
                 clientOffsetDiff *= .75f;
@@ -345,7 +356,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                                 level().addFreshEntity(new ItemEntity(level(), player.getX(), player.getY(), player.getZ(), returnTicket));
                             }
                         }
-                        disassemble();
+                        //If we're landing, move the rocket up so it doesn't clip into the ground
+                        if (this.landingMode) setPos(getX(), getY() + 1, getZ());
+                        stopAndDissasembleInTicks(20);
                         if (this.landingMode && isUsingTicket) {//Consume the ticket
                             RocketHandler.deleteTicket(level(), this.blockPosition());
                         }
@@ -372,6 +385,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 contraption.stop(level());
             slowing = false;
         }
+    }
+
+    private void writeSyncPacket() {
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+                new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime,
+                        launchingMode, landingMode, blasting, slowing, activeLaunch, dissasemblyTicks));
     }
 
 
@@ -406,7 +425,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         rce.blasting = packet.blasting;
         rce.slowing = packet.slowing;
         rce.activeLaunch = packet.activeLaunch;
-//        rce.auto_land_mode = packet.auto_land_mode;
+        rce.dissasemblyTicks = packet.dissasemblyTicks;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -500,7 +519,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return true;
     }
 
-    /** In ticks */
+    /**
+     * In ticks
+     */
     public final static int LAUNCH_COUNTDOWN_TIME = 220;
 
     public void startLaunchSequence() {
@@ -689,6 +710,21 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
         AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
                 new ContraptionBlockChangedPacket(this.getId(), localPos, newInfo.state()));
+    }
+
+    /**
+     * Disassembles the rocket in nTicks (max 128)
+     * @param nTicks
+     */
+    public void stopAndDissasembleInTicks(int nTicks) {
+        dissasemblyTicks = (byte) nTicks;
+        lift_vel = 0;
+        launchingMode = false;
+        landingMode = false;
+        blasting = false;
+        if (!level().isClientSide()) {
+            writeSyncPacket();
+        }
     }
 
     @Override

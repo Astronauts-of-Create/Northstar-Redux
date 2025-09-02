@@ -50,11 +50,24 @@ repositories {
             includeGroup("curse.maven")
         }
     }
+    maven("https://api.modrinth.com/maven") {
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
+    maven("https://maven.parchmentmc.org/") {
+        content {
+            includeGroupByRegex("org\\.parchmentmc.*")
+        }
+    }
 }
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+    })
     "forge"(libs.forge)
 
     annotationProcessor(libs.mixinextras.common)
@@ -72,13 +85,13 @@ dependencies {
     modImplementation(libs.jei.forge)
 //    modImplementation(libs.copycats)
 
+    modRuntimeOnly(libs.embeddium)
+    modRuntimeOnly(libs.oculus)
+    forgeRuntimeLibrary(libs.jcpp)
+
     modImplementation("curse.maven:advanced-xray-256256:4840340")
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
-}
-
-tasks.processResources {
-    outputs.upToDateWhen { false }
 }
 
 tasks.jar {
@@ -101,6 +114,7 @@ tasks.processResources {
     filesMatching(listOf("META-INF/mods.toml")) {
         expand(buildProps)
     }
+    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {

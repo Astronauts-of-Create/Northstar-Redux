@@ -8,7 +8,7 @@
     "L": {
       "item": "create:shaft"
     },
-    "S": {
+    "C": {
       "item": "northstar:circuit"
     },
     "T": {
@@ -18,9 +18,9 @@
   "pattern": [
     "TTT",
     "TTT",
-    " S ",
-    "ALA",
-    "ASA"
+    " L ",
+    "ACA",
+    "ALA"
   ],
   "result": {
     "count": 1,
