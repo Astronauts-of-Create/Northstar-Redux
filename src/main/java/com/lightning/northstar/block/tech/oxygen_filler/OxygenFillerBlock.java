@@ -21,14 +21,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-// TODO: this is NOT a kinetic block
 public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<OxygenFillerBlockEntity> {
 
     public OxygenFillerBlock(Properties properties) {
         super(properties);
+
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
                                  BlockHitResult hit) {
@@ -60,18 +60,8 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return IBE.super.newBlockEntity(pPos, pState);
-    }
-
-    @Override
     public Axis getRotationAxis(BlockState state) {
         return Axis.Y;
-    }
-
-    @Override
-    public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-        return face == Direction.DOWN;
     }
 
     @Override

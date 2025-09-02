@@ -9,11 +9,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
+public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> {
 
     private static final ResourceLocation TELESCOPE_TEXTURE = Northstar.asResource("textures/gui/telescope_gui.png");
     private static final ResourceLocation TELESCOPE_TEXTURE_SIDE = Northstar.asResource("textures/gui/telescope_gui_side.png");
@@ -55,9 +55,9 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
     private Inventory inv;
     public String selectedPlanet = null;
 
-    public TelescopeScreen(TelescopeMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
-        inv = pPlayerInventory;
+    public TelescopeScreen(TelescopeMenu menu, Inventory inv, Component title) {
+        super(menu, inv, title);
+        this.inv = inv;
 
         imageWidth = 300;
         imageHeight = 300;
@@ -74,7 +74,7 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
         IconButton printButton = new IconButton(x - 33, y + 200, AllIcons.I_ADD);
         printButton.withCallback(() -> {
             if (selectedPlanet != null) {
-                NorthstarPackets.getChannel().sendToServer(TelescopePrintPacket.print(menu.blockEntity.getBlockPos(), selectedPlanet));
+                NorthstarPackets.getChannel().sendToServer(TelescopePrintPacket.print(menu.contentHolder.getBlockPos(), selectedPlanet));
                 //System.out.println("WE'VE BEEN CLICKED, SCATTER!!!!!");
             }
         });
@@ -229,9 +229,13 @@ public class TelescopeScreen extends AbstractContainerScreen<TelescopeMenu> {
     }
 
     public boolean paperCheck() {
+        if (inv.player.isCreative()) {
+            return true;
+        }
+
         boolean flag = false;
 
-        if (menu.inv != null) {
+        if (inv != null) {
             for (int p = 0; p < 36; p++) {
                 ItemStack items = inv.getItem(p);
                 Item item = items.getItem();

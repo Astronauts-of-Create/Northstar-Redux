@@ -16,7 +16,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class OxygenConcentratorBlock extends HorizontalKineticBlock implements IBE<OxygenConcentratorBlockEntity> {
-       protected static final VoxelShape AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
+
+    protected static final VoxelShape AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
     public OxygenConcentratorBlock(Properties properties) {
         super(properties);
@@ -28,14 +29,14 @@ public class OxygenConcentratorBlock extends HorizontalKineticBlock implements I
 //        if (!pLevel.isClientSide()) {
 //            BlockEntity entity = pLevel.getBlockEntity(pPos);
 //            if(entity instanceof OxygenConcentratorBlockEntity) {
- //              NetworkHooks.openScreen(((ServerPlayer)pPlayer), (OxygenConcentratorBlockEntity)entity, pPos);
- //               
- //           } else {
- //               throw new IllegalStateException("Our Container provider is missing!");
- //           }
- //       }
- //       return InteractionResult.sidedSuccess(pLevel.isClientSide());
- //   }
+    //              NetworkHooks.openScreen(((ServerPlayer)pPlayer), (OxygenConcentratorBlockEntity)entity, pPos);
+    //
+    //           } else {
+    //               throw new IllegalStateException("Our Container provider is missing!");
+    //           }
+    //       }
+    //       return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    //   }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
@@ -46,6 +47,7 @@ public class OxygenConcentratorBlock extends HorizontalKineticBlock implements I
     public Axis getRotationAxis(BlockState state) {
         return Axis.Y;
     }
+
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return AABB;

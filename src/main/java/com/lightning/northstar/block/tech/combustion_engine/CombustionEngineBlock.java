@@ -31,11 +31,6 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return IBE.super.newBlockEntity(pPos, pState);
-    }
-
-    @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return state.getValue(HORIZONTAL_FACING).getOpposite() == face;
     }
@@ -46,8 +41,8 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return switch (pState.getValue(HORIZONTAL_FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(HORIZONTAL_FACING)) {
             case EAST, WEST -> SHAPE_EAST_WEST;
             default -> SHAPE_NORTH_SOUTH;
         };

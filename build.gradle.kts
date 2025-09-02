@@ -89,7 +89,7 @@ dependencies {
     modRuntimeOnly(libs.oculus)
     forgeRuntimeLibrary(libs.jcpp)
 
-    modImplementation("curse.maven:advanced-xray-256256:4840340")
+    //modImplementation("curse.maven:advanced-xray-256256:4840340")
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }

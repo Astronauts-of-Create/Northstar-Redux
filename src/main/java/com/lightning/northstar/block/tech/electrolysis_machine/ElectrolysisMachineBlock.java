@@ -14,6 +14,8 @@ public class ElectrolysisMachineBlock extends HorizontalKineticBlock implements 
 
     public ElectrolysisMachineBlock(Properties properties) {
         super(properties);
+
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override

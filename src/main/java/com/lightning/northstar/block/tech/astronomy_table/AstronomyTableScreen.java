@@ -16,20 +16,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTableMenu> implements ContainerListener {
     private static final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/astronomy_table.png");
-    private static final Component DIFFERENT_PLANETS_TEXT = Component.translatable("northstar.gui.astronomy_table.different_planets");
-    private static final Component CLOSE_DATA_TEXT = Component.translatable("northstar.gui.astronomy_table.close_data");
 
     public AstronomyTableScreen(AstronomyTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 
-    protected void subInit() {
-    }
-
     @Override
     protected void init() {
         super.init();
-        this.subInit();
         this.menu.addSlotListener(this);
     }
 
@@ -44,34 +38,17 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
         this.renderBackground(graphics);
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.disableBlend();
-        this.renderFg(graphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(graphics, pMouseX, pMouseY);
     }
 
-    protected void renderFg(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-
-    }
-
     @Override
-    protected void renderLabels(GuiGraphics graphics, int pX, int pY) {
-        RenderSystem.disableBlend();
-        super.renderLabels(graphics, pX, pY);
-        int j = 8453920;
-        Component component = null;
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
 
-        j = 16736352;
-        if (this.menu.dataTooFar) {
-            component = CLOSE_DATA_TEXT;
-        }
-        if (this.menu.differentPlanets) {
-            component = DIFFERENT_PLANETS_TEXT;
-        }
+        Component component = menu.errorMessage;
         if (component != null) {
-            int k = this.imageWidth - 8 - this.font.width(component) - 2;
-            graphics.fill(k - 2, 67, this.imageWidth - 8, 79, 1325400064);
-            graphics.drawString(font, component, k, 69, j, true);
+            graphics.drawString(font, component, 5, 15, 0xff6060, true);
         }
-
     }
 
     @Override

@@ -24,19 +24,15 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class RocketStationScreen extends AbstractContainerScreen<RocketStationMenu> implements ContainerListener {
 
-    private final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/rocket_station.png");
+    private static final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/rocket_station.png");
 
-    public RocketStationScreen(RocketStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
-    }
-
-    protected void subInit() {
+    public RocketStationScreen(RocketStationMenu menu, Inventory inv, Component title) {
+        super(menu, inv, title);
     }
 
     @Override
     protected void init() {
         super.init();
-        this.subInit();
         this.menu.addSlotListener(this);
     }
 
@@ -58,10 +54,10 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
     }
 
     protected void renderCost(GuiGraphics pPoseStack, float delta) {
-        this.menu.slotsChanged(this.menu.container);
+        this.menu.slotsChanged(this.menu.contentHolder.container);
         int x = ((width - (imageWidth + (imageWidth / 2))) / 2);
         int y = (height - (imageHeight + (imageHeight / 2))) / 2;
-        if (this.menu.blockEntity == null) {
+        if (this.menu.contentHolder == null) {
             System.out.println("Ruh roh");
         }
         if (this.menu.target != null)
@@ -77,7 +73,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         IconButton assemble = new IconButton(x + imageWidth - 10, y + imageHeight - 79, AllIcons.I_ADD);
         assemble.setToolTip(CreateLang.translateDirect("station.assemble_train"));
         assemble.withCallback(() -> {
-            NorthstarPackets.getChannel().sendToServer(RocketStationEditPacket.tryAssemble(menu.blockEntity.getBlockPos()));
+            NorthstarPackets.getChannel().sendToServer(RocketStationEditPacket.tryAssemble(menu.contentHolder.getBlockPos()));
             removed();
             onClose();
         });
@@ -91,22 +87,9 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
 
             pPoseStack.renderComponentTooltip(font, list, mouseX, mouseY);
         }
-
-    }
-
-    protected void assemble() {
-        if (this.menu != null) {
-            this.menu.assemble();
-        } else {
-            System.out.println("no block entity :(");
-        }
-        if (this.menu == null) {
-            System.out.println("no menu?? :(");
-        }
     }
 
     protected void renderFg(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-
     }
 
     @Override

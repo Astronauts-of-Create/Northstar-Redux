@@ -1,0 +1,16 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "mekanism:biofuel"
+    }
+  ],
+  "results": [
+    {
+      // yes, this is way lower than if you compacted items to liquid biofuel normally but otherwise mekanism biofuel would be really overpowered
+      "amount": 20,
+      "fluid": "northstar:biofuel"
+    }
+  ],
+  "heatRequirement": "heated"
+}

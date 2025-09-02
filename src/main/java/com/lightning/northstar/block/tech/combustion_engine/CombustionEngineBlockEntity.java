@@ -1,21 +1,26 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
-import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.data.FuelType;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
+import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -24,93 +29,89 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity implements IHaveGoggleInformation {
 
-    SmartFluidTankBehaviour tank;
-    boolean powered = false;
-    int powerLevel = 0;
+    public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
+    public SmartFluidTankBehaviour tank;
+    private float generatorSpeed;
+    private Fluid lastFluid;
+    private FuelType fuelType;
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 10000));
+
+        ValueBoxTransform slot = new ValueBoxTransform.Sided() {
+            @Override
+            protected boolean isSideActive(BlockState state, Direction direction) {
+                return direction == Direction.UP;
+            }
+
+            @Override
+            public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
+                return VecHelper.voxelSpace(8, 12, 8);
+            }
+
+            @Override
+            protected Vec3 getSouthLocation() {
+                return Vec3.ZERO;
+            }
+        };
+
+        movementDirection = new ScrollOptionBehaviour<>(WindmillBearingBlockEntity.RotationDirection.class,
+                CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this, slot);
+        movementDirection.withCallback($ -> reActivateSource = true);
+        behaviours.add(movementDirection);
+    }
+
     @Override
     public void tick() {
         super.tick();
-        int increment = 0;
-        powered = false;
-        Fluid fluid = tank.getPrimaryHandler().getFluid().getFluid();
-        int fluidamount = tank.getPrimaryHandler().getFluidAmount();
-        if (fluid.is(NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.tag)) {
-            if (fluidamount > 4) {
-                increment = 4;
-            } else {
-                increment = fluidamount;
-            }
-            powered = true;
-            powerLevel = 4;
-        } else if (fluid.is(NorthstarTags.NorthstarFluidTags.TIER_2_ROCKET_FUEL.tag)) {
-            if (fluidamount > 3) {
-                increment = 3;
-            } else {
-                increment = fluidamount;
-            }
-            powered = true;
-            powerLevel = 6;
-        } else if (fluid.is(NorthstarTags.NorthstarFluidTags.TIER_3_ROCKET_FUEL.tag)) {
-            if (fluidamount > 2) {
-                increment = 2;
-            } else {
-                increment = fluidamount;
-            }
-            powered = true;
-            powerLevel = 8;
-        }
-        tank.getPrimaryHandler().drain(increment, FluidAction.EXECUTE);
-        this.updateGeneratedRotation();
-    }
 
-    //1 large water wheel can spin a mill at 128 (half) speed before it overstresses
-    //10 torque can move 3 mills at full speed before overstressing
-    final static float TORQUE = 10; //128 was original
+        FluidStack fluid = tank.getPrimaryHandler().getFluid();
+        if (!fluid.getFluid().equals(lastFluid)) {
+            lastFluid = fluid.getFluid();
+            fuelType = FuelType.getFuelType(level.registryAccess(), lastFluid);
+        }
+
+        FuelType fuel = this.fuelType;
+        if (fuel == null) {
+            return;
+        }
+
+        if (fluid.getAmount() < fuel.combustionEngineEfficiency()) {
+            if (generatorSpeed != 0) {
+                generatorSpeed = 0;
+                updateGeneratedRotation();
+            }
+        } else if (generatorSpeed == 0) {
+            generatorSpeed = fuel.combustionEngineRpm();
+            updateGeneratedRotation();
+        }
+
+        tank.getPrimaryHandler().drain(fuel.combustionEngineEfficiency(), FluidAction.EXECUTE);
+    }
 
     @Override
     public float getGeneratedSpeed() {
-        return (powered ? 1 : 0) * TORQUE * (powerLevel / 8);
-    }
-
-    @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        tank = SmartFluidTankBehaviour.single(this, 10000);
-        behaviours.add(tank);
+        return generatorSpeed * (movementDirection.getValue() == 1 ? 1 : -1);
     }
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING))
-            return tank.getCapability()
-                    .cast();
-        tank.getCapability().cast();
+            return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }
 
     @Override
-    public void write(CompoundTag tag, boolean clientPacket) {
-        super.write(tag, clientPacket);
-    }
-
-    @Override
-    protected void read(CompoundTag tag, boolean clientPacket) {
-        super.read(tag, clientPacket);
-    }
-
-    @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.translate("gui.goggles.combustion_engine")
-                .forGoggles(tooltip);
+        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+
         FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
         if (!fluidStack.getFluid().getFluidType().isAir()) {
             CreateLang.fluidName(fluidStack)
@@ -121,6 +122,8 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }
+
+        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
         CreateLang.builder()
                 .add(CreateLang.number(fluidStack.getAmount())
                         .add(mb)
@@ -131,25 +134,6 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
 
-        float stressBase = calculateAddedStressCapacity();
-        float speed = getTheoreticalSpeed();
-        if (speed != getGeneratedSpeed() && speed != 0)
-            stressBase *= getGeneratedSpeed() / speed;
-        speed = Math.abs(speed);
-
-        float stressTotal = stressBase * speed;
-
-        CreateLang.translate("tooltip.capacityProvided")
-                .style(ChatFormatting.GRAY)
-                .forGoggles(tooltip);
-
-        CreateLang.number(stressTotal)
-                .translate("generic.unit.stress")
-                .style(ChatFormatting.AQUA)
-                .space()
-                .add(CreateLang.translate("gui.goggles.at_current_speed")
-                        .style(ChatFormatting.DARK_GRAY))
-                .forGoggles(tooltip, 1);
         return true;
     }
 

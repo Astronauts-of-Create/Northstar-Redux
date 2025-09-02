@@ -6,40 +6,19 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AstronomyTableBlockEntity extends BlockEntity implements MenuProvider  {
 
-    protected final ContainerData data;
-
-    public AstronomyTableBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
-        super(pType, pPos, pBlockState);
-        this.data = new ContainerData() {
-
-            @Override
-            public int get(int pIndex) {
-                return 0;
-            }
-
-            @Override
-            public void set(int pIndex, int pValue) {
-                return;
-            }
-
-            @Override
-            public int getCount() {
-                // TODO Auto-generated method stub
-                return 0;
-            }
-            ;};
+    public AstronomyTableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new AstronomyTableMenu(pContainerId, pPlayerInventory,  this.data);
+    public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+        return AstronomyTableMenu.create(id, inv, this);
     }
 
     @Override
