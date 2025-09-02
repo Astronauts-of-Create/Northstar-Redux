@@ -1,5 +1,6 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraptions.packets;
 
+import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
@@ -8,12 +9,13 @@ import net.minecraftforge.network.NetworkEvent.Context;
 
 public class RocketContraptionQuickSyncPacket extends SimplePacketBase {
     public int contraptionEntityId;
-    boolean slowing;
+    public boolean slowing;
 
     public RocketContraptionQuickSyncPacket(boolean vActiveLaunch, int id) {
         slowing = vActiveLaunch;
         contraptionEntityId = id;
     }
+
     public RocketContraptionQuickSyncPacket(FriendlyByteBuf buffer) {
         slowing = buffer.readBoolean();
         contraptionEntityId = buffer.readInt();

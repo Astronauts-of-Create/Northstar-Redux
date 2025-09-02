@@ -7,6 +7,7 @@
     "BucketItemMixin",
     "CompassMixin",
     "ContraptionTestMixin",
+    "EntityMixin",
     "GravityStuffMixin",
     "MobMixin",
     "OxygenAndTempEntityMixin",

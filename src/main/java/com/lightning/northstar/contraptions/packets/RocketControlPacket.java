@@ -1,5 +1,6 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraptions.packets;
 
+import com.lightning.northstar.contraptions.RocketHandler;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;

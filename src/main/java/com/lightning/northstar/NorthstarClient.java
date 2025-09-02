@@ -1,7 +1,7 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
-import com.lightning.northstar.block.tech.rocket_controls.RocketControlsHandler;
+import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHandler;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
 import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
@@ -70,7 +70,7 @@ public class NorthstarClient {
         @SubscribeEvent
         public static void onTick(ClientTickEvent event) {
             if (event.phase == Phase.START) {
-                RocketControlsHandler.tick();
+                RocketControlsClientHandler.tick();
             }
         }
 

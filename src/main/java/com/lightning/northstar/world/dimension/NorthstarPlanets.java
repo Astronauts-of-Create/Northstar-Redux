@@ -415,13 +415,13 @@ public class NorthstarPlanets {
     }
 
 
-    public static double getSunMultiplier(ResourceKey<Level> level) {
+    public static float getSunMultiplier(ResourceKey<Level> level) {
         if(level == Level.OVERWORLD) {return 1;}
 
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return 8;}
-        if(level == NorthstarDimensions.VENUS_DIM_KEY) {return 0.6;}
-        if(level == NorthstarDimensions.MOON_DIM_KEY) {return 1.5;}
-        if(level == NorthstarDimensions.MARS_DIM_KEY) {return 1.2;}
+        if(level == NorthstarDimensions.VENUS_DIM_KEY) {return 0.6f;}
+        if(level == NorthstarDimensions.MOON_DIM_KEY) {return 1.5f;}
+        if(level == NorthstarDimensions.MARS_DIM_KEY) {return 1.2f;}
 
 
 

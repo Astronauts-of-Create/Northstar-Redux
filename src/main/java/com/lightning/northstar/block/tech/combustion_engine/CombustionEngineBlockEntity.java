@@ -72,9 +72,13 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
         this.updateGeneratedRotation();
     }
 
+    //1 large water wheel can spin a mill at 128 (half) speed before it overstresses
+    //10 torque can move 3 mills at full speed before overstressing
+    final static float TORQUE = 10; //128 was original
+
     @Override
     public float getGeneratedSpeed() {
-        return (powered ? 1 : 0) * 128 * powerLevel / 8;
+        return (powered ? 1 : 0) * TORQUE * (powerLevel / 8);
     }
 
     @Override
