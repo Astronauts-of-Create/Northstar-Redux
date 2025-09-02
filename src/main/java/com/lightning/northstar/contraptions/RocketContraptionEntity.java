@@ -62,6 +62,8 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+import static com.lightning.northstar.Northstar.LOGGER;
+
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
 
     public boolean auto_land_mode;
@@ -180,6 +182,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 }
                 return;
             }
+
+            //TODO: Other entities that arent in seats (animals that I have tested) always get removed or dissapear whent the rocket lands
+//            LOGGER.info(getPassengers().size() + " {} Passengers: {}", level().isClientSide ? "Client" : "Server", getPassengers());
 
             if (level().isClientSide) {
                 clientOffsetDiff *= .75f;
@@ -719,8 +724,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public void stopAndDissasembleInTicks(int nTicks) {
         dissasemblyTicks = (byte) nTicks;
         lift_vel = 0;
-        launchingMode = false;
-        landingMode = false;
         blasting = false;
         if (!level().isClientSide()) {
             writeSyncPacket();
