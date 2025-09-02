@@ -7,8 +7,9 @@
   ],
   "results": [
     {
-      "amount": 50,
+      "amount": 100,
       "fluid": "northstar:carbon"
     }
-  ]
+  ],
+  "heatRequirement": "heated"
 }

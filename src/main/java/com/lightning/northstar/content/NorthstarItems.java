@@ -376,10 +376,9 @@ public class NorthstarItems {
             .register();
 
     //An alternative to chlorine (pre-electrolysis)
-    //This is only single purpose, so I replaced it with obsidian powder and salt in mixing recipe
-//    public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
-//            .item("sodium_catalyst", Item::new)
-//            .register();
+    public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
+            .item("sodium_catalyst", Item::new)
+            .register();
 
     //minerals
     public static final ItemEntry<Item> RUITILE_CONCENTRATE = REGISTRATE

@@ -20,17 +20,13 @@
       "item": "create:zinc_ingot"
     },
     {
-      "item": "northstar:salt"
+      "item": "northstar:sodium_catalyst"
     },
     {
-      "item": "northstar:salt"
+      "item": "northstar:sodium_catalyst"
     },
     {
-      "item": "northstar:salt"
-    },
-    {
-      "amount": 10000,
-      "fluid": "minecraft:lava"
+      "item": "northstar:sodium_catalyst"
     },
     {
       "amount": 500,

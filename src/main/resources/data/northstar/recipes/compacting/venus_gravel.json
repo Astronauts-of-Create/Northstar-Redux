@@ -10,5 +10,6 @@
       "amount": 100,
       "fluid": "northstar:carbon"
     }
-  ]
+  ],
+  "heatRequirement": "heated"
 }

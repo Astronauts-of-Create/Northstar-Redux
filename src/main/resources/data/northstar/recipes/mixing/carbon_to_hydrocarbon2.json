@@ -2,17 +2,21 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "amount": 600,
+      "amount": 500,
       "fluid": "northstar:carbon"
     },
     {
-      "amount": 400,
-      "fluid": "northstar:liquid_hydrogen"
+      "amount": 100,
+      "fluid": "northstar:sodium_hydroxide"
+    },
+    {
+      "amount": 500,
+      "fluid": "minecraft:water"
     }
   ],
   "results": [
     {
-      "amount": 1000,
+      "amount": 750,
       "fluid": "northstar:hydrocarbon"
     }
   ],

@@ -18,9 +18,9 @@
   "pattern": [
     "TTT",
     "TTT",
-    " L ",
-    "ASA",
-    "ALA"
+    " S ",
+    "ALA",
+    "ASA"
   ],
   "result": {
     "count": 1,
