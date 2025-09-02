@@ -146,6 +146,23 @@ public class NorthstarFluids {
             .build()
             .register();
 
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> BIOFUEL = REGISTRATE
+            .standardFluid("biofuel",
+                    SolidRenderedPlaceableFluidType.create(0xFFFFFF, 0xFFFFFF,
+                            () -> 1f / 8f * 0.25f))
+            .lang("Biofuel")
+            .properties(b -> b.viscosity(1000)
+                    .density(1400))
+            .fluidProperties(p -> p.levelDecreasePerBlock(2)
+                    .tickRate(25)
+                    .slopeFindDistance(3)
+                    .explosionResistance(100f))
+            .source(ForgeFlowingFluid.Source::new)
+            .bucket()
+            .build()
+            .register();
+
+
     public static void register() {
     }
 
