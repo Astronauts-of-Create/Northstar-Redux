@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "group": "charred_biomass",
+  "ingredient": {
+    "item": "minecraft:bamboo"
+  },
+  "result": "northstar:charred_biomass",
+  "experience": 0.2,
+  "cookingtime": 300
+}

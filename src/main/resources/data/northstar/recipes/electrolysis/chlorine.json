@@ -2,18 +2,18 @@
   "type": "northstar:electrolysis",
   "ingredients": [
     {
-      "fluid": "minecraft:water",
+      "fluid": "northstar:brine",
       "amount": 10
     }
   ],
   "results": [
     {
-      "fluid": "northstar:oxygen",
+      "fluid": "northstar:chlorine",
       "amount": 7
     },
     {
-      "fluid": "northstar:hydrogen",
-      "amount": 2
+      "fluid": "northstar:sodium_hydroxide",
+      "amount": 1
     }
   ]
 }

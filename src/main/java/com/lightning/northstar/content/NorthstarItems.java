@@ -376,13 +376,18 @@ public class NorthstarItems {
             .register();
 
     //An alternative to chlorine (pre-electrolysis)
-    public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
-            .item("sodium_catalyst", Item::new)
-            .register();
+    //This is only single purpose, so I replaced it with obsidian powder and salt in mixing recipe
+//    public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
+//            .item("sodium_catalyst", Item::new)
+//            .register();
 
     //minerals
     public static final ItemEntry<Item> RUITILE_CONCENTRATE = REGISTRATE
             .item("rutile_concentrate", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> CHARRED_BIOMASS = REGISTRATE
+            .item("charred_biomass", Item::new)
             .register();
 
     public static final RegistryEntry<BucketItem> TITANIUM_TETRACHLORIDE_BUCKET =

@@ -14,7 +14,7 @@
   "results": [
     {
       "amount": 1000,
-      "fluid": "northstar:hydrocarbon"
+      "fluid": "northstar:carbon"
     }
   ],
   "heatRequirement": "heated"

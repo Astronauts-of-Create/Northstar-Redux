@@ -14,8 +14,8 @@
       "item": "create:zinc_ingot"
     },
     {
-      "amount": 250,
-      "fluid": "northstar:hydrocarbon"
+      "amount": 500,
+      "fluid": "northstar:carbon"
     },
     {
       "amount": 1000,
@@ -24,7 +24,7 @@
   ],
   "results": [
     {
-      "amount": 2000,
+      "amount": 2500,
       "fluid": "northstar:tetrachloride"
     }
   ],

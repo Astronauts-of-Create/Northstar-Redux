@@ -1,0 +1,25 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:dried_kelp"
+    },
+    {
+      "item": "minecraft:dried_kelp"
+    },
+    {
+      "item": "minecraft:dried_kelp"
+    },
+    {
+      "amount": 1000,
+      "fluid": "northstar:oxygen"
+    }
+  ],
+  "results": [
+    {
+      "amount": 200,
+      "fluid": "northstar:hydrogen"
+    }
+  ],
+  "heatRequirement": "heated"
+}

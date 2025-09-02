@@ -8,7 +8,7 @@
   "results": [
     {
       "amount": 3000,
-      "fluid": "northstar:hydrocarbon"
+      "fluid": "northstar:carbon"
     }
   ],
   "heatRequirement": "heated"

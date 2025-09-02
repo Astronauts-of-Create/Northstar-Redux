@@ -71,6 +71,8 @@ dependencies {
     modImplementation(libs.jei.forge)
 //    modImplementation(libs.copycats)
 
+    modImplementation("curse.maven:advanced-xray-256256:4840340")
+
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
 

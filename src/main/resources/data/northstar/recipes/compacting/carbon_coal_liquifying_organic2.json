@@ -1,0 +1,60 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    }
+  ],
+  "results": [
+    {
+      "amount": 10,
+      "fluid": "northstar:carbon"
+    }
+  ],
+  "heatRequirement": "heated"
+}

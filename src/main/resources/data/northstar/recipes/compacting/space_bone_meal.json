@@ -1,0 +1,33 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "item": "northstar:charred_biomass"
+    },
+    {
+      "amount": 1000,
+      "fluid": "northstar:carbon"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "heatRequirement": "heated"
+}

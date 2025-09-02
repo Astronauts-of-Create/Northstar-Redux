@@ -1,0 +1,14 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "northstar:moon_sand"
+    }
+  ],
+  "results": [
+    {
+      "amount": 50,
+      "fluid": "northstar:carbon"
+    }
+  ]
+}

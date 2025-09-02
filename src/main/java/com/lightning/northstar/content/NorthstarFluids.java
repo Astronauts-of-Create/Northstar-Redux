@@ -78,6 +78,12 @@ public class NorthstarFluids {
             .tag(AllTags.forgeFluidTag("sodium_hydroxide"))
             .register();
 
+    public static final FluidEntry<VirtualFluid> CARBON = REGISTRATE
+            .virtualFluid("carbon")
+            .lang("Carbon")
+            .tag(AllTags.forgeFluidTag("carbon"))
+            .register();
+
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE =
             REGISTRATE.standardFluid("tetrachloride",
