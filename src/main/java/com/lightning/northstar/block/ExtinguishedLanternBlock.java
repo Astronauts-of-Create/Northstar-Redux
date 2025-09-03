@@ -1,6 +1,6 @@
 package com.lightning.northstar.block;
 
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -81,7 +81,7 @@ public class ExtinguishedLanternBlock extends Block implements SimpleWaterlogged
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         boolean fireflag = false;
-        if ((pPlayer.getItemInHand(pHand).getItem() == Items.FLINT_AND_STEEL || pPlayer.getItemInHand(pHand).getItem() == Items.FIRE_CHARGE) && OxygenStuff.hasOxygen(pPos, pLevel.dimension())) {
+        if ((pPlayer.getItemInHand(pHand).getItem() == Items.FLINT_AND_STEEL || pPlayer.getItemInHand(pHand).getItem() == Items.FIRE_CHARGE) && NorthstarOxygen.hasOxygen(pLevel, pPos)) {
             fireflag = true;
         }
         if (pPlayer.getAbilities().mayBuild && fireflag) {

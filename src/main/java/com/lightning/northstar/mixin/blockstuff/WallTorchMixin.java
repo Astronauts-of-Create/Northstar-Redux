@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.blockstuff;
 
 import com.lightning.northstar.content.NorthstarTechBlocks;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -25,9 +25,7 @@ public class WallTorchMixin {
     public void getStateForPlacement(BlockPlaceContext pContext, CallbackInfoReturnable<BlockState> info) {
         if (pContext.getItemInHand().getItem() == Items.TORCH)
         {
-            System.out.println(OxygenStuff.hasOxygen(pContext.getClickedPos(),pContext.getLevel().dimension()));
-
-            if(!OxygenStuff.hasOxygen(pContext.getClickedPos(),pContext.getLevel().dimension())) {
+            if(!NorthstarOxygen.hasOxygen(pContext.getLevel(), pContext.getClickedPos())) {
                 pContext.getLevel().playSound(null, pContext.getClickedPos(), SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 0);
                 info.setReturnValue(NorthstarTechBlocks.EXTINGUISHED_TORCH.get().defaultBlockState());}
         }
@@ -38,7 +36,7 @@ public class WallTorchMixin {
     LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos, CallbackInfoReturnable<BlockState> info) {
         try {
             if(pState.is(Blocks.WALL_TORCH)) {
-            if(!OxygenStuff.hasOxygen(pCurrentPos,((Level)pLevel).dimension()) ) {
+            if(!NorthstarOxygen.hasOxygen(((Level)pLevel), pCurrentPos) ) {
                 if(!pState.canSurvive(pLevel, pCurrentPos)) {
                     info.setReturnValue(Blocks.AIR.defaultBlockState());
                     return;

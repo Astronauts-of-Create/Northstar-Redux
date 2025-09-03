@@ -2,7 +2,7 @@ package com.lightning.northstar.mixin.blockstuff;
 
 import com.lightning.northstar.block.ExtinguishedTorchWallBlock;
 import com.lightning.northstar.content.NorthstarTechBlocks;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,7 +22,7 @@ public class TorchItemMixin {
         public void getPlacementState(BlockPlaceContext pContext, CallbackInfoReturnable<BlockState> info) {
             if (pContext.getItemInHand().getItem() == Items.TORCH) 
             {               
-                if(!OxygenStuff.hasOxygen(pContext.getClickedPos(),pContext.getLevel().dimension())){
+                if(!NorthstarOxygen.hasOxygen(pContext.getLevel(), pContext.getClickedPos())){
                     BlockState state = NorthstarTechBlocks.EXTINGUISHED_TORCH_WALL.getDefaultState();
                     for(Direction dirs : pContext.getNearestLookingDirections()) {
                         if(dirs != Direction.DOWN && dirs != Direction.UP) {

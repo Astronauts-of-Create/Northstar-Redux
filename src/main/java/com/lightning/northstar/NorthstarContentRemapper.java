@@ -34,6 +34,8 @@ public class NorthstarContentRemapper {
         remap("iron_pillar", NorthstarBlocks.TITANIUM_PILLAR);
         remap("iron_grate", NorthstarBlocks.TITANIUM_GRATE);
         remap("iron_space_door", NorthstarTechBlocks.TITANIUM_SPACE_DOOR);
+        // 0.3.0:
+        remap("oxygen_generator", NorthstarTechBlocks.OXYGEN_SEALER);
     }
 
     public static void remap(String oldValue, RegistryEntry<?> newValue) {
@@ -47,6 +49,7 @@ public class NorthstarContentRemapper {
     @SubscribeEvent
     public static void onRemapContent(MissingMappingsEvent event) {
         remapContent(event, Registries.BLOCK, ForgeRegistries.BLOCKS);
+        remapContent(event, Registries.BLOCK_ENTITY_TYPE, ForgeRegistries.BLOCK_ENTITY_TYPES);
         remapContent(event, Registries.ITEM, ForgeRegistries.ITEMS);
     }
 

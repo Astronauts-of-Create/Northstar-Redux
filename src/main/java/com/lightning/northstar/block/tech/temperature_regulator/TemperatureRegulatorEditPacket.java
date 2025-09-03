@@ -6,59 +6,51 @@ import net.minecraft.network.FriendlyByteBuf;
 
 public class TemperatureRegulatorEditPacket extends BlockEntityConfigurationPacket<TemperatureRegulatorBlockEntity> {
 
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
-    private int sizeChangeX;
-    private int sizeChangeY;
-    private int sizeChangeZ;
-    private int temp;
-    private boolean envFill;
+    private int temperature;
+    private boolean limit;
+    private int sizeX;
+    private int sizeY;
+    private int sizeZ;
 
     public TemperatureRegulatorEditPacket(FriendlyByteBuf buffer) {
         super(buffer);
     }
 
-    public TemperatureRegulatorEditPacket(BlockPos pos, int offX, int offY, int offZ, int sizeX, int sizeY, int sizeZ, int tempChange, boolean envFill) {
+    public TemperatureRegulatorEditPacket(BlockPos pos, int temperature, boolean limit, int sizeX, int sizeY, int sizeZ) {
         super(pos);
-        this.offsetX = offX;
-        this.offsetY = offY;
-        this.offsetZ = offZ;
-        this.sizeChangeX = sizeX;
-        this.sizeChangeY = sizeY;
-        this.sizeChangeZ = sizeZ;
-        this.temp = tempChange;
-        this.envFill = envFill;
+        this.temperature = temperature;
+        this.limit = limit;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.sizeZ = sizeZ;
     }
 
     @Override
     protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(offsetX);
-        buffer.writeVarInt(offsetY);
-        buffer.writeVarInt(offsetZ);
-        buffer.writeVarInt(sizeChangeX);
-        buffer.writeVarInt(sizeChangeY);
-        buffer.writeVarInt(sizeChangeZ);
-        buffer.writeVarInt(temp);
-        buffer.writeBoolean(envFill);
+        buffer.writeVarInt(temperature);
+        buffer.writeBoolean(limit);
+        buffer.writeVarInt(sizeX);
+        buffer.writeVarInt(sizeY);
+        buffer.writeVarInt(sizeZ);
     }
 
     @Override
     protected void readSettings(FriendlyByteBuf buffer) {
-        offsetX = buffer.readVarInt();
-        offsetY = buffer.readVarInt();
-        offsetZ = buffer.readVarInt();
-        sizeChangeX = buffer.readVarInt();
-        sizeChangeY = buffer.readVarInt();
-        sizeChangeZ = buffer.readVarInt();
-        temp = buffer.readVarInt();
-        envFill = buffer.readBoolean();
+        temperature = buffer.readVarInt();
+        limit = buffer.readBoolean();
+        sizeX = buffer.readVarInt();
+        sizeY = buffer.readVarInt();
+        sizeZ = buffer.readVarInt();
     }
 
     @Override
     protected void applySettings(TemperatureRegulatorBlockEntity be) {
-        be.changeTemp(temp);
-        be.changeSize(sizeChangeX, sizeChangeY, sizeChangeZ, offsetX, offsetY, offsetZ, envFill);
+        be.targetTemperature = temperature;
+        if (limit) {
+            be.setBounds(sizeX, sizeY, sizeZ);
+        } else {
+            be.setUnbounded();
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
@@ -38,7 +37,7 @@ public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<Tempera
     @Override
     public void beginFrame(Context context) {
         float speed = blockEntity.getSpeed();
-        boolean warm = blockEntity.temp >= NorthstarPlanets.getPlanetTemp(level.dimension());
+        boolean warm = blockEntity.isCurrentlyWarm();
 
         warmSpinner.setVisible(warm);
         warmSpinner.setPosition(getVisualPosition())

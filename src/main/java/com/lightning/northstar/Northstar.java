@@ -7,15 +7,12 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;
 import com.lightning.northstar.data.FuelType;
-import com.lightning.northstar.data.NorthstarDataGen;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.item.NorthstarTooltipModifier;
 import com.lightning.northstar.particle.NorthstarParticles;
-import com.lightning.northstar.world.OxygenStuff;
-import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.features.NorthstarFeatures;
@@ -34,7 +31,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -91,9 +87,6 @@ public class Northstar {
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();
 
-        OxygenStuff.register();
-        TemperatureStuff.register();
-
         RocketHandler.register();
 
         REGISTRATE.registerEventListeners(modEventBus);
@@ -106,7 +99,6 @@ public class Northstar {
 
         modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerSpawnPlacements);
-        modEventBus.addListener(NorthstarDataGen::gatherData);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus, forgeEventBus));
     }

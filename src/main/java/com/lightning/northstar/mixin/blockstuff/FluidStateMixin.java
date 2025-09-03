@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.blockstuff;
 
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -19,14 +19,13 @@ public class FluidStateMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick$fluid(Level pLevel, BlockPos pPos, CallbackInfo info) {
-        //       System.out.println("loadBuffer: " + TemperatureStuff.loadBuffer);
-        //       System.out.println("TemperatureStuff.loadBuffer <= 70: " +  String.valueOf(TemperatureStuff.loadBuffer <= 70));
-        if (pLevel.isClientSide || TemperatureStuff.loadBuffer <= 70)
-            return;
+        // TODO: load buffer
+        //if (pLevel.isClientSide || NorthstarTemperature.loadBuffer <= 70)
+        //    return;
         FluidState state = pLevel.getFluidState(pPos);
         BlockState block = pLevel.getBlockState(pPos);
-        int temp = TemperatureStuff.getTemp(pPos, pLevel);
-        if (temp > TemperatureStuff.getBoilingPoint(state)) {
+        float temp = NorthstarTemperature.getTemperatureAt(pLevel, pPos);
+        if (temp > NorthstarTemperature.getBoilingPoint(state)) {
             if (block.hasProperty(BlockStateProperties.WATERLOGGED) && !state.isEmpty()) {
                 pLevel.setBlockAndUpdate(pPos, block.setValue(BlockStateProperties.WATERLOGGED, false));
                 removeFluid(pLevel, pPos, state);
@@ -35,7 +34,7 @@ public class FluidStateMixin {
                 removeFluid(pLevel, pPos, state);
             }
         }
-        if (temp < TemperatureStuff.getFreezingPoint(state) && state.is(Fluids.WATER)) {
+        if (temp < NorthstarTemperature.getFreezingPoint(state) && state.is(Fluids.WATER)) {
             if (block.hasProperty(BlockStateProperties.WATERLOGGED)) {
                 pLevel.setBlockAndUpdate(pPos, block.setValue(BlockStateProperties.WATERLOGGED, false));
                 removeFluid(pLevel, pPos, state);
@@ -43,8 +42,8 @@ public class FluidStateMixin {
                 pLevel.setBlockAndUpdate(pPos, Blocks.ICE.defaultBlockState());
             }
         }
-        if (TemperatureStuff.combustable(state)) {
-            if (TemperatureStuff.combustionTemp(state) <= temp) {
+        if (NorthstarTemperature.combustable(state)) {
+            if (NorthstarTemperature.combustionTemp(state) <= temp) {
                 combust(pLevel, pPos, state);
             }
 

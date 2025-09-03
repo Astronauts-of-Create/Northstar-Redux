@@ -1,7 +1,7 @@
 package com.lightning.northstar.block;
 
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -29,7 +29,7 @@ public class MartianGrassBlock extends Block implements BonemealableBlock  {
             return false;
         } else {
             int i = BlockLightEngine.getLightBlockInto(pLevelReader, pState, pPos, blockstate, blockpos, Direction.UP, blockstate.getLightBlock(pLevelReader, blockpos));
-            return i < pLevelReader.getMaxLightLevel() && TemperatureStuff.getTemp(pPos, (Level) pLevelReader) > 0;
+            return i < pLevelReader.getMaxLightLevel() && NorthstarTemperature.getTemperatureAt((Level) pLevelReader, pPos) > 0;
         }
     }
 

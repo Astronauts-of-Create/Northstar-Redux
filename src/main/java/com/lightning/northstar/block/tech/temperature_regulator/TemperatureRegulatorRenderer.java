@@ -1,7 +1,6 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -26,7 +25,7 @@ public class TemperatureRegulatorRenderer extends KineticBlockEntityRenderer<Tem
         if (VisualizationManager.supportsVisualization(be.getLevel()))
             return;
 
-        boolean warm = be.temp >= NorthstarPlanets.getPlanetTemp(be.getLevel().dimension());
+        boolean warm = be.isCurrentlyWarm();
         float time = AnimationTickHolder.getRenderTime(be.getLevel());
         float angle = ((time * be.getSpeed() / 60) % 360) / 180 * Mth.PI;
 

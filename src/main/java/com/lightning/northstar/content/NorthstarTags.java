@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -112,9 +113,12 @@ public class NorthstarTags {
             this.alwaysDataGen = alwaysDataGen;
         }
 
-        @SuppressWarnings("deprecation")
+        public boolean matches(FluidStack fluid) {
+            return fluid.getFluid().defaultFluidState().is(tag);
+        }
+
         public boolean matches(Fluid fluid) {
-            return fluid.is(tag);
+            return fluid.defaultFluidState().is(tag);
         }
 
         public boolean matches(FluidState state) {
@@ -129,6 +133,9 @@ public class NorthstarTags {
     public enum NorthstarBlockTags {
 
         AIR_PASSES_THROUGH,
+        /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
+        @Deprecated
+        BLOCKS_AIR,
         ARGYRE_REPLACES,
         NATURAL_MARS_BLOCKS,
         NATURAL_VENUS_BLOCKS,

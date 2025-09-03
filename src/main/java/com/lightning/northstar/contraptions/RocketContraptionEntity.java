@@ -6,7 +6,7 @@ import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraptions.packets.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraptions.packets.RocketContraptionSyncPacket;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
@@ -247,8 +247,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
 
             if (contrap.owner != null && printed == false) {
-                double heatCost = (TemperatureStuff.getHeatRating(destination) * ((RocketContraption) contraption).blockCount) + TemperatureStuff.getHeatConstant(destination);
-                double heatCostHome = (TemperatureStuff.getHeatRating(level().dimension()) * ((RocketContraption) contraption).blockCount) + TemperatureStuff.getHeatConstant(level().dimension());
+                double heatCost = (NorthstarTemperature.getHeatRating(destination) * ((RocketContraption) contraption).blockCount) + NorthstarTemperature.getHeatConstant(destination);
+                double heatCostHome = (NorthstarTemperature.getHeatRating(level().dimension()) * ((RocketContraption) contraption).blockCount) + NorthstarTemperature.getHeatConstant(level().dimension());
                 if (heatCostHome > heatCost) heatCost = heatCostHome;
                 int requiredJets = contrap.fuelCost / 800;
                 int fuelCost = (int) (contrap.weightCost + (contrap.fuelCost - (contrap.fuelCost * contrap.computingPower)));
