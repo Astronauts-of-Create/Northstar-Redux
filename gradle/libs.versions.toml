@@ -5,7 +5,10 @@ ponder = "1.0.83"
 
 [libraries]
 create = "com.simibubi.create:create-1.20.1:6.0.6-205"
-copycats = "com.copycatsplus:copycats:3.0.2+mc.1.20.1-forge-build.258"
+copycats = "curse.maven:copycats-968398:6650089"
+cdg="curse.maven:create-diesel-generators-869316:6920093"
+cbc="curse.maven:create-big-cannons-646668:6696635"
+xray="curse.maven:advanced-xray-256256:4840340"
 embeddium = "maven.modrinth:embeddium:0.3.31+mc1.20.1"
 flywheel-forge-api = { module = "dev.engine-room.flywheel:flywheel-forge-api-1.20.1", version.ref = "flywheel" }
 flywheel-forge = { module = "dev.engine-room.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }

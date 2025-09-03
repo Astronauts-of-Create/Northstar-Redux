@@ -188,12 +188,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
 
 //            LOGGER.info(getPassengers().size() + " {} Passengers: {}", level().isClientSide ? "Client" : "Server", getPassengers());
-//TODO: The client seems to be holding onto passengers that are no longer in the contraption (in the other dimension) (see rocketHandler entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);) It makes sense that they were removed on the server however
-//An easy solution would be to tell the client what passengers are in the contraption (like how I sent passenger offsets between client and server with writeAdditional and readAdditional)
-
-//[20:04:32] [Render thread/INFO] [co.li.no.Northstar/]: 7 Client Passengers: [LocalPlayer['Dev'/1, l='ClientLevel', x=-3.50, y=72.96, z=-22.50], MarsToadEntity['Mars Root Toad'/384, l='ClientLevel', x=-3.65, y=73.08, z=-20.70], MarsToadEntity['Mars Root Toad'/385, l='ClientLevel', x=-3.65, y=73.08, z=-19.35], MarsToadEntity['Mars Root Toad'/386, l='ClientLevel', x=-3.05, y=73.08, z=-19.61], MarsToadEntity['Mars Root Toad'/386, l='ClientLevel', x=-3.05, y=73.08, z=-19.61], MarsToadEntity['Mars Root Toad'/385, l='ClientLevel', x=-3.65, y=73.08, z=-19.35], MarsToadEntity['Mars Root Toad'/384, l='ClientLevel', x=-3.65, y=73.08, z=-20.70]]
-//[20:04:32] [Server thread/INFO] [co.li.no.Northstar/]: 4 Server Passengers: [ServerPlayer['Dev'/1, l='ServerLevel[New World]', x=-3.50, y=72.46, z=-22.50], MarsToadEntity['Mars Root Toad'/384, l='ServerLevel[New World]', x=-3.65, y=72.58, z=-20.70], MarsToadEntity['Mars Root Toad'/385, l='ServerLevel[New World]', x=-3.65, y=72.58, z=-19.35], MarsToadEntity['Mars Root Toad'/386, l='ServerLevel[New World]', x=-3.05, y=72.58, z=-19.61]]
-
 
             if (level().isClientSide) {
                 clientOffsetDiff *= .75f;
@@ -243,8 +237,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 // this code feels really stupid but I don't care enough to clean it up
                 if (Math.abs(final_lift_vel) > 0.5f) {
                     int volume = NorthstarPlanets.getPlanetAtmosphereCost(level().dimension()) / 400;
-                    int final_vol = volume < 1 ? 1 : volume;
-                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound(final_vol));
+                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound(Math.max(volume, 1)));
                 }
 
                 //Reseat the entities on the client
@@ -280,7 +273,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 int fuelCost = (int) (contrap.weightCost + (contrap.fuelCost - (contrap.fuelCost * contrap.computingPower)));
 
                 contrap.owner.displayClientMessage(Component.literal
-                        ("Fuel: " + (int)contrap.fuelAmount() + "; Required: " + fuelCost).withStyle(ChatFormatting.GOLD), false);
+                        ("Fuel: " + (int) contrap.fuelAmount() + "; Required: " + fuelCost).withStyle(ChatFormatting.GOLD), false);
                 contrap.owner.displayClientMessage(Component.literal
                         ("Return Fuel Cost: ~" + contrap.fuelReturnCost).withStyle(ChatFormatting.GOLD), false);
                 contrap.owner.displayClientMessage(Component.literal
@@ -661,16 +654,14 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             passenger.startRiding(this, true);
             if (passenger instanceof TamableAnimal ta) ta.setInSittingPose(true);
 
-//TODO: Should the passenger be seated using create seats?
-
-//Make a new seat and add sitting passenger based on it (The only issue is when 2 entities share the same block position)
-//BlockPos newSeat = new BlockPos((int) offset.x, (int) offset.y, (int) offset.z);
-//contraption.getSeats().add(newSeat); //Add the new seat and get the index
-//seatIndex = contraption.getSeats().indexOf(newSeat);
-//super.addSittingPassenger(passenger, seatIndex);
-
-//We CANNOT assign a fake seat id (the seat ID must be corresponding to an actual seat in contraption.getSeats())
-//see com.simibubi.create.content.contraptions.Contraption.addPassengersToWorld(Contraption.java:1297)
+            //TODO: Should the passenger be seated using create seats?
+            //Make a new seat and add sitting passenger based on it (The only issue is when 2 entities share the same block position)
+            //We CANNOT assign a fake seat id (the seat ID must be corresponding to an actual seat in contraption.getSeats())
+            //see com.simibubi.create.content.contraptions.Contraption.addPassengersToWorld(Contraption.java:1297)
+            BlockPos newSeat = new BlockPos((int) offset.x, (int) offset.y, (int) offset.z);
+            contraption.getSeats().add(newSeat); //Add the new seat and get the index
+            seatIndex = contraption.getSeats().indexOf(newSeat);
+            super.addSittingPassenger(passenger, seatIndex);
         } else {
             super.addSittingPassenger(passenger, seatIndex);
         }

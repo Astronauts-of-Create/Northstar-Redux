@@ -294,6 +294,7 @@ public class RocketHandler {
 
             //Remove the entity from the current dimension
             entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
+            entity.stopRiding();//We also have to stop riding (to tell the client to let go of the passenger)
             entity.level().getProfiler().pop();
             ((ServerLevel) entity.level()).resetEmptyTime();
             pDestination.resetEmptyTime();

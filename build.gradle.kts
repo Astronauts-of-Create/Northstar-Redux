@@ -83,13 +83,15 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
-//    modImplementation(libs.copycats)
+    modRuntimeOnly(libs.copycats)
+//    modRuntimeOnly(libs.cbc) //Create addons
+    modRuntimeOnly(libs.cdg)
 
     modRuntimeOnly(libs.embeddium)
     modRuntimeOnly(libs.oculus)
     forgeRuntimeLibrary(libs.jcpp)
 
-    //modImplementation("curse.maven:advanced-xray-256256:4840340")
+//    modRuntimeOnly(libs.xray) //An easy way for inspecting ore generation
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
