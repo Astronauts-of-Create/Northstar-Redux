@@ -1,5 +1,6 @@
 package com.lightning.northstar.contraptions;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
@@ -19,6 +20,7 @@ import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -42,6 +44,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -160,6 +163,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
     }
 
+
     @Override
     protected void tickContraption() {
         if (contraption instanceof RocketContraption contrap) {
@@ -183,8 +187,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 return;
             }
 
-            //TODO: Other entities that arent in seats (animals that I have tested) always get removed or dissapear whent the rocket lands
-//            LOGGER.info(getPassengers().size() + " {} Passengers: {}", level().isClientSide ? "Client" : "Server", getPassengers());
+            LOGGER.info(getPassengers().size() + " {} Passengers: {}", level().isClientSide ? "Client" : "Server", getPassengers());
 
             if (level().isClientSide) {
                 clientOffsetDiff *= .75f;
@@ -195,7 +198,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             if (launchingMode && launchtime == 0 && activeLaunch) {//Start blasting off
                 if (!blasting) {//Only do this once
                     //When we make all entities passengers on client and server side
-                    makeEntitiesPassengers(getEntitiesWithinContraption());
+                    addAllEntitiesAsPassengers(getEntitiesWithinContraption());
                     blasting = true;
                 }
                 if (!fuelBurned) { //We only burn the fuel once
@@ -245,7 +248,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                             Entity passenger = getEntitiesWithinContraption().get(i);
                             if (clientSide_entitiesThatMustBeReseated.contains(passenger.getUUID())) {
                                 System.out.println("RESEATING " + passenger);
-                                makeEntityPassenger(passenger);
+                                addPassenger(passenger, null);
                                 clientSide_entitiesThatMustBeReseated.remove(passenger.getUUID());
                             }
                         }
@@ -633,18 +636,55 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return (RocketContraption) this.contraption;
     }
 
-    public void makeEntityPassenger(Entity passenger) {
-        passenger.pinToVehicle(this); //When we pin the entity, we force them to be a passenger and create a position offset to lock them down
+
+    /**
+     * Adapted from AbstractContraptionEntity.addSittingPassenger()
+     * Just gotta make sure the name doesnt override the original method
+     * (The player sits down via the create handlePlayerInteraction() method)
+     *
+     * @param passenger
+     * @param seatIndex
+     */
+    public void addPassenger(Entity passenger, Integer seatIndex) {
+        Northstar.LOGGER.info("ROCKET: Adding passenger " + passenger + " Seat ID: " + seatIndex);
+
+        if (seatIndex == null) {            //When we want to force seat an entity but they aren't in a seat
+            Vec3 offset = passenger.pinToVehicle(this);
+
+            //Create code for seating the passenger
+            passenger.startRiding(this, true);
+            if (passenger instanceof TamableAnimal ta) ta.setInSittingPose(true);
+
+            BlockPos newSeat = new BlockPos((int) offset.x, (int) offset.y, (int) offset.z);//Create seats is a hashset of BlockPos, so every entity must have a unique position
+            contraption.getSeats().add(newSeat); //Add the new seat and get the index
+            seatIndex = contraption.getSeats().indexOf(newSeat);
+
+            if (contraption.getSeatMapping().containsValue(seatIndex)) { //If someone is already in this seat, spoof a seat ID
+                seatIndex = contraption.getSeats().size() + 1;
+                Northstar.LOGGER.info("ROCKET: Seat is already taken. Assigning (Fake) Seat ID: " + seatIndex);
+            }
+
+            if (!level().isClientSide) {
+                contraption.getSeatMapping().put(passenger.getUUID(), seatIndex);//Put this entity into the seat mapping
+                AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+                        new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
+            }
+
+
+        } else {
+            super.addSittingPassenger(passenger, seatIndex);
+        }
     }
 
-    public List<Entity> makeEntitiesPassengers(List<Entity> entitiesInContraption) {
+
+    public List<Entity> addAllEntitiesAsPassengers(List<Entity> entitiesInContraption) {
         System.out.println("\n");
         List<Entity> madePassengers = new ArrayList<>();
         for (Entity passenger : entitiesInContraption) {
             if (passenger instanceof SuperGlueEntity) continue;
 
             if (!isEntitySeated(passenger)) {
-                makeEntityPassenger(passenger);
+                addPassenger(passenger, null);
                 madePassengers.add(passenger);
             }
         }
@@ -719,6 +759,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     /**
      * Disassembles the rocket in nTicks (max 128)
+     *
      * @param nTicks
      */
     public void stopAndDissasembleInTicks(int nTicks) {
@@ -732,15 +773,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     public void disassemble() {
-        //TODO: Entities are thrust downward when rocket hits the ground
-        //A solution may be to freeze all entities in place for 0.5s after the rocket disassembles
-        for (Entity passenger : getEntitiesWithinContraption()) {
-            System.out.println("Dismounting " + passenger);
-            passenger.stopRiding();//Safely dismount
-        }
-        for (Entity passenger : getPassengers()) {
-            System.out.println("Dismounting " + passenger);
-            passenger.stopRiding();//Safely dismount
+        for (int i = 0; i < getPassengers().size(); i++) {
+            Entity passenger = getPassengers().get(i);
+            if (passenger != null) {
+                System.out.println("Dismounting " + passenger);
+                passenger.stopRiding();//Safely dismount
+            }
         }
         RocketHandler.ROCKETS.remove(this);
         sequencedOffsetLimit = -1;
@@ -864,7 +902,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 synchronized (clientReseatLock) {
                     clientSide_entitiesThatMustBeReseated = new ArrayList<>(passengerOffsets.keySet());
                 }
-            } else makeEntitiesPassengers(getEntitiesWithinContraption());
+            } else addAllEntitiesAsPassengers(getEntitiesWithinContraption());
         }
     }
 
