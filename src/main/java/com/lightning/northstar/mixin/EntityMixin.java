@@ -23,12 +23,17 @@ public abstract class EntityMixin implements EntityAccessor {
     @Shadow
     private Entity vehicle;
 
+    /**
+     *
+     * @param vehicle
+     * @return the offset of the entity relative to the vehicle
+     */
     @Override
-    public void pinToVehicle(Entity vehicle) {
+    public Vec3 pinToVehicle(Entity vehicle) {
         Entity me = ((Entity) ((Object) this));
         this.vehicle = vehicle;
         vehicle.addPassenger(me);
-        recordOffsetOfPassenger(me, vehicle); //If the entity was previously unseated, they will need an offset even if they are a player
+        return recordOffsetOfPassenger(me, vehicle); //If the entity was previously unseated, they will need an offset even if they are a player
     }
 
     // Store offsets for passengers
@@ -49,7 +54,7 @@ public abstract class EntityMixin implements EntityAccessor {
     private void recordOffset(Entity passenger, CallbackInfo ci) {
         Entity me = ((Entity) ((Object) this));
         if (me instanceof RocketContraptionEntity) {
-            Northstar.LOGGER.info("ADDING Passenger {}; Rocket: {}", passenger, me);
+            Northstar.LOGGER.info("MIXIN: Added Passenger {}; Rocket: {}", passenger, me);
             if (!(passenger instanceof Player)) {
                 recordOffsetOfPassenger(passenger, me);
                 passenger.setInvulnerable(true);
@@ -62,7 +67,7 @@ public abstract class EntityMixin implements EntityAccessor {
     private void onRemovePassenger(Entity passenger, CallbackInfo ci) {
         Entity me = ((Entity) ((Object) this));
         if (me instanceof RocketContraptionEntity rce) {//We only remove passengers from rockets when the rockets disassemble
-            Northstar.LOGGER.info("REMOVING Passenger {}; Rocket: {}", passenger, rce);
+            Northstar.LOGGER.info("MIXIN: Removed Passenger {}; Rocket: {}", passenger, rce);
             passenger.setInvulnerable(false);
             passenger.noPhysics = false;
         }
@@ -75,7 +80,7 @@ public abstract class EntityMixin implements EntityAccessor {
     }
 
     @Unique
-    private static void recordOffsetOfPassenger(Entity passenger, Entity vehicle) {
+    private static Vec3 recordOffsetOfPassenger(Entity passenger, Entity vehicle) {
         if (vehicle.getRocketPassengerOffsets() == null) {
             vehicle.setRocketPassengerOffsets(new HashMap<>());
         }
@@ -84,6 +89,7 @@ public abstract class EntityMixin implements EntityAccessor {
             Northstar.LOGGER.info("Recording Passenger Offset. Passenger: {}; Rocket: {}; Offset: {}", passenger, vehicle, offset);
             vehicle.getRocketPassengerOffsets().put(passenger.getUUID(), offset);
         }
+        return offset;
     }
 
     @Inject(method = "rideTick", at = @At("HEAD"), cancellable = true)

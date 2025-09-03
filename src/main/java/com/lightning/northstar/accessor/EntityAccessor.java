@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface EntityAccessor {
 
-    default void pinToVehicle(Entity vehicle) {
+    default Vec3 pinToVehicle(Entity vehicle) {
         throw new RuntimeException("This should be implemented by a mixin!");
     }
 

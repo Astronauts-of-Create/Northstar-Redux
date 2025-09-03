@@ -374,7 +374,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                         level().explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
                         hasExploded = true;
                     }
-                } else {
+                } else if (flyingSound != null) {
                     flyingSound.stopSound();
                 }
             }

@@ -1,11 +1,7 @@
 package com.lightning.northstar.contraptions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraptions.packets.RocketControlPacket;
@@ -183,29 +179,51 @@ public class RocketHandler {
 
     private static void loadEntityData(Entity passenger, CompoundTag nbt, Map<UUID, Vec3> shipOffsetMap) {
         passenger.load(nbt); // restores same UUID + your custom data
-        if (shipOffsetMap == null ||!shipOffsetMap.containsKey(passenger.getUUID())) {
+        if (shipOffsetMap == null || !shipOffsetMap.containsKey(passenger.getUUID())) {
             Northstar.LOGGER.warn("Passenger {} DOES NOT has a ship offset", passenger);
         }
     }
 
-    public static Entity changeDimensionCustom(ServerLevel pDestination, Entity entity, net.minecraftforge.common.util.ITeleporter teleporter,
-                                               HashMap<Entity, Integer> seatMap, Map<Entity, MutableInt> colliders, RocketContraption contrap, RocketContraptionEntity contrapEnt, UUID controller) {
+
+    /**
+     * Returns a nullable seat number
+     *
+     * @param entity
+     * @param contrap
+     * @return
+     */
+    private static Integer getSeatNumber(Entity entity, RocketContraption contrap) {
+        //Get the seat number of the entity
+        Integer seatNumber = null;
+        if (contrap.getSeatOf(entity.getUUID()) != null) {
+            for (Map.Entry<UUID, Integer> entry : contrap.getSeatMapping().entrySet()) {
+                if (entry.getKey() == entity.getUUID()) {
+                    seatNumber = entry.getValue();
+                }
+            }
+        }
+        return seatNumber;
+    }
+
+    public static Entity changeDimensionCustom(ServerLevel pDestination,
+                                               Entity entity,
+                                               net.minecraftforge.common.util.ITeleporter teleporter,
+                                               HashMap<Entity, Integer> seatMap,
+                                               Map<Entity, MutableInt> colliders,
+                                               RocketContraption contrap,
+                                               RocketContraptionEntity contrapEnt,
+                                               UUID controller) {
         if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
         if (entity.level() instanceof ServerLevel && !entity.isRemoved()) {
             entity.level().getProfiler().push("changeDimension");
-            int seatNumber = -12345;
-            if (contrap.getSeatOf(entity.getUUID()) != null) {
-                Map<UUID, Integer> seatMapping = contrap.getSeatMapping();
-                for (Map.Entry<UUID, Integer> entry : seatMapping.entrySet()) {
-                    if (entry.getKey() == entity.getUUID()) {
-                        seatNumber = entry.getValue();
-                    }
-                }
+
+            //If this entity is not the rocket, get the seat number
+            Integer seatNumber = null;
+            if (!(entity instanceof RocketContraptionEntity)) {
+                seatNumber = getSeatNumber(entity, contrap);
             }
+
             entity.level().getProfiler().push("reposition");
-
-            System.out.println(entity);
-
             Entity transportedEntity = teleporter.placeEntity(entity, (ServerLevel) entity.level(), pDestination, entity.getYRot(), spawnPortal -> {
 
                 entity.level().getProfiler().popPush("reloading");
@@ -222,42 +240,59 @@ public class RocketHandler {
 
                 return newentity;
             });
-            if (entity instanceof RocketContraptionEntity rce) {
 
-                for (Integer entint : seatMap.values()) {
-                    for (Entity ents : seatMap.keySet()) {
-                        if (seatMap.get(ents) == entint)
-                            ((RocketContraptionEntity) transportedEntity).addSittingPassenger(ents, entint);
-                        ;
+
+            //If we are teleporting the rocket
+            if (entity instanceof RocketContraptionEntity rce) {
+                RocketContraptionEntity newRCE = ((RocketContraptionEntity) transportedEntity);
+
+                //Add ALL passengers on server side
+                //We use seat map to store all entities that exist within the rocket
+                entityList:
+                for (Entity seatedEntity : seatMap.keySet()) {
+                    Integer entitySeatID = seatMap.get(seatedEntity);
+                    System.out.println("ROCKET SEAT-MAP ENTITY: " + seatedEntity + " \t Seat ID: " + (entitySeatID == null ? "null" : entitySeatID));
+
+                    if (entitySeatID == null) {
+                        newRCE.addPassenger(seatedEntity, null);
+                    } else {
+                        for (Integer seatID : seatMap.values()) {
+                            if (entitySeatID.equals(seatID)) {
+                                newRCE.addPassenger(seatedEntity, seatID);
+                                continue entityList;
+                            }
+                        }
+                        newRCE.addPassenger(seatedEntity, null);
                     }
                 }
-                for (MutableInt entint : colliders.values()) {
+
+                for (MutableInt entint : colliders.values()) {//Register all colliding entities
                     for (Entity ents : colliders.keySet()) {
-                        if (colliders.get(ents) == entint)
-                            ((RocketContraptionEntity) transportedEntity).registerColliding(ents);
+                        if (Objects.equals(colliders.get(ents), entint))
+                            newRCE.registerColliding(ents);
                     }
                 }
-                if (controller == null) {
-                    ((RocketContraptionEntity) transportedEntity).setControllingPlayer(controller);
+                if (controller == null) {//Assign controller
+                    newRCE.setControllingPlayer(controller);
                 }
-                ((RocketContraptionEntity) transportedEntity).owner = rce.owner;
-                ((RocketContraptionEntity) transportedEntity).isUsingTicket = rce.isUsingTicket;
-                ((RocketContraptionEntity) transportedEntity).visualEngineCount = rce.visualEngineCount;
-                ((RocketContraptionEntity) transportedEntity).localControlsPos = rce.localControlsPos;
-                ((RocketContraptionEntity) transportedEntity).setControllingPlayer(controller);
+                newRCE.owner = rce.owner;
+                newRCE.isUsingTicket = rce.isUsingTicket;
+                newRCE.visualEngineCount = rce.visualEngineCount;
+                newRCE.localControlsPos = rce.localControlsPos;
+                newRCE.setControllingPlayer(controller);
                 if (pilotID != null)
                     NorthstarPackets.getChannel().send(PacketDistributor.ALL.noArg(),
-                            new RocketControlPacket(pilotID, ((RocketContraptionEntity) transportedEntity).getId(), rce.localControlsPos));
-
-
-            }
-            if (seatNumber != -12345) {
+                            new RocketControlPacket(pilotID, newRCE.getId(), rce.localControlsPos));
+            } else {
                 seatMap.put(transportedEntity, seatNumber);
-            }
-            if (contrapEnt.collidingEntities.containsKey(entity)) {
-                colliders.put(transportedEntity, contrapEnt.collidingEntities.get(entity));
+
+                //Add the entity to the colliders map
+                if (contrapEnt.collidingEntities.containsKey(entity)) {
+                    colliders.put(transportedEntity, contrapEnt.collidingEntities.get(entity));
+                }
             }
 
+            //Remove the entity from the current dimension
             entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
             entity.level().getProfiler().pop();
             ((ServerLevel) entity.level()).resetEmptyTime();
@@ -279,15 +314,8 @@ public class RocketHandler {
         entity.connection.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
 
         PlayerList playerlist = entity.server.getPlayerList();
-        int seatNumber = Integer.MIN_VALUE;
-        if (contrap.getSeatOf(entity.getUUID()) != null) {
-            Map<UUID, Integer> seatMapping = contrap.getSeatMapping();
-            for (Map.Entry<UUID, Integer> entry : seatMapping.entrySet()) {
-                if (entry.getKey() == entity.getUUID()) {
-                    seatNumber = entry.getValue();
-                }
-            }
-        }
+        int seatNumber = getSeatNumber(entity, contrap);
+
         if (contrapEnt.hasControllingPassenger() && contrapEnt.getControllingPlayer().isPresent()) {
             controller = contrapEnt.getControllingPlayer().get();
         }
@@ -319,10 +347,7 @@ public class RocketHandler {
             entity.connection.send(new ClientboundUpdateMobEffectPacket(entity.getId(), mobeffectinstance));
 
         }
-        if (seatNumber != Integer.MIN_VALUE) {
-            seatMap.put(entity, seatNumber);
-        }
-
+        seatMap.put(entity, seatNumber);
 
         return entity;
 
