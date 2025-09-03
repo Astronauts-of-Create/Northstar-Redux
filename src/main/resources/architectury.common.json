@@ -1,6 +1,5 @@
 {
   "accessWidener": "northstar.accessWidener",
   "injected_interfaces": {
-    "net/minecraft/world/entity/Entity": [ "com/lightning/northstar/accessor/EntityAccessor" ]
   }
 }

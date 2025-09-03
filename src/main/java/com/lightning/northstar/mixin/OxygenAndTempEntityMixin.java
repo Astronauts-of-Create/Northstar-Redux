@@ -10,7 +10,6 @@ import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,9 +22,6 @@ import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -115,37 +111,6 @@ public class OxygenAndTempEntityMixin {
 //            RocketHandler.changePlayerDimension(destLevel, (ServerPlayer) entity, new PortalForcer(destLevel));
 //        }
     }
-
-    public @Nullable Entity changeDimensionCustom(ServerLevel pDestination) {
-        Entity entity = (Entity) (Object) this;
-        if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
-        entity.level().getProfiler().push("changeDimension");
-        entity.level().getProfiler().push("reposition");
-        BlockPos blockpos = entity.blockPosition();
-        PortalInfo portalinfo = new PortalInfo(new Vec3((double) blockpos.getX() + 0.5D, (double) blockpos.getY(), (double) blockpos.getZ() + 0.5D),
-                entity.getDeltaMovement(), entity.getYRot(), entity.getXRot());
-        Entity transportedEntity = pDestination.getPortalForcer().placeEntity(entity, (ServerLevel) entity.level(), pDestination, entity.getYRot(), spawnPortal -> { //Forge: Start vanilla logic
-            entity.level().getProfiler().popPush("reloading");
-            Entity newentity = entity.getType().create(pDestination);
-            if (newentity != null) {
-                newentity.restoreFrom(newentity);
-                newentity.moveTo(portalinfo.pos.x, portalinfo.pos.y, portalinfo.pos.z, portalinfo.yRot, newentity.getXRot());
-                newentity.setDeltaMovement(portalinfo.speed);
-                pDestination.addDuringTeleport(newentity);
-                if (spawnPortal && pDestination.dimension() == Level.END) {
-                    ServerLevel.makeObsidianPlatform(pDestination);
-                }
-            }
-            return newentity;
-        });
-        entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-        entity.level().getProfiler().pop();
-        ((ServerLevel) entity.level()).resetEmptyTime();
-        pDestination.resetEmptyTime();
-        entity.level().getProfiler().pop();
-        return transportedEntity;
-    }
-
 
     public void sulfurBurn(Entity entity, RandomSource rando) {
         if (entity.hurt(entity.level().damageSources().lava(), 6.0F)) {

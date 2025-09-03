@@ -18,9 +18,6 @@ import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -201,22 +198,6 @@ public class RocketContraption extends TranslatingContraption {
             heatShielding += 20;
         }
         return super.capture(world, pos);
-    }
-
-    public void changeDim(ResourceKey<Level> targetDim, RocketContraptionEntity entity) {
-        entity.level().getProfiler().push("changeDimension");
-        ServerLevel serverlevel = (ServerLevel) entity.level();
-        MinecraftServer minecraftserver = serverlevel.getServer();
-        ServerLevel target = minecraftserver.getLevel(targetDim);
-        target.setChunkForced((int) entity.getX(), (int) entity.getZ(), true);
-        System.out.println(target.isLoaded(entity.blockPosition()));
-        for (Entity e : entity.getPassengers()) {
-            System.out.println(e);
-            e.changeDimension(target);
-        }
-        entity.changeDimension(target);
-        entity.getContraption().getContraptionWorld();
-        entity.level().getProfiler().pop();
     }
 
     @Override
