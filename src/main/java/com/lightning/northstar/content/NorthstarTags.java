@@ -79,9 +79,6 @@ public class NorthstarTags {
 
     public enum NorthstarFluidTags {
 
-        TIER_1_ROCKET_FUEL,
-        TIER_2_ROCKET_FUEL,
-        TIER_3_ROCKET_FUEL,
         IS_OXY,
         FORGE_OXYGEN(FORGE, "oxygen"),
         ;

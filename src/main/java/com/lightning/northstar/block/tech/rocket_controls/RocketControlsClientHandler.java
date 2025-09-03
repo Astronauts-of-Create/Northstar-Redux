@@ -57,7 +57,6 @@ public class RocketControlsClientHandler {
         }
     }
 
-    @SuppressWarnings("resource")
     public static void stopControlling() {
         ControlsUtil.getControls()
                 .forEach(kb -> kb.setDown(ControlsUtil.isActuallyPressed(kb)));

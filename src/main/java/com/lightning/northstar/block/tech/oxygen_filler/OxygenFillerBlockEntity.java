@@ -38,14 +38,12 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
     public int airLevel;
     public int airTimer;
     private boolean hasStopped = false;
     private int audioTick = 0;
-
 
     protected LazyOptional<IItemHandlerModifiable> itemCapability;
     SmartFluidTankBehaviour tank;

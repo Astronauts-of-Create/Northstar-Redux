@@ -6,6 +6,7 @@ import com.lightning.northstar.block.entity.VenusExhaustBlockEntity;
 import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlockEntity;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlockEntity;
+import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverRenderer;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverVisual;
 import com.lightning.northstar.block.tech.cogs.SpaceCogVisual;
 import com.lightning.northstar.block.tech.combustion_engine.CombustionEngineBlockEntity;
@@ -40,6 +41,7 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlockEntity;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorRenderer;
 import com.simibubi.create.content.kinetics.base.OrientedRotatingVisual;
+import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntity;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
@@ -49,7 +51,6 @@ import net.minecraft.core.Direction;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
 
-// FIXME: remake the renderers for when flywheel is off
 public class NorthstarBlockEntityTypes {
 
     public static final BlockEntityEntry<TelescopeBlockEntity> TELESCOPE = REGISTRATE
@@ -85,7 +86,7 @@ public class NorthstarBlockEntityTypes {
             .blockEntity("solar_panel", SolarPanelBlockEntity::new)
             .visual(() -> ShaftVisual::new)
             .validBlocks(NorthstarTechBlocks.SOLAR_PANEL)
-            .renderer(() -> SolarPanelRenderer::new)
+            .renderer(() -> ShaftRenderer::new)
             .register();
 
     public static final BlockEntityEntry<CombustionEngineBlockEntity> COMBUSTION_ENGINE = REGISTRATE
@@ -109,7 +110,7 @@ public class NorthstarBlockEntityTypes {
             .blockEntity("circuit_engraver", CircuitEngraverBlockEntity::new)
             .visual(() -> CircuitEngraverVisual::new)
             .validBlocks(NorthstarTechBlocks.CIRCUIT_ENGRAVER)
-            //.renderer(() -> CircuitEngraverRenderer::new)
+            .renderer(() -> CircuitEngraverRenderer::new)
             .register();
 
     public static final BlockEntityEntry<OxygenConcentratorBlockEntity> OXYGEN_CONCENTRATOR = REGISTRATE

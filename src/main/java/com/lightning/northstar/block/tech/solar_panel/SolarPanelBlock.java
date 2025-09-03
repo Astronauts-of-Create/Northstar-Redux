@@ -19,17 +19,19 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<SolarPanelBlockEntity> {
+
     protected static final VoxelShape SHAPE_EAST_WEST = Block.box(1.0D, 0.0D, 0.0D, 15.0D, 12.0D, 16.0D);
     protected static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(0.0D, 0.0D, 1.0D, 16.0D, 12.0D, 15.0D);
 
     public SolarPanelBlock(Properties properties) {
         super(properties);
+
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
     public Axis getRotationAxis(BlockState state) {
-        return state.getValue(HORIZONTAL_FACING)
-                .getAxis();
+        return state.getValue(HORIZONTAL_FACING).getAxis();
     }
 
     @Override
@@ -40,22 +42,19 @@ public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<Solar
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        withBlockEntityDo(pLevel, pPos, SolarPanelBlockEntity::determineAndApplySunlightScore);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        withBlockEntityDo(level, pos, SolarPanelBlockEntity::determineAndApplySunlightScore);
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return (pState.getValue(HORIZONTAL_FACING) == Direction.EAST) || (pState.getValue(HORIZONTAL_FACING) == Direction.WEST) ? SHAPE_EAST_WEST : SHAPE_NORTH_SOUTH;
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return (state.getValue(HORIZONTAL_FACING) == Direction.EAST) || (state.getValue(HORIZONTAL_FACING) == Direction.WEST) ? SHAPE_EAST_WEST : SHAPE_NORTH_SOUTH;
     }
-
 
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-        return state.getValue(HORIZONTAL_FACING)
-            .getAxis() == face.getAxis();
+        return state.getValue(HORIZONTAL_FACING).getAxis() == face.getAxis();
     }
-
 
     @Override
     public float getParticleTargetRadius() {

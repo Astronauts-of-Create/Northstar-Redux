@@ -203,7 +203,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                     if (contrap.fuelAmount() < contrap.fuelCost) {  //If we dont have enough fuel, disassemble
                         this.disassemble();
                     } else {
-                        contrap.burnFuel();
+                        contrap.burnFuel(level());
                         fuelBurned = true;
                     }
                 }
@@ -271,7 +271,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 int fuelCost = (int) (contrap.weightCost + (contrap.fuelCost - (contrap.fuelCost * contrap.computingPower)));
 
                 contrap.owner.displayClientMessage(Component.literal
-                        ("Fuel: " + contrap.fuelAmount() + "; Required: " + fuelCost).withStyle(ChatFormatting.GOLD), false);
+                        ("Fuel: " + (int)contrap.fuelAmount() + "; Required: " + fuelCost).withStyle(ChatFormatting.GOLD), false);
                 contrap.owner.displayClientMessage(Component.literal
                         ("Return Fuel Cost: ~" + contrap.fuelReturnCost).withStyle(ChatFormatting.GOLD), false);
                 contrap.owner.displayClientMessage(Component.literal

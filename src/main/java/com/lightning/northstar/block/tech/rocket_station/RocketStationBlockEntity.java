@@ -158,8 +158,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
 
         int engines = 0;
         boolean hasStation = false;
-        boolean hasFuel = false;
-        int fuelAmount = 0;
+        float fuelAmount = 0;
         int requiredJets = 0;
         int heatShielding = 0;
         double heatCost = 0;
@@ -171,7 +170,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
                 return;
             }
             engines = contraption.hasJetEngine();
-            hasFuel = contraption.hasFuel();
             fuelAmount = contraption.fuelAmount();
             heatShielding = contraption.heatShielding();
             hasStation |= contraption.hasRocketStation();
@@ -231,7 +229,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
                     ("Interplanetary travel requires a Interplanetary Navigator!").withStyle(ChatFormatting.RED), false);
         }
        //Assuming we have everything we need to assemble, let's do it
-        if (engines >= requiredJets && hasStation && hasFuel && fuelAmount > (fuelCost + contraption.weightCost) && heatShielding >= heatCost && oxygenSealed && !interplanetaryFlag && contraption.hasControls && contraption.dest != null && contraption.dest != this.level.dimension()) {
+        if (engines >= requiredJets && hasStation && fuelAmount > (fuelCost + contraption.weightCost) && heatShielding >= heatCost && oxygenSealed && !interplanetaryFlag && contraption.hasControls && contraption.dest != null && contraption.dest != this.level.dimension()) {
            //Create the new contraption entity
             System.out.println(engines);
             contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
@@ -251,7 +249,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             contraption.owner.displayClientMessage(Component.literal
                     ("Full Fuel Cost: " + (contraption.weightCost + contraption.fuelCost)).withStyle(ChatFormatting.GOLD), false);
             contraption.owner.displayClientMessage(Component.literal
-                    ("Current Fuel Supply: " + contraption.fuelAmount()).withStyle(ChatFormatting.GOLD), false);
+                    ("Current Fuel Supply: " + (int)contraption.fuelAmount()).withStyle(ChatFormatting.GOLD), false);
             contraption.owner.displayClientMessage(Component.literal
                     ("Estimated Return Cost: " + (contraption.weightCost + fuelReturnCost)).withStyle(ChatFormatting.GOLD), false);
             contraption.owner.displayClientMessage(Component.literal
@@ -459,8 +457,8 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RocketStationMenu(pContainerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+        return RocketStationMenu.create(id, inv, this);
     }
 
     @Override
