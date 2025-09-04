@@ -489,7 +489,6 @@
   "northstar.contraption.controls.landing_notification": "Commencing auto-landing sequence!",
   "northstar.contraption.controls.landing_warning": "Hold Space to slow down!",
   "northstar.contraption.controls.rocket_tut": "Press Space to begin launch sequence!",
-  "northstar.contraption.controls.sit_down": "All entities must be seated before controlling rocket!",
   "northstar.gui.astronomy_table.close_data": "Data points are too close together!",
   "northstar.gui.astronomy_table.different_planets": "Data points are different planets!",
   "northstar.gui.combustion_engine.fluid": "Fluid: ",

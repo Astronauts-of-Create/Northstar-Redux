@@ -98,18 +98,10 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
     }
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        if (!getBlockState().canSurvive(level, worldPosition))
-            level.destroyBlock(worldPosition, true);
-    }
-
     public void queueAssembly(Player player) {
         owner = player;
         assembleNextTick = true;
     }
-
 
     public void enterAssembly() {
         assembleNextTick = true;
@@ -241,9 +233,8 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             movedContraption.destination = target;
             //Assign auto lander
             movedContraption.auto_land_mode = contraption.hasAutoLander;
-            movedContraption.home = this.level.dimension();
+            movedContraption.home = level.dimension();
             RocketHandler.ROCKETS.add(movedContraption);
-            System.out.println(level);
             level.addFreshEntity(movedContraption);
         } else {
             contraption.owner.displayClientMessage(Component.literal
