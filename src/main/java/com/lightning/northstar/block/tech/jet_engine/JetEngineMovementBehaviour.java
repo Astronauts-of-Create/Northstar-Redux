@@ -49,7 +49,7 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
                     if (r.nextInt(8) == 0) context.world.addParticle(new ColdAirParticleData(), v.x, v.y, v.z, 0, 0, 0);
                 }
 
-            } else if (rce.landingMode && rce.lift_vel < 0 && context.contraption.entity.getY() < RocketContraptionEntity.getSlowdownHeightThreshold(rce)) {
+            } else if (rce.landingMode && rce.lift_vel < 0 && context.contraption.entity.getY() < rce.getSlowdownHeightThreshold()) {
                 Vec3 v = context.position;
 //                Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
                 if (rce.slowing) {

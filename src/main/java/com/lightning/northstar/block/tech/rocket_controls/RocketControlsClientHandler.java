@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
-import static com.lightning.northstar.contraptions.RocketContraptionEntity.LAUNCH_COUNTDOWN_TIME;
-
 public class RocketControlsClientHandler {
 
     public static Collection<Integer> currentlyPressed = new HashSet<>();
@@ -31,7 +29,7 @@ public class RocketControlsClientHandler {
     public static int PACKET_RATE = 5;
     private static int packetCooldown;
     private static int displaytime = 0;
-    private static int launchtime = 0;
+    private static int launchTime = 0;
 
     private static WeakReference<RocketContraptionEntity> entityRef = new WeakReference<>(null);
     private static BlockPos controlsPos;
@@ -83,20 +81,20 @@ public class RocketControlsClientHandler {
         if (displaytime < 61) displaytime++;
 
 
-        //Server side communitcates with client side,
+        //Server side communicates with client side,
         //The server handles when the launch happens, the client rocket is only the display puppet of the server side rocket
         if (rce.isActiveLaunch()) {
             //Sync our visual launch time with the clients side (We dont want the number to fluctuate too much)
-            if (Math.abs(rce.getLaunchTime() - launchtime) > 10) launchtime = rce.getLaunchTime();
-            launchtime--;
-            if (launchtime == LAUNCH_COUNTDOWN_TIME || launchtime % 20 == 0) {
-                player.displayClientMessage(Component.literal("T-" + (launchtime / 20)).withStyle(ChatFormatting.AQUA), true);
-                player.level().playSound(player, player.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.get(), SoundSource.BLOCKS, 10, launchtime / 20 == 0 ? 10 : 1);
+            if (Math.abs(rce.getLaunchTime() - launchTime) > 10) launchTime = rce.getLaunchTime();
+            if (launchTime % 20 == 0) {
+                player.displayClientMessage(Component.literal("T-" + (launchTime / 20)).withStyle(ChatFormatting.AQUA), true);
+                player.level().playSound(player, player.blockPosition(), SoundEvents.NOTE_BLOCK_PLING.get(), SoundSource.BLOCKS, 10, launchTime / 20 == 0 ? 10 : 1);
             }
+            launchTime--;
         }
 
         if (rce.landingMode && rce.getY() < rce.getSlowdownHeightThreshold()) {
-            if (!rce.getControllingPlayer().isEmpty()) {
+            if (rce.getControllingPlayer().isPresent()) {
                 if (rce.getControllingPlayer().get() == player.getUUID()) {
                     if (rce.auto_land_mode) {
                         player.displayClientMessage(Component.translatable("northstar.contraption.controls.landing_notification").withStyle(ChatFormatting.RED), true);
@@ -163,7 +161,7 @@ public class RocketControlsClientHandler {
             }
             if (currentlyPressed.contains(5)) {
                 //Stop Controlling
-                launchtime = -20;//So we dont get a double message
+                launchTime = -20;//So we dont get a double message
                 stopControlling();
             }
         }

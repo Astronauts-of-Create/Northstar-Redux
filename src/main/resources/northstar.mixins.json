@@ -6,6 +6,7 @@
   "mixins": [
     "BucketItemMixin",
     "CompassMixin",
+    "ContraptionColliderMixin",
     "ContraptionTestMixin",
     "GravityStuffMixin",
     "MobMixin",

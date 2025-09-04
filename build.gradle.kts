@@ -1,8 +1,8 @@
 import java.time.Instant
 
 plugins {
-    id("architectury-plugin") version "3.4-SNAPSHOT"
-    id("dev.architectury.loom") version "1.9.+"
+    id("architectury-plugin") version "3.4.161"
+    id("dev.architectury.loom") version "1.10.433"
 }
 
 version = "0.2.8-SNAPSHOT+1.20.1" // https://semver.org/
@@ -71,6 +71,7 @@ dependencies {
     "forge"(libs.forge)
 
     annotationProcessor(libs.mixinextras.common)
+    implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
 
     modImplementation(variantOf(libs.create) { classifier("slim") })
