@@ -103,6 +103,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         assembleNextTick = true;
     }
 
+
     public void enterAssembly() {
         assembleNextTick = true;
     }
