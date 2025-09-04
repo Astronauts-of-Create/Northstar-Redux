@@ -4,6 +4,7 @@ import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -21,6 +22,16 @@ public class JetEngineBlock extends Block implements IWrenchable, IBE<JetEngineB
         this.registerDefaultState(defaultBlockState()
                 .setValue(TOP, true)
                 .setValue(BOTTOM, true));
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+        return true; // lets skylight through
+    }
+
+    @Override
+    public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
+        return 0; // 0 = block doesn’t block any light
     }
 
     @Override
