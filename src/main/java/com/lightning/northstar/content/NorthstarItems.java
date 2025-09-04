@@ -385,8 +385,8 @@ public class NorthstarItems {
             .item("rutile_concentrate", Item::new)
             .register();
 
-    public static final ItemEntry<Item> CHARRED_BIOMASS = REGISTRATE
-            .item("charred_biomass", Item::new)
+    public static final ItemEntry<Item> DRY_PLANT_FIBER = REGISTRATE
+            .item("dry_plant_fiber", Item::new)
             .register();
 
     public static final RegistryEntry<BucketItem> TITANIUM_TETRACHLORIDE_BUCKET =

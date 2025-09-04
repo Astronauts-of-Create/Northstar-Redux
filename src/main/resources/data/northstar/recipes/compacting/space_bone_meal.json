@@ -2,25 +2,34 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "item": "northstar:charred_biomass"
+      "item": "northstar:dry_plant_fiber"
     },
     {
-      "item": "northstar:charred_biomass"
+      "item": "northstar:dry_plant_fiber"
     },
     {
-      "item": "northstar:charred_biomass"
+      "item": "northstar:dry_plant_fiber"
     },
     {
-      "item": "northstar:charred_biomass"
+      "item": "northstar:dry_plant_fiber"
     },
     {
-      "item": "northstar:charred_biomass"
+      "item": "northstar:dry_plant_fiber"
     },
     {
-      "item": "northstar:charred_biomass"
+      "item": "northstar:dry_plant_fiber"
     },
     {
-      "amount": 1000,
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "amount": 3000,
       "fluid": "northstar:carbon"
     }
   ],

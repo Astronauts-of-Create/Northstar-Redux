@@ -1,0 +1,207 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "results": [
+    {
+      "amount": 500,
+      "fluid": "northstar:biofuel"
+    }
+  ],
+  "heatRequirement": "heated"
+}

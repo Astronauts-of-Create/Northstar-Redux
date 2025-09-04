@@ -2,11 +2,11 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "amount": 350,
+      "amount": 750,
       "fluid": "northstar:carbon"
     },
     {
-      "amount": 1000,
+      "amount": 750,
       "fluid": "minecraft:water"
     },
     {
@@ -15,7 +15,7 @@
   ],
   "results": [
     {
-      "amount": 350,
+      "amount": 750,
       "fluid": "northstar:hydrocarbon"
     }
   ],

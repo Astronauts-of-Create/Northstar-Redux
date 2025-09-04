@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "northstar:item/charred_biomass"
+    "layer0": "northstar:item/dry_plant_fiber"
   }
 }

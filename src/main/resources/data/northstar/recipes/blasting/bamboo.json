@@ -1,10 +1,10 @@
 {
   "type": "minecraft:blasting",
-  "group": "charred_biomass",
+  "group": "dry_plant_fiber",
   "ingredient": {
     "item": "minecraft:bamboo"
   },
-  "result": "northstar:charred_biomass",
+  "result": "northstar:dry_plant_fiber",
   "experience": 0.2,
   "cookingtime": 100
 }
