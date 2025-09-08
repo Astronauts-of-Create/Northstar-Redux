@@ -3,7 +3,6 @@ package com.lightning.northstar.block.tech.astronomy_table;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
-import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
 

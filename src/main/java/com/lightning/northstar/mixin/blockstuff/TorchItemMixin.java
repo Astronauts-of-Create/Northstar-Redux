@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.blockstuff;
 
-import com.lightning.northstar.block.ExtinguishedTorchWallBlock;
+import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.lightning.northstar.world.OxygenStuff;
 import net.minecraft.core.Direction;

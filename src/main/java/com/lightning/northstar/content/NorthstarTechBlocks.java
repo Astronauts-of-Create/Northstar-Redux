@@ -1,6 +1,6 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.*;
+import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlock;
 import com.lightning.northstar.block.tech.cogs.SpaceCogWheelBlock;

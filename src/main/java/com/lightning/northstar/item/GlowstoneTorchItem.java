@@ -1,6 +1,6 @@
 package com.lightning.northstar.item;
 
-import com.lightning.northstar.block.GlowstoneTorchWallBlock;
+import com.lightning.northstar.block.simple.GlowstoneTorchWallBlock;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
-import com.lightning.northstar.block.LaserBlock;
+import com.lightning.northstar.block.simple.LaserBlock;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;

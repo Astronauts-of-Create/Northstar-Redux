@@ -2,7 +2,6 @@ package com.lightning.northstar;
 
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
-import com.lightning.northstar.content.NorthstarPartialModels;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;

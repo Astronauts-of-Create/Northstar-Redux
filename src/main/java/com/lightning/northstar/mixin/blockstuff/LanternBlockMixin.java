@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.blockstuff;
 
-import com.lightning.northstar.block.ExtinguishedLanternBlock;
+import com.lightning.northstar.block.simple.ExtinguishedLanternBlock;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.lightning.northstar.world.OxygenStuff;
 import net.minecraft.core.BlockPos;

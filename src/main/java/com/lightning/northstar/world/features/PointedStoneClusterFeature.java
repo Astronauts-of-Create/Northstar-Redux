@@ -1,6 +1,6 @@
 package com.lightning.northstar.world.features;
 
-import com.lightning.northstar.block.PointedCrimsiteBlock;
+import com.lightning.northstar.block.simple.PointedCrimsiteBlock;
 import com.lightning.northstar.world.features.configuration.PointedStoneClusterConfiguration;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
