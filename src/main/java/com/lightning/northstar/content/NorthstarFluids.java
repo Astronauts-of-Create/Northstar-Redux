@@ -86,7 +86,7 @@ public class NorthstarFluids {
 
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE =
-            REGISTRATE.standardFluid("tetrachloride",
+            REGISTRATE.standardFluid("titanium_tetrachloride",
                             SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
                                     () -> 1f / 8f * 0.8f))
                     .lang("Titanium Tetrachloride")
