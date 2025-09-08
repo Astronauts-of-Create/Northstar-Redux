@@ -26,7 +26,7 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
 
     @Override
     public void tick(MovementContext context) {
-        if (!context.world.isClientSide() || !context.state.getValue(JetEngineBlock.BOTTOM)) return;
+        if (!context.world.isClientSide() || context.state.getValue(JetEngineBlock.BOTTOM)) return;
         Minecraft mc = Minecraft.getInstance();
         ParticleStatus status = mc.options.particles().get();
         //ALL > DECREASED > MINIMAL

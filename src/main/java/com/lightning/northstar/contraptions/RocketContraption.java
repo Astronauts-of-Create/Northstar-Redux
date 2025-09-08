@@ -150,9 +150,9 @@ public class RocketContraption extends TranslatingContraption {
                 this.localControlsPos = this.toLocalPos(pos);
             }
         }
-        if (NorthstarTechBlocks.JET_ENGINE.has(blockState)) {
+        if (blockState.getBlock() instanceof JetEngineBlock) {
             jet_engines += 1;
-            if (blockState.getValue(JetEngineBlock.BOTTOM)) {
+            if (!blockState.getValue(JetEngineBlock.BOTTOM)) {
                 visual_jet_engines++;
             }
             assembledJets.add(toLocalPos(pos));
