@@ -3,10 +3,10 @@
   "ingredient": {
     "tag": "forge:plates/iron"
   },
-  "loops": 8,
+  "loops": 5,
   "results": [
     {
-      "chance": 65.0,
+      "chance": 70.0,
       "item": "northstar:circuit"
     },
     {
@@ -16,10 +16,6 @@
     {
       "chance": 10.0,
       "item": "create:copper_nugget"
-    },
-    {
-      "chance": 5.0,
-      "item": "minecraft:gold_nugget"
     }
   ],
   "sequence": [

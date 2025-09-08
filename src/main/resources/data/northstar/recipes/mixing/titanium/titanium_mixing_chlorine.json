@@ -1,0 +1,32 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "create:zinc_ingot"
+    },
+    {
+      "item": "create:zinc_ingot"
+    },
+    {
+      "amount": 500,
+      "fluid": "northstar:carbon"
+    },
+    {
+      "amount": 1000,
+      "fluid": "northstar:chlorine"
+    }
+  ],
+  "results": [
+    {
+      "amount": 2500,
+      "fluid": "northstar:tetrachloride"
+    }
+  ],
+  "heatRequirement": "superheated"
+}

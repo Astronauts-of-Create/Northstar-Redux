@@ -1,0 +1,15 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "minecraft:coal_block"
+    }
+  ],
+  "results": [
+    {
+      "amount": 3000,
+      "fluid": "northstar:carbon"
+    }
+  ],
+  "heatRequirement": "heated"
+}

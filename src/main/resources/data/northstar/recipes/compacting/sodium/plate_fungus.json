@@ -1,0 +1,22 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+
+    {
+      "item": "northstar:plate_fungus_stem_block"
+    },
+    {
+      "item": "northstar:plate_fungus_stem_block"
+    },
+    {
+      "item": "northstar:plate_fungus_stem_block"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "fluid": "northstar:sodium_hydroxide"
+    }
+  ],
+  "heatRequirement": "heated"
+}

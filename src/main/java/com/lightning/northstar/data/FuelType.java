@@ -15,6 +15,7 @@ public record FuelType(
         int combustionEngineEfficiency,
         float combustionEngineRpm) {
 
+    //Todo:
     public static final Codec<FuelType> CODEC = RecordCodecBuilder.create(i -> i.group(
             RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluids").forGetter(FuelType::fluids),
             Codec.FLOAT.fieldOf("rocket_multiplier").forGetter(FuelType::rocketMultiplier),

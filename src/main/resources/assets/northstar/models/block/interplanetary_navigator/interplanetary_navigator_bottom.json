@@ -24,15 +24,15 @@
 		{
 			"name": "bottom_base",
 			"from": [1, 0, 1],
-			"to": [15, 4, 15],
+			"to": [15, 5, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [2, 0, 2]},
 			"faces": {
-				"north": {"uv": [0.5, 0, 7.5, 2], "texture": "#1"},
-				"east": {"uv": [0.5, 0, 7.5, 2], "texture": "#1"},
-				"south": {"uv": [0.5, 0, 7.5, 2], "texture": "#1"},
-				"west": {"uv": [0.5, 0, 7.5, 2], "texture": "#1"},
+				"north": {"uv": [9, 5, 16, 7.5], "texture": "#1"},
+				"east": {"uv": [9, 5, 16, 7.5], "texture": "#1"},
+				"south": {"uv": [9, 5, 16, 7.5], "texture": "#1"},
+				"west": {"uv": [9, 5, 16, 7.5], "texture": "#1"},
 				"up": {"uv": [0.5, 2, 7.5, 9], "texture": "#1"},
-				"down": {"uv": [0.5, 2, 7.5, 9], "texture": "#1"}
+				"down": {"uv": [0.5, 9, 7.5, 16], "texture": "#1"}
 			}
 		}
 	]

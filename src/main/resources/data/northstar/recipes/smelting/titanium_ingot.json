@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "northstar:raw_titanium_ore"
+  },
+  "result": "northstar:titanium_ingot",
+  "experience": 0.3,
+  "cookingtime": 500
+}

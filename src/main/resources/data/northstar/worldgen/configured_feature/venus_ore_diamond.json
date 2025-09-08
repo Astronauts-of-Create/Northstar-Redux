@@ -1,13 +1,13 @@
 {
   "type": "minecraft:ore",
   "config": {
-    "size": 2,
-    "discard_chance_on_air_exposure": 0,
+    "size": 6,
+    "discard_chance_on_air_exposure": 0.3,
     "targets": [
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:venus_stone_replacables"
+          "tag": "northstar:venus_stone_replaceables"
         },
         "state": {
           "Name": "northstar:venus_diamond_ore"
@@ -16,7 +16,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:venus_deep_stone_replacables"
+          "tag": "northstar:venus_deep_stone_replaceables"
         },
         "state": {
           "Name": "northstar:venus_deep_diamond_ore"

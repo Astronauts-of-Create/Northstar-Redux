@@ -85,6 +85,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public float final_lift_vel = lift_vel;
     public ResourceKey<Level> home;
     public ResourceKey<Level> destination;
+    private byte dissasemblyTicks;
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -114,6 +115,17 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             if (!level.dimension().equals(destination) && getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
                 changeDimension(level.getServer().getLevel(destination));
             }
+        }
+
+        //If we wait 1 second before disassembling, it helps preventing entities clipping into the ground after disassembling
+        if (dissasemblyTicks > 0) {
+            setDeltaMovement(0, 0, 0);
+            if (!level().isClientSide) {
+//                System.out.println("Dissasembling in " + dissasemblyTicks + " ticks");
+                dissasemblyTicks--;
+                if (dissasemblyTicks == 0) disassemble();
+            }
+            return;
         }
 
         var contraption = getContraption();
@@ -162,9 +174,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
         } else {
             if (this.tickCount % 40 == 0) { //Send a packet containing data from server to client every 40 ticks
-                NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                        new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchTime,
-                                launchingMode, landingMode, blasting, slowing, activeLaunch));
+                writeSyncPacket();
             }
             if (this.landingMode) {
                 NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
@@ -272,6 +282,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         slowing = false;
     }
 
+    private void writeSyncPacket() {
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+                new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime,
+                        launchingMode, landingMode, blasting, slowing, activeLaunch, dissasemblyTicks));
+    }
+
     private void displayInfo() {
         RocketContraption contraption = getContraption();
         double heatCost = (TemperatureStuff.getHeatRating(destination) * ((RocketContraption) this.contraption).blockCount) + TemperatureStuff.getHeatConstant(destination);
@@ -360,6 +376,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
     }
 
+    public void stopAndDissasembleInTicks(int nTicks) {
+        dissasemblyTicks = (byte) nTicks;
+        lift_vel = 0;
+        blasting = false;
+        if (!level().isClientSide()) {
+            writeSyncPacket();
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
     public static void handleSyncPacket(RocketContraptionSyncPacket packet) {
         Entity entity = Minecraft.getInstance().level.getEntity(packet.contraptionEntityId);
@@ -373,6 +398,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         rce.blasting = packet.blasting;
         rce.slowing = packet.slowing;
         rce.activeLaunch = packet.activeLaunch;
+        rce.dissasemblyTicks = packet.dissasemblyTicks;
 //        rce.auto_land_mode = packet.auto_land_mode;
     }
 
@@ -472,7 +498,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
         return true;
     }
-
 
     public void startLaunchSequence() {
         launchTime = LAUNCH_COUNTDOWN_TIME;

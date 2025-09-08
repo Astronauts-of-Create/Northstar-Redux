@@ -37,7 +37,7 @@ public class OxygenConcentratorVisual extends KineticBlockEntityVisual<OxygenCon
     @Override
     public void beginFrame(Context ctx) {
         shaft.setup(blockEntity).setChanged();
-        propeller.setup(blockEntity, 0.25f).setChanged();
+        propeller.setup(blockEntity, 2f).setChanged();
     }
 
     @Override

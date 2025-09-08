@@ -6,20 +6,8 @@
   "loops": 5,
   "results": [
     {
-      "chance": 95.0,
+      "chance": 100.0,
       "item": "northstar:advanced_circuit"
-    },
-    {
-      "chance": 4.0,
-      "item": "minecraft:iron_nugget"
-    },
-    {
-      "chance": 3.0,
-      "item": "create:copper_nugget"
-    },
-    {
-      "chance": 3.0,
-      "item": "minecraft:gold_nugget"
     }
   ],
   "sequence": [

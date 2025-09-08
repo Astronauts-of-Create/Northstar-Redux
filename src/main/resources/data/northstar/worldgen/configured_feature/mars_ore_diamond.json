@@ -1,13 +1,13 @@
 {
   "type": "minecraft:ore",
   "config": {
-    "size": 2,
-    "discard_chance_on_air_exposure": 0,
+    "size": 5,
+    "discard_chance_on_air_exposure": 0.1,
     "targets": [
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mars_stone_replacables"
+          "tag": "northstar:mars_stone_replaceables"
         },
         "state": {
           "Name": "northstar:mars_diamond_ore"
@@ -16,7 +16,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mars_deep_stone_replacables"
+          "tag": "northstar:mars_deep_stone_replaceables"
         },
         "state": {
           "Name": "northstar:mars_deep_diamond_ore"

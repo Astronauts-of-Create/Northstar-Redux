@@ -18,12 +18,13 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
     public boolean blasting;
     public boolean slowing;
     public boolean activeLaunch;
-//    public boolean auto_land_mode;
+    public byte dissasemblyTicks;
 
     public RocketContraptionSyncPacket(Vec3 syncedPos, float lift_vel2, int id,
                                        int vLaunchtime, boolean vLaunched,
                                        boolean vLanding, boolean vBlasting,
-                                       boolean vSlowing, boolean vActiveLaunch) {
+                                       boolean vSlowing, boolean vActiveLaunch,
+                                       byte vDissasemblyTicks) {
         pos = syncedPos;
         lift_vel = lift_vel2;
         contraptionEntityId = id;
@@ -33,6 +34,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         blasting = vBlasting;
         slowing = vSlowing;
         activeLaunch = vActiveLaunch;
+        dissasemblyTicks = vDissasemblyTicks;
     }
 
     public RocketContraptionSyncPacket(FriendlyByteBuf buffer) {
@@ -45,7 +47,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         blasting = buffer.readBoolean();
         slowing = buffer.readBoolean();
         activeLaunch = buffer.readBoolean();
-//        auto_land_mode = buffer.readBoolean();
+        dissasemblyTicks = buffer.readByte();
     }
 
     @Override
@@ -61,7 +63,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         buffer.writeBoolean(blasting);
         buffer.writeBoolean(slowing);
         buffer.writeBoolean(activeLaunch);
-//        buffer.writeBoolean(auto_land_mode);
+        buffer.writeByte(dissasemblyTicks);
     }
 
     @Override
