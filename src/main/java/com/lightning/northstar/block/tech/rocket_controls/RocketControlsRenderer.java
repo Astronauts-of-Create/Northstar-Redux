@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;

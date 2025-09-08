@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;

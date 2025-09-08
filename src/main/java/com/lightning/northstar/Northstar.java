@@ -2,7 +2,7 @@ package com.lightning.northstar;
 
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;
@@ -34,7 +34,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;

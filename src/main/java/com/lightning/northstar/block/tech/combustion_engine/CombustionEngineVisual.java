@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;

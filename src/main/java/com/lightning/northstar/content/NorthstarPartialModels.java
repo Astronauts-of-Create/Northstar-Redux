@@ -1,16 +1,7 @@
-package com.lightning.northstar.block.tech;
+package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.simibubi.create.content.fluids.FluidTransportBehaviour;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import net.createmod.catnip.data.Couple;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.lang.Lang;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
-
-import java.util.*;
 
 public class NorthstarPartialModels {
 
@@ -20,12 +11,10 @@ public class NorthstarPartialModels {
             MARTIAN_STEEL_SPACE_SUIT_HELMET = armor("martian_steel_space_suit_helmet"),
             CIRCUIT_ENGRAVER_HEAD = block("circuit_engraver/head"),
             CIRCUIT_ENGRAVER_LASER = block("circuit_engraver/laser"),
-            HALF_SHAFT = block("half_shaft"),
             OXYGEN_CONCENTATOR_FAN = block("oxygen_concentrator/fan"),
             WARM_SPINNY = block("temperature_regulator/warm_spinny"),
             COLD_SPINNY = block("temperature_regulator/cold_spinny"),
             OXYGEN_FAN = block("oxygen_generator/fan"),
-            SMALL_PISTON = block("combustion_engine/small_piston"),
             PISTON1 = block("combustion_engine/pistons/piston1"),
             PISTON2 = block("combustion_engine/pistons/piston2"),
             PISTON3 = block("combustion_engine/pistons/piston3"),
@@ -42,26 +31,6 @@ public class NorthstarPartialModels {
             CONTROL_LEVER_BLOCK = block("rocket_controls/stick_2"),
             IRON_COGWHEEL = block("iron_cogwheel"),
             IRON_LARGE_COGWHEEL = block("iron_large_cogwheel");
-
-
-    public static final Map<FluidTransportBehaviour.AttachmentTypes.ComponentPartials, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
-            new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.ComponentPartials.class);
-
-    public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
-    public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
-    public static final Map<ResourceLocation, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
-    public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
-
-    static {
-        for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type : FluidTransportBehaviour.AttachmentTypes.ComponentPartials.values()) {
-            Map<Direction, PartialModel> map = new HashMap<>();
-            for (Direction d : Iterate.directions) {
-                String asId = Lang.asId(type.name());
-                map.put(d, block("fluid_pipe/" + asId + "/" + Lang.asId(d.getSerializedName())));
-            }
-        }
-    }
-
 
     private static PartialModel block(String path) {
         return PartialModel.of(Northstar.asResource("block/" + path));

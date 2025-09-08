@@ -9,7 +9,6 @@ import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlo
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachineBlock;
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
-import com.lightning.northstar.block.tech.jet_engine.JetEngineItem;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
@@ -172,8 +171,7 @@ public class NorthstarTechBlocks {
                     .isViewBlocking(NorthstarTechBlocks::never))
             .transform(pickaxeOnly())
             .onRegister(MovementBehaviour.movementBehaviour(new JetEngineMovementBehaviour()))
-            .item(JetEngineItem::new)
-            .build()
+            .simpleItem()
             .register();
 
     public static final BlockEntry<AstronomyTableBlock> ASTRONOMY_TABLE = REGISTRATE

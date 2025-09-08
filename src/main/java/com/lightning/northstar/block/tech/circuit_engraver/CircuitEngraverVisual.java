@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;

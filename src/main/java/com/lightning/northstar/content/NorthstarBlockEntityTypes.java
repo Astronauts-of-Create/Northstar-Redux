@@ -3,7 +3,6 @@ package com.lightning.northstar.content;
 import com.lightning.northstar.block.entity.LaserLenseBlockEntity;
 import com.lightning.northstar.block.entity.OxygenBubbleGeneratorBlockEntity;
 import com.lightning.northstar.block.entity.VenusExhaustBlockEntity;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlockEntity;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlockEntity;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverRenderer;
@@ -18,7 +17,6 @@ import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachi
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachineRenderer;
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlockEntity;
 import com.lightning.northstar.block.tech.ice_box.IceBoxRenderer;
-import com.lightning.northstar.block.tech.jet_engine.JetEngineBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorRenderer;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorVisual;
@@ -32,7 +30,6 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlockEnt
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsVisual;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
-import com.lightning.northstar.block.tech.solar_panel.SolarPanelRenderer;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorRenderer;
@@ -149,12 +146,6 @@ public class NorthstarBlockEntityTypes {
             .visual(() -> RocketControlsVisual::new)
             .validBlocks(NorthstarTechBlocks.ROCKET_CONTROLS)
             //.renderer(() -> RocketControlsRenderer::new)
-            .register();
-
-    public static final BlockEntityEntry<JetEngineBlockEntity> JET_ENGINE = REGISTRATE
-            .blockEntity("jet_engine", JetEngineBlockEntity::new)
-            //.renderer(() -> JetEngineRenderer::new)
-            .validBlocks(NorthstarTechBlocks.JET_ENGINE)
             .register();
 
     public static final BlockEntityEntry<SlidingDoorBlockEntity> SPACE_DOORS =
