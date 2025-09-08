@@ -283,9 +283,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     }
 
     private void writeSyncPacket() {
-        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime,
-                        launchingMode, landingMode, blasting, slowing, activeLaunch, dissasemblyTicks));
+        RocketContraptionSyncPacket packet = new RocketContraptionSyncPacket(
+                getId(), position(), lift_vel, launchTime,
+                launchingMode, landingMode, blasting, slowing,
+                activeLaunch, dissasemblyTicks);
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), packet);
     }
 
     private void displayInfo() {
@@ -392,14 +394,13 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         rce.setPos(packet.pos.x, packet.pos.y, packet.pos.z);
         rce.lift_vel = packet.lift_vel;
-        rce.launchTime = packet.launchtime;
+        rce.launchTime = packet.launchTime;
         rce.launchingMode = packet.launched;
         rce.landingMode = packet.landing;
         rce.blasting = packet.blasting;
         rce.slowing = packet.slowing;
         rce.activeLaunch = packet.activeLaunch;
-        rce.dissasemblyTicks = packet.dissasemblyTicks;
-//        rce.auto_land_mode = packet.auto_land_mode;
+        rce.dissasemblyTicks = packet.disassemblyTicks;
     }
 
     @OnlyIn(Dist.CLIENT)

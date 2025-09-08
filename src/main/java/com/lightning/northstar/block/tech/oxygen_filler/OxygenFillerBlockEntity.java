@@ -65,7 +65,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        tank = SmartFluidTankBehaviour.single(this, 10000);
+        tank = SmartFluidTankBehaviour.single(this, 1000);
         behaviours.add(tank);
     }
 

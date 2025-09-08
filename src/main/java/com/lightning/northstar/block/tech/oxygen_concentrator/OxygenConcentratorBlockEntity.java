@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.oxygen_concentrator;
 
 import com.lightning.northstar.content.NorthstarFluids;
+import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -37,10 +38,9 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
         super(typeIn, pos, state);
     }
 
-
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        tank = SmartFluidTankBehaviour.single(this, 10000);
+        tank = SmartFluidTankBehaviour.single(this, 1000);
         behaviours.add(tank);
     }
 
@@ -75,30 +75,19 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
         return true;
     }
 
-    private static final ResourceKey<Level> OVERWORLD =
-            ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
-                    new ResourceLocation("minecraft", "overworld"));
-
-    private static final ResourceKey<Level> MARS =
-            ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
-                    new ResourceLocation("northstar", "mars"));
-
-    private static final ResourceKey<Level> VENUS =
-            ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
-                    new ResourceLocation("northstar", "venus"));
-
     @Override
     public void tick() {
-        super.tick();//TODO: Add carbon as well as oxygen
-        if (getSpeed() == 0)
+        super.tick();
+        if (speed == 0 || overStressed)
             return;
         float abs = Math.abs(getSpeed());
         int increment = Mth.clamp(((int) abs - 100) / 200, 1, 5);
         airLevel = Math.min(500, airLevel + increment);
 
-        if (level.dimension().equals(OVERWORLD)) {
+        ResourceKey<Level> dimension = level.dimension();
+        if (dimension.equals(Level.OVERWORLD)) {
             tank.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.OXYGEN.get(), increment), FluidAction.EXECUTE);
-        } else if (level.dimension().equals(MARS) || level.dimension().equals(VENUS)) {
+        } else if (dimension.equals(NorthstarDimensions.MARS_DIM_KEY) || dimension.equals(NorthstarDimensions.VENUS_DIM_KEY)) {
             tank.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.CARBON.get(), increment), FluidAction.EXECUTE);
         }
     }

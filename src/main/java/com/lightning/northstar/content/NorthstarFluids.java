@@ -94,7 +94,7 @@ public class NorthstarFluids {
                     .fluidProperties(p -> p.levelDecreasePerBlock(1)
                             .tickRate(8).slopeFindDistance(3).explosionResistance(100f))
                     .source(ForgeFlowingFluid.Source::new)
-                    .block((fluidSupplier, properties) -> new TitaniumTetrachlorideBlock(fluidSupplier, properties))
+                    .block(TitaniumTetrachlorideBlock::new)
                     .build()
                     .register();
 

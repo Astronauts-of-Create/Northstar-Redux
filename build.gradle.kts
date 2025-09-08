@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.2.8-SNAPSHOT+1.20.1" // https://semver.org/
+version = "0.3.0-SNAPSHOT+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -39,12 +39,12 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
-//    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-//        credentials {
-//            username = project.property("github.packages.username") as? String
-//            password = project.property("github.packages.password") as? String
-//        }
-//    }
+    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
+        credentials {
+            username = project.property("github.packages.username") as? String
+            password = project.property("github.packages.password") as? String
+        }
+    }
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
@@ -85,14 +85,10 @@ dependencies {
 
     modImplementation(libs.jei.forge)
     modRuntimeOnly(libs.copycats)
-//    modRuntimeOnly(libs.cbc) //Create addons
-    modRuntimeOnly(libs.cdg)
 
     modRuntimeOnly(libs.embeddium)
     modRuntimeOnly(libs.oculus)
     forgeRuntimeLibrary(libs.jcpp)
-
-//    modRuntimeOnly(libs.xray) //An easy way for inspecting ore generation
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }

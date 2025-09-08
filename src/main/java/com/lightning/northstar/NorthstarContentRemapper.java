@@ -23,7 +23,7 @@ public class NorthstarContentRemapper {
     private static final Map<ResourceLocation, ResourceLocation> remapped = new HashMap<>();
 
     static {
-        // 0.2.8: Replace iron with titanium (as part of #7)
+        // 0.3.0: Replace iron with titanium (as part of #7)
         remap("iron_sheetmetal", NorthstarBlocks.TITANIUM_SHEETMETAL);
         remap("iron_sheetmetal_slab", NorthstarBlocks.TITANIUM_SHEETMETAL_SLAB);
         remap("iron_sheetmetal_vertical_slab", NorthstarBlocks.TITANIUM_SHEETMETAL_VERTICAL_SLAB);
