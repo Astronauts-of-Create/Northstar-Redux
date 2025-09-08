@@ -12,7 +12,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -72,15 +75,32 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
         return true;
     }
 
+    private static final ResourceKey<Level> OVERWORLD =
+            ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
+                    new ResourceLocation("minecraft", "overworld"));
+
+    private static final ResourceKey<Level> MARS =
+            ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
+                    new ResourceLocation("northstar", "mars"));
+
+    private static final ResourceKey<Level> VENUS =
+            ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
+                    new ResourceLocation("northstar", "venus"));
+
     @Override
     public void tick() {
-        super.tick();
+        super.tick();//TODO: Add carbon as well as oxygen
         if (getSpeed() == 0)
             return;
         float abs = Math.abs(getSpeed());
         int increment = Mth.clamp(((int) abs - 100) / 200, 1, 5);
         airLevel = Math.min(500, airLevel + increment);
-        tank.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.OXYGEN.get(), increment), FluidAction.EXECUTE);
+
+        if (level.dimension().equals(OVERWORLD)) {
+            tank.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.OXYGEN.get(), increment), FluidAction.EXECUTE);
+        } else if (level.dimension().equals(MARS) || level.dimension().equals(VENUS)) {
+            tank.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.CARBON.get(), increment), FluidAction.EXECUTE);
+        }
     }
 
     @Override

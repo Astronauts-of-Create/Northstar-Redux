@@ -3,7 +3,7 @@
   "ingredient": {
     "tag": "forge:plates/iron"
   },
-  "loops": 9,
+  "loops": 8,
   "results": [
     {
       "chance": 120.0,
@@ -18,20 +18,7 @@
           "item": "northstar:unfinished_targeting_computer"
         },
         {
-          "item": "northstar:circuit"
-        }
-      ],
-      "results": [
-        {
-          "item": "northstar:unfinished_targeting_computer"
-        }
-      ]
-    },
-    {
-      "type": "northstar:engraving",
-      "ingredients": [
-        {
-          "item": "northstar:unfinished_targeting_computer"
+          "item": "northstar:polished_diamond"
         }
       ],
       "results": [
@@ -76,7 +63,20 @@
           "item": "northstar:unfinished_targeting_computer"
         },
         {
-          "item": "northstar:polished_diamond"
+          "item": "northstar:circuit"
+        }
+      ],
+      "results": [
+        {
+          "item": "northstar:unfinished_targeting_computer"
+        }
+      ]
+    },
+    {
+      "type": "northstar:engraving",
+      "ingredients": [
+        {
+          "item": "northstar:unfinished_targeting_computer"
         }
       ],
       "results": [

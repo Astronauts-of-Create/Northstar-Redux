@@ -1,0 +1,16 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "amount": 1000,
+      "fluid": "createdieselgenerators:biodiesel"
+    }
+  ],
+  "results": [
+    {
+      "amount": 350,
+      "fluid": "northstar:carbon"
+    }
+  ],
+  "heatRequirement": "superheated"
+}

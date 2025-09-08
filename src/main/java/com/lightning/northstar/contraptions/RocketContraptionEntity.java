@@ -1,5 +1,6 @@
 package com.lightning.northstar.contraptions;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
@@ -41,6 +42,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -85,7 +87,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     int cooldown = 0;
     int cooldownLength = 100;
     private int maxSpeed = 5;
-    /** In ticks */
+    /**
+     * In ticks
+     */
     private int launchtime = 0;
     public int visualEngineCount = 0;
     private boolean activeLaunch = false;
@@ -96,6 +100,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public ResourceKey<Level> home;
     public ResourceKey<Level> destination;
     public WeakReference<RocketContraptionEntity> entity;
+    private byte dissasemblyTicks;
 
     public int getLaunchTime() {
         return launchtime;
@@ -145,6 +150,17 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     protected void tickContraption() {
         if (!level().dimension().equals(destination) && getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT && level() instanceof ServerLevel) {
             changeDimension(level().getServer().getLevel(destination));
+        }
+
+        //If we wait 1 second before disassembling, it helps preventing entities clipping into the ground after disassembling
+        if (dissasemblyTicks > 0) {
+            setDeltaMovement(0, 0, 0);
+            if (!level().isClientSide) {
+//                System.out.println("Dissasembling in " + dissasemblyTicks + " ticks");
+                dissasemblyTicks--;
+                if (dissasemblyTicks == 0) disassemble();
+            }
+            return;
         }
 
         var contraption = getContraption();
@@ -211,9 +227,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
         } else {
             if (this.tickCount % 40 == 0) { //Send a packet containing data from server to client every 40 ticks
-                NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                        new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime,
-                                launchingMode, landingMode, blasting, slowing, activeLaunch));
+writeSyncPacket();
             }
             if (this.landingMode) {
                 NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
@@ -320,7 +334,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                             level().addFreshEntity(new ItemEntity(level(), player.getX(), player.getY(), player.getZ(), returnTicket));
                         }
                     }
-                    disassemble();
+                    setPos(getX(), getY() + 1, getZ());   //To prevent the rocket from colliding with the world, we move it up
+                    stopAndDissasembleInTicks(20);
+
                     if (this.landingMode && isUsingTicket) {//Consume the ticket
                         RocketHandler.deleteTicket(level(), this.blockPosition());
                     }
@@ -343,6 +359,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (Math.signum(prevAxisMotion) != Math.signum(axisMotion) && prevAxisMotion != 0)
             this.contraption.stop(level());
         slowing = false;
+    }
+
+    private void writeSyncPacket() {
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+                new RocketContraptionSyncPacket(this.position(), lift_vel, this.getId(), launchtime,
+                        launchingMode, landingMode, blasting, slowing, activeLaunch, dissasemblyTicks));
     }
 
     private void securePassengers() {
@@ -442,6 +464,54 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
     }
 
+
+    public void stopAndDissasembleInTicks(int nTicks) {
+        dissasemblyTicks = (byte) nTicks;
+        lift_vel = 0;
+        blasting = false;
+        if (!level().isClientSide()) {
+            writeSyncPacket();
+        }
+    }
+
+
+//    public void addPassenger(Entity passenger, Integer seatIndex, Vec3 offset) {
+//        Northstar.LOGGER.info("ROCKET: Adding passenger " + passenger + " Seat ID: " + seatIndex + " Offset " + offset);
+//        //If we want to set an offset (and we dont have one already), do it
+//        if (offset != null && !passengerOffsets.containsKey(passenger.getId())) {
+//            System.out.println("ROCKET: Setting offset for passenger " + passenger + " Seat ID: " + seatIndex + " Offset " + offset);
+//            passengerOffsets.put(passenger.getId(), offset);
+//        }
+//
+//        if (seatIndex == null) {//When we want to force seat an entity but they aren't in a seat
+//
+//            if (offset == null) {//If the offset is null
+//                offset = passengerOffsets.get(passenger.getId());
+//                if (offset == null) { //If we dont have an offset for this passenger, make one
+//                    offset = new Vec3(passenger.getX() - getX(), passenger.getY() - getY(), passenger.getZ() - getZ());
+//                    Northstar.LOGGER.info("ROCKET: Recording Passenger Offset. Passenger: {}; Offset: {}", passenger, offset);
+//                    passengerOffsets.put(passenger.getId(), offset);
+//                }
+//            }
+//
+//            passenger.startRiding(this, true);
+//            if (passenger instanceof TamableAnimal ta) ta.setInSittingPose(true);
+//
+//            //TODO: Should the passenger be seated using create seats?
+//            //Make a new seat and add sitting passenger based on it (The only issue is when 2 entities share the same block position)
+//            //We CANNOT assign a fake seat id (the seat ID must be corresponding to an actual seat in contraption.getSeats())
+//            //see com.simibubi.create.content.contraptions.Contraption.addPassengersToWorld(Contraption.java:1297)
+//            BlockPos newSeat = new BlockPos((int) offset.x, (int) offset.y, (int) offset.z);
+//            contraption.getSeats().add(newSeat); //Add the new seat and get the index
+//            seatIndex = contraption.getSeats().indexOf(newSeat);
+//        }
+//
+//        passenger.setInvulnerable(true);
+//        passenger.noPhysics = true;
+//        super.addSittingPassenger(passenger, seatIndex);
+//    }
+
+
     @OnlyIn(Dist.CLIENT)
     public static void handleSyncPacket(RocketContraptionSyncPacket packet) {
         Entity entity = Minecraft.getInstance().level.getEntity(packet.contraptionEntityId);
@@ -455,6 +525,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         rce.blasting = packet.blasting;
         rce.slowing = packet.slowing;
         rce.activeLaunch = packet.activeLaunch;
+        rce.dissasemblyTicks = packet.dissasemblyTicks;
 //        rce.auto_land_mode = packet.auto_land_mode;
     }
 
@@ -542,7 +613,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return true;
     }
 
-    /** In ticks */
+    /**
+     * In ticks
+     */
     public final static int LAUNCH_COUNTDOWN_TIME = 220;
 
     public void startLaunchSequence() {
