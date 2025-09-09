@@ -203,9 +203,11 @@ public class NorthstarTechBlocks {
                     .isViewBlocking(NorthstarTechBlocks::never)
                     .sound(SoundType.NETHERITE_BLOCK).noOcclusion())
             .transform(pickaxeOnly())
+            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
             .item()
             .transform(customItemModel("_", "block"))
             .register();
+
     public static final BlockEntry<RocketStationBlock> ROCKET_STATION = REGISTRATE
             .block("rocket_station", RocketStationBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -216,6 +218,7 @@ public class NorthstarTechBlocks {
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketStationBlockMovingInteraction()))
             .lang("Rocket Station")
             .register();
+
     public static final BlockEntry<RocketControlsBlock> ROCKET_CONTROLS = REGISTRATE
             .block("rocket_controls", RocketControlsBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -228,6 +231,7 @@ public class NorthstarTechBlocks {
             .simpleItem()
             .lang("Rocket Controls")
             .register();
+
     public static final BlockEntry<TargetingComputerRackBlock> COMPUTER_RACK = REGISTRATE
             .block("computer_rack", TargetingComputerRackBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -238,6 +242,7 @@ public class NorthstarTechBlocks {
             .simpleItem()
             .lang("Computer Rack")
             .register();
+
     public static final BlockEntry<OxygenDetectorBlock> OXYGEN_DETECTOR = REGISTRATE
             .block("oxygen_detector", OxygenDetectorBlock::new)
             .initialProperties(SharedProperties::softMetal)
