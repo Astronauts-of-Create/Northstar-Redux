@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.blockstuff;
 
-import com.lightning.northstar.world.OxygenStuff;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -19,7 +19,7 @@ public class FireBlockMixin {
     @Inject(method = "canSurvive", at = @At("HEAD"), cancellable = true)
     public void canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos, CallbackInfoReturnable<Boolean> info) {
         try {
-            if (TemperatureStuff.getTemp(pPos, (Level) pLevel) < -100 || (!OxygenStuff.hasOxygen(pPos, ((Level)pLevel).dimension()) && !NorthstarPlanets.getPlanetOxy(((Level)pLevel).dimension()))) {
+            if (NorthstarTemperature.getTemperatureAt((Level) pLevel, pPos) < -100 || (!NorthstarOxygen.hasOxygen(((Level)pLevel), pPos) && !NorthstarPlanets.getPlanetOxy(((Level)pLevel).dimension()))) {
                 info.setReturnValue(false);
             }
         } catch (Exception e) {

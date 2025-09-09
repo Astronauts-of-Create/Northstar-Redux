@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.data.FuelType;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -84,7 +84,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             return;
         }
 
-        if (!OxygenStuff.hasOxygen(worldPosition, level.dimension())) {
+        if (!NorthstarOxygen.hasOxygen(level, worldPosition)) {
             if (generatorSpeed != 0) {
                 generatorSpeed = 0;
                 updateGeneratedRotation();

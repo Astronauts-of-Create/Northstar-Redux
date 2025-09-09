@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -284,7 +284,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (level.isClientSide)
             return;
         updateRecipe();
-        int temperature = TemperatureStuff.getTemp(worldPosition, level);
+        float temperature = NorthstarTemperature.getTemperatureAt(level, worldPosition);
         float freezespeed = 0;
         if (temperature <= 0) {
             freezespeed = Math.abs(temperature) / 15;

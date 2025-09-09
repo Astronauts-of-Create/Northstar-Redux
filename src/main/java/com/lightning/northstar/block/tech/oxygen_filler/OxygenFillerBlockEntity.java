@@ -3,7 +3,7 @@ package com.lightning.northstar.block.tech.oxygen_filler;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -82,10 +82,10 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         if (item.is(NorthstarItemTags.OXYGEN_SOURCES.tag) && (NorthstarFluidTags.IS_OXY.matches(fluid) || NorthstarFluidTags.FORGE_OXYGEN.matches(fluid))) {
             CompoundTag tag = item.getOrCreateTag();
             int currentOxy = tag.getInt("Oxygen");
-            while (currentOxy + increment > OxygenStuff.maximumOxy) {
+            while (currentOxy + increment > NorthstarOxygen.MAXIMUM_OXYGEN) {
                 increment--;
             }
-            increment = increment > 0 ? increment : 0;
+            increment = Math.max(increment, 0);
             if (increment == 0 && !hasStopped) {
                 AllSoundEvents.CONFIRM.playAt(level, worldPosition, 0.4f, 0, true);
                 hasStopped = true;
@@ -185,9 +185,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenFillerBlock.HORIZONTAL_FACING).getOpposite())
-            return tank.getCapability()
-                    .cast();
-        tank.getCapability().cast();
+            return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }
 

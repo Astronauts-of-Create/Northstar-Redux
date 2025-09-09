@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.blockstuff;
 
 import com.lightning.northstar.particle.ColdAirParticleData;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,7 +29,7 @@ public class IceBlockMixin {
             return;
         }
 
-        int highestTemp = checkTemp(pState, pLevel, pPos, pRandom);
+        float highestTemp = checkTemp(pState, pLevel, pPos, pRandom);
         if(pRandom.nextFloat() > 0.4) {
             if(100 < highestTemp){
                 this.evaporate2(pState, pLevel, pPos);
@@ -46,11 +46,11 @@ public class IceBlockMixin {
     }
     
 
-    public int checkTemp(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        int highestTemp = TemperatureStuff.getTemp(pPos, pLevel);
+    public float checkTemp(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        float highestTemp = NorthstarTemperature.getTemperatureAt(pLevel, pPos);
         for(Direction dirs : Direction.values()) {
-            if(TemperatureStuff.getTemp(pPos.mutable().move(dirs), pLevel) > highestTemp && pLevel.getBlockState(pPos.mutable().move(dirs)).isAir()) {
-                highestTemp = TemperatureStuff.getTemp(pPos.mutable().move(dirs), pLevel);
+            if(NorthstarTemperature.getTemperatureAt(pLevel, pPos.mutable().move(dirs)) > highestTemp && pLevel.getBlockState(pPos.mutable().move(dirs)).isAir()) {
+                highestTemp = NorthstarTemperature.getTemperatureAt(pLevel, pPos.mutable().move(dirs));
             }
         }
         return highestTemp;

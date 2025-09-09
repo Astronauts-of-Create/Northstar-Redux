@@ -4,8 +4,8 @@ import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.contraptions.RocketContraption;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.lightning.northstar.contraptions.RocketHandler;
-import com.lightning.northstar.world.OxygenStuff;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.*;
@@ -170,8 +170,8 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             contraption.fuelReturnCost = fuelReturnCost;
             contraption.dest = target;
             System.out.println(this.container);
-            heatCost = (TemperatureStuff.getHeatRating(target) * (contraption.blockCount)) + TemperatureStuff.getHeatConstant(target);
-            heatCostHome = (TemperatureStuff.getHeatRating(level.dimension()) * (contraption.blockCount)) + TemperatureStuff.getHeatConstant(level.dimension());
+            heatCost = (NorthstarTemperature.getHeatRating(target) * (contraption.blockCount)) + NorthstarTemperature.getHeatConstant(target);
+            heatCostHome = (NorthstarTemperature.getHeatRating(level.dimension()) * (contraption.blockCount)) + NorthstarTemperature.getHeatConstant(level.dimension());
             if (heatCostHome > heatCost) {
                 heatCost = heatCostHome;
             }
@@ -201,16 +201,11 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             System.out.println("Obamna");
         }
 
-        Set<BlockPos> oxyCheck = new HashSet<>();
-        boolean oxygenSealed = true;
-        oxyCheck.add(this.getBlockPos().above());
-        if (oxyCheck.size() < OxygenStuff.maximumOxy) {
-            OxygenStuff.spreadOxy(this.level, oxyCheck, OxygenStuff.maximumOxy);
-//            System.out.println(oxyCheck.size());
-        }
-        if (oxyCheck.size() >= OxygenStuff.maximumOxy) {
-            oxygenSealed = false;
-        }
+        ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
+        ContraptionWorld contraptionWorld = contraption.getContraptionWorld();
+        int maximumSealedBlocks = AllConfigs.server().kinetics.maxBlocksMoved.get() - contraption.getBlocks().size(); // TODO: how much should this be
+        boolean oxygenSealed = sealer.beginSeal(contraptionWorld, worldPosition, Direction.UP) && sealer.updateSeal(contraptionWorld, maximumSealedBlocks);
+
         boolean interplanetaryFlag = NorthstarPlanets.isInterplanetary(level.dimension(), target);
         if (interplanetaryFlag) {
             if (contraption.hasInterplanetaryNavigation) {
@@ -252,8 +247,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
                     ("Required Engines: " + requiredJets).withStyle(ChatFormatting.BLUE), false);
             contraption.owner.displayClientMessage(Component.literal
                     ("Current Engine Count: " + contraption.hasJetEngine()).withStyle(ChatFormatting.BLUE), false);
-            contraption.owner.displayClientMessage(Component.literal
-                    ("Oxygen Size: " + oxyCheck.size()).withStyle(ChatFormatting.AQUA), false);
+            //contraption.owner.displayClientMessage(Component.literal("Oxygen Size: " + oxyCheck.size()).withStyle(ChatFormatting.AQUA), false);
             if (!oxygenSealed) {
                 contraption.owner.displayClientMessage(Component.literal
                         ("Cockpit is not sealed, or too large!").withStyle(ChatFormatting.DARK_RED), false);

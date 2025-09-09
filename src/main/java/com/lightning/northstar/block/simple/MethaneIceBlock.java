@@ -3,7 +3,7 @@ package com.lightning.northstar.block.simple;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.particle.ColdAirParticleData;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,9 +34,9 @@ public class MethaneIceBlock extends HalfTransparentBlock {
     public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pTe, ItemStack pStack) {
         super.playerDestroy(pLevel, pPlayer, pPos, pState, pTe, pStack);
         if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, pStack) == 0) {
-            if (TemperatureStuff.getBoilingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < TemperatureStuff.getTemp(pPos, pLevel)) {
+            if (NorthstarTemperature.getBoilingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
                 this.evaporate(pState, pLevel, pPos);
-            } else if (TemperatureStuff.getFreezingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < TemperatureStuff.getTemp(pPos, pLevel)) {
+            } else if (NorthstarTemperature.getFreezingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
                 this.melt(pState, pLevel, pPos);
             }
         }
@@ -47,7 +47,7 @@ public class MethaneIceBlock extends HalfTransparentBlock {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        if (random.nextInt(5) != 0 && TemperatureStuff.getTemp(pos, level) < TemperatureStuff.getFreezingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState())) {
+        if (random.nextInt(5) != 0 && NorthstarTemperature.getTemperatureAt(level, pos) < NorthstarTemperature.getFreezingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState())) {
             return;
         }
         for (Direction dir : Direction.values()) {
@@ -62,9 +62,9 @@ public class MethaneIceBlock extends HalfTransparentBlock {
 
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        if (TemperatureStuff.getBoilingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < TemperatureStuff.getTemp(pPos, pLevel)) {
+        if (NorthstarTemperature.getBoilingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
             this.evaporate(pState, pLevel, pPos);
-        } else if (TemperatureStuff.getFreezingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < TemperatureStuff.getTemp(pPos, pLevel)) {
+        } else if (NorthstarTemperature.getFreezingPoint(NorthstarFluids.METHANE.getSource().defaultFluidState()) < NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
             this.melt(pState, pLevel, pPos);
         }
     }

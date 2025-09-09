@@ -23,9 +23,9 @@ import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentrator
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerRenderer;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorBlockEntity;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorRenderer;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorVisual;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlockEntity;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerRenderer;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerVisual;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlockEntity;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsRenderer;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
@@ -72,11 +72,11 @@ public class NorthstarBlockEntityTypes {
             .renderer(() -> TemperatureRegulatorRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<OxygenGeneratorBlockEntity> OXYGEN_GENERATOR = REGISTRATE
-            .blockEntity("oxygen_generator", OxygenGeneratorBlockEntity::new)
-            .visual(() -> OxygenGeneratorVisual::new)
-            .validBlocks(NorthstarTechBlocks.OXYGEN_GENERATOR)
-            .renderer(() -> OxygenGeneratorRenderer::new)
+    public static final BlockEntityEntry<OxygenSealerBlockEntity> OXYGEN_GENERATOR = REGISTRATE
+            .blockEntity("oxygen_sealer", OxygenSealerBlockEntity::new)
+            .visual(() -> OxygenSealerVisual::new)
+            .validBlocks(NorthstarTechBlocks.OXYGEN_SEALER)
+            .renderer(() -> OxygenSealerRenderer::new)
             .register();
 
     public static final BlockEntityEntry<SolarPanelBlockEntity> SOLAR_PANEL = REGISTRATE

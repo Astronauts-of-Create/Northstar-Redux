@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.blockstuff;
 
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -24,8 +24,8 @@ public class CandleBlockMixin {
     LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos, CallbackInfoReturnable<BlockState> info) {
         try {
             if(pState.is(BlockTags.CANDLES)) {
-                System.out.println(OxygenStuff.hasOxygen(pCurrentPos,((Level)pLevel).dimension()));
-                if(!OxygenStuff.hasOxygen(pCurrentPos,((Level)pLevel).dimension()) && pState.getValue(CandleBlock.LIT)) {
+                System.out.println(NorthstarOxygen.hasOxygen(((Level)pLevel), pCurrentPos));
+                if(!NorthstarOxygen.hasOxygen(((Level)pLevel), pCurrentPos) && pState.getValue(CandleBlock.LIT)) {
                     if(! pState.canSurvive(pLevel, pCurrentPos)) {
                         info.setReturnValue(Blocks.AIR.defaultBlockState());
                         return;

@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.blockstuff;
 
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,7 +26,7 @@ public class CampfireBlockMixin {
             Level level = pContext.getLevel();
             boolean flag = level.getFluidState(pos).getType() == Fluids.WATER;
             if(item.is(Items.CAMPFIRE)) {
-                if(!OxygenStuff.hasOxygen(pos, level.dimension())) {
+                if(!NorthstarOxygen.hasOxygen(level, pos)) {
                     info.cancel();
                     info.setReturnValue(Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.WATERLOGGED, flag)
                             .setValue(CampfireBlock.LIT, false).setValue(CampfireBlock.FACING, pContext.getHorizontalDirection()));

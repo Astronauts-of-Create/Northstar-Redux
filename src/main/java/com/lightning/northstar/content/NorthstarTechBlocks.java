@@ -13,7 +13,7 @@ import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorBlock;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlock;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInteractionBehaviour;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsMovementBehaviour;
@@ -135,8 +135,8 @@ public class NorthstarTechBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<OxygenGeneratorBlock> OXYGEN_GENERATOR = REGISTRATE
-            .block("oxygen_generator", OxygenGeneratorBlock::new)
+    public static final BlockEntry<OxygenSealerBlock> OXYGEN_SEALER = REGISTRATE
+            .block("oxygen_sealer", OxygenSealerBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .noOcclusion()

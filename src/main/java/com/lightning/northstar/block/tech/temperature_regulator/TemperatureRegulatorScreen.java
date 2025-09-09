@@ -2,323 +2,94 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.world.TemperatureStuff;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.lightning.northstar.util.MutableAABB;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
+import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 public class TemperatureRegulatorScreen extends AbstractSimiScreen {
-    private final ResourceLocation TEMPERATURE_REGULATOR = Northstar.asResource("textures/gui/temperature_regulator.png");
-    protected int imageWidth = 204;
-    protected int imageHeight = 166;
-    private int sizeX;
-    private int sizeY;
-    private int sizeZ;
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
-    private int temp;
-    protected final List<Component> envOptions = new ArrayList<>();
 
-    private boolean envFill;
-    private TemperatureRegulatorBlockEntity blockEntity;
+    private static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/temperature_regulator.png");
 
-    public TemperatureRegulatorScreen(TemperatureRegulatorBlockEntity block) {
-        blockEntity = block;
-        sizeX = block.sizeX;
-        sizeY = block.sizeY;
-        sizeZ = block.sizeZ;
-        offsetX = block.offsetX;
-        offsetY = block.offsetY;
-        offsetZ = block.offsetZ;
-        temp = block.temp;
-    }
+    private final TemperatureRegulatorBlockEntity be;
 
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        temp = Mth.clamp(temp, -273, 1000);
-        RenderSystem.disableBlend();
-        this.renderVariables(graphics, mouseX, mouseY, partialTicks);
-        this.renderButtons(graphics, mouseX, mouseY, partialTicks);
+    public TemperatureRegulatorScreen(TemperatureRegulatorBlockEntity be) {
+        super(Component.literal("Temperature Regulator"));
+        this.be = be;
 
-//        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+        setWindowSize(204, 40);
     }
 
     @Override
     protected void init() {
         super.init();
-        sizeX = blockEntity.sizeX;
-        sizeY = blockEntity.sizeY;
-        sizeZ = blockEntity.sizeZ;
-        offsetX = blockEntity.offsetX;
-        offsetY = blockEntity.offsetY;
-        offsetZ = blockEntity.offsetZ;
-        envFill = blockEntity.envFill;
-        envOptions.add(Component.translatable("northstar.gui.temperature_regulator.box"));
-        envOptions.add(Component.translatable("northstar.gui.temperature_regulator.env_fill"));
-        this.initScrollStuff();
-    }
 
-    protected void renderButtons(GuiGraphics pPoseStack, int mouseX, int mouseY, float delta) {
-    }
+        int x = guiLeft, y = guiTop;
 
-    protected void renderVariables(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        int x = (width - (imageWidth + (imageWidth / 2))) / 2;
-        int y = (height - (imageHeight + (imageHeight / 2))) / 2;
-        //this.font.draw(graphics, Component.literal("Temperature: " + blockEntity.temp).withStyle(ChatFormatting.AQUA), x, y, 6944);
-        //this.font.draw(graphics, Component.literal("Offset: " + blockEntity.offsetX + ", " + blockEntity.offsetY + ", " + blockEntity.offsetZ).withStyle(ChatFormatting.AQUA), x, y + 20, 6944);
-        //this.font.draw(graphics, Component.literal("Size: " + blockEntity.sizeX + ", " + blockEntity.sizeY + ", " + blockEntity.sizeZ).withStyle(ChatFormatting.AQUA), x, y + 40, 6944);
-        graphics.drawString(font, Component.literal("C°").withStyle(ChatFormatting.WHITE), x + 213, y + 110, 6944);
-        //this.font.draw(graphics, Component.literal("Fill Mode").withStyle(ChatFormatting.GRAY), x + 180, y + 85, 6944);
-    }
+        MutableAABB bounds = be.bounds;
+        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), bounds.width(), "Width (X)");
+        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), bounds.height(), "Height (Y)");
+        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), bounds.height(), "Depth (Z)");
 
-    protected void initScrollStuff() {
-        int x = (width - (imageWidth + (imageWidth / 2))) / 2;
-        int y = (height - (imageHeight + (imageHeight / 2))) / 2;
-        List<String> strings = new ArrayList<>();
-        strings.add("X");
-        strings.add("Y");
-        strings.add("Z");
-        Vector<Label> labels = new Vector<>(3);
-        Vector<ScrollInput> inputs = new Vector<>(3);
-        temp = blockEntity.temp;
-        envFill = blockEntity.envFill;
+        // condition is negated because a click is simulated to sync the states of everything
+        boolean[] limit = { be.bounds.minX == Integer.MIN_VALUE };
 
-        IconButton confirm_change = new IconButton(x + imageWidth + 20, y + 105, AllIcons.I_CONFIRM);
-        confirm_change.setToolTip(Component.literal("Confirm"));
-        confirm_change.withCallback(() -> {
-            removed();
+        IconButton fill = new IconButton(x + 7, y + 11, AllIcons.I_NONE);
+        fill.setToolTip(Component.literal("Enable limits"));
+        fill.withCallback(() -> {
+            limit[0] = !limit[0];
+            fill.setIcon(limit[0] ? AllIcons.I_CONFIRM : AllIcons.I_DISABLE);
+            sizeX.active = limit[0];
+            sizeY.active = limit[0];
+            sizeZ.active = limit[0];
+        });
+        fill.onClick(0, 0);
+        addRenderableWidget(fill);
+
+        ScrollInput temperature = addScrollInput(new ScrollInput(x + 134, y + 11, 41, 18), 0, "Temperature")
+                .addHint(Component.literal("Use control to step by 20 and shift for 100.")
+                        .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY))
+                .withRange(NorthstarTemperature.MINIMUM_TEMPERATURE, NorthstarTemperature.MAXIMUM_TEMPERATURE + 1)
+                .setState((int) be.targetTemperature)
+                .withStepFunction(s -> s.shift ? 100 : s.control ? 20 : 1)
+                .format(i -> Component.literal(i + "°C"));
+        temperature.onChanged();
+
+        IconButton confirm = new IconButton(x + 179, y + 11, AllIcons.I_CONFIRM);
+        confirm.setToolTip(CreateLang.translateDirect("station.assemble_train"));
+        confirm.withCallback(() -> {
+            NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(be.getBlockPos(), temperature.getState(), limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
             onClose();
         });
-        addRenderableWidget(confirm_change);
-
-        Label labelX = new Label(x + 65 + 20, y + 97, Component.literal(Integer.toString(5))).withShadow();
-        ScrollInput inputX = new ScrollInput(x + 56 + 20, y + 97, 18, 18)
-                .withRange(1, TemperatureStuff.maxSize)
-                .writingTo(labelX)
-                .titled(Component.literal("Box Width"))
-                .calling(state -> {
-                    blockEntity.sizeX = state;
-                    sizeX = state;
-                    while (blockEntity.offsetX > blockEntity.sizeX / 2) {
-                        blockEntity.offsetX--;
-                    }
-                    while (blockEntity.offsetY > blockEntity.sizeY / 2) {
-                        blockEntity.offsetY--;
-                    }
-                    while (blockEntity.offsetZ > blockEntity.sizeZ / 2) {
-                        blockEntity.offsetZ--;
-                    }
-                    labelX.setX(x + 65 + 20 - font.width(labelX.text) / 2);
-                });
-        inputX.setState(blockEntity.sizeX);
-        inputX.onChanged();
-        inputs.add(inputX);
-        labels.add(labelX);
-
-        Label labelY = new Label(x + 65 + 44, y + 97, Component.empty()).withShadow();
-        ScrollInput inputY = new ScrollInput(x + 56 + 43, y + 97, 18, 18)
-                .withRange(1, TemperatureStuff.maxSize)
-                .writingTo(labelY)
-                .titled(Component.literal("Box Height"))
-                .calling(state -> {
-                    blockEntity.sizeY = state;
-                    sizeY = state;
-                    while (blockEntity.offsetX > blockEntity.sizeX / 2) {
-                        blockEntity.offsetX--;
-                    }
-                    while (blockEntity.offsetY > blockEntity.sizeY / 2) {
-                        blockEntity.offsetY--;
-                    }
-                    while (blockEntity.offsetZ > blockEntity.sizeZ / 2) {
-                        blockEntity.offsetZ--;
-                    }
-                    labelY.setX(x + 65 + 43 - font.width(labelY.text) / 2);
-                });
-        inputY.setState(blockEntity.sizeY);
-        inputY.onChanged();
-        inputs.add(inputY);
-        labels.add(labelY);
-
-        Label labelZ = new Label(x + 65 + 67, y + 97, Component.empty()).withShadow();
-        ScrollInput inputZ = new ScrollInput(x + 56 + 67, y + 97, 18, 18)
-                .withRange(1, TemperatureStuff.maxSize)
-                .writingTo(labelZ)
-                .titled(Component.literal("Box Length"))
-                .calling(state -> {
-                    blockEntity.sizeZ = state;
-                    sizeZ = state;
-                    while (blockEntity.offsetX > blockEntity.sizeX / 2) {
-                        blockEntity.offsetX--;
-                    }
-                    while (blockEntity.offsetY > blockEntity.sizeY / 2) {
-                        blockEntity.offsetY--;
-                    }
-                    while (blockEntity.offsetZ > blockEntity.sizeZ / 2) {
-                        blockEntity.offsetZ--;
-                    }
-                    labelZ.setX(x + 65 + 67 - font.width(labelZ.text) / 2);
-                });
-        inputZ.setState(blockEntity.sizeZ);
-        inputZ.onChanged();
-        inputs.add(inputZ);
-        labels.add(labelZ);
-
-        for (Label labels2 : labels) {
-            addRenderableWidget(labels2);
-        }
-        for (ScrollInput inputs2 : inputs) {
-            addRenderableWidget(inputs2);
-        }
-
-        Vector<Label> offsetlabels = new Vector<>(3);
-        Vector<ScrollInput> offsetinputs = new Vector<>(3);
-
-        Label offsetlabelX = new Label(x + 65 + 20, y + 123, Component.empty()).withShadow();
-        ScrollInput offsetinputX = new ScrollInput(x + 56 + 20, y + 123, 18, 18)
-                .withRange(-blockEntity.sizeX / 2, blockEntity.sizeX / 2)
-                .writingTo(offsetlabelX)
-                .titled(Component.literal("Box X Offset"))
-                .calling(state -> {
-                    blockEntity.offsetX = state;
-                    offsetX = state;
-                    while (blockEntity.offsetX > blockEntity.sizeX / 2) {
-                        blockEntity.offsetX--;
-                    }
-                    while (blockEntity.offsetY > blockEntity.sizeY / 2) {
-                        blockEntity.offsetY--;
-                    }
-                    while (blockEntity.offsetZ > blockEntity.sizeZ / 2) {
-                        blockEntity.offsetZ--;
-                    }
-                    offsetlabelX.setX(x + 65 + 20 - font.width(offsetlabelX.text) / 2);
-                });
-        offsetinputX.setState(blockEntity.offsetX);
-        offsetinputX.onChanged();
-        offsetlabels.add(offsetlabelX);
-        offsetinputs.add(offsetinputX);
-
-        Label offsetlabelY = new Label(x + 65 + 44, y + 123, Component.empty()).withShadow();
-        ScrollInput offsetinputY = new ScrollInput(x + 56 + 44, y + 123, 18, 18)
-                .withRange(-blockEntity.sizeY / 2, blockEntity.sizeX / 2)
-                .writingTo(offsetlabelY)
-                .titled(Component.literal("Box Y Offset"))
-                .calling(state -> {
-                    blockEntity.offsetY = state;
-                    offsetY = state;
-                    while (blockEntity.offsetX > blockEntity.sizeX / 2) {
-                        blockEntity.offsetX--;
-                    }
-                    while (blockEntity.offsetY > blockEntity.sizeY / 2) {
-                        blockEntity.offsetY--;
-                    }
-                    while (blockEntity.offsetZ > blockEntity.sizeZ / 2) {
-                        blockEntity.offsetZ--;
-                    }
-                    offsetlabelY.setX(x + 65 + 44 - font.width(offsetlabelY.text) / 2);
-                });
-        offsetinputY.setState(blockEntity.offsetY);
-        offsetinputY.onChanged();
-        offsetlabels.add(offsetlabelY);
-        offsetinputs.add(offsetinputY);
-
-        Label offsetlabelZ = new Label(x + 65 + 68, y + 123, Component.empty()).withShadow();
-        ScrollInput offsetinputZ = new ScrollInput(x + 56 + 68, y + 123, 18, 18)
-                .withRange(-blockEntity.sizeZ / 2, blockEntity.sizeZ / 2)
-                .writingTo(offsetlabelZ)
-                .titled(Component.literal("Box Z Offset"))
-                .calling(state -> {
-                    blockEntity.offsetZ = state;
-                    offsetZ = state;
-                    while (blockEntity.offsetX > blockEntity.sizeX / 2) {
-                        blockEntity.offsetX--;
-                    }
-                    while (blockEntity.offsetY > blockEntity.sizeY / 2) {
-                        blockEntity.offsetY--;
-                    }
-                    while (blockEntity.offsetZ > blockEntity.sizeZ / 2) {
-                        blockEntity.offsetZ--;
-                    }
-                    offsetlabelZ.setX(x + 65 + 68 - font.width(offsetlabelZ.text) / 2);
-                });
-        offsetinputZ.setState(blockEntity.offsetZ);
-        offsetinputZ.onChanged();
-        offsetlabels.add(offsetlabelZ);
-        offsetinputs.add(offsetinputZ);
-
-        Label templabel = new Label(x + 200, y + 110, Component.empty()).withShadow();
-        ScrollInput tempinput = new ScrollInput(x + 186, y + 110, 24, 18)
-                .withRange(-273, 1000)
-                .writingTo(templabel)
-                .titled(Component.literal("Temperature"))
-                .calling(state -> {
-                    blockEntity.temp = state;
-                    temp = state;
-                    templabel.setX(x + 200 - font.width(templabel.text) / 2);
-                });
-        tempinput.setState(blockEntity.temp);
-        tempinput.onChanged();
-        offsetlabels.add(templabel);
-        offsetinputs.add(tempinput);
-
-        Label envLabel = new Label(x + 200, y + 90, Component.empty()).withShadow();
-        ScrollInput envInput = new SelectionScrollInput(x + 186, y + 90, 24, 18)
-                .forOptions(envOptions)
-                .writingTo(envLabel)
-                .titled(Component.literal("Fill Mode"))
-                .calling(state -> {
-                    blockEntity.envFill = state == 1;
-                    envFill = state == 1;
-                    envLabel.setX(x + 200 - font.width(envLabel.text) / 2);
-                });
-        envInput.setState(blockEntity.envFill ? 1 : 0);
-        envInput.onChanged();
-        offsetlabels.add(envLabel);
-        offsetinputs.add(envInput);
-
-
-        for (Label labels2 : offsetlabels) {
-            addRenderableWidget(labels2);
-        }
-        for (ScrollInput inputs2 : offsetinputs) {
-            addRenderableWidget(inputs2);
-        }
-
-
+        addRenderableWidget(confirm);
     }
 
-    @Override
-    public void removed() {
-        TemperatureRegulatorEditPacket packet = getConfigurationPacket();
-        NorthstarPackets.getChannel().sendToServer(packet);
-    }
-
-    protected TemperatureRegulatorEditPacket getConfigurationPacket() {
-        return new TemperatureRegulatorEditPacket(this.blockEntity.getBlockPos(), offsetX, offsetY, offsetZ, sizeX, sizeY, sizeZ, temp, envFill);
+    private ScrollInput addScrollInput(ScrollInput input, int value, String name) {
+        Label label = new Label(0, input.getY() + 6, Component.empty())
+                .withShadow();
+        input.withRange(1, 17)
+                .calling(i -> label.setX(input.getX() + input.getWidth() / 2 - Minecraft.getInstance().font.width(label.text) / 2))
+                .writingTo(label)
+                .titled(Component.literal(name))
+                .setState(value)
+                .onChanged();
+        addRenderableWidget(label);
+        addRenderableWidget(input);
+        return input;
     }
 
     @Override
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        graphics.blit(TEMPERATURE_REGULATOR, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(BACKGROUND, guiLeft, guiTop, 0, 0, windowWidth, windowHeight);
     }
 
 }

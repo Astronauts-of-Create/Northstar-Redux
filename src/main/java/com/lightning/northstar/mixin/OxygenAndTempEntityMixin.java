@@ -4,12 +4,8 @@ import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
-import com.lightning.northstar.world.OxygenStuff;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
-import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,49 +26,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class OxygenAndTempEntityMixin {
 
-    int oxyHurtBuffer = 70;
     int tempHurtBuffer = 70;
-    protected Object2DoubleMap<net.minecraftforge.fluids.FluidType> forgeFluidTypeHeight = new Object2DoubleArrayMap<>(net.minecraftforge.fluids.FluidType.SIZE.get());
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void northstar$tick(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity instanceof ZombifiedPiglin)
+        if (entity instanceof ZombifiedPiglin || entity.level().isClientSide())
             return;
 
-        if (entity.level().isClientSide)
-            return;
         ResourceKey<Level> dim = entity.level().dimension();
-        boolean posHasAir = OxygenStuff.checkForAir(entity);
-        if (entity.canBreatheUnderwater()) {
-            posHasAir = true;
-        }
-        boolean oxygenated = OxygenStuff.oxygenatedEntities.contains(entity) || NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.matches(entity);
-        int temp = checkTemp(entity);
-        boolean hasInsulation = TemperatureStuff.hasInsulation(entity);
-        boolean hasHeatProtection = TemperatureStuff.hasHeatProtection(entity);
+        float temp = NorthstarTemperature.getTemperatureAt(entity.level(), entity.position());
+        boolean hasInsulation = NorthstarTemperature.hasInsulation(entity);
+        boolean hasHeatProtection = NorthstarTemperature.hasHeatProtection(entity);
         boolean creativeCheck = false;
         if (entity instanceof ServerPlayer svp) {
             creativeCheck = svp.isCreative();
         }
 
-        if (posHasAir) {
-            oxyHurtBuffer = 40;
-        }
         if (temp > -32 && temp < 300) {
             tempHurtBuffer = 40;
         }
 
-        if (oxyHurtBuffer > 0) {
-            oxyHurtBuffer--;
-        }
         if (tempHurtBuffer > 0) {
             tempHurtBuffer--;
         }
 
-        if (!NorthstarPlanets.getPlanetOxy(dim) && !posHasAir && !oxygenated && !NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.matches(entity) && oxyHurtBuffer <= 0 && !creativeCheck) {
-            entity.hurt(entity.level().damageSources().drown(), 2f);
-        }
         if (temp < -32 && !entity.isSpectator() && !hasInsulation && tempHurtBuffer <= 0 && !creativeCheck && !NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity)) {
             boolean flag = entity.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES);
             int j = flag ? 7 : 2;
@@ -126,11 +104,5 @@ public class OxygenAndTempEntityMixin {
             return null;
         }
     }
-
-
-    private static int checkTemp(LivingEntity entity) {
-        return TemperatureStuff.getTempForEntity(entity);
-    }
-
 
 }

@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.simple;
 
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +37,7 @@ public class CustomIceBlock extends HalfTransparentBlock {
                 pLevel.removeBlock(pPos, false);
                 return;
             }
-            if (TemperatureStuff.getFreezingPoint(fluid.defaultFluidState()) > TemperatureStuff.getTemp(pPos, pLevel)) {
+            if (NorthstarTemperature.getFreezingPoint(fluid.defaultFluidState()) > NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
                 BlockState below = pLevel.getBlockState(pPos.below());
                 if (below.blocksMotion() || below.liquid()) {
                     pLevel.setBlockAndUpdate(pPos, fluid.getFluidType().getBlockForFluidState(pLevel, pPos, fluid.defaultFluidState()));
@@ -51,10 +51,10 @@ public class CustomIceBlock extends HalfTransparentBlock {
      */
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        if (TemperatureStuff.getBoilingPoint(fluid.defaultFluidState()) > TemperatureStuff.getTemp(pPos, pLevel)) {
+        if (NorthstarTemperature.getBoilingPoint(fluid.defaultFluidState()) > NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
             this.evaporate(pState, pLevel, pPos);
         }
-        if (TemperatureStuff.getFreezingPoint(fluid.defaultFluidState()) > TemperatureStuff.getTemp(pPos, pLevel)) {
+        if (NorthstarTemperature.getFreezingPoint(fluid.defaultFluidState()) > NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
             this.melt(pState, pLevel, pPos);
         }
     }

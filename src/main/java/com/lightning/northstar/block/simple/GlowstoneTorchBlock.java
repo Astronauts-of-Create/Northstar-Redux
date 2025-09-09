@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.particle.GlowstoneParticleData;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -58,7 +58,7 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
     @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
-        if (OxygenStuff.hasOxygen(pCurrentPos, ((Level) pLevel).dimension())) {
+        if (NorthstarOxygen.hasOxygen(((Level) pLevel), pCurrentPos)) {
         }
         return pFacing == Direction.DOWN && !this.canSurvive(pState, pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
     }

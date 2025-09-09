@@ -23,7 +23,7 @@ public class NorthstarContentRemapper {
     private static final Map<ResourceLocation, ResourceLocation> remapped = new HashMap<>();
 
     static {
-        // 0.3.0: Replace iron with titanium (as part of #7)
+        // 0.3.0: Replace iron with titanium (as part of #7/#10)
         remap("iron_sheetmetal", NorthstarBlocks.TITANIUM_SHEETMETAL);
         remap("iron_sheetmetal_slab", NorthstarBlocks.TITANIUM_SHEETMETAL_SLAB);
         remap("iron_sheetmetal_vertical_slab", NorthstarBlocks.TITANIUM_SHEETMETAL_VERTICAL_SLAB);
@@ -34,6 +34,8 @@ public class NorthstarContentRemapper {
         remap("iron_pillar", NorthstarBlocks.TITANIUM_PILLAR);
         remap("iron_grate", NorthstarBlocks.TITANIUM_GRATE);
         remap("iron_space_door", NorthstarTechBlocks.TITANIUM_SPACE_DOOR);
+        // 0.3.0: Rename the oxygen_generator to oxygen_sealer
+        remap("oxygen_generator", NorthstarTechBlocks.OXYGEN_SEALER);
     }
 
     public static void remap(String oldValue, RegistryEntry<?> newValue) {
@@ -47,6 +49,7 @@ public class NorthstarContentRemapper {
     @SubscribeEvent
     public static void onRemapContent(MissingMappingsEvent event) {
         remapContent(event, Registries.BLOCK, ForgeRegistries.BLOCKS);
+        remapContent(event, Registries.BLOCK_ENTITY_TYPE, ForgeRegistries.BLOCK_ENTITY_TYPES);
         remapContent(event, Registries.ITEM, ForgeRegistries.ITEMS);
     }
 

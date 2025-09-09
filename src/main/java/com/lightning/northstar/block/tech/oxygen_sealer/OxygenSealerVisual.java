@@ -1,4 +1,4 @@
-package com.lightning.northstar.block.tech.oxygen_generator;
+package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.AllPartialModels;
@@ -13,12 +13,12 @@ import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
 
-public class OxygenGeneratorVisual extends KineticBlockEntityVisual<OxygenGeneratorBlockEntity> implements SimpleDynamicVisual {
+public class OxygenSealerVisual extends KineticBlockEntityVisual<OxygenSealerBlockEntity> implements SimpleDynamicVisual {
 
     private final RotatingInstance shaft;
     private final RotatingInstance propeller;
 
-    public OxygenGeneratorVisual(VisualizationContext context, OxygenGeneratorBlockEntity entity, float partialTick) {
+    public OxygenSealerVisual(VisualizationContext context, OxygenSealerBlockEntity entity, float partialTick) {
         super(context, entity, partialTick);
 
         shaft = instancerProvider()

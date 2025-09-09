@@ -2,9 +2,7 @@ package com.lightning.northstar.contraptions;
 
 import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlockEntity;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorBlockEntity;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
-import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
@@ -32,7 +30,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class RocketContraption extends TranslatingContraption {
@@ -173,14 +170,6 @@ public class RocketContraption extends TranslatingContraption {
         if (!blockState.is(Blocks.AIR) && !blockState.is(Blocks.CAVE_AIR)) {
             blockCount++;
         }
-        if (blockState.is(NorthstarTechBlocks.OXYGEN_GENERATOR.get())) {
-            OxygenGeneratorBlockEntity ent = (OxygenGeneratorBlockEntity) world.getBlockEntity(pos);
-            ent.removeOxy(ent, new HashSet<>());
-        } else if (blockState.is(NorthstarTechBlocks.TEMPERATURE_REGULATOR.get())) {
-            TemperatureRegulatorBlockEntity ent2 = (TemperatureRegulatorBlockEntity) world.getBlockEntity(pos);
-            ent2.removeTemp(ent2);
-        }
-
         if (blockState.is(NorthstarTags.NorthstarBlockTags.HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR)) {
             weightCost += 5;
         } else if (blockState.is(NorthstarTags.NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR)) {

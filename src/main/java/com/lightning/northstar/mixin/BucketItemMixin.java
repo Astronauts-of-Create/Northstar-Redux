@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin;
 
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -45,7 +45,7 @@ public abstract class BucketItemMixin extends Item{
         BlockState blockstate = pLevel.getBlockState(pPos);
         if (!(this.content instanceof FlowingFluid)) {
             info.setReturnValue(false);
-        } else if (pLevel.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER) && TemperatureStuff.getTemp(pPos, pLevel) < 212) {
+        } else if (pLevel.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER) && NorthstarTemperature.getTemperatureAt(pLevel, pPos) < 212) {
             if (!pLevel.setBlock(pPos, this.content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
                 info.setReturnValue(false);
             } else {
@@ -62,14 +62,14 @@ public abstract class BucketItemMixin extends Item{
 //        System.out.println("YOooo buckets are real");
         BucketItem item = (BucketItem) (Object) this;
  //       System.out.println(item.getFluid());
-        int temp = TemperatureStuff.getTemp(pPos, pLevel);
+        float temp = NorthstarTemperature.getTemperatureAt(pLevel, pPos);
 //        System.out.println(temp);
         BlockState blockstate = pLevel.getBlockState(pPos);
 //        System.out.println(item.getFluid());
         if(item.getFluid() == null)
             return;
-        int boilingpoint = TemperatureStuff.getBoilingPoint(item.getFluid().defaultFluidState());
-        int freezingpoint = TemperatureStuff.getFreezingPoint(item.getFluid().defaultFluidState());
+        int boilingpoint = NorthstarTemperature.getBoilingPoint(item.getFluid().defaultFluidState());
+        int freezingpoint = NorthstarTemperature.getFreezingPoint(item.getFluid().defaultFluidState());
         Block block = pLevel.getBlockState(pPos).getBlock();
         if (!(item.getFluid() instanceof FlowingFluid)) {
             return;

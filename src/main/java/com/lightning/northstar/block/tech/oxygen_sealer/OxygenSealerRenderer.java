@@ -1,4 +1,4 @@
-package com.lightning.northstar.block.tech.oxygen_generator;
+package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,14 +12,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
-public class OxygenGeneratorRenderer extends KineticBlockEntityRenderer<OxygenGeneratorBlockEntity> {
+public class OxygenSealerRenderer extends KineticBlockEntityRenderer<OxygenSealerBlockEntity> {
 
-    public OxygenGeneratorRenderer(BlockEntityRendererProvider.Context context) {
+    public OxygenSealerRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    protected void renderSafe(OxygenGeneratorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+    protected void renderSafe(OxygenSealerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         if (VisualizationManager.supportsVisualization(be.getLevel()))
             return;
 
