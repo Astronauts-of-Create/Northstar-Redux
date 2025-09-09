@@ -1,15 +1,17 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.util.MutableAABB;
+import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.lang.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,7 +25,7 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
     private final TemperatureRegulatorBlockEntity be;
 
     public TemperatureRegulatorScreen(TemperatureRegulatorBlockEntity be) {
-        super(Component.literal("Temperature Regulator"));
+        super(NorthstarTechBlocks.TEMPERATURE_REGULATOR.get().getName());
         this.be = be;
 
         setWindowSize(204, 40);
@@ -35,10 +37,9 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
         int x = guiLeft, y = guiTop;
 
-        MutableAABB bounds = be.bounds;
-        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), bounds.width(), "Width (X)");
-        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), bounds.height(), "Height (Y)");
-        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), bounds.height(), "Depth (Z)");
+        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), be.sizeX, "Width (X)");
+        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), be.sizeY, "Height (Y)");
+        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), be.sizeZ, "Depth (Z)");
 
         // condition is negated because a click is simulated to sync the states of everything
         boolean[] limit = { be.bounds.minX == Integer.MIN_VALUE };
@@ -55,17 +56,19 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
         fill.onClick(0, 0);
         addRenderableWidget(fill);
 
+        TemperatureUnit unit = NorthstarConfigs.client().temperatureUnit.get();
+
         ScrollInput temperature = addScrollInput(new ScrollInput(x + 134, y + 11, 41, 18), 0, "Temperature")
-                .addHint(Component.literal("Use control to step by 20 and shift for 100.")
+                .addHint(Component.translatable("northstar.gui.temperature_regulator.step")
                         .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY))
                 .withRange(NorthstarTemperature.MINIMUM_TEMPERATURE, NorthstarTemperature.MAXIMUM_TEMPERATURE + 1)
                 .setState((int) be.targetTemperature)
                 .withStepFunction(s -> s.shift ? 100 : s.control ? 20 : 1)
-                .format(i -> Component.literal(i + "°C"));
+                .format(i -> Component.literal(LangNumberFormat.format(unit.fromCelsius(i)) + unit.symbol));
         temperature.onChanged();
 
         IconButton confirm = new IconButton(x + 179, y + 11, AllIcons.I_CONFIRM);
-        confirm.setToolTip(CreateLang.translateDirect("station.assemble_train"));
+        confirm.setToolTip(Component.translatable("northstar.generic.confirm"));
         confirm.withCallback(() -> {
             NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(be.getBlockPos(), temperature.getState(), limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
             onClose();
@@ -76,7 +79,7 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
     private ScrollInput addScrollInput(ScrollInput input, int value, String name) {
         Label label = new Label(0, input.getY() + 6, Component.empty())
                 .withShadow();
-        input.withRange(1, 17)
+        input.withRange(1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE + 1)
                 .calling(i -> label.setX(input.getX() + input.getWidth() / 2 - Minecraft.getInstance().font.width(label.text) / 2))
                 .writingTo(label)
                 .titled(Component.literal(name))

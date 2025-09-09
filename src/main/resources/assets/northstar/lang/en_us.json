@@ -472,6 +472,8 @@
   "northstar.contraption.controls.rocket_tut": "Press Space to begin launch sequence!",
   "northstar.contraption.controls.sit_down": "All entities must be seated before controlling rocket!",
   "northstar.generic.unit.millibuckets_per_tick": "mB/t",
+  "northstar.generic.confirm": "Confirm",
+  "northstar.gui.temperature_regulator.step": "Use control to step by 20 and shift for 100",
   "northstar.gui.astronomy_table.close_data": "Data points are too close together!",
   "northstar.gui.astronomy_table.different_planets": "Data points are different planets!",
   "northstar.gui.combustion_engine.fluid": "Fluid: ",

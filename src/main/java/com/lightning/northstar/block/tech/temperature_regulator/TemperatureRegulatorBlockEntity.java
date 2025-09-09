@@ -4,6 +4,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.particle.SnowflakeParticleData;
 import com.lightning.northstar.util.MutableAABB;
 import com.lightning.northstar.util.NorthstarLang;
+import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
@@ -28,6 +29,8 @@ import java.util.List;
 
 public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
 
+    public static final int MAX_LIMIT_SIZE = 5;
+
     protected final MutableAABB bounds = new MutableAABB();
     protected final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer() {
         @Override
@@ -37,12 +40,19 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
             return super.isAirOccluded(level, from, to, direction);
         }
     };
+
+    protected boolean limit;
+    protected int sizeX, sizeY, sizeZ;
     protected float targetTemperature;
+
     protected int sealCooldown;
     protected boolean active;
 
     public TemperatureRegulatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+
+        limit = false;
+        sizeX = sizeY = sizeZ = 2;
 
         bounds.inf();
     }
@@ -122,9 +132,11 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         NorthstarLang.translate("gui.goggles.temperature")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
-        CreateLang.number(targetTemperature)
+
+        TemperatureUnit unit = NorthstarConfigs.client().temperatureUnit.get();
+        CreateLang.number(unit.fromCelsius(targetTemperature))
                 .style(ChatFormatting.AQUA)
-                .text(ChatFormatting.GRAY, "°C")
+                .text(ChatFormatting.GRAY, unit.symbol)
                 .forGoggles(tooltip, 1);
 
         sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks());
@@ -134,8 +146,16 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         return true;
     }
 
-    public void setBounds(int sizeX, int sizeY, int sizeZ) {
-        bounds.setCentered(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), sizeX, sizeY, sizeZ);
+    public void setBounds(boolean limit, int sizeX, int sizeY, int sizeZ) {
+        this.limit = limit;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.sizeZ = sizeZ;
+        if (limit) {
+            bounds.setCentered(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), sizeX, sizeY, sizeZ);
+        } else {
+            bounds.inf();
+        }
     }
 
     public void setUnbounded() {
@@ -147,12 +167,10 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         super.write(compound, clientPacket);
 
         compound.putFloat("temperature", targetTemperature);
-
-        if (bounds.minX != Integer.MIN_VALUE) {
-            compound.putInt("sizeX", bounds.width());
-            compound.putInt("sizeY", bounds.height());
-            compound.putInt("sizeZ", bounds.depth());
-        }
+        compound.putBoolean("limit", limit);
+        compound.putInt("sizeX", sizeX);
+        compound.putInt("sizeY", sizeY);
+        compound.putInt("sizeZ", sizeZ);
     }
 
     @Override
@@ -161,11 +179,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
         targetTemperature = compound.getFloat("temperature");
 
-        if (compound.contains("sizeX", Tag.TAG_INT)) {
-            setBounds(compound.getInt("sizeX"), compound.getInt("sizeY"), compound.getInt("sizeZ"));
-        } else {
-            setUnbounded();
-        }
+        setBounds(compound.getBoolean("limit"), compound.getInt("sizeX"), compound.getInt("sizeY"), compound.getInt("sizeZ"));
 
         if (compound.contains("temp", Tag.TAG_INT)) {
             targetTemperature = compound.getInt("temp");

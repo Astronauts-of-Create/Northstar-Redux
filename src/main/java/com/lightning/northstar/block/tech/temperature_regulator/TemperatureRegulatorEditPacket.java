@@ -1,8 +1,10 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 
 public class TemperatureRegulatorEditPacket extends BlockEntityConfigurationPacket<TemperatureRegulatorBlockEntity> {
 
@@ -45,12 +47,12 @@ public class TemperatureRegulatorEditPacket extends BlockEntityConfigurationPack
 
     @Override
     protected void applySettings(TemperatureRegulatorBlockEntity be) {
-        be.targetTemperature = temperature;
-        if (limit) {
-            be.setBounds(sizeX, sizeY, sizeZ);
-        } else {
-            be.setUnbounded();
-        }
+        be.targetTemperature = Mth.clamp(temperature, NorthstarTemperature.MINIMUM_TEMPERATURE, NorthstarTemperature.MAXIMUM_TEMPERATURE);
+        be.setBounds(limit, clampSize(sizeX), clampSize(sizeY), clampSize(sizeZ));
+    }
+
+    private static int clampSize(int size) {
+        return Mth.clamp(size, 1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE);
     }
 
 }

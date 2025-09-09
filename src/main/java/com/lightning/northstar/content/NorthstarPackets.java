@@ -41,11 +41,11 @@ public enum NorthstarPackets {
     ROCKET_CONTROL_PACKET(RocketControlPacket.class, RocketControlPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
-    public static final int NETWORK_VERSION = 3;
+    public static final int NETWORK_VERSION = 4;
     public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
     private static SimpleChannel channel;
 
-    private PacketType<?> packetType;
+    private final PacketType<?> packetType;
 
     <T extends SimplePacketBase> NorthstarPackets(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
         packetType = new PacketType<>(type, factory, direction);
