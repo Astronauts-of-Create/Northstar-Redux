@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.world.OxygenStuff;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -43,7 +44,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 10000));
+        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 1000));
 
         ValueBoxTransform slot = new ValueBoxTransform.Sided() {
             @Override
@@ -80,6 +81,14 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
         FuelType fuel = this.fuelType;
         if (fuel == null) {
+            return;
+        }
+
+        if (!OxygenStuff.hasOxygen(worldPosition, level.dimension())) {
+            if (generatorSpeed != 0) {
+                generatorSpeed = 0;
+                updateGeneratedRotation();
+            }
             return;
         }
 
