@@ -54,6 +54,8 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
                 .instancer(InstanceTypes.ORIENTED, Models.partial(NorthstarPartialModels.PISTON6))
                 .createInstance()
                 .rotate(rotation);
+
+        beginFrame(null);
     }
 
     @Override

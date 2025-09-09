@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.render.CachedBuffers;
@@ -26,9 +25,6 @@ public class RocketControlsRenderer extends SmartBlockEntityRenderer<RocketContr
 
     @Override
     protected void renderSafe(RocketControlsBlockEntity be, float partialTicks, PoseStack pose, MultiBufferSource buffer, int light, int overlay) {
-        if (VisualizationManager.supportsVisualization(be.getLevel()))
-            return;
-
         pose.pushPose();
         getBuffer(pose, be.getBlockState(), 0)
                 .light(light)

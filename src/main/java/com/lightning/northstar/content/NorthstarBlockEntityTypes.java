@@ -28,7 +28,6 @@ import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorRender
 import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorVisual;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlockEntity;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsRenderer;
-import com.lightning.northstar.block.tech.rocket_controls.RocketControlsVisual;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
@@ -144,7 +143,6 @@ public class NorthstarBlockEntityTypes {
 
     public static final BlockEntityEntry<RocketControlsBlockEntity> ROCKET_CONTROLS = REGISTRATE
             .blockEntity("rocket_controls", RocketControlsBlockEntity::new)
-            //.visual(() -> RocketControlsVisual::new)
             .validBlocks(NorthstarTechBlocks.ROCKET_CONTROLS)
             .renderer(() -> RocketControlsRenderer::new)
             .register();

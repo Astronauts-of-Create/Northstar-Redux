@@ -28,11 +28,13 @@ public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<Tempera
                 .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.WARM_SPINNY))
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
+        warmSpinner.setChanged();
 
         coldSpinner = instancerProvider()
                 .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.COLD_SPINNY))
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
+        coldSpinner.setChanged();
     }
 
     @Override
