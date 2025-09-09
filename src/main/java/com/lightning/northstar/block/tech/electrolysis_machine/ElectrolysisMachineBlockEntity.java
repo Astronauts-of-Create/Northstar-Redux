@@ -100,7 +100,14 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        addTankToolTip(tooltip, "gui.goggles.electrolysis_machine", inputTank);
+        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
+            tooltip.add(Component.empty());
+        }
+
+        CreateLang.translate("gui.goggles.electrolysis_machine")
+                .forGoggles(tooltip);
+
+        addTankToolTip(tooltip, "gui.goggles.electrolysis_input", inputTank);
         addTankToolTip(tooltip, "gui.goggles.electrolysis_orange_port", outputTankL);
         addTankToolTip(tooltip, "gui.goggles.electrolysis_blue_port", outputTankR);
         return true;
