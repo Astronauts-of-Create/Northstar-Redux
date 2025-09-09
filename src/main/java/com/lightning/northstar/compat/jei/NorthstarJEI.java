@@ -7,6 +7,8 @@ import com.lightning.northstar.block.tech.ice_box.FreezingRecipe;
 import com.lightning.northstar.compat.jei.category.ElectrolysisCategory;
 import com.lightning.northstar.compat.jei.category.EngravingCategory;
 import com.lightning.northstar.compat.jei.category.FreezingCategory;
+import com.lightning.northstar.compat.jei.category.FuelTypeCategory;
+import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.simibubi.create.compat.jei.*;
@@ -17,14 +19,14 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
-import mezz.jei.api.runtime.IIngredientManager;
+import mezz.jei.common.util.RegistryUtil;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -33,10 +35,7 @@ import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -45,24 +44,23 @@ import java.util.function.Supplier;
 @JeiPlugin
 @SuppressWarnings("unused")
 @ParametersAreNonnullByDefault
-public class NorthstarJei implements IModPlugin {
+public class NorthstarJEI implements IModPlugin {
 
     private static final ResourceLocation ID = Northstar.asResource("jei_plugin");
 
     private final List<CreateRecipeCategory<?>> northstarCategories = new ArrayList<>();
-    private IIngredientManager ingredientManager;
 
     private void loadCategories() {
         northstarCategories.clear();
 
         CreateRecipeCategory<?>
-
+                start = null,
                 engraving = builder(EngravingRecipe.class)
-                .addTypedRecipes(NorthstarRecipeTypes.ENGRAVING)
-                .catalyst(NorthstarTechBlocks.CIRCUIT_ENGRAVER::get)
-                .itemIcon(NorthstarTechBlocks.CIRCUIT_ENGRAVER.get())
-                .emptyBackground(177, 70)
-                .build("engraving", EngravingCategory::new),
+                        .addTypedRecipes(NorthstarRecipeTypes.ENGRAVING)
+                        .catalyst(NorthstarTechBlocks.CIRCUIT_ENGRAVER::get)
+                        .itemIcon(NorthstarTechBlocks.CIRCUIT_ENGRAVER.get())
+                        .emptyBackground(177, 70)
+                        .build("engraving", EngravingCategory::new),
 
                 freezing = builder(FreezingRecipe.class)
                         .addTypedRecipes(NorthstarRecipeTypes.FREEZING)
@@ -77,7 +75,6 @@ public class NorthstarJei implements IModPlugin {
                         .itemIcon(NorthstarTechBlocks.ELECTROLYSIS_MACHINE.get())
                         .emptyBackground(177, 70)
                         .build("electrolysis", ElectrolysisCategory::new);
-
     }
 
     private <T extends Recipe<?>> CategoryBuilder<T> builder(Class<? extends T> recipeClass) {
@@ -94,25 +91,26 @@ public class NorthstarJei implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         loadCategories();
         registration.addRecipeCategories(northstarCategories.toArray(IRecipeCategory[]::new));
+
+        registration.addRecipeCategories(new FuelTypeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        ingredientManager = registration.getIngredientManager();
-
         northstarCategories.forEach(c -> c.registerRecipes(registration));
 
-        registration.addRecipes(RecipeTypes.CRAFTING, ToolboxColoringRecipeMaker.createRecipes().toList());
+        RegistryAccess registryAccess = RegistryUtil.getRegistryAccess();
+        Set<ResourceLocation> supportedFluids = registryAccess.registryOrThrow(Registries.FLUID).keySet();
+        registration.addRecipes(FuelTypeCategory.RECIPE_TYPE, registryAccess.registryOrThrow(NorthstarRegistries.FUEL)
+                .stream()
+                .filter(fuel -> fuel.fluids().stream().anyMatch(supportedFluids::contains))
+                .toList());
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         northstarCategories.forEach(c -> c.registerCatalysts(registration));
-    }
-
-    @Override
-    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(new BlueprintTransferHandler(), RecipeTypes.CRAFTING);
+        registration.addRecipeCatalysts(FuelTypeCategory.RECIPE_TYPE, NorthstarTechBlocks.JET_ENGINE, NorthstarTechBlocks.COMBUSTION_ENGINE);
     }
 
     private class CategoryBuilder<T extends Recipe<?>> {

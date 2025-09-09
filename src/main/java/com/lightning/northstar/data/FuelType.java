@@ -28,6 +28,10 @@ public record FuelType(
             Codec.FLOAT.fieldOf("combustion_engine_rpm").forGetter(FuelType::combustionEngineRpm)
     ).apply(i, FuelType::new));
 
+    public boolean supports(RegistryAccess registryAccess, Fluid fluid) {
+        return fluids().contains(registryAccess.registryOrThrow(Registries.FLUID).getKey(fluid));
+    }
+
     public static FuelType getFuelType(RegistryAccess registryAccess, Fluid fluid) {
         ResourceLocation name = registryAccess.registryOrThrow(Registries.FLUID).getKey(fluid);
         return registryAccess.registryOrThrow(NorthstarRegistries.FUEL)
