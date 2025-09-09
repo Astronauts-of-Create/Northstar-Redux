@@ -49,17 +49,6 @@ public class NorthstarItems {
             .item("titanium_nugget", Item::new)
             .register();
 
-
-    //sand
-//    public static final ItemEntry<Item> COMPRESSED_SAND_BAR = REGISTRATE
-//            .item("compressed_sand_bar", Item::new)
-//            .register();
-//
-//    public static final ItemEntry<Item> COMPRESSSED_SAND_TILE = REGISTRATE
-//            .item("compressed_sand_tile", Item::new)
-//            .register();
-
-
     public static final ItemEntry<Item> DURABLE_FABRIC = REGISTRATE
             .item("durable_fabric", Item::new)
             .register();

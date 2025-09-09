@@ -1,5 +1,11 @@
 {
   "type": "create:compacting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
   "ingredients": [
     {
       "item": "mekanism:biofuel"

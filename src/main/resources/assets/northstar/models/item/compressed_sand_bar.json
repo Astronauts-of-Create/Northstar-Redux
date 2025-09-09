@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "northstar:item/compressed_sand_bar"
-  }
-}

@@ -36,7 +36,7 @@
   "results": [
     {
       "amount": 1000,
-      "fluid": "northstar:tetrachloride"
+      "fluid": "northstar:titanium_tetrachloride"
     }
   ],
   "heatRequirement": "superheated"

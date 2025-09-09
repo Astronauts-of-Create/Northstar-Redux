@@ -9,10 +9,8 @@ import com.lightning.northstar.compat.jei.category.EngravingCategory;
 import com.lightning.northstar.compat.jei.category.FreezingCategory;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.compat.jei.*;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -20,9 +18,7 @@ import com.simibubi.create.infrastructure.config.CRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.helpers.IPlatformFluidHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IIngredientManager;
@@ -117,14 +113,6 @@ public class NorthstarJei implements IModPlugin {
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(new BlueprintTransferHandler(), RecipeTypes.CRAFTING);
-    }
-
-    @Override
-    public <T> void registerFluidSubtypes(ISubtypeRegistration registration, IPlatformFluidHelper<T> platformFluidHelper) {
-        PotionFluidSubtypeInterpreter interpreter = new PotionFluidSubtypeInterpreter();
-        PotionFluid potionFluid = AllFluids.POTION.get();
-        registration.registerSubtypeInterpreter(ForgeTypes.FLUID_STACK, potionFluid.getSource(), interpreter);
-        registration.registerSubtypeInterpreter(ForgeTypes.FLUID_STACK, potionFluid.getFlowing(), interpreter);
     }
 
     private class CategoryBuilder<T extends Recipe<?>> {
