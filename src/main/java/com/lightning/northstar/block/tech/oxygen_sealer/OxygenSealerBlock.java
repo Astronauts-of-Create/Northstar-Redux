@@ -1,15 +1,21 @@
 package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -22,13 +28,35 @@ public class OxygenSealerBlock extends HorizontalKineticBlock implements IBE<Oxy
             box(1, 12, 1, 15, 16, 15)
     );
 
+    public static final BooleanProperty VARIANT = BooleanProperty.create("variant");
+
     public OxygenSealerBlock(Properties properties) {
         super(properties);
+
+        registerDefaultState(defaultBlockState()
+                .setValue(VARIANT, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(VARIANT));
+    }
+
+    @Override
+    public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+        if (context.getClickedFace().getAxis().isHorizontal()) {
+            BlockState newState = state.setValue(VARIANT, !state.getValue(VARIANT));
+            context.getLevel().setBlock(context.getClickedPos(), newState, Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
+            IWrenchable.playRotateSound(context.getLevel(), context.getClickedPos());
+            return InteractionResult.SUCCESS;
+        }
+
+        return super.onWrenched(state, context);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return state.getValue(VARIANT) ? Shapes.block() : SHAPE;
     }
 
     @Override
@@ -53,7 +81,7 @@ public class OxygenSealerBlock extends HorizontalKineticBlock implements IBE<Oxy
 
     @Override
     public BlockEntityType<? extends OxygenSealerBlockEntity> getBlockEntityType() {
-        return NorthstarBlockEntityTypes.OXYGEN_GENERATOR.get();
+        return NorthstarBlockEntityTypes.OXYGEN_SEALER.get();
     }
 
 }

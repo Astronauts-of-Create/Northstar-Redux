@@ -72,7 +72,7 @@ public class NorthstarBlockEntityTypes {
             .renderer(() -> TemperatureRegulatorRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<OxygenSealerBlockEntity> OXYGEN_GENERATOR = REGISTRATE
+    public static final BlockEntityEntry<OxygenSealerBlockEntity> OXYGEN_SEALER = REGISTRATE
             .blockEntity("oxygen_sealer", OxygenSealerBlockEntity::new)
             .visual(() -> OxygenSealerVisual::new)
             .validBlocks(NorthstarTechBlocks.OXYGEN_SEALER)

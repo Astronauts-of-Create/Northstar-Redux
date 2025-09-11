@@ -14,7 +14,7 @@ public class NorthstarPartialModels {
             OXYGEN_CONCENTATOR_FAN = block("oxygen_concentrator/fan"),
             WARM_SPINNY = block("temperature_regulator/warm_spinny"),
             COLD_SPINNY = block("temperature_regulator/cold_spinny"),
-            OXYGEN_FAN = block("oxygen_generator/fan"),
+            OXYGEN_SEALER_FAN = block("oxygen_sealer/fan"),
             PISTON1 = block("combustion_engine/pistons/piston1"),
             PISTON2 = block("combustion_engine/pistons/piston2"),
             PISTON3 = block("combustion_engine/pistons/piston3"),

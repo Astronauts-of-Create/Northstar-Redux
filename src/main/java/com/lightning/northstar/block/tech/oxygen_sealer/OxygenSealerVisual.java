@@ -28,7 +28,7 @@ public class OxygenSealerVisual extends KineticBlockEntityVisual<OxygenSealerBlo
                 .rotateToFace(Direction.SOUTH, Direction.DOWN);
 
         propeller = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.OXYGEN_FAN))
+                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.OXYGEN_SEALER_FAN))
                 .createInstance()
                 .setPosition(getVisualPosition())
                 .setRotationAxis(Direction.Axis.Y);
