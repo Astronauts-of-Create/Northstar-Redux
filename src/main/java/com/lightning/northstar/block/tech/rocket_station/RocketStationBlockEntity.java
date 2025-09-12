@@ -202,6 +202,12 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         }
 
         ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
+
+        if (contraption.entity == null) {//fixes nullpointer with contraption.getContraptionWorld();
+            contraption.owner.displayClientMessage(Component.literal("Contraption entity is null! Canceling assembly.").withStyle(ChatFormatting.RED)
+                    , false);
+            return;
+        }
         ContraptionWorld contraptionWorld = contraption.getContraptionWorld();
         int maximumSealedBlocks = AllConfigs.server().kinetics.maxBlocksMoved.get() - contraption.getBlocks().size(); // TODO: how much should this be
         boolean oxygenSealed = sealer.beginSeal(contraptionWorld, worldPosition, Direction.UP) && sealer.updateSeal(contraptionWorld, maximumSealedBlocks);
@@ -216,9 +222,9 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             contraption.owner.displayClientMessage(Component.literal
                     ("Interplanetary travel requires a Interplanetary Navigator!").withStyle(ChatFormatting.RED), false);
         }
-       //Assuming we have everything we need to assemble, let's do it
+        //Assuming we have everything we need to assemble, let's do it
         if (engines >= requiredJets && hasStation && fuelAmount > (fuelCost + contraption.weightCost) && heatShielding >= heatCost && oxygenSealed && !interplanetaryFlag && contraption.hasControls && contraption.dest != null && contraption.dest != this.level.dimension()) {
-           //Create the new contraption entity
+            //Create the new contraption entity
             System.out.println(engines);
             contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
             RocketContraptionEntity movedContraption =
@@ -236,7 +242,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             contraption.owner.displayClientMessage(Component.literal
                     ("Full Fuel Cost: " + (contraption.weightCost + contraption.fuelCost)).withStyle(ChatFormatting.GOLD), false);
             contraption.owner.displayClientMessage(Component.literal
-                    ("Current Fuel Supply: " + (int)contraption.fuelAmount()).withStyle(ChatFormatting.GOLD), false);
+                    ("Current Fuel Supply: " + (int) contraption.fuelAmount()).withStyle(ChatFormatting.GOLD), false);
             contraption.owner.displayClientMessage(Component.literal
                     ("Estimated Return Cost: " + (contraption.weightCost + fuelReturnCost)).withStyle(ChatFormatting.GOLD), false);
             contraption.owner.displayClientMessage(Component.literal
