@@ -22,22 +22,20 @@ public class OxygenConcentratorVisual extends KineticBlockEntityVisual<OxygenCon
         super(context, entity, partialTick);
 
         shaft = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, Direction.DOWN))
                 .createInstance()
-                .setPosition(getVisualPosition())
-                .rotateToFace(Direction.SOUTH, Direction.DOWN);
+                .setPosition(getVisualPosition());
 
         propeller = instancerProvider()
                 .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.OXYGEN_CONCENTATOR_FAN))
                 .createInstance()
-                .setPosition(getVisualPosition())
-                .setRotationAxis(Direction.Axis.Y);
+                .setPosition(getVisualPosition());
     }
 
     @Override
     public void beginFrame(Context ctx) {
         shaft.setup(blockEntity).setChanged();
-        propeller.setup(blockEntity, 2f).setChanged();
+        propeller.setup(blockEntity).setChanged();
     }
 
     @Override

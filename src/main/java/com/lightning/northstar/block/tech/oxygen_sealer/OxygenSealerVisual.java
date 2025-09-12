@@ -22,16 +22,14 @@ public class OxygenSealerVisual extends KineticBlockEntityVisual<OxygenSealerBlo
         super(context, entity, partialTick);
 
         shaft = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, Direction.DOWN))
                 .createInstance()
-                .setPosition(getVisualPosition())
-                .rotateToFace(Direction.SOUTH, Direction.DOWN);
+                .setPosition(getVisualPosition());
 
         propeller = instancerProvider()
                 .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.OXYGEN_SEALER_FAN))
                 .createInstance()
-                .setPosition(getVisualPosition())
-                .setRotationAxis(Direction.Axis.Y);
+                .setPosition(getVisualPosition());
     }
 
     @Override

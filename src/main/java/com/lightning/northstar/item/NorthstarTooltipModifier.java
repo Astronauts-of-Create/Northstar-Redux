@@ -1,12 +1,13 @@
 package com.lightning.northstar.item;
 
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
+import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import net.createmod.catnip.lang.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
@@ -19,8 +20,12 @@ public class NorthstarTooltipModifier implements TooltipModifier {
         if (tag == null || !NorthstarItemTags.OXYGEN_SOURCES.matches(stack)) {
             return;
         }
-        int oxygen = tag.contains("Oxygen", Tag.TAG_INT) ? tag.getInt("Oxygen") : 0;
-        event.getToolTip().add(1, Component.literal("Oxygen: " + oxygen + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)));
+        MutableComponent tooltip = Component.translatable("northstar.gui.tooltip.oxygen")
+                .append(LangNumberFormat.format(tag.getInt("Oxygen")))
+                .append(NorthstarLang.MB.component())
+                .withStyle(ChatFormatting.GRAY);
+
+        event.getToolTip().add(1, tooltip);
     }
 
 }

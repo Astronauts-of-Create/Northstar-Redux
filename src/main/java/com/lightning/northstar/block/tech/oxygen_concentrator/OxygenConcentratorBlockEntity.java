@@ -6,9 +6,6 @@ import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.lang.LangBuilder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -45,32 +42,11 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        CreateLang.translate("gui.goggles.kinetic_stats")
-                .forGoggles(tooltip);
-        addStressImpactStats(tooltip, calculateStressApplied());
-
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.translate("gui.goggles.oxygen_concentrator")
-                .forGoggles(tooltip);
-        FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
-        if (!fluidStack.getFluid().getFluidType().isAir()) {
-            CreateLang.fluidName(fluidStack)
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
-        } else {
-            CreateLang.translate("gui.goggles.empty")
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
+        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
+            tooltip.add(Component.empty());
         }
-        CreateLang.builder()
-                .add(CreateLang.number(fluidStack.getAmount())
-                        .add(mb)
-                        .style(ChatFormatting.GOLD))
-                .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
-                        .add(mb)
-                        .style(ChatFormatting.DARK_GRAY))
-                .forGoggles(tooltip, 1);
+
+        containedFluidTooltip(tooltip, isPlayerSneaking, tank.getCapability().cast());
         return true;
     }
 
@@ -113,9 +89,7 @@ public class OxygenConcentratorBlockEntity extends KineticBlockEntity implements
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING).getOpposite())
-            return tank.getCapability()
-                    .cast();
-        tank.getCapability().cast();
+            return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }
 

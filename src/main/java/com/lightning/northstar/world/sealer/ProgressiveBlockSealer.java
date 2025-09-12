@@ -1,6 +1,5 @@
 package com.lightning.northstar.world.sealer;
 
-import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.util.MutableAABB;
@@ -40,7 +39,7 @@ public class ProgressiveBlockSealer {
     public boolean beginSeal(Level level, BlockPos origin, Direction originDirection) {
         if (originDirection != null) {
             tempPos1.setWithOffset(origin, originDirection);
-            if (isAirOccluded(level, origin, tempPos1, originDirection)) {
+            if (isFaceOccluded(level, tempPos1, originDirection.getOpposite(), false)) {
                 sealedBounds.zero();
                 sealedBlocks.clear();
                 visualizer.complete();
@@ -52,7 +51,6 @@ public class ProgressiveBlockSealer {
 
         if (level instanceof ClientLevel && NorthstarConfigs.client().debugSealerBounds.get() != visualizer instanceof SealerDebugVisualizer.Client) {
             visualizer = NorthstarConfigs.client().debugSealerBounds.get() ? new SealerDebugVisualizer.Client() : SealerDebugVisualizer.NOOP;
-            System.out.println("UPDATING VIEWER");
         }
 
         visited.clear();
@@ -128,12 +126,12 @@ public class ProgressiveBlockSealer {
 
     protected static boolean isFaceOccluded(BlockGetter level, BlockPos pos, Direction direction, boolean source) {
         BlockState state = level.getBlockState(pos);
-        Block block = state.getBlock();
+        //Block block = state.getBlock();
         //if (block instanceof EncasedPipeBlock)
         //    return !state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
         if (source && NorthstarBlockTags.BLOCKS_AIR.matches(state))
             return true;
-        return OxygenSealerBlock.isFaceFull(state.getCollisionShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
+        return Block.isFaceFull(state.getCollisionShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
     }
 
     public void addToGoggleTooltip(List<Component> tooltip, int maximumSealed) {
