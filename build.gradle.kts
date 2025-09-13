@@ -80,6 +80,10 @@ dependencies {
     modCompileOnly(libs.flywheel.forge.api)
     modRuntimeOnly(libs.flywheel.forge)
 
+    val tfmgCoord = "maven.modrinth:create-tfmg:1.0.2c-1.20.1"
+    modCompileOnly(tfmgCoord)
+    modRuntimeOnly(tfmgCoord)
+
     modImplementation(libs.geckolib.forge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
