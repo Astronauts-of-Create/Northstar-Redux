@@ -61,7 +61,7 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 128.0))
-            .onRegister(BlockStressValues.setGeneratorSpeed(SolarPanelBlock.getSpeedRange().getSecond(), true))
+            .onRegister(BlockStressValues.setGeneratorSpeed(8, true))
             .item()
             .transform(customItemModel())
             .register();

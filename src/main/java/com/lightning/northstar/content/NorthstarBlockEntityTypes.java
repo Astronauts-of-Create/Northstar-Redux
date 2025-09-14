@@ -30,6 +30,7 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlockEnt
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsRenderer;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
+import com.lightning.northstar.block.tech.solar_panel.SolarPanelRenderer;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorRenderer;
@@ -38,7 +39,6 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlockEntity;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorRenderer;
 import com.simibubi.create.content.kinetics.base.OrientedRotatingVisual;
-import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntity;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
@@ -83,7 +83,7 @@ public class NorthstarBlockEntityTypes {
             .blockEntity("solar_panel", SolarPanelBlockEntity::new)
             .visual(() -> ShaftVisual::new)
             .validBlocks(NorthstarTechBlocks.SOLAR_PANEL)
-            .renderer(() -> ShaftRenderer::new)
+            .renderer(() -> SolarPanelRenderer::new)
             .register();
 
     public static final BlockEntityEntry<CombustionEngineBlockEntity> COMBUSTION_ENGINE = REGISTRATE

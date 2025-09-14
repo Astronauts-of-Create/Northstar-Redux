@@ -3,6 +3,7 @@ package com.lightning.northstar.block.tech.solar_panel;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -18,7 +19,10 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     // 22 torque can spin 2 grinders at full speed before it overstresses
     private final static float TORQUE = (float) 22;
 
+    public final LerpedFloat targetAngle = LerpedFloat.angular();
+
     public int sunlightScore;
+
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -31,6 +35,10 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     public void tick() {
         super.tick();
         determineAndApplySunlightScore();
+
+        if (level.isClientSide()) {
+            targetAngle.tickChaser();
+        }
     }
 
     @Override
