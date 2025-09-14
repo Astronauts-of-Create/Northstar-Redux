@@ -95,7 +95,7 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
         int y = (height - imageHeight) / 2;
 
         graphics.enableScissor(x + 3, y + 3, x + imageWidth - 3, y + imageHeight - 3);
-        graphics.blitRepeating(BACKGROUND, x, y, imageWidth, imageHeight, (int) -scrollX, (int) -scrollY, imageWidth, imageHeight, 900, 900);
+        graphics.blit(BACKGROUND, x, y, (int) -scrollX, (int) -scrollY, imageWidth, imageHeight, 900, 900);
         renderPlanets(graphics, mouseX, mouseY, partialTick);
         graphics.disableScissor();
 

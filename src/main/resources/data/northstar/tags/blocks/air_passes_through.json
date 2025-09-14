@@ -25,6 +25,7 @@
     "northstar:titanium_grate",
     "northstar:tungsten_grate",
     // Create
+    "create:empty_blaze_burner",
     "create:blaze_burner",
     "create:lit_blaze_burner",
     "create:andesite_scaffolding",

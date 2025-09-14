@@ -1,48 +1,70 @@
 package com.lightning.northstar.world;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
+@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class NorthstarTemperature {
 
     public static final int MINIMUM_TEMPERATURE = -273;
     public static final int MAXIMUM_TEMPERATURE = 1500;
 
     private final Level level;
-    private final Set<TemperatureRegulatorBlockEntity> regulators;
+    private final Set<Provider> providers;
 
     public NorthstarTemperature(Level level) {
         this.level = level;
-        this.regulators = new HashSet<>();
+        this.providers = new HashSet<>();
     }
 
     public float getTemperatureAt(Vec3 pos) {
-        return getTemperatureAt(BlockPos.containing(pos));
-    }
-
-    public float getTemperatureAt(Vec3i pos) {
-        long packedPos = BlockPos.asLong(pos.getX(), pos.getY(), pos.getZ());
         float temperature = 0;
         int count = 0;
 
-        for (TemperatureRegulatorBlockEntity regulator : regulators) {
-            if (regulator.isActive() && regulator.getSealer().getSealedBlocks().contains(packedPos)) {
-                temperature += regulator.getTemperature();
+        for (Provider provider : providers) {
+            if (provider.isSealed(pos)) {
+                temperature += provider.getTemperature();
+                count++;
+            }
+        }
+
+        return count == 0 ? getBaseTemperature(level, BlockPos.containing(pos)) : temperature / count;
+    }
+
+    public float getTemperatureAt(Vec3i pos) {
+        float temperature = 0;
+        int count = 0;
+
+        for (Provider provider : providers) {
+            if (provider.isSealed(pos)) {
+                temperature += provider.getTemperature();
                 count++;
             }
         }
@@ -50,8 +72,16 @@ public class NorthstarTemperature {
         return count == 0 ? getBaseTemperature(level, pos instanceof BlockPos bp ? bp : new BlockPos(pos)) : temperature / count;
     }
 
-    public Set<TemperatureRegulatorBlockEntity> getRegulators() {
-        return regulators;
+    public void registerSealer(Provider provider) {
+        providers.add(provider);
+    }
+
+    public void unregisterSealer(Provider provider) {
+        providers.remove(provider);
+    }
+
+    public interface Provider extends SealingProvider {
+        float getTemperature();
     }
 
     public static float getTemperatureAt(Level level, Vec3 pos) {
@@ -74,7 +104,35 @@ public class NorthstarTemperature {
         return NorthstarPlanets.getPlanetTemp(level.dimension());
     }
 
-    public static boolean combustable(FluidState state) {
+    @ApiStatus.Internal
+    public static void tickEntity(LivingEntity entity) {
+        if (entity.level().isClientSide())
+            return;
+
+        float temp = NorthstarTemperature.getTemperatureAt(entity.level(), entity.position());
+        boolean hasInsulation = NorthstarTemperature.hasInsulation(entity);
+        boolean hasHeatProtection = NorthstarTemperature.hasHeatProtection(entity);
+
+        if (entity instanceof Player player && (player.isCreative() || player.isSpectator()))
+            return;
+        if (temp > -32 && temp < 300)
+            return;
+
+        if (temp < -32 && !hasInsulation && !NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity)) {
+            // +3 instead of +1 because it's decreased by -2 each tick, but we still want it to increase by 1
+            int ticksFrozen = Math.min(entity.getTicksRequiredToFreeze(), entity.getTicksFrozen()) + 3;
+            entity.setTicksFrozen(ticksFrozen);
+            if (ticksFrozen >= entity.getTicksRequiredToFreeze() / 2) {
+                int damage = entity.getType().is(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES) ? 7 : 2;
+                entity.hurt(entity.level().damageSources().freeze(), damage);
+            }
+        }
+        if (temp > 300 && !entity.isOnFire() && !entity.fireImmune() && !hasHeatProtection) {
+            entity.setSecondsOnFire(5);
+        }
+    }
+
+    public static boolean isCombustible(FluidState state) {
         if (state.is(NorthstarFluids.HYDROCARBON.getSource().getSource())) return true;
         return false;
     }
@@ -127,7 +185,7 @@ public class NorthstarTemperature {
                 entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarTags.NorthstarItemTags.INSULATING.tag) &&
                 entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarTags.NorthstarItemTags.INSULATING.tag) &&
                 entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarTags.NorthstarItemTags.INSULATING.tag))
-                || NorthstarTags.NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
+                || NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
 
     }
 
@@ -156,6 +214,25 @@ public class NorthstarTemperature {
         if (level == NorthstarDimensions.VENUS_DIM_KEY) return 1000;
         if (level == Level.OVERWORLD) return 100;
         return 1;
+    }
+
+    @SubscribeEvent
+    public static void onPostRender(RenderLevelStageEvent event) {
+        if (!NorthstarConfigs.client().debugSealerBounds.get())
+            return;
+
+        if (event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SOLID_BLOCKS)) {
+            PoseStack pose = event.getPoseStack();
+            Vec3 pos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+
+            pose.pushPose();
+            pose.translate(-pos.x, -pos.y, -pos.z);
+            for (Provider provider : Minecraft.getInstance().level.northstar$temperature().providers) {
+                if (provider instanceof TemperatureRegulatorBlockEntity regulator)
+                    regulator.getSealer().getVisualizer().render(pose, Minecraft.getInstance().renderBuffers().bufferSource());
+            }
+            pose.popPose();
+        }
     }
 
 }

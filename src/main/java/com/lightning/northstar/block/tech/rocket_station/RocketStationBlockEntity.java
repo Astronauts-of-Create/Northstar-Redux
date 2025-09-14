@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.contraptions.RocketContraption;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
@@ -202,15 +203,11 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         }
 
         ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
-
-        if (contraption.entity == null) {//fixes nullpointer with contraption.getContraptionWorld();
-            contraption.owner.displayClientMessage(Component.literal("Contraption entity is null! Canceling assembly.").withStyle(ChatFormatting.RED)
-                    , false);
-            return;
-        }
-        ContraptionWorld contraptionWorld = contraption.getContraptionWorld();
-        int maximumSealedBlocks = AllConfigs.server().kinetics.maxBlocksMoved.get() - contraption.getBlocks().size(); // TODO: how much should this be
-        boolean oxygenSealed = sealer.beginSeal(contraptionWorld, worldPosition, Direction.UP) && sealer.updateSeal(contraptionWorld, maximumSealedBlocks);
+        // cannot rely on getContraptionWorld() yet as it depends on the entity to get the level
+        Level contraptionWorld = new ContraptionWorld(level, contraption);
+        int maximumSealedBlocks = NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get();
+        boolean oxygenSealed = sealer.beginSeal(contraptionWorld, worldPosition.subtract(contraption.anchor).above(), Direction.UP) &&
+                sealer.updateSeal(contraptionWorld, maximumSealedBlocks, maximumSealedBlocks);
 
         boolean interplanetaryFlag = NorthstarPlanets.isInterplanetary(level.dimension(), target);
         if (interplanetaryFlag) {
@@ -227,8 +224,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             //Create the new contraption entity
             System.out.println(engines);
             contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
-            RocketContraptionEntity movedContraption =
-                    RocketContraptionEntity.create(level, contraption);
+            RocketContraptionEntity movedContraption = RocketContraptionEntity.create(level, contraption);
             BlockPos anchor = worldPosition;
             movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
             AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);

@@ -147,11 +147,11 @@ public class NorthstarBlockEntityTypes {
             .renderer(() -> RocketControlsRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<SlidingDoorBlockEntity> SPACE_DOORS =
-            REGISTRATE.blockEntity("space_sliding_door", SlidingDoorBlockEntity::new)
-                    .renderer(() -> SlidingDoorRenderer::new)
-                    .validBlocks(NorthstarTechBlocks.TITANIUM_SPACE_DOOR)
-                    .register();
+    public static final BlockEntityEntry<SlidingDoorBlockEntity> SPACE_DOORS = REGISTRATE
+            .blockEntity("space_sliding_door", SlidingDoorBlockEntity::new)
+            .renderer(() -> SlidingDoorRenderer::new)
+            .validBlocks(NorthstarTechBlocks.TITANIUM_SPACE_DOOR)
+            .register();
 
     public static final BlockEntityEntry<IceBoxBlockEntity> ICE_BOX = REGISTRATE
             .blockEntity("ice_box", IceBoxBlockEntity::new)

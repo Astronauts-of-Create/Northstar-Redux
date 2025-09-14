@@ -14,6 +14,8 @@ import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentrator
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerMovementBehaviour;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerMovingInteractionBehaviour;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlock;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInteractionBehaviour;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsMovementBehaviour;
@@ -21,6 +23,8 @@ import com.lightning.northstar.block.tech.rocket_station.RocketStationBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockMovingInteraction;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlock;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlock;
+import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovementBehaviour;
+import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.stress.BlockStressValues;
@@ -62,7 +66,6 @@ public class NorthstarTechBlocks {
             .transform(customItemModel())
             .register();
 
-
     public static final BlockEntry<LaserLenseBlock> LASER_LENSE = REGISTRATE
             .block("laser_lense", LaserLenseBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -71,8 +74,8 @@ public class NorthstarTechBlocks {
             .properties(p -> p.sound(SoundType.COPPER))
             .transform(pickaxeOnly())
             .simpleItem()
-
             .register();
+
     public static final BlockEntry<LaserBlock> LASER = REGISTRATE
             .block("laser", LaserBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -82,6 +85,7 @@ public class NorthstarTechBlocks {
                     .lightLevel(state -> 15))
             .simpleItem()
             .register();
+
     public static final BlockEntry<CircuitEngraverBlock> CIRCUIT_ENGRAVER = REGISTRATE
             .block("circuit_engraver", CircuitEngraverBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -132,6 +136,8 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
+            .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
+            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
             .simpleItem()
             .register();
 
@@ -144,6 +150,8 @@ public class NorthstarTechBlocks {
                     .strength(8, 8))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
+            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new OxygenSealerMovingInteractionBehaviour()))
+            .onRegister(MovementBehaviour.movementBehaviour(new OxygenSealerMovementBehaviour()))
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .simpleItem()
             .register();
@@ -256,7 +264,7 @@ public class NorthstarTechBlocks {
 
     public static final BlockEntry<SpaceDoorBlock> TITANIUM_SPACE_DOOR = REGISTRATE
             .block("titanium_space_door", p -> new SpaceDoorBlock(p, BlockSetType.IRON, false))
-            .transform(BuilderTransformers.slidingDoor("train"))
+            .transform(BuilderTransformers.slidingDoor("titanium"))
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion())

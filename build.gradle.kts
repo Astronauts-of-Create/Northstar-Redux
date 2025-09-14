@@ -90,6 +90,7 @@ dependencies {
     modRuntimeOnly(libs.oculus)
     forgeRuntimeLibrary(libs.jcpp)
 
+    // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
 

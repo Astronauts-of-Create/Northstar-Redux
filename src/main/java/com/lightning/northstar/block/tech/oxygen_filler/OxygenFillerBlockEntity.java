@@ -1,7 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
 import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.AllSoundEvents;
@@ -79,7 +78,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         ItemStack item = container.getItem(0);
         Fluid fluid = tank.getPrimaryHandler().getFluid().getFluid();
         int increment = 2;
-        if (item.is(NorthstarItemTags.OXYGEN_SOURCES.tag) && (NorthstarFluidTags.IS_OXY.matches(fluid) || NorthstarFluidTags.FORGE_OXYGEN.matches(fluid))) {
+        if (item.is(NorthstarItemTags.OXYGEN_SOURCES.tag) && NorthstarOxygen.isOxygen(fluid)) {
             CompoundTag tag = item.getOrCreateTag();
             int currentOxy = tag.getInt("Oxygen");
             while (currentOxy + increment > NorthstarOxygen.MAXIMUM_OXYGEN) {

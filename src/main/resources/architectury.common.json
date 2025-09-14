@@ -1,6 +1,7 @@
 {
   "accessWidener": "northstar.accessWidener",
   "injected_interfaces": {
+    "net/minecraft/client/gui/GuiGraphics": [ "com/lightning/northstar/accessor/NorthstarGuiGraphics" ],
     "net/minecraft/world/damagesource/DamageSources": [ "com/lightning/northstar/accessor/NorthstarDamageSources" ],
     "net/minecraft/world/level/Level": [ "com/lightning/northstar/accessor/NorthstarLevel" ]
   }

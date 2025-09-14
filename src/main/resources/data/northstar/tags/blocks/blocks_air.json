@@ -17,6 +17,8 @@
     "minecraft:blue_stained_glass_pane",
     "minecraft:purple_stained_glass_pane",
     "minecraft:magenta_stained_glass_pane",
-    "minecraft:pink_stained_glass_pane"
+    "minecraft:pink_stained_glass_pane",
+
+    "create:fluid_tank"
   ]
 }

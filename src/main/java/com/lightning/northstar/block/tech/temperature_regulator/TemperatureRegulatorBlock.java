@@ -31,7 +31,8 @@ public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, be -> ScreenOpener.open(new TemperatureRegulatorScreen(be))));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos,
+                be -> ScreenOpener.open(new TemperatureRegulatorScreen(be.regulator, -1, be.getBlockPos()))));
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 

@@ -11,12 +11,10 @@ import com.lightning.northstar.contraptions.packets.RocketControlPacket;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
-import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
@@ -555,12 +553,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     }
 
     @Override
-    public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
-        AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-                new ContraptionBlockChangedPacket(this.getId(), localPos, newInfo.state()));
-    }
-
-    @Override
     protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
         super.writeAdditional(compound, spawnPacket);
 
@@ -615,15 +607,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             final_lift_vel = compound.getFloat("final_lift_vel");
 
         auto_land_mode = compound.contains("auto_land") && compound.getBoolean("auto_land");
-    }
-
-    @Override
-    protected boolean isActorActive(MovementContext context, MovementBehaviour actor) {
-        if (!(contraption instanceof RocketContraption))
-            return false;
-        if (!super.isActorActive(context, actor))
-            return false;
-        return level().isClientSide();
     }
 
     @Override

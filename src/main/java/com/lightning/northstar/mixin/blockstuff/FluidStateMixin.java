@@ -42,7 +42,7 @@ public class FluidStateMixin {
                 pLevel.setBlockAndUpdate(pPos, Blocks.ICE.defaultBlockState());
             }
         }
-        if (NorthstarTemperature.combustable(state)) {
+        if (NorthstarTemperature.isCombustible(state)) {
             if (NorthstarTemperature.combustionTemp(state) <= temp) {
                 combust(pLevel, pPos, state);
             }

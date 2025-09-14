@@ -54,6 +54,7 @@ public class NorthstarConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_branch"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_UPSIDE_DOWN_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_upside_down_branch"));
 
+    @SuppressWarnings("unchecked")
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         HolderGetter<Block> block = context.lookup(Registries.BLOCK);
 
