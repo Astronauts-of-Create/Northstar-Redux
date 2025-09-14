@@ -4,6 +4,7 @@ import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,12 +32,23 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
             lastLight = light;
             generatedSpeed = MAXIMUM_SPEED * light / 15f * NorthstarPlanets.getSunMultiplier(level.dimension());
             updateGeneratedRotation();
-            setChanged();
         }
 
         if (level.isClientSide()) {
             targetAngle.tickChaser();
         }
+    }
+
+    @Override
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
+        generatedSpeed = compound.getFloat("GeneratorSpeed");
+    }
+
+    @Override
+    public void write(CompoundTag compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
+        compound.putFloat("GeneratorSpeed", generatedSpeed);
     }
 
     @Override

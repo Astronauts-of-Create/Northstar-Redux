@@ -16,6 +16,7 @@ import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -81,28 +82,29 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
         FuelType fuel = this.fuelType;
         if (fuel == null) {
+            setGeneratorSpeed(0);
             return;
         }
 
         if (!NorthstarOxygen.hasOxygen(level, worldPosition)) {
-            if (generatorSpeed != 0) {
-                generatorSpeed = 0;
-                updateGeneratedRotation();
-            }
+            setGeneratorSpeed(0);
             return;
         }
 
         if (fluid.getAmount() < fuel.combustionEngineEfficiency()) {
-            if (generatorSpeed != 0) {
-                generatorSpeed = 0;
-                updateGeneratedRotation();
-            }
+            setGeneratorSpeed(0);
         } else if (generatorSpeed == 0) {
-            generatorSpeed = fuel.combustionEngineRpm();
-            updateGeneratedRotation();
+            setGeneratorSpeed(fuel.combustionEngineRpm());
         }
 
         tank.getPrimaryHandler().drain(fuel.combustionEngineEfficiency(), FluidAction.EXECUTE);
+    }
+
+    private void setGeneratorSpeed(float generatorSpeed) {
+        if (this.generatorSpeed != generatorSpeed) {
+            this.generatorSpeed = generatorSpeed;
+            updateGeneratedRotation();
+        }
     }
 
     @Override
@@ -144,6 +146,18 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                 .forGoggles(tooltip, 1);
 
         return true;
+    }
+
+    @Override
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
+        generatorSpeed = compound.getFloat("GeneratorSpeed");
+    }
+
+    @Override
+    protected void write(CompoundTag compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
+        compound.putFloat("GeneratorSpeed", generatorSpeed);
     }
 
 }

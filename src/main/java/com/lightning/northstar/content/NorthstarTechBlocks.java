@@ -168,7 +168,7 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 256))
-            .onRegister(BlockStressValues.setGeneratorSpeed(CombustionEngineBlock.getSpeedRange().getSecond(), true))
+            //.onRegister(BlockStressValues.setGeneratorSpeed(CombustionEngineBlock.getSpeedRange().getSecond(), true))
             .simpleItem()
             .register();
 
