@@ -81,7 +81,10 @@ dependencies {
     modRuntimeOnly(libs.flywheel.forge)
 
     val tfmgCoord = "maven.modrinth:create-tfmg:1.0.2c-1.20.1"
-    modCompileOnly(tfmgCoord)
+    // Make the class visible at compile time for Mixins
+    compileOnly(tfmgCoord)
+
+    // Still load it at runtime
     modRuntimeOnly(tfmgCoord)
 
     modImplementation(libs.geckolib.forge)

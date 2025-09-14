@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "forge:storage_blocks/lead"
+    },
+    "C": {
+      "item": "tfmg:industrial_aluminum_casing"
+    },
+    "L": {
+      "tag": "forge:plates/lead"
+    },
+    "S": {
+      "item": "tfmg:sulfuric_acid_bucket"
+    },
+    "W": {
+      "tag": "forge:wires/copper"
+    }
+  },
+  "pattern": [
+    "LWL",
+    "SBS",
+    "LCL"
+  ],
+  "result": {
+    "item": "tfmg:accumulator"
+  },
+  "show_notification": true
+}
