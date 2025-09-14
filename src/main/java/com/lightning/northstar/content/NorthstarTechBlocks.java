@@ -22,6 +22,7 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsMovement
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockMovingInteraction;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlock;
+import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlock;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovementBehaviour;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovingInteractionBehaviour;
@@ -61,7 +62,7 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 128.0))
-            .onRegister(BlockStressValues.setGeneratorSpeed(8, true))
+            .onRegister(BlockStressValues.setGeneratorSpeed(SolarPanelBlockEntity.MAXIMUM_SPEED, true))
             .item()
             .transform(customItemModel())
             .register();

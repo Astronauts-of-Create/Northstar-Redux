@@ -6,8 +6,6 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -77,25 +75,19 @@ public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<Solar
     }
 
     @Override
-    public Axis getRotationAxis(BlockState state) {
-        return state.getValue(HORIZONTAL_FACING).getAxis();
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return state.getValue(HORIZONTAL_FACING).getAxis() == Axis.X ? SHAPE_X : SHAPE_Z;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState state = super.getStateForPlacement(context);
-
-        return state.setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getCounterClockWise());
+        return super.getStateForPlacement(context)
+                .setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getCounterClockWise());
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        withBlockEntityDo(level, pos, SolarPanelBlockEntity::determineAndApplySunlightScore);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(HORIZONTAL_FACING).getAxis() == Axis.X ? SHAPE_X : SHAPE_Z;
+    public Axis getRotationAxis(BlockState state) {
+        return state.getValue(HORIZONTAL_FACING).getAxis();
     }
 
     @Override
