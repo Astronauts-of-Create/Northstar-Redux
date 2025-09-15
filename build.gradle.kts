@@ -84,11 +84,14 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
-//    modRuntimeOnly(libs.copycats)
+    modRuntimeOnly(libs.copycats)
 
     modRuntimeOnly(libs.embeddium)
     modRuntimeOnly(libs.oculus)
     forgeRuntimeLibrary(libs.jcpp)
+
+    //For testing purposes only
+    modRuntimeOnly(libs.createdieselgenerators)
 
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
