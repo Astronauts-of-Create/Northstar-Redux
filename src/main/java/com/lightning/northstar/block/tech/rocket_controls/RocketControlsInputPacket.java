@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
@@ -71,10 +72,10 @@ public class RocketControlsInputPacket extends SimplePacketBase {
                 return;
             }
 
-            if (rce.toGlobalVector(Vec3.atCenterOf(controlsPos), 0)
-                    .closerThan(player.position(), 16))
-//                System.out.println("Key press Detected!");
+            if (rce.toGlobalVector(Vec3.atCenterOf(controlsPos), 0).closerThan(player.position(), 16)) {
+                Northstar.LOGGER.debug("Key press Detected!");
                 RocketControlsServerHandler.receivePressed(world, rce, controlsPos, uniqueID, activatedButtons, press);
+            }
         });
         return true;
     }

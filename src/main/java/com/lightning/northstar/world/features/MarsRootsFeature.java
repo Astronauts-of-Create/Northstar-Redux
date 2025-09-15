@@ -66,14 +66,14 @@ public class MarsRootsFeature extends Feature<MultifaceGrowthConfiguration> {
                     BlockState blockstate = level.getBlockState(mutable.setWithOffset(blockpos1, direction));
                     if (blockstate.is(config.canBePlacedOn)) {
                         BlockState blockstate1 = config.placeBlock.getStateForPlacement(state, level, blockpos1, direction);
-//                        BlockState blockstate1 = NorthstarBlocks.MARS_ROOTS.get().defaultBlockState();
+    // BlockState blockstate1 = NorthstarBlocks.MARS_ROOTS.get().defaultBlockState();
 
                         if (blockstate1 == null) {
                             continue;}
 
                         dirs.add(direction);
 
-//                        blockstate1.randomTick(level.getLevel(), blockpos1, rando);
+    // blockstate1.randomTick(level.getLevel(), blockpos1, rando);
 
                     }
                 }

@@ -16,9 +16,22 @@
     "minecraft:warped_trapdoor",
     "minecraft:iron_door",
     "minecraft:iron_trapdoor",
-    "minecraft:scaffolding",
     "#minecraft:fire",
     "#minecraft:leaves",
+    "minecraft:azalea", // top face should let air pass, it's leaves after all
+    "minecraft:flowering_azalea",
+    "minecraft:sculk_shrieker",
+    "minecraft:cobweb",
+    "minecraft:campfire",
+    "minecraft:soul_campfire",
+    "minecraft:cauldron",
+    "minecraft:ladder",
+    "minecraft:scaffolding",
+    "minecraft:rail",
+    "minecraft:powered_rail",
+    "minecraft:detector_rail",
+    "minecraft:activator_rail",
+    "minecraft:light",
     // Northstar
     "northstar:vent_block",
     "northstar:martian_steel_grate",
@@ -26,9 +39,13 @@
     "northstar:tungsten_grate",
     // Create
     "create:blaze_burner",
-    "create:lit_blaze_burner",
+    "create:andesite_ladder",
+    "create:brass_ladder",
+    "create:copper_ladder",
     "create:andesite_scaffolding",
     "create:brass_scaffolding",
-    "create:copper_scaffolding"
+    "create:copper_scaffolding",
+    "create:packager",
+    "create:repackager"
   ]
 }

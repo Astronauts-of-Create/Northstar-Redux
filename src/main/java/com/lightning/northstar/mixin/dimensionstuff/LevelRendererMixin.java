@@ -1,5 +1,3 @@
-//(from https://github.com/lightning2401/northstar/blob/6afd026bb15a83e4494219231f4f48ddc94ea95e/northstar/src/main/java/com/lightning/northstar/mixin/dimensionstuff/LevelRendererMixin.java)
-
 package com.lightning.northstar.mixin.dimensionstuff;
 
 import javax.annotation.Nullable;
@@ -374,7 +372,7 @@ public class LevelRendererMixin {
             info.cancel();
             float rain_det = this.minecraft.level.getRainLevel(3);
             if (level.random.nextInt(2) == 0 && level.isDay()) {
-//	        	System.out.println("tubble weed :)");
+//	        	Northstar.LOGGER.debug("tubble weed :)");
                 BlockPos newpos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING,
                         new BlockPos(pCamera.getBlockPosition().getX() + level.random.nextIntBetweenInclusive(-64, 64), 0, pCamera.getBlockPosition().getZ() + level.random.nextIntBetweenInclusive(-64, 64)));
                 level.isClientSide();
@@ -510,7 +508,7 @@ public class LevelRendererMixin {
     private BufferBuilder.RenderedBuffer drawStars2(BufferBuilder pBuilder) {
         RandomSource randomsource = RandomSource.create(92410L);
         pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-//		System.out.println("big bingus");
+//		Northstar.LOGGER.debug("big bingus");
         for (int i = 0; i < 2500; ++i) {
             double d0 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
             double d1 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
@@ -863,7 +861,7 @@ public class LevelRendererMixin {
                     starBrightness2 = Mth.clamp(starBrightness2, 0, 0.67F);
                     starBrightness3 = Mth.clamp(starBrightness2, 0, 0.33F);
 
-//          System.out.println(starBrightness);
+                    Northstar.LOGGER.debug("{}", starBrightness);
 
                     if (starBrightness > 0.0F) {
                         RenderSystem.setShaderColor(starBrightness, starBrightness, starBrightness, starBrightness / 2);
@@ -909,7 +907,7 @@ public class LevelRendererMixin {
                     BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
                     if (playerEyeLevel >= 450) {
-                        RenderSystem.setShaderColor(1, 1, 1, 1);//System.out.println("we gamin");
+                        RenderSystem.setShaderColor(1, 1, 1, 1);//Northstar.LOGGER.debug("we gamin");
                     } else {
                         RenderSystem.setShaderColor(earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness);
                     }
@@ -1015,7 +1013,7 @@ public class LevelRendererMixin {
                 float f = (float) skycolor.x * skydarken;
                 float f1 = (float) skycolor.y * skydarken;
                 float f2 = (float) skycolor.z * skydarken;
-                //       System.out.println(time);
+                Northstar.LOGGER.debug("{}", time);
 
                 if (playerEyeLevel > 600) {
                     f = (float) (skycolor.x * skydarken - ((playerEyeLevel - 600) / 300));
@@ -1109,7 +1107,7 @@ public class LevelRendererMixin {
                 float f11 = 0.5F - this.level.getRainLevel(pPartialTick);
                 float f10 = this.level.getStarBrightness(pPartialTick) * f11;
                 float starHeight = (playerEyeLevel - 600) / 300;
-                //       System.out.println(starHeight + "BRUH");
+                Northstar.LOGGER.debug("{}BRUH", starHeight);
                 float starBrightness;
                 float starBrightness2;
                 float starBrightness3;
@@ -1134,7 +1132,7 @@ public class LevelRendererMixin {
                 }
                 starBrightness2 = Mth.clamp(starBrightness2, 0, 0.67F);
                 starBrightness3 = Mth.clamp(starBrightness2, 0, 0.33F);
-//        System.out.println(starBrightness);
+                Northstar.LOGGER.debug("{}", starBrightness);
                 if (f10 > 0.0F) {
                     RenderSystem.setShaderColor(starBrightness, starBrightness, starBrightness, starBrightness);
                     FogRenderer.setupNoFog();
@@ -1696,7 +1694,7 @@ public class LevelRendererMixin {
         BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
         if (playerEyeLevel >= 450) {
-            RenderSystem.setShaderColor(1, 1, 1, 1);//System.out.println("we gamin");
+            RenderSystem.setShaderColor(1, 1, 1, 1);//Northstar.LOGGER.debug("we gamin");
         } else {
             RenderSystem.setShaderColor(earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness);
         }

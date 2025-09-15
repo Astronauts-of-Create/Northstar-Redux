@@ -238,8 +238,8 @@ public class NorthstarPlanets {
         double eris_radian = eris_orbit_speed * time;
         eris_x = (eris_origin_x + (Math.cos(eris_radian)* eris_orbit_radius_x));
         eris_y = (eris_origin_y + (Math.sin(eris_radian)* eris_orbit_radius_y));
-//      System.out.println(mars_x + "   Mars X");
-//      System.out.println(mars_y + "   Mars Y");
+        Northstar.LOGGER.debug("{}   Mars X", mars_x);
+        Northstar.LOGGER.debug("{}   Mars Y", mars_y);
     }
 
     public static double getPlanetX(String name) {

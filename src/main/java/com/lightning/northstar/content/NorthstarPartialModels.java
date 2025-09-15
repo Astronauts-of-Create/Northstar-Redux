@@ -30,7 +30,11 @@ public class NorthstarPartialModels {
             CONTROL_LEVER = block("rocket_controls/stick"),
             CONTROL_LEVER_BLOCK = block("rocket_controls/stick_2"),
             IRON_COGWHEEL = block("iron_cogwheel"),
-            IRON_LARGE_COGWHEEL = block("iron_large_cogwheel");
+            IRON_LARGE_COGWHEEL = block("iron_large_cogwheel"),
+            SOLAR_PANEL_FULL = block("solar_panel/solar_panel_full"),
+            SOLAR_PANEL_SLIM = block("solar_panel/solar_panel_slim"),
+            SOLAR_PANEL_NORTH = block("solar_panel/solar_panel_north"),
+            SOLAR_PANEL_SOUTH = block("solar_panel/solar_panel_south");
 
     private static PartialModel block(String path) {
         return PartialModel.of(Northstar.asResource("block/" + path));

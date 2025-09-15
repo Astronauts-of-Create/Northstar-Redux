@@ -13,9 +13,9 @@ public class ServerConfig extends ConfigBase {
     public final ConfigInt oxygenSealerBlocksPerRpm = i(20, 1, "oxygenSealerBlocksPerRpm");
     // 0.001 mB per block per tick is 1 mB per tick for 100 blocks or 20 mB per second for 1000 blocks
     public final ConfigFloat oxygenSealerOxygenPerBlockPerTick = f(0.001f, 0, "oxygenPerBlockPerTick");
+    public final ConfigInt oxygenSealerMaxContraptionSealed = i(10_000, "oxygenSealerMaxContraptionSealed");
 
     public final ConfigInt temperatureRegulatorBlocksPerRpm = i(20, 1, "temperatureRegulatorBlocksPerRpm");
-    public final ConfigBool smoothTemperature = b(false, "temperatureRegulatorSmoothTemperature", "Wether to interpolate temperature between adjacent blocks, affects performance");
 
     @Override
     public @NotNull String getName() {

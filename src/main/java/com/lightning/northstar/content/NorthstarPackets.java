@@ -5,6 +5,7 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInputPac
 import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket;
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
+import com.lightning.northstar.contraptions.ActorConfigPacket;
 import com.lightning.northstar.contraptions.packets.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraptions.packets.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraptions.packets.RocketControlPacket;
@@ -36,9 +37,10 @@ public enum NorthstarPackets {
     ROCKET_CONTROLS_INPUT(RocketControlsInputPacket.class, RocketControlsInputPacket::new, PLAY_TO_SERVER),
 
     // server to client
-    ROCKET_SYNC_PACKET(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket::new, PLAY_TO_CLIENT),
-    ROCKET_QUICK_SYNC_PACKET(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket::new, PLAY_TO_CLIENT),
-    ROCKET_CONTROL_PACKET(RocketControlPacket.class, RocketControlPacket::new, PLAY_TO_CLIENT);
+    ROCKET_SYNC(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket::new, PLAY_TO_CLIENT),
+    ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket::new, PLAY_TO_CLIENT),
+    ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket::new, PLAY_TO_CLIENT),
+    ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
     public static final int NETWORK_VERSION = 4;

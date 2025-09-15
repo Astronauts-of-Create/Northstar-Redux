@@ -1,0 +1,38 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"texture_size": [48, 48],
+	"textures": {
+		"0": "northstar:block/solar_panel"
+	},
+	"elements": [
+		{
+			"name": "stem",
+			"from": [6, 8, 6],
+			"to": [10, 18, 10],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [14.66667, 9.33333, 16, 16], "texture": "#0"},
+				"east": {"uv": [14.66667, 9.33333, 16, 16], "texture": "#0"},
+				"south": {"uv": [14.66667, 9.33333, 16, 16], "texture": "#0"},
+				"west": {"uv": [14.66667, 9.33333, 16, 16], "texture": "#0"},
+				"up": {"uv": [12, 10.66666, 10.66666, 9.33333], "texture": "#0"},
+				"down": {"uv": [12, 9.33333, 10.66667, 10.66666], "texture": "#0"}
+			}
+		},
+		{
+			"name": "panel",
+			"from": [-1, 17, -4],
+			"to": [17, 19, 16],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
+			"faces": {
+				"north": {"uv": [14, 9.33333, 14.66667, 16], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [7.33333, 15.33333, 14, 16], "texture": "#0"},
+				"south": {"uv": [14, 9.33333, 14.66667, 16], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [6, 15.33333, 12, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 6, 6.66667], "texture": "#0"},
+				"down": {"uv": [0, 9.33333, 6, 16], "texture": "#0"}
+			}
+		}
+	]
+}

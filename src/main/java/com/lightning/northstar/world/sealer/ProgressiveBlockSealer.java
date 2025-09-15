@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import it.unimi.dsi.fastutil.longs.*;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +48,7 @@ public class ProgressiveBlockSealer {
             tempPos1.set(origin);
         }
 
-        if (level instanceof ClientLevel && NorthstarConfigs.client().debugSealerBounds.get() != visualizer instanceof SealerDebugVisualizer.Client) {
+        if (level.isClientSide() && NorthstarConfigs.client().debugSealerBounds.get() != visualizer instanceof SealerDebugVisualizer.Client) {
             visualizer = NorthstarConfigs.client().debugSealerBounds.get() ? new SealerDebugVisualizer.Client() : SealerDebugVisualizer.NOOP;
         }
 
@@ -66,6 +65,13 @@ public class ProgressiveBlockSealer {
     }
 
     public boolean updateSeal(Level level, int maximumSealed) {
+        return updateSeal(level, maximumSealed, NorthstarConfigs.server().sealerMaxBlocksPerTick.get());
+    }
+
+    /**
+     * @return true if the seal is complete or false if it is still in progress
+     */
+    public boolean updateSeal(Level level, int maximumSealed, int maximumChecked) {
         if (queue.isEmpty()) {
             return true; // nothing to do
         }
@@ -73,10 +79,8 @@ public class ProgressiveBlockSealer {
         ProfilerFiller profiler = level.getProfiler();
         profiler.push("northstar:seal_blocks");
 
-        int processed = 0;
-        int maximum = NorthstarConfigs.server().sealerMaxBlocksPerTick.get();
-
-        while (!queue.isEmpty() && processed++ < maximum && visited.size() <= maximumSealed) {
+        int checked = 0;
+        while (!queue.isEmpty() && checked++ < maximumChecked && visited.size() <= maximumSealed) {
             tempPos1.set(queue.dequeueLong());
 
             for (Direction direction : Iterate.directions) {
@@ -91,7 +95,7 @@ public class ProgressiveBlockSealer {
                     bounds.union(tempPos2);
                     queue.enqueue(packed);
 
-                    visualizer.addConnection(tempPos1.asLong(), packed, 0xFF_00FF00);
+                    visualizer.addConnection(tempPos1.asLong(), packed);
                 }
             }
         }
@@ -126,9 +130,8 @@ public class ProgressiveBlockSealer {
 
     protected static boolean isFaceOccluded(BlockGetter level, BlockPos pos, Direction direction, boolean source) {
         BlockState state = level.getBlockState(pos);
-        //Block block = state.getBlock();
-        //if (block instanceof EncasedPipeBlock)
-        //    return !state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
+        if (state.getBlock() instanceof SealableBlock sealable)
+            return sealable.isFaceSealed(level, pos, direction, source);
         if (source && NorthstarBlockTags.BLOCKS_AIR.matches(state))
             return true;
         return Block.isFaceFull(state.getCollisionShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
@@ -187,6 +190,10 @@ public class ProgressiveBlockSealer {
 
     public SealerDebugVisualizer getVisualizer() {
         return visualizer;
+    }
+
+    public int getSealedBlockCount() {
+        return sealedBlocks.size();
     }
 
 }

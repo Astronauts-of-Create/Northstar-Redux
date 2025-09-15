@@ -3,7 +3,6 @@ package com.lightning.northstar.block.tech.rocket_station;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
-import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -77,11 +76,6 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos updatePos,
         boolean p_220069_6_) {
-    }
-
-
-    public static Couple<Integer> getSpeedRange() {
-        return Couple.create(1, 16);
     }
 
     @Override

@@ -5,8 +5,12 @@ import com.lightning.northstar.world.NorthstarTemperature;
 
 public interface NorthstarLevel {
 
-    NorthstarTemperature northstar$temperature();
+    default NorthstarTemperature northstar$temperature() {
+        throw new RuntimeException("This should be implemented by a mixin!");
+    }
 
-    NorthstarOxygen northstar$oxygen();
+    default NorthstarOxygen northstar$oxygen() {
+        throw new RuntimeException("This should be implemented by a mixin!");
+    }
 
 }

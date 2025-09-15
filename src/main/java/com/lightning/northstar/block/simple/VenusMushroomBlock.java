@@ -81,7 +81,6 @@ public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        System.out.println(pContext.getClickedFace());
         return this.defaultBlockState().setValue(IS_ON_CEILING, pContext.getClickedFace() == Direction.DOWN);
     }
 
@@ -115,7 +114,7 @@ public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
     @Override
     public boolean isBonemealSuccess(Level pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         return pState.getValue(IS_ON_CEILING) ? ((VenusMushroomBlock) (pState.getBlock())).upsideDownSupplier != null : ((VenusMushroomBlock) (pState.getBlock())).featureSupplier != null;
-//        return (double)pRandom.nextFloat() < 0.4D;
+    // return (double)pRandom.nextFloat() < 0.4D;
     }
 
 }

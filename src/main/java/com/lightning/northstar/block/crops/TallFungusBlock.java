@@ -87,8 +87,7 @@ public class TallFungusBlock extends TallFlowerBlock {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        System.out.println(pContext.getClickedFace());
-        boolean ceiling_flag = pContext.getClickedFace() == Direction.DOWN;  
+        boolean ceiling_flag = pContext.getClickedFace() == Direction.DOWN;
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
         if(ceiling_flag)

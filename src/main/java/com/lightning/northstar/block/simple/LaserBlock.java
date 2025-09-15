@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.simple;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import net.minecraft.core.BlockPos;
@@ -87,7 +88,7 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
                     blockstate = blockstate.setValue(DIRECTION, dir);
 
                 blockpos$mutableblockpos.move(dir);
-                System.out.println("AMETHYST DETECTED!");
+                Northstar.LOGGER.debug("AMETHYST DETECTED!");
             } else {
                 crystal_flag = false;
             }
@@ -151,7 +152,7 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
         Direction direction = pState.getValue(DIRECTION);
         BlockPos blockpos = pPos.relative(direction.getOpposite());
         if (direction != Direction.DOWN) {
-            System.out.println(pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get()));
+            Northstar.LOGGER.debug("{}", pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get()));
             return true;
         }
         return pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.LASER.get()) ||

@@ -2,92 +2,63 @@ package com.lightning.northstar.block.tech.solar_panel;
 
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
-import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Mth;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.List;
-
 public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
 
-    // 1 large water wheel can spin a mill at 128 (half) speed before it overstresses
-    // 22 torque can spin 2 grinders at full speed before it overstresses
-    private final static float TORQUE = (float) 22;
+    public static final int MAXIMUM_SPEED = 16;
 
-    public int sunlightScore;
+    public final LerpedFloat targetAngle = LerpedFloat.angular();
+
+    private int lastLight = -1;
+    private float generatedSpeed;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        setLazyTickRate(60);
-        updateGeneratedRotation();
-        setChanged();
     }
 
     @Override
     public void tick() {
         super.tick();
-        determineAndApplySunlightScore();
-    }
 
-    @Override
-    public void lazyTick() {
-        super.lazyTick();
-        determineAndApplySunlightScore();
-    }
+        int light = Math.max(0, level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken());
+        if (light != lastLight) {
+            lastLight = light;
+            generatedSpeed = MAXIMUM_SPEED * light / 15f * NorthstarPlanets.getSunMultiplier(level.dimension());
+            updateGeneratedRotation();
+        }
 
-    public void determineAndApplySunlightScore() {
-        sunlightScore = getSunlightAtPosition(worldPosition);
-        setSunlightScoreAndUpdate(sunlightScore);
-    }
-
-    public int getSunlightAtPosition(BlockPos pos) {
-        if (level.isNight())
-            return 0;
-        if (level.getRawBrightness(pos.above(), -15) >= 16)
-            return (int) (level.getRawBrightness(pos.above(), -15) * NorthstarPlanets.getSunMultiplier(level.dimension()));
-        return 0;
-    }
-
-    @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        super.addBehaviours(behaviours);
-    }
-
-    public void setSunlightScoreAndUpdate(int score) {
-        sunlightScore = score;
-        updateGeneratedRotation();
-        setChanged();
-    }
-
-    @Override
-    public float getGeneratedSpeed() {
-        return (Mth.clamp(sunlightScore, -1, 1) * TORQUE) * NorthstarPlanets.getSunMultiplier(level == null ? null : level.dimension());
+        if (level.isClientSide()) {
+            targetAngle.tickChaser();
+        }
     }
 
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
-        sunlightScore = compound.getInt("sunlightScore");
-
+        generatedSpeed = compound.getFloat("GeneratorSpeed");
     }
 
     @Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
-        compound.putInt("sunlightScore", sunlightScore);
+        compound.putFloat("GeneratorSpeed", generatedSpeed);
+    }
+
+    @Override
+    public float getGeneratedSpeed() {
+        return generatedSpeed;
     }
 
     @Override
     protected AABB createRenderBoundingBox() {
-        return new AABB(worldPosition).inflate(getSize());
-    }
-
-    protected int getSize() {
-        return 1;
+        return new AABB(worldPosition).inflate(1);
     }
 
 }
