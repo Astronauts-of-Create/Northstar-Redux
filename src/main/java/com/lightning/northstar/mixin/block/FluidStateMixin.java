@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin.blockstuff;
+package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FluidStateMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void tick$fluid(Level pLevel, BlockPos pPos, CallbackInfo info) {
+    public void northstar$tick(Level pLevel, BlockPos pPos, CallbackInfo info) {
         // TODO: load buffer
         //if (pLevel.isClientSide || NorthstarTemperature.loadBuffer <= 70)
         //    return;
