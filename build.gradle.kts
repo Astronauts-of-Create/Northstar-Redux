@@ -39,12 +39,12 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
-    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-        credentials {
-            username = project.property("github.packages.username") as? String
-            password = project.property("github.packages.password") as? String
-        }
-    }
+//    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
+//        credentials {
+//            username = project.property("github.packages.username") as? String
+//            password = project.property("github.packages.password") as? String
+//        }
+//    }
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
@@ -84,7 +84,7 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
-    modRuntimeOnly(libs.copycats)
+//    modRuntimeOnly(libs.copycats)
 
     modRuntimeOnly(libs.embeddium)
     modRuntimeOnly(libs.oculus)
