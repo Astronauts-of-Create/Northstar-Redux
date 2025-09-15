@@ -10,7 +10,6 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -377,12 +376,6 @@ public class NorthstarItems {
     public static final ItemEntry<Item> DRY_PLANT_FIBER = REGISTRATE
             .item("dry_plant_fiber", Item::new)
             .register();
-
-    public static final RegistryEntry<BucketItem> TITANIUM_TETRACHLORIDE_BUCKET =
-            REGISTRATE.item("tetrachloride_bucket",
-                            props -> new BucketItem(() -> NorthstarFluids.TITANIUM_TETRACHLORIDE.getSource(),
-                                    props.stacksTo(1).craftRemainder(Items.BUCKET)))
-                    .register();
 
     public static void register() {
     }

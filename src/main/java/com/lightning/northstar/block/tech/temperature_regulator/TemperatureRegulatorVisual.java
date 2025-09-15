@@ -19,9 +19,7 @@ public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<Tempera
     private final RotatingInstance coldSpinner;
 
     public TemperatureRegulatorVisual(VisualizationContext context, TemperatureRegulatorBlockEntity entity, float partialTick) {
-        super(context, entity, partialTick, Models.partial(AllPartialModels.SHAFT_HALF));
-
-        rotatingModel.rotateToFace(Direction.NORTH, Direction.Axis.Y);
+        super(context, entity, partialTick, Models.partial(AllPartialModels.SHAFT_HALF, Direction.DOWN));
 
         warmSpinner = instancerProvider()
                 .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.WARM_SPINNY))
