@@ -20,8 +20,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<SolarPanelBlockEntity> {
 
-    protected static final VoxelShape SHAPE_EAST_WEST = Block.box(1.0D, 0.0D, 0.0D, 15.0D, 12.0D, 16.0D);
-    protected static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(0.0D, 0.0D, 1.0D, 16.0D, 12.0D, 15.0D);
+    protected static final VoxelShape SHAPE_EAST_WEST = Block.box(1.0D, 0.0D, 0.0D, 15.0D, 14.0D, 16.0D);
+    protected static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(0.0D, 0.0D, 1.0D, 16.0D, 14.0D, 15.0D);
 
     public SolarPanelBlock(Properties properties) {
         super(properties);

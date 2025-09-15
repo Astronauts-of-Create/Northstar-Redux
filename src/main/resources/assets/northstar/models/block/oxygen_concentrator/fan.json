@@ -3,8 +3,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"2": "northstar:block/oxygen_concentrator_bottom",
-		"4": "northstar:block/oxygen_concentrator_fan",
-		"particle": "northstar:block/oxygen_concentrator_side"
+		"4": "northstar:block/oxygen_concentrator_fan"
 	},
 	"elements": [
 		{
