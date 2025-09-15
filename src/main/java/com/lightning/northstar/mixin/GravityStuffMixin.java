@@ -6,13 +6,9 @@ import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -103,7 +99,7 @@ public class GravityStuffMixin {
                 entity.setDeltaMovement(velocity.x() + dust_push, vel_y + (CONSTANT - newGrav) - crouchPush, velocity.z() - dust_push);
             }
         }
-        if (isInOrbit) {
+        /*if (isInOrbit) {
             if (entity.getY() < 0 && !entity.level().isClientSide) {
                 if (entity.level().dimension() == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {
                     ServerLevel destLevel = entity.level().getServer().getLevel(Level.OVERWORLD);
@@ -114,7 +110,7 @@ public class GravityStuffMixin {
                     }
                 }
             }
-        }
+        }*/
     }
 
     @Inject(method = "calculateFallDamage", at = @At("HEAD"), cancellable = true)
@@ -126,56 +122,6 @@ public class GravityStuffMixin {
             double mult = getGravMultiplier(entity.level().dimension());
             float f = (float) (mobeffectinstance == null ? 0.0F : (float) (mobeffectinstance.getAmplifier() + 1) * mult);
             info.setReturnValue(Mth.ceil(((pFallDistance * mult) - 3.0F - f) * pDamageMultiplier));
-        }
-    }
-
-
-    private static Entity changePlayerDimension(ServerLevel pDestination, ServerPlayer entity) {
-        if (!CommonHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
-        entity.isChangingDimension();
-        ServerLevel serverlevel = (ServerLevel) entity.level();
-        LevelData leveldata = pDestination.getLevelData();
-        entity.connection.send(new ClientboundRespawnPacket(new CommonPlayerSpawnInfo(pDestination.dimensionTypeRegistration(), pDestination.dimension(), BiomeManager.obfuscateSeed(pDestination.getSeed()), entity.gameMode.getGameModeForPlayer(), entity.gameMode.getPreviousGameModeForPlayer(), pDestination.isDebug(), pDestination.isFlat(), entity.getLastDeathLocation(), entity.getPortalCooldown()), (byte) 3));
-        entity.connection.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
-        PlayerList playerlist = entity.server.getPlayerList();
-
-
-        playerlist.sendPlayerPermissionLevel(entity);
-        pDestination.removePlayerImmediately(entity, Entity.RemovalReason.CHANGED_DIMENSION);
-        entity.revive();
-        CriteriaTriggers.CHANGED_DIMENSION.trigger(entity, entity.level().dimension(), pDestination.dimension());
-        entity.connection.send(new ClientboundPlayerAbilitiesPacket(entity.getAbilities()));
-        playerlist.sendLevelInfo(entity, pDestination);
-        playerlist.sendAllPlayerInfo(entity);
-
-        for (MobEffectInstance mobeffectinstance : entity.getActiveEffects()) {
-            entity.connection.send(new ClientboundUpdateMobEffectPacket(entity.getId(), mobeffectinstance, false));
-
-        }
-
-        return entity;
-    }
-
-    private static Entity changeDimensionCustom(ServerLevel pDestination, Entity entity) {
-        if (!CommonHooks.onTravelToDimension(entity, pDestination.dimension())) return null;
-        if (entity.level() instanceof ServerLevel level && !entity.isRemoved()) {
-            int seatNumber = -12345;
-
-            Entity newentity = entity.getType().create(pDestination);
-
-            if (newentity != null) {
-                newentity.restoreFrom(entity);
-                newentity.moveTo(entity.position().x, 800, entity.position().z, entity.getYRot(), entity.getXRot());
-                newentity.setDeltaMovement(entity.getDeltaMovement());
-                pDestination.addDuringTeleport(newentity);
-            }
-
-            entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-            level.resetEmptyTime();
-            pDestination.resetEmptyTime();
-            return newentity;
-        } else {
-            return null;
         }
     }
 

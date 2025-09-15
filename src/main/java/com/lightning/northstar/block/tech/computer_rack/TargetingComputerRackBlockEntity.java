@@ -42,12 +42,12 @@ public class TargetingComputerRackBlockEntity extends SmartBlockEntity {
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
 
-        tag.put("slot1", container.getItem(0).save(registries));
-        tag.put("slot2", container.getItem(1).save(registries));
-        tag.put("slot3", container.getItem(2).save(registries));
-        tag.put("slot4", container.getItem(3).save(registries));
-        tag.put("slot5", container.getItem(4).save(registries));
-        tag.put("slot6", container.getItem(5).save(registries));
+        tag.put("slot1", container.getItem(0).saveOptional(registries));
+        tag.put("slot2", container.getItem(1).saveOptional(registries));
+        tag.put("slot3", container.getItem(2).saveOptional(registries));
+        tag.put("slot4", container.getItem(3).saveOptional(registries));
+        tag.put("slot5", container.getItem(4).saveOptional(registries));
+        tag.put("slot6", container.getItem(5).saveOptional(registries));
     }
 
 }

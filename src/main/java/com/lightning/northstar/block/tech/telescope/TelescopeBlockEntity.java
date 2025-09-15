@@ -26,46 +26,37 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class TelescopeBlockEntity extends SmartBlockEntity implements MenuProvider {
-
-    public String SelectedPlanet = null;
 
     public TelescopeBlockEntity(BlockEntityType<TelescopeBlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
-    @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        return new TelescopeMenu(NorthstarMenuTypes.TELESCOPE_MENU.get(), id, inventory, this);
+        return TelescopeMenu.create(id, inventory, this);
     }
 
     public void print(String name, ServerPlayer player) {
-        SelectedPlanet = name;
-        boolean flag = false;
-        int paperslot = 0;
-        Inventory inv = player.getInventory();
-        if (name == null) {
-            return;
-        }
-        for (int p = 0; p < 36; p++) {
-            ItemStack items = inv.getItem(p);
-            Item item = items.getItem();
-            if (item == Items.PAPER) {
-                flag = true;
-                paperslot = p;
+        boolean foundPaper = false;
+
+        Inventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.items.size(); i++) {
+            ItemStack item = inventory.items.get(i);
+            if (item.is(Items.PAPER)) {
+                item.setCount(item.getCount() - 1);
+                foundPaper = true;
+                break;
             }
         }
-        System.out.println(flag);
-        if (!flag) {
+
+        if (!foundPaper && !player.isCreative()) {
             return;
         }
-        ItemStack paper = inv.getItem(paperslot);
-        paper.setCount(paper.getCount() - 1);
-        inv.player.level().playSound(null, inv.player.blockPosition(), SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+        player.level().playSound(player, getBlockPos(), SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 1.0F, 1.0F);
 
         int x = (int) NorthstarPlanets.getPlanetX(name);
         int y = (int) NorthstarPlanets.getPlanetY(name);

@@ -3,12 +3,12 @@
   "acceptMirrored": false,
   "key": {
     "A": {
-      "tag": "forge:plates/iron"
+      "item": "northstar:titanium_sheet"
     },
     "L": {
       "item": "create:shaft"
     },
-    "S": {
+    "C": {
       "item": "northstar:circuit"
     },
     "T": {
@@ -19,7 +19,7 @@
     "TTT",
     "TTT",
     " L ",
-    "ASA",
+    "ACA",
     "ALA"
   ],
   "result": {

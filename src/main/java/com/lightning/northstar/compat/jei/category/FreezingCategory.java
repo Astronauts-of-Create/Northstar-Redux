@@ -56,9 +56,7 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
             i++;
         }
         for (FluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
-                    .setBackground(getRenderedSlot(), -1, -1)
-                    .addIngredients(NeoForgeTypes.FLUID_STACK, fluidIngredient.getMatchingFluidStacks());
+            addFluidSlot(builder, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19, fluidIngredient);
             i++;
         }
 
@@ -80,11 +78,7 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
         for (FluidStack fluidResult : recipe.getFluidResults()) {
             int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
             int yPosition = -19 * (i / 2) + 51;
-
-            builder
-                    .addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
-                    .setBackground(getRenderedSlot(), -1, -1)
-                    .addIngredient(NeoForgeTypes.FLUID_STACK, fluidResult);
+            addFluidSlot(builder, xPosition, yPosition, fluidResult);
             i++;
         }
     }

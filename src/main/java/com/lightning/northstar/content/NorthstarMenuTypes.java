@@ -17,7 +17,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 public class NorthstarMenuTypes {
 
     public static final MenuEntry<TelescopeMenu> TELESCOPE_MENU = register("telescope", TelescopeMenu::new, () -> TelescopeScreen::new);
-    public static final MenuEntry<AstronomyTableMenu> ASTRONOMY_TABLE_MENU = register("astronomy_table", AstronomyTableMenu::new, () -> AstronomyTableScreen::new);
+    public static final MenuEntry<AstronomyTableMenu> ASTRONOMY_TABLE_MENU = register("astronomy_table_menu", AstronomyTableMenu::new, () -> AstronomyTableScreen::new);
     public static final MenuEntry<RocketStationMenu> ROCKET_STATION = register("rocket_station", RocketStationMenu::new, () -> RocketStationScreen::new);
 
     private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(

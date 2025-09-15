@@ -31,13 +31,13 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
@@ -123,7 +123,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
         } else if (pId == 8) {
             this.hiding = true;
             hideTick = 12;
-//            this.setXRot(Mth.roundToward((int)this.getXRot(), 90));
+            // this.setXRot(Mth.roundToward((int)this.getXRot(), 90));
         } else if (pId == 9) {
             this.hiding = false;
             this.ignoreHideTimer = 1200;
@@ -182,13 +182,13 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             this.targetSelector.disableControlFlag(Goal.Flag.JUMP);
             this.getNavigation().stop();
             if (hideTick == 12) {
-//                if(Math.abs(this.position().x - Math.round(this.position().x)) > 0.1)
-//                {double dif = this.position().x - Math.round(this.position().x);
-//                this.setDeltaMovement(this.getDeltaMovement().add(dif, 0, 0));}
+                // if(Math.abs(this.position().x - Math.round(this.position().x)) > 0.1)
+                // {double dif = this.position().x - Math.round(this.position().x);
+                // this.setDeltaMovement(this.getDeltaMovement().add(dif, 0, 0));}
 
-//                if(Math.abs(this.position().z - Math.round(this.position().z)) > 0.1)
-//                {double dif = this.position().z - Math.round(this.position().z);
-//                this.setDeltaMovement(this.getDeltaMovement().add(dif, 0, 0));}
+                // if(Math.abs(this.position().z - Math.round(this.position().z)) > 0.1)
+                // {double dif = this.position().z - Math.round(this.position().z);
+                // this.setDeltaMovement(this.getDeltaMovement().add(dif, 0, 0));}
             }
 
             this.setYBodyRot(0);
@@ -236,13 +236,13 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
 
     @Override
     protected void registerGoals() {
-//        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-//        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        // this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        // this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-//        this.targetSelector.addGoal(1, new VenusMimicEntity.MimicLookForPlayerGoal(this, this::canTarget));
-//        this.targetSelector.addGoal(1, new VenusMimicEntity.HideWhenStaredAt(this));
+        // this.targetSelector.addGoal(1, new VenusMimicEntity.MimicLookForPlayerGoal(this, this::canTarget));
+        // this.targetSelector.addGoal(1, new VenusMimicEntity.HideWhenStaredAt(this));
         super.registerGoals();
     }
 
@@ -346,8 +346,8 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             double d0 = vec31.length();
             vec31 = vec31.normalize();
             double d1 = vec3.dot(vec31);
-//             System.out.println(d1);
-//             System.out.println("comparer: " + String.valueOf(1.0D - 0.35D / (d0 / 8)));
+            Northstar.LOGGER.debug("{}", d1);
+            Northstar.LOGGER.debug("comparer: {}", 1.0D - 0.35D / (d0 / 8));
             return d1 > 1.0D - 0.35D / (d0 / 8) ? pPlayer.hasLineOfSight(this) : false;
         }
     }
@@ -436,7 +436,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
                     return false;
                 } else {
                     stareTimer = Mth.clamp(stareTimer + 1, 0, 120);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                     if (stareTimer >= 32) {
                         this.mimic.lookAt(this.pendingTarget, 10.0F, 10.0F);
                         return true;
@@ -457,7 +457,7 @@ public class VenusMimicEntity extends Monster implements GeoAnimatable {
             if (this.pendingTarget != null) {
                 if (!this.mimic.isLookingAtMe(this.pendingTarget)) {
                     stareTimer = Mth.clamp(stareTimer, 0, stareTimer - 1);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                 }
                 if (--this.aggroTime <= 0) {
                     if (!this.mimic.hiding) {

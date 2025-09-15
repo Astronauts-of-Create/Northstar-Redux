@@ -3,6 +3,7 @@ package com.lightning.northstar.world.dimension;
 import com.lightning.northstar.Northstar;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 
@@ -14,9 +15,11 @@ public class NorthstarDimensions {
     // mars
     public static final ResourceKey<Level> MARS_DIM_KEY = ResourceKey.create(Registries.DIMENSION, Northstar.asResource("mars"));
     public static final ResourceKey<DimensionType> MARS_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("mars"));
+    public static final ResourceLocation MARS_EFFECTS = Northstar.asResource("mars");
     // venus
     public static final ResourceKey<Level> VENUS_DIM_KEY = ResourceKey.create(Registries.DIMENSION, Northstar.asResource("venus"));
     public static final ResourceKey<DimensionType> VENUS_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("venus"));
+    public static final ResourceLocation VENUS_EFFECTS = Northstar.asResource("venus");
     // moon
     public static final ResourceKey<Level> MOON_DIM_KEY = ResourceKey.create(Registries.DIMENSION, Northstar.asResource("moon"));
     public static final ResourceKey<DimensionType> MOON_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("moon"));

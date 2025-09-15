@@ -1,0 +1,23 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 750,
+      "fluid": "northstar:carbon"
+    },
+    {
+      "amount": 750,
+      "fluid": "minecraft:water"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
+    }
+  ],
+  "results": [
+    {
+      "amount": 750,
+      "fluid": "northstar:hydrocarbon"
+    }
+  ],
+  "heatRequirement": "superheated"
+}

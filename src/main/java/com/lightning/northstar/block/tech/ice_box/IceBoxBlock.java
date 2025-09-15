@@ -46,6 +46,7 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
 
     public IceBoxBlock(Properties properties) {
         super(properties);
+
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.DOWN));
     }
 

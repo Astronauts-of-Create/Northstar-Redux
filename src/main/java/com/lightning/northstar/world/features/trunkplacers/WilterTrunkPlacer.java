@@ -1,6 +1,7 @@
 package com.lightning.northstar.world.features.trunkplacers;
 
 import com.google.common.collect.Lists;
+import com.lightning.northstar.Northstar;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -63,7 +64,7 @@ public class WilterTrunkPlacer extends TrunkPlacer {
             dir = Direction.getRandom(pRandom);
             trunkDir = dir;
         }
-        System.out.println(pFreeTreeHeight);
+        Northstar.LOGGER.debug("{}", pFreeTreeHeight);
 
         if (trunkDir == Direction.EAST) {
             Xadd = 1;
@@ -100,7 +101,7 @@ public class WilterTrunkPlacer extends TrunkPlacer {
                 curve_z = 0;
             }
             curve_z *= Zadd;
-            //             System.out.println(curve_x);
+            Northstar.LOGGER.debug("{}", curve_x);
             int Xpos = pPos.getX() + curve_x + x_offset;
             int Zpos = pPos.getZ() + curve_z + z_offset;
             int j = pPos.getY() + i;
@@ -159,23 +160,23 @@ public class WilterTrunkPlacer extends TrunkPlacer {
         }
 
 
-//                  for(int i2 = 0; i2 < pFreeTreeHeight; ++i2) {
+        //   for(int i2 = 0; i2 < pFreeTreeHeight; ++i2) {
 //
-//                     int Xpos = pPos.getX() + spinX2;
-//                     int Zpos = pPos.getZ() + spinZ2;
-//                     int j = pPos.getY() + i2;
+        //  int Xpos = pPos.getX() + spinX2;
+        //  int Zpos = pPos.getZ() + spinZ2;
+        //  int j = pPos.getY() + i2;
 //
-//                     this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos), pConfig);
-//                     this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j - 1, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j - 1, Zpos), pConfig);
 //
-//                     if (i2 == pFreeTreeHeight - 1) {
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos + 1, j, Zpos), pConfig);
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos - 1, j, Zpos), pConfig);
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos + 1), pConfig);
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos - 1), pConfig);
-//                        list.add(new FoliagePlacer.FoliageAttachment(blockpos$mutableblockpos2.set(Xpos, j + 1, Zpos), 0, false));
-//                     }
-//                  }
+        //  if (i2 == pFreeTreeHeight - 1) {
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos + 1, j, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos - 1, j, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos + 1), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos - 1), pConfig);
+        // list.add(new FoliagePlacer.FoliageAttachment(blockpos$mutableblockpos2.set(Xpos, j + 1, Zpos), 0, false));
+        //  }
+        //   }
         return list;
     }
 

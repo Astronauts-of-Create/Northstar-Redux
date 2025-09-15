@@ -91,7 +91,7 @@ public class EngravingBehaviour extends BeltProcessingBehaviour {
         nbt.putInt("Ticks", runningTicks);
 
         if (clientPacket) {
-            nbt.put("ParticleItems", NBTHelper.writeCompoundList(particleItems, item -> (CompoundTag) item.save(registries)));
+            nbt.put("ParticleItems", NBTHelper.writeCompoundList(particleItems, item -> (CompoundTag) item.saveOptional(registries)));
             particleItems.clear();
         }
     }

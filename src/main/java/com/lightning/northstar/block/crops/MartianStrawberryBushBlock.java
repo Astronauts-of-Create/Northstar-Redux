@@ -200,10 +200,6 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         return NorthstarItems.MARTIAN_STRAWBERRY.get();
     }
 
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
-        return new ItemStack(this.getBaseSeedId());
-    }
-
     /**
      * @return whether bonemeal can be used on this block
      */

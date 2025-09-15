@@ -26,6 +26,8 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
 
     public TargetingComputerRackBlock(Properties properties) {
         super(properties);
+
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override

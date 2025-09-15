@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.crops.MartianFlowerBlock;
 import com.lightning.northstar.block.crops.MartianTallFlowerBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
@@ -11,14 +12,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
@@ -38,12 +37,11 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import javax.annotation.Nullable;
 
 public class MarsMothEntity extends Monster implements GeoAnimatable {
 
@@ -126,7 +124,7 @@ public class MarsMothEntity extends Monster implements GeoAnimatable {
         if (isResting()) {
             return NorthstarSounds.MARS_MOTH_SNORE.get();
         }
-//        System.out.println("GABINGA!!!");
+        Northstar.LOGGER.debug("GABINGA!!!");
         if (random.nextInt(9) == 0) {
             return NorthstarSounds.MARS_MOTH_IDLE.get();
         }
@@ -184,7 +182,7 @@ public class MarsMothEntity extends Monster implements GeoAnimatable {
             this.setFlying(true);
         }
 
-//        super.usePlayerItem(player, hand, stack);
+    // super.usePlayerItem(player, hand, stack);
     }
 
     //    @Override
@@ -400,8 +398,4 @@ public class MarsMothEntity extends Monster implements GeoAnimatable {
         return super.doHurtTarget(pEntity);
     }
 
-    //    @Override
-    public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob pOtherParent) {
-        return null;
-    }
 }

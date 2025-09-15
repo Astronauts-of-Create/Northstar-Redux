@@ -1,7 +1,9 @@
 package com.lightning.northstar.world.features.trunkplacers;
 
 import com.google.common.collect.Lists;
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -57,7 +59,7 @@ public class BloomTrunkPlacer extends TrunkPlacer {
 
         for (int i = 0; i < pFreeTreeHeight; ++i) {
 
-            //             System.out.println(curve_x);
+            //Northstar.LOGGER.debug(curve_x);
             int Xpos = pPos.getX();
             int Zpos = pPos.getZ();
             int j = pPos.getY() + i;
@@ -101,23 +103,23 @@ public class BloomTrunkPlacer extends TrunkPlacer {
         }
 
 
-//                  for(int i2 = 0; i2 < pFreeTreeHeight; ++i2) {
+        //   for(int i2 = 0; i2 < pFreeTreeHeight; ++i2) {
 //
-//                     int Xpos = pPos.getX() + spinX2;
-//                     int Zpos = pPos.getZ() + spinZ2;
-//                     int j = pPos.getY() + i2;
+        //  int Xpos = pPos.getX() + spinX2;
+        //  int Zpos = pPos.getZ() + spinZ2;
+        //  int j = pPos.getY() + i2;
 //
-//                     this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos), pConfig);
-//                     this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j - 1, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j - 1, Zpos), pConfig);
 //
-//                     if (i2 == pFreeTreeHeight - 1) {
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos + 1, j, Zpos), pConfig);
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos - 1, j, Zpos), pConfig);
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos + 1), pConfig);
-//                         this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos - 1), pConfig);
-//                        list.add(new FoliagePlacer.FoliageAttachment(blockpos$mutableblockpos2.set(Xpos, j + 1, Zpos), 0, false));
-//                     }
-//                  }
+        //  if (i2 == pFreeTreeHeight - 1) {
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos + 1, j, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos - 1, j, Zpos), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos + 1), pConfig);
+        //  this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos - 1), pConfig);
+        // list.add(new FoliagePlacer.FoliageAttachment(blockpos$mutableblockpos2.set(Xpos, j + 1, Zpos), 0, false));
+        //  }
+        //   }
         return list;
     }
 
@@ -177,9 +179,9 @@ public class BloomTrunkPlacer extends TrunkPlacer {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos.MutableBlockPos blockpos$mutableblockpos3 = new BlockPos.MutableBlockPos();
         this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY() + 12, pPos.getZ()), pConfig);
-//                  System.out.println(this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY()+12, pPos.getZ()), pConfig));
-//                  System.out.println("YOOOOOOOOOOOOOOOO, BIOLUMINESCENCE");
-//                  System.out.println(pPos.getX() + "X    " + (pPos.getY()+12) + "Y    " + pPos.getZ() + "Z" );
+        Northstar.LOGGER.debug("{}", this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY()+12, pPos.getZ()), pConfig));
+        Northstar.LOGGER.debug("YOOOOOOOOOOOOOOOO, BIOLUMINESCENCE");
+        Northstar.LOGGER.debug("{}X    {}Y    {}Z", pPos.getX(), pPos.getY() + 12, pPos.getZ());
 
         return list;
     }

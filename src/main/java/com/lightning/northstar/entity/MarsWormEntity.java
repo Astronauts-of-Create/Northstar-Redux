@@ -41,13 +41,13 @@ import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -163,8 +163,8 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
         }
 
         @Override
-        public void onReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> event, @Nullable Entity entity, @Nullable Entity player, float distance) {
-            //System.out.println("Big Bazinga 24");
+        public void onReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> gameEvent, @Nullable Entity entity, @Nullable Entity playerEntity, float distance) {
+            //Northstar.LOGGER.debug("Big Bazinga 24");
             if (!isDeadOrDying()) {
                 brain.setMemoryWithExpiry(MemoryModuleType.VIBRATION_COOLDOWN, Unit.INSTANCE, 40L);
                 level.broadcastEntityEvent(MarsWormEntity.this, EntityEvent.TENDRILS_SHIVER);
@@ -172,7 +172,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
                     playSound(NorthstarSounds.MARS_WORM_CLICK_NOTICE.get(), 5.0F, getVoicePitch());
                 }
                 MarsWormAi.setDisturbanceLocation(MarsWormEntity.this, pos);
-                if (notTarget != null && !aggro && (notTarget == entity || notTarget == player)) {
+                if (notTarget != null && !aggro && (notTarget == entity || notTarget == playerEntity)) {
                     aggro = true;
                 }
             }

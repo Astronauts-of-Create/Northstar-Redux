@@ -1,68 +1,45 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.createmod.catnip.platform.NeoForgeCatnipServices;
+import net.createmod.catnip.render.CachedBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.core.Direction;
 
-public class ElectrolysisMachineRenderer extends SmartBlockEntityRenderer<ElectrolysisMachineBlockEntity>  {
+public class ElectrolysisMachineRenderer extends KineticBlockEntityRenderer<ElectrolysisMachineBlockEntity> {
 
     public ElectrolysisMachineRenderer(Context context) {
         super(context);
     }
-    
+
     @Override
-    protected void renderSafe(ElectrolysisMachineBlockEntity elecMac, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-        int light, int overlay) {
-        super.renderSafe(elecMac, partialTicks, ms, buffer, light, overlay);
-        renderFluids(elecMac, partialTicks, ms, buffer, light, overlay);
-    }
-    
-    protected float renderFluids(ElectrolysisMachineBlockEntity elecMac, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-            int light, int overlay) {
-            SmartFluidTankBehaviour inputFluids = elecMac.getBehaviour(SmartFluidTankBehaviour.INPUT);
-            SmartFluidTankBehaviour outputFluids = elecMac.getBehaviour(SmartFluidTankBehaviour.OUTPUT);
-            SmartFluidTankBehaviour[] tanks = { inputFluids, outputFluids };
-            float totalUnits = elecMac.getTotalFluidUnits(partialTicks);
-            if (totalUnits < 1)
-                return 0;
-
-            float fluidLevel = Mth.clamp(totalUnits / 2000, 0, 1);
-
-            fluidLevel = 1 - ((1 - fluidLevel) * (1 - fluidLevel));
-
-            float xMin = 2 / 16f;
-            float xMax = 2 / 16f;
-            final float yMin = 2 / 16f;
-            final float yMax = yMin + 12 / 16f * fluidLevel;
-            final float zMin = 2 / 16f;
-            final float zMax = 14 / 16f;
-
-            for (SmartFluidTankBehaviour behaviour : tanks) {
-                if (behaviour == null)
-                    continue;
-                for (TankSegment tankSegment : behaviour.getTanks()) {
-                    FluidStack renderedFluid = tankSegment.getRenderedFluid();
-                    if (renderedFluid.isEmpty())
-                        continue;
-                    float units = tankSegment.getTotalUnits(partialTicks);
-                    if (units < 1)
-                        continue;
-
-                    float partial = Mth.clamp(units / totalUnits, 0, 1);
-                    xMax += partial * 12 / 16f;
-
-                    NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(renderedFluid, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false, false);
-
-                    xMin = xMax;
-                }
-            }
-
-            return yMax;
+    protected void renderSafe(ElectrolysisMachineBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        if (!VisualizationManager.supportsVisualization(be.getLevel())) {
+            SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
+            standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
         }
+
+        TankSegment tank = be.getBehaviour(SmartFluidTankBehaviour.INPUT).getTanks()[0];
+        float level = tank.getFluidLevel().getValue(partialTicks);
+        NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(tank.getRenderedFluid(),
+                2f / 16f,
+                2f / 16f,
+                2f / 16f,
+                2f / 16f,
+                2f / 16f + 12f / 16f * level,
+                14f / 16f,
+                buffer, ms, light, false, false);
+    }
+
 }

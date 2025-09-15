@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import io.netty.buffer.ByteBuf;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +35,9 @@ public class RocketControlsInputPacket implements ServerboundPacketPayload {
     private BlockPos controlsPos;
     private boolean stopControlling;
 
-    public RocketControlsInputPacket(List<Integer> activatedButtons, boolean press, int contraptionEntityId, BlockPos controlsPos, boolean stopControlling) {
+    public RocketControlsInputPacket(List<Integer> activatedButtons, boolean press, int contraptionEntityId,
+                                     BlockPos controlsPos, boolean stopControlling) {
+        this.contraptionEntityId = contraptionEntityId;
         this.activatedButtons = activatedButtons;
         this.press = press;
         this.contraptionEntityId = contraptionEntityId;
@@ -54,11 +58,14 @@ public class RocketControlsInputPacket implements ServerboundPacketPayload {
             return;
         if (stopControlling) {
             rce.stopControlling(controlsPos);
+            rce.cancelLaunch();
             return;
         }
 
-        if (rce.toGlobalVector(Vec3.atCenterOf(controlsPos), 0).closerThan(player.position(), 16))
+        if (rce.toGlobalVector(Vec3.atCenterOf(controlsPos), 0).closerThan(player.position(), 16)) {
+            Northstar.LOGGER.debug("Key press Detected!");
             RocketControlsServerHandler.receivePressed(world, rce, controlsPos, uniqueID, activatedButtons, press);
+        }
     }
 
     @Override

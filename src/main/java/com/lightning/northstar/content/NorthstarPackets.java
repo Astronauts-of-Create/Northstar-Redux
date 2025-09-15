@@ -5,9 +5,10 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInputPac
 import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket;
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
-import com.lightning.northstar.contraptions.RocketContraptionQuickSyncPacket;
-import com.lightning.northstar.contraptions.RocketContraptionSyncPacket;
-import com.lightning.northstar.contraptions.RocketControlPacket;
+import com.lightning.northstar.contraptions.ActorConfigPacket;
+import com.lightning.northstar.contraptions.packets.RocketContraptionQuickSyncPacket;
+import com.lightning.northstar.contraptions.packets.RocketContraptionSyncPacket;
+import com.lightning.northstar.contraptions.packets.RocketControlPacket;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -25,9 +26,10 @@ public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
     ROCKET_CONTROLS_INPUT(RocketControlsInputPacket.class, RocketControlsInputPacket.STREAM_CODEC),
 
     // server to client
-    ROCKET_SYNC_PACKET(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket.STREAM_CODEC),
-    ROCKET_QUICK_SYNC_PACKET(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket.STREAM_CODEC),
-    ROCKET_CONTROL_PACKET(RocketControlPacket.class, RocketControlPacket.STREAM_CODEC);
+    ROCKET_SYNC(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket.STREAM_CODEC),
+    ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket.STREAM_CODEC),
+    ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket.STREAM_CODEC),
+    ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket.STREAM_CODEC);
 
     public static final int NETWORK_VERSION = 4;
 

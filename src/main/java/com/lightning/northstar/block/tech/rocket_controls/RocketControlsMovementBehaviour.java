@@ -2,27 +2,17 @@ package com.lightning.northstar.block.tech.rocket_controls;
 
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import java.util.Collection;
-
-public class RocketControlsMovementBehaviour  implements MovementBehaviour {
-
-    static class LeverAngles {
-        LerpedFloat steering = LerpedFloat.linear();
-        LerpedFloat speed = LerpedFloat.linear();
-        LerpedFloat equipAnimation = LerpedFloat.linear();
-    }
+public class RocketControlsMovementBehaviour implements MovementBehaviour {
 
     @Override
     public ItemStack canBeDisabledVia(MovementContext context) {
@@ -32,51 +22,35 @@ public class RocketControlsMovementBehaviour  implements MovementBehaviour {
     @Override
     public void stopMoving(MovementContext context) {
         context.contraption.entity.stopControlling(context.localPos);
-        MovementBehaviour.super.stopMoving(context);
     }
 
     @Override
     public void tick(MovementContext context) {
-        MovementBehaviour.super.tick(context);
-        if (!context.world.isClientSide)
-            return;
-        if (!(context.temporaryData instanceof LeverAngles))
-            context.temporaryData = new LeverAngles();
-        LeverAngles angles = (LeverAngles) context.temporaryData;
-        angles.steering.tickChaser();
-        angles.speed.tickChaser();
-        angles.equipAnimation.tickChaser();
+        if (context.world.isClientSide) {
+            if (!(context.temporaryData instanceof LerpedFloat))
+                context.temporaryData = LerpedFloat.linear();
+
+            ((LerpedFloat) context.temporaryData).tickChaser();
+        }
+    }
+
+    @Override
+    public boolean disableBlockEntityRendering() {
+        return true;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-        ContraptionMatrices matrices, MultiBufferSource buffer) {
-        if (!(context.temporaryData instanceof LeverAngles angles))
+    public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
+        if (!(context.temporaryData instanceof LerpedFloat angle))
             return;
 
-        float pt = AnimationTickHolder.getPartialTicks(context.world);
-        RocketControlsRenderer.render(context, renderWorld, matrices, buffer, angles.equipAnimation.getValue(pt),
-                angles.speed.getValue(pt), angles.steering.getValue(pt));
-
-        AbstractContraptionEntity entity = context.contraption.entity;
-        if (!(entity instanceof RocketContraptionEntity cce))
-            return;
-
-        if (RocketControlsHandler.getContraption() == entity && RocketControlsHandler.getControlsPos() != null
-            && RocketControlsHandler.getControlsPos().equals(context.localPos)) {
-            Collection<Integer> pressed = RocketControlsHandler.currentlyPressed;
-            angles.equipAnimation.chase(1, .2f, LerpedFloat.Chaser.EXP);
-            angles.steering.chase((pressed.contains(3) ? 0.5 : 0) + (pressed.contains(2) ? -0.5 : 0), 0.2f, LerpedFloat.Chaser.EXP);
-            float f = pressed.contains(4) ? -1f : 1f;
-//            System.out.println("LENGTH: " + context.motion.length());
-            angles.speed.chase(Mth.clamp((Math.min(context.motion.length(), 0.5f) + 1) / 2 * f, 0, 0.4), 0.6f, LerpedFloat.Chaser.EXP);
-
-        } else {
-            angles.equipAnimation.chase(0, .2f, LerpedFloat.Chaser.EXP);
-            angles.steering.chase(0, 0, LerpedFloat.Chaser.EXP);
-            angles.speed.chase(0, 0, LerpedFloat.Chaser.EXP);
+        if (context.contraption.entity instanceof RocketContraptionEntity rocket && rocket.isLaunchingOrLanding() &&
+                rocket.getLaunchTime() <= 2 && angle.getChaseTarget() == 0) {
+            angle.chase(1.0, 0.2, LerpedFloat.Chaser.EXP);
         }
 
+        RocketControlsRenderer.render(context, renderWorld, matrices, buffer, angle.getValue(AnimationTickHolder.getPartialTicks(renderWorld)));
     }
+
 }

@@ -27,6 +27,51 @@ public class NorthstarItems {
         REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.ITEMS);
     }
 
+
+
+    //Titanium
+    public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_TITANIUM_INGOT
+            = sequencedIngredient("incomplete_titanium_ingot");
+
+    public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
+            .item("raw_titanium_ore", Item::new)
+           .register();
+
+    public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
+            .item("titanium_ingot", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> TITANIUM_SHEET = REGISTRATE
+            .item("titanium_sheet", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> TITANIUM_NUGGET = REGISTRATE
+            .item("titanium_nugget", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> DURABLE_FABRIC = REGISTRATE
+            .item("durable_fabric", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
+            .item("volcanic_ash_item", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> ROCKET_COMBUSTION_CHAMBER = REGISTRATE
+            .item("rocket_combustion_chamber", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> OXYGEN_SEPARATOR = REGISTRATE
+            .item("oxygen_separator", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> HARDENED_PRECISION_MECHANISM = REGISTRATE
+            .item("hardened_precision_mechanism", Item::new)
+            .register();
+
+    public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_HARDENED_PRECISION_MECHANISM
+            = sequencedIngredient("incomplete_hardened_precision_mechanism");
+
     public static final ItemEntry<Item> RAW_MARTIAN_IRON_ORE = REGISTRATE
             .item("raw_martian_iron_ore", Item::new)
             .register();
@@ -315,6 +360,25 @@ public class NorthstarItems {
             .item("moon_sand_paper", SandPaperItem::new)
             .tag(AllTags.AllItemTags.SANDPAPER.tag)
             .properties(p -> p.durability(512))
+            .register();
+
+    //Chlorine
+    public static final ItemEntry<Item> SALT = REGISTRATE
+            .item("salt", Item::new)
+            .register();
+
+    //An alternative to chlorine (pre-electrolysis)
+    public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
+            .item("sodium_catalyst", Item::new)
+            .register();
+
+    //minerals
+    public static final ItemEntry<Item> RUITILE_CONCENTRATE = REGISTRATE
+            .item("rutile_concentrate", Item::new)
+            .register();
+
+    public static final ItemEntry<Item> DRY_PLANT_FIBER = REGISTRATE
+            .item("dry_plant_fiber", Item::new)
             .register();
 
     public static void register() {

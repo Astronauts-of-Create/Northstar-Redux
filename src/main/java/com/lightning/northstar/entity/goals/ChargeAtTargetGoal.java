@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity.goals;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.entity.VenusStoneBullEntity;
 import net.minecraft.core.BlockPos;
@@ -63,7 +64,7 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
         targetPos = this.chargingMob.blockPosition();
         if (chargingMob.moveDirection == null || chargingMob.moveDirection == Vec3.ZERO) {
             chargingMob.moveDirection = new Vec3(newX, 0, newZ);
-//          System.out.println("DOING THINGS!!!!!!");
+            Northstar.LOGGER.debug("DOING THINGS!!!!!!");
             chargingMob.ticksSpentCharging = 0;
             this.chargingMob.playSound(NorthstarSounds.VENUS_STONE_BULL_CHARGE.get(), 1.0F, 1.0F);
             ;
@@ -79,7 +80,7 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
     @Override
     public void stop() {
         super.stop();
-//          this.chargingMob.chargeTimer = 60;
+        //   this.chargingMob.chargeTimer = 60;
     }
 
     /**
@@ -123,15 +124,15 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
             this.stop();
         }
 
-//          System.out.println("targetPos: " + chargingMob.targetPos);
-//          System.out.println("blockPos: " + chargingMob.blockPosition());
-//          System.out.println("moveDirection: " + chargingMob.moveDirection);
-//          System.out.println("target: " + chargingMob.getTarget());
+        Northstar.LOGGER.debug("targetPos: {}", chargingMob.targetPos);
+        Northstar.LOGGER.debug("blockPos: {}", chargingMob.blockPosition());
+        Northstar.LOGGER.debug("moveDirection: {}", chargingMob.moveDirection);
+        Northstar.LOGGER.debug("target: {}", chargingMob.getTarget());
         if (chargingMob.targetPos != null && chargingMob.blockPosition() != null && chargingMob.moveDirection != null) {
             Vec3 targetVec = blockPosToVec3(chargingMob.targetPos);
             Vec3 chargerVec = blockPosToVec3(chargingMob.blockPosition());
             Vec3 subVec = targetVec.subtract(chargerVec);
-//              System.out.println("SUBVEC: " + subVec);
+            Northstar.LOGGER.debug("SUBVEC: {}", subVec);
 
             for (Entity colliders : this.chargingMob.level().getEntities(chargingMob, chargingMob.getBoundingBox())) {
                 if (colliders instanceof LivingEntity lc) {
@@ -165,7 +166,7 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
                     chargingMob.level().broadcastEntityEvent(chargingMob, (byte) 66);
                 }
             }
-//              System.out.println("distance: " +  blockPosToVec3(chargingMob.blockPosition()).distanceTo(blockPosToVec3(this.targetPos)));
+            //Northstar.LOGGER.debug("distance: {}", blockPosToVec3(chargingMob.blockPosition()).distanceTo(blockPosToVec3(this.targetPos)));
             if (blockPosToVec3(chargingMob.blockPosition()).distanceTo(blockPosToVec3(chargingMob.targetPos)) > 15) {
                 this.stop();
                 chargingMob.moveDirection = Vec3.ZERO;

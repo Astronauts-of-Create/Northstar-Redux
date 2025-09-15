@@ -1,6 +1,8 @@
 package com.lightning.northstar.block.tech.telescope;
 
+import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -9,27 +11,28 @@ import net.minecraft.world.item.ItemStack;
 
 public class TelescopeMenu extends MenuBase<TelescopeBlockEntity> {
 
-    public TelescopeMenu(MenuType<TelescopeMenu> type, int id, Inventory inventory, RegistryFriendlyByteBuf extraData) {
-        super(type, id, inventory, extraData);
+    public TelescopeMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
+        super(type, id, inv, extraData);
     }
 
     public TelescopeMenu(MenuType<?> type, int id, Inventory inv, TelescopeBlockEntity contentHolder) {
         super(type, id, inv, contentHolder);
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+    public static TelescopeMenu create(int id, Inventory inventory, TelescopeBlockEntity data) {
+        return new TelescopeMenu(NorthstarMenuTypes.TELESCOPE_MENU.get(), id, inventory, data);
     }
 
     @Override
     protected TelescopeBlockEntity createOnClient(RegistryFriendlyByteBuf extraData) {
+        if (Minecraft.getInstance().level.getBlockEntity(extraData.readBlockPos()) instanceof TelescopeBlockEntity be) {
+            return be;
+        }
         return null;
     }
 
     @Override
     protected void initAndReadInventory(TelescopeBlockEntity contentHolder) {
-
     }
 
     @Override
@@ -38,6 +41,16 @@ public class TelescopeMenu extends MenuBase<TelescopeBlockEntity> {
 
     @Override
     protected void saveData(TelescopeBlockEntity contentHolder) {
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return true;
     }
 
 }

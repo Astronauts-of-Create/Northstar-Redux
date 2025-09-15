@@ -25,8 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
 
@@ -104,9 +103,8 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         pBuilder.add(AGE);
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         Item playerItem = pContext.getPlayer().getItemInHand(pContext.getHand()).getItem();
         if (playerItem == this.getSeedItem())
             return this.defaultBlockState().setValue(AGE, 0);

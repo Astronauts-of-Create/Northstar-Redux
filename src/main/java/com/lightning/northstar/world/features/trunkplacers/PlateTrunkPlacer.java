@@ -2,6 +2,7 @@ package com.lightning.northstar.world.features.trunkplacers;
 
 import com.google.common.collect.Lists;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -58,7 +59,7 @@ public class PlateTrunkPlacer extends TrunkPlacer {
 
         for (int i = 0; i < pFreeTreeHeight; ++i) {
 
-            //             System.out.println(curve_x);
+            //Northstar.LOGGER.debug(curve_x);
             int Xpos = pPos.getX();
             int Zpos = pPos.getZ();
             int j = pPos.getY() + i;

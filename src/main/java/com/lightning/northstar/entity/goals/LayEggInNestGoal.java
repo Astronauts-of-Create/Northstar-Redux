@@ -1,6 +1,6 @@
 package com.lightning.northstar.entity.goals;
 
-import com.lightning.northstar.block.MarsWormNestBlock;
+import com.lightning.northstar.block.simple.MarsWormNestBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.entity.MarsWormEntity;
 import net.minecraft.core.BlockPos;

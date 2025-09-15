@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.CommonHooks;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VenusVinesBlock extends Block implements BonemealableBlock {
     protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
@@ -106,17 +106,16 @@ public class VenusVinesBlock extends Block implements BonemealableBlock {
         return true;
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         if (pContext.getLevel().getBlockState(pContext.getClickedPos().above()).isAir())
             return Blocks.AIR.defaultBlockState();
         BlockState belowstate = pContext.getLevel().getBlockState(pContext.getClickedPos().below());
 
         if (!(belowstate.is(NorthstarBlocks.VENUS_VINES.get()) || belowstate.is(NorthstarBlocks.GLOWING_VENUS_VINES.get()))) {
             return this.defaultBlockState().setValue(IS_TIP, true);
-        } else
-            return this.defaultBlockState().setValue(IS_TIP, false);
+        }
+        return this.defaultBlockState().setValue(IS_TIP, false);
     }
 
 }

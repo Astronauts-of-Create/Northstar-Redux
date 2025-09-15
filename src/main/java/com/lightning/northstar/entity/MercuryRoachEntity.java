@@ -156,7 +156,7 @@ public class MercuryRoachEntity extends Monster implements GeoAnimatable {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(9, new RunToGroupGoal<>(this, Player.class, 7, 1, 1.2));
         this.goalSelector.addGoal(7, new MeleeAttackGoal(this, 1.0D, false));
-//        this.goalSelector.addGoal(7, new ScourChestGoal(this, 1.0D, 16));
+    // this.goalSelector.addGoal(7, new ScourChestGoal(this, 1.0D, 16));
         super.registerGoals();
     }
 

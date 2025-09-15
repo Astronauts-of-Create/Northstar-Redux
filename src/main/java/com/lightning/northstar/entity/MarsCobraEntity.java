@@ -30,12 +30,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
@@ -183,9 +183,8 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             double d0 = vec31.length();
             vec31 = vec31.normalize();
             double d1 = vec3.dot(vec31);
-//             System.out.println(d1);
-//             System.out.println("comparer: " + String.valueOf(1.0D - 0.35D / (d0 / 8)));
-            return d1 > 1.0D - 0.35D / (d0 / 8) ? pPlayer.hasLineOfSight(this) : false;
+            Northstar.LOGGER.debug("{}, comparer: {}", d1, (1.0D - 0.35D / (d0 / 8)));
+            return d1 > 1.0D - 0.35D / (d0 / 8) && pPlayer.hasLineOfSight(this);
         }
     }
 
@@ -275,7 +274,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
                     return false;
                 } else {
                     stareTimer = Mth.clamp(stareTimer + 1, 0, 120);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                     if (stareTimer >= 32) {
                         this.cobra.lookAt(this.pendingTarget, 10.0F, 10.0F);
                         return true;
@@ -296,7 +295,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             if (this.pendingTarget != null) {
                 if (!this.cobra.isLookingAtMe(this.pendingTarget)) {
                     stareTimer = Mth.clamp(stareTimer, 0, stareTimer - 1);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                 }
                 if (--this.aggroTime <= 0) {
                     this.target = this.pendingTarget;
@@ -305,7 +304,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
                 }
             }
             super.tick();
-
         }
     }
+
 }

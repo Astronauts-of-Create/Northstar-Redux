@@ -1,7 +1,7 @@
 package com.lightning.northstar.item.armor;
 
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.lightning.northstar.content.NorthstarDataComponents;
-import com.lightning.northstar.world.OxygenStuff;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.theme.Color;
@@ -36,7 +36,8 @@ public class RemainingOxygenOverlay implements LayeredDraw.Layer {
 
         pose.pushPose();
 
-        ItemStack oxygenTank = OxygenStuff.getOxy(player);
+        ItemStack oxygenTank = NorthstarOxygen.getOxy(player);
+
         if (oxygenTank.isEmpty()) {
             return;
         }

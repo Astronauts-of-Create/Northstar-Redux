@@ -25,9 +25,12 @@ public class OxygenDetectorBlock extends DirectionalBlock implements IBE<OxygenD
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public OxygenDetectorBlock(BlockBehaviour.Properties pProperties) {
-        super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(POWERED, Boolean.FALSE));
+    public OxygenDetectorBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+
+        registerDefaultState(defaultBlockState()
+                .setValue(FACING, Direction.SOUTH)
+                .setValue(POWERED, false));
     }
 
     @Override
@@ -41,49 +44,41 @@ public class OxygenDetectorBlock extends DirectionalBlock implements IBE<OxygenD
     }
 
     @Override
-    public BlockState rotate(BlockState pState, Rotation pRot) {
-        return pState.setValue(FACING, pRot.rotate(pState.getValue(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public boolean isSignalSource(BlockState pState) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
-    public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        return pBlockState.getValue(POWERED) && pBlockState.getValue(FACING) == pSide ? 15 : 0;
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return state.getValue(POWERED) && state.getValue(FACING) == direction ? 15 : 0;
     }
 
     @Override
-    public int getDirectSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        return pBlockState.getSignal(pBlockAccess, pPos, pSide);
-    }
-
-    protected void updateNeighborsInFront(Level pLevel, BlockPos pPos, BlockState pState) {
-        Direction direction = pState.getValue(FACING);
-        BlockPos blockpos = pPos.relative(direction.getOpposite());
-        pLevel.neighborChanged(blockpos, this, pPos);
-        pLevel.updateNeighborsAtExceptFromFacing(blockpos, this, direction);
+    public int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return getSignal(state, level, pos, direction);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         if (context.getPlayer().isCrouching())
-            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
-        else
-            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+            return defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
+        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onRemove(state, world, pos, newState, isMoving);
-        IBE.onRemove(state, world, pos, newState);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        IBE.onRemove(state, level, pos, newState);
     }
 
     @Override

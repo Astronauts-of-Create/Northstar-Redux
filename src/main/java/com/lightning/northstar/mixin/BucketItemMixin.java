@@ -1,6 +1,7 @@
 package com.lightning.northstar.mixin;
 
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.Northstar;
+import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.SoundActions;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,28 +31,25 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
-
 @Mixin(BucketItem.class)
 public abstract class BucketItemMixin extends Item {
-
     @Shadow
     @Final
-    public Fluid content;
+    private Fluid content;
 
     public BucketItemMixin(Properties pProperties) {
         super(pProperties);
     }
 
     @SuppressWarnings("deprecation")
-//     @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
-//    at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
-//    cancellable = true)
+    //  @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
+    // at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
+    // cancellable = true)
     protected void emptyContentsReal(@Nullable Player pPlayer, Level pLevel, BlockPos pPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> info) {
         BlockState blockstate = pLevel.getBlockState(pPos);
         if (!(this.content instanceof FlowingFluid)) {
             info.setReturnValue(false);
-        } else if (pLevel.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER) && TemperatureStuff.getTemp(pPos, pLevel) < 212) {
+        } else if (pLevel.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER) && NorthstarTemperature.getTemperatureAt(pLevel, pPos) < 212) {
             if (!pLevel.setBlock(pPos, this.content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
                 info.setReturnValue(false);
             } else {
@@ -65,17 +64,14 @@ public abstract class BucketItemMixin extends Item {
             at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
             cancellable = true)
     private void emptyContentsReal(@Nullable Player pPlayer, Level pLevel, BlockPos pPos, @Nullable BlockHitResult blockHitResult, ItemStack container, CallbackInfoReturnable<Boolean> info) {
-//        System.out.println("YOooo buckets are real");
+        Northstar.LOGGER.debug("YOooo buckets are real");
         BucketItem item = (BucketItem) (Object) this;
-        //       System.out.println(item.content);
-        int temp = TemperatureStuff.getTemp(pPos, pLevel);
-//        System.out.println(temp);
+        float temp = NorthstarTemperature.getTemperatureAt(pLevel, pPos);
         BlockState blockstate = pLevel.getBlockState(pPos);
-//        System.out.println(item.content);
         if (item.content == null)
             return;
-        int boilingpoint = TemperatureStuff.getBoilingPoint(item.content.defaultFluidState());
-        int freezingpoint = TemperatureStuff.getFreezingPoint(item.content.defaultFluidState());
+        int boilingpoint = NorthstarTemperature.getBoilingPoint(item.content.defaultFluidState());
+        int freezingpoint = NorthstarTemperature.getFreezingPoint(item.content.defaultFluidState());
         Block block = pLevel.getBlockState(pPos).getBlock();
         if (!(item.content instanceof FlowingFluid)) {
             return;

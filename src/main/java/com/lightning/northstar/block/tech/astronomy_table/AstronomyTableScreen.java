@@ -21,13 +21,9 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
         super(pMenu, pPlayerInventory, pTitle);
     }
 
-    protected void subInit() {
-    }
-
     @Override
     protected void init() {
         super.init();
-        this.subInit();
         this.menu.addSlotListener(this);
     }
 
@@ -38,30 +34,21 @@ public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTable
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
         RenderSystem.disableBlend();
-        this.renderFg(graphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(graphics, mouseX, mouseY);
-    }
-
-    protected void renderFg(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-
+        this.renderTooltip(graphics, pMouseX, pMouseY);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int pX, int pY) {
-        RenderSystem.disableBlend();
-        super.renderLabels(graphics, pX, pY);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
 
         Component component = menu.errorMessage;
         if (component != null) {
-            int k = this.imageWidth - 8 - this.font.width(component) - 2;
-            graphics.fill(k - 2, 67, this.imageWidth - 8, 79, 1325400064);
-            graphics.drawString(font, component, k, 69, 16736352, true);
+            graphics.drawString(font, component, 5, 15, 0xff6060, true);
         }
-
     }
 
     @Override

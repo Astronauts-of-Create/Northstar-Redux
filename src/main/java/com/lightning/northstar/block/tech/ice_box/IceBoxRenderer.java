@@ -32,8 +32,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
     }
 
     @Override
-    protected void renderSafe(IceBoxBlockEntity iceBox, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-                              int light, int overlay) {
+    protected void renderSafe(IceBoxBlockEntity iceBox, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         super.renderSafe(iceBox, partialTicks, ms, buffer, light, overlay);
 
         float fluidLevel = renderFluids(iceBox, partialTicks, ms, buffer, light, overlay);
@@ -127,8 +126,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
         }
     }
 
-    protected float renderFluids(IceBoxBlockEntity iceBox, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-                                 int light, int overlay) {
+    protected float renderFluids(IceBoxBlockEntity iceBox, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         SmartFluidTankBehaviour inputFluids = iceBox.getBehaviour(SmartFluidTankBehaviour.INPUT);
         SmartFluidTankBehaviour outputFluids = iceBox.getBehaviour(SmartFluidTankBehaviour.OUTPUT);
         SmartFluidTankBehaviour[] tanks = { inputFluids, outputFluids };

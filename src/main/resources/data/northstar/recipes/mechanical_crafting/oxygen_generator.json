@@ -3,7 +3,7 @@
   "acceptMirrored": false,
   "key": {
     "A": {
-      "tag": "forge:plates/iron"
+      "item": "northstar:titanium_sheet"
     },
     "P": {
       "item": "create:encased_fan"
@@ -16,16 +16,19 @@
     },
     "S": {
       "item": "northstar:circuit"
+    },
+    "#": {
+      "item": "northstar:oxygen_separator"
     }
   },
   "pattern": [
     "APA",
-    "ALA",
+    "A#A",
     "SFS",
     "ALA"
   ],
   "result": {
     "count": 1,
-    "item": "northstar:oxygen_generator"
+    "item": "northstar:oxygen_sealer"
   }
 }

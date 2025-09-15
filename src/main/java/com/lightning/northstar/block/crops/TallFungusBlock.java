@@ -24,9 +24,10 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class TallFungusBlock extends TallFlowerBlock {
     protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
@@ -89,10 +90,8 @@ public class TallFungusBlock extends TallFlowerBlock {
         }
     }
 
-    @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        System.out.println(pContext.getClickedFace());
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         boolean ceiling_flag = pContext.getClickedFace() == Direction.DOWN;
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();

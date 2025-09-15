@@ -1,0 +1,43 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "northstar:rutile_concentrate"
+    },
+    {
+      "item": "create:zinc_ingot"
+    },
+    {
+      "item": "create:zinc_ingot"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
+    },
+    {
+      "amount": 500,
+      "fluid": "northstar:carbon"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "fluid": "northstar:titanium_tetrachloride"
+    }
+  ],
+  "heatRequirement": "superheated"
+}

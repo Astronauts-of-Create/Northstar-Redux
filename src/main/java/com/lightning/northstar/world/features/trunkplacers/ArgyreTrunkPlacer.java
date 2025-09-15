@@ -14,6 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
@@ -33,10 +34,10 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
     private final IntProvider extraBranchSteps;
     private final float placeBranchPerLogProbability;
     private final IntProvider extraBranchLength;
-    private final HolderSet<net.minecraft.world.level.block.Block> canGrowThrough;
+    private final HolderSet<Block> canGrowThrough;
     private final IntProvider spinFactor;
 
-    public ArgyreTrunkPlacer(int int1, int int2, int int3, IntProvider int4, float int5, IntProvider int6, HolderSet<net.minecraft.world.level.block.Block> int7, IntProvider spinfacto) {
+    public ArgyreTrunkPlacer(int int1, int int2, int int3, IntProvider int4, float int5, IntProvider int6, HolderSet<Block> int7, IntProvider spinfacto) {
         super(int1, int2, int3);
         this.extraBranchSteps = int4;
         this.placeBranchPerLogProbability = int5;
@@ -94,13 +95,13 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
 
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos, j, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos, j - 1, Zpos), treeconfiguration);
-//                     if (this.spinFactor == UniformInt.of(-1,-1)) {
+            //  if (this.spinFactor == UniformInt.of(-1,-1)) {
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos + 1, j, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos + 1, j - 1, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos, j, Zpos + 1), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos, j - 1, Zpos + 1), treeconfiguration);
-//                     }
-//                     if (this.spinFactor == UniformInt.of(1,1)) {
+            //  }
+            //  if (this.spinFactor == UniformInt.of(1,1)) {
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos + 1, j, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos + 1, j - 1, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos.set(Xpos - 1, j, Zpos), treeconfiguration);
@@ -161,7 +162,7 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
 
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j - 1, Zpos), treeconfiguration);
-//                     if (this.spinFactor == UniformInt.of(1,1)) {
+            //  if (this.spinFactor == UniformInt.of(1,1)) {
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos + 1, j, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos + 1, j - 1, Zpos), treeconfiguration);
             this.placeLog(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos2.set(Xpos, j, Zpos + 1), treeconfiguration);
@@ -169,7 +170,7 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
             if (Math.random() > 0.97) {
                 this.placeLog(pLevel, glow_block, pRandom, blockpos$mutableblockpos2.set(Xpos + glowoffsetX, j, Zpos + glowoffsetZ), treeconfiguration);
             }
-//                     }
+            //  }
         }
     }
 

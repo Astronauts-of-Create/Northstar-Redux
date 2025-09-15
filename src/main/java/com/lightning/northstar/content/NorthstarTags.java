@@ -21,6 +21,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import static com.lightning.northstar.content.NorthstarTags.Namespace.*;
 
 public class NorthstarTags {
 
@@ -32,68 +36,68 @@ public class NorthstarTags {
         NorthstarBiomeTags.init();
     }
 
-    public enum NameSpace {
+    public enum Namespace {
 
         MOD(Northstar.MOD_ID, false, true),
         FORGE("forge"),
-        TIC("tconstruct"),
-        QUARK("quark");
+        ;
 
         public final String id;
         public final boolean optionalDefault;
-        public final boolean alwaysDatagenDefault;
+        public final boolean alwaysDataGenDefault;
 
-        NameSpace(String id) {
+        Namespace(String id) {
             this(id, true, false);
         }
 
-        NameSpace(String id, boolean optionalDefault, boolean alwaysDatagenDefault) {
+        Namespace(String id, boolean optionalDefault, boolean alwaysDataGenDefault) {
             this.id = id;
             this.optionalDefault = optionalDefault;
-            this.alwaysDatagenDefault = alwaysDatagenDefault;
+            this.alwaysDataGenDefault = alwaysDataGenDefault;
         }
     }
 
     public enum NorthstarFluidTags {
 
-        TIER_1_ROCKET_FUEL(NameSpace.MOD),
-        TIER_2_ROCKET_FUEL(NameSpace.MOD),
-        TIER_3_ROCKET_FUEL(NameSpace.MOD),
-        OXYGEN(NameSpace.FORGE),
-        IS_OXY(NameSpace.MOD);
+        IS_OXY,
+        FORGE_OXYGEN(FORGE, "oxygen"),
+        ;
 
         public final TagKey<Fluid> tag;
-        public final boolean alwaysDatagen;
+        public final boolean alwaysDataGen;
 
         NorthstarFluidTags() {
-            this(NameSpace.MOD);
+            this(MOD);
         }
 
-        NorthstarFluidTags(NameSpace namespace) {
-            this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarFluidTags(Namespace namespace) {
+            this(namespace, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarFluidTags(NameSpace namespace, String path) {
-            this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarFluidTags(Namespace namespace, String path) {
+            this(namespace, path, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarFluidTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-            this(namespace, null, optional, alwaysDatagen);
+        NorthstarFluidTags(Namespace namespace, boolean optional, boolean alwaysDataGen) {
+            this(namespace, null, optional, alwaysDataGen);
         }
 
-        NorthstarFluidTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+        NorthstarFluidTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
                 tag = AllTags.optionalTag(BuiltInRegistries.FLUID, id);
             } else {
                 tag = FluidTags.create(id);
             }
-            this.alwaysDatagen = alwaysDatagen;
+            this.alwaysDataGen = alwaysDataGen;
         }
 
-        @SuppressWarnings("deprecation")
+        public boolean matches(FluidStack fluid) {
+            return fluid.getFluid().defaultFluidState().is(tag);
+        }
+
         public boolean matches(Fluid fluid) {
-            return fluid.is(tag);
+            return fluid.defaultFluidState().is(tag);
         }
 
         public boolean matches(FluidState state) {
@@ -107,53 +111,56 @@ public class NorthstarTags {
 
     public enum NorthstarBlockTags {
 
-        AIR_PASSES_THROUGH(NameSpace.MOD),
-        ARGYRE_REPLACES(NameSpace.MOD),
-        NATURAL_MARS_BLOCKS(NameSpace.MOD),
-        NATURAL_VENUS_BLOCKS(NameSpace.MOD),
-        NATURAL_MOON_BLOCKS(NameSpace.MOD),
-        NATURAL_MERCURY_BLOCKS(NameSpace.MOD),
-        HEAVY_BLOCKS(NameSpace.MOD),
-        SUPER_HEAVY_BLOCKS(NameSpace.MOD),
-        TIER_1_HEAT_RESISTANCE(NameSpace.MOD),
-        TIER_2_HEAT_RESISTANCE(NameSpace.MOD),
-        TIER_3_HEAT_RESISTANCE(NameSpace.MOD),
-        MOON_BLOCKS(NameSpace.MOD),
-        MARS_BLOCKS(NameSpace.MOD);
+        AIR_PASSES_THROUGH,
+        /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
+        @Deprecated
+        BLOCKS_AIR,
+        ARGYRE_REPLACES,
+        NATURAL_MARS_BLOCKS,
+        NATURAL_VENUS_BLOCKS,
+        NATURAL_MOON_BLOCKS,
+        NATURAL_MERCURY_BLOCKS,
+        HEAVY_BLOCKS,
+        SUPER_HEAVY_BLOCKS,
+        TIER_1_HEAT_RESISTANCE,
+        TIER_2_HEAT_RESISTANCE,
+        TIER_3_HEAT_RESISTANCE,
+        MOON_BLOCKS,
+        MARS_BLOCKS,
+        ;
 
         public final TagKey<Block> tag;
-        public final boolean alwaysDatagen;
+        public final boolean alwaysDataGen;
 
         NorthstarBlockTags() {
-            this(NameSpace.MOD);
+            this(MOD);
         }
 
-        NorthstarBlockTags(NameSpace namespace) {
-            this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarBlockTags(Namespace namespace) {
+            this(namespace, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarBlockTags(NameSpace namespace, String path) {
-            this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarBlockTags(Namespace namespace, String path) {
+            this(namespace, path, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarBlockTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-            this(namespace, null, optional, alwaysDatagen);
+        NorthstarBlockTags(Namespace namespace, boolean optional, boolean alwaysDataGen) {
+            this(namespace, null, optional, alwaysDataGen);
         }
 
-        NorthstarBlockTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+        NorthstarBlockTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
                 tag = AllTags.optionalTag(BuiltInRegistries.BLOCK, id);
             } else {
                 tag = BlockTags.create(id);
             }
-            this.alwaysDatagen = alwaysDatagen;
+            this.alwaysDataGen = alwaysDataGen;
         }
 
         @SuppressWarnings("deprecation")
         public boolean matches(Block block) {
-            return block.builtInRegistryHolder()
-                    .is(tag);
+            return block.builtInRegistryHolder().is(tag);
         }
 
         public boolean matches(ItemStack stack) {
@@ -174,35 +181,36 @@ public class NorthstarTags {
         INSULATING,
         HEAT_RESISTANT,
         OXYGEN_SEALING,
-        OXYGEN_SOURCES;
+        OXYGEN_SOURCES,
+        ;
 
         public final TagKey<Item> tag;
-        public final boolean alwaysDatagen;
+        public final boolean alwaysDataGen;
 
         NorthstarItemTags() {
-            this(NameSpace.MOD);
+            this(MOD);
         }
 
-        NorthstarItemTags(NameSpace namespace) {
-            this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarItemTags(Namespace namespace) {
+            this(namespace, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarItemTags(NameSpace namespace, String path) {
-            this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarItemTags(Namespace namespace, String path) {
+            this(namespace, path, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarItemTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-            this(namespace, null, optional, alwaysDatagen);
+        NorthstarItemTags(Namespace namespace, boolean optional, boolean alwaysDataGen) {
+            this(namespace, null, optional, alwaysDataGen);
         }
 
-        NorthstarItemTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+        NorthstarItemTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
                 tag = AllTags.optionalTag(BuiltInRegistries.ITEM, id);
             } else {
                 tag = ItemTags.create(id);
             }
-            this.alwaysDatagen = alwaysDatagen;
+            this.alwaysDataGen = alwaysDataGen;
         }
 
         @SuppressWarnings("deprecation")
@@ -223,35 +231,36 @@ public class NorthstarTags {
     public enum NorthstarEntityTags {
 
         DOESNT_REQUIRE_OXYGEN,
-        CAN_SURVIVE_COLD;
+        CAN_SURVIVE_COLD,
+        ;
 
         public final TagKey<EntityType<?>> tag;
-        public final boolean alwaysDatagen;
+        public final boolean alwaysDataGen;
 
         NorthstarEntityTags() {
-            this(NameSpace.MOD);
+            this(MOD);
         }
 
-        NorthstarEntityTags(NameSpace namespace) {
-            this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarEntityTags(Namespace namespace) {
+            this(namespace, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarEntityTags(NameSpace namespace, String path) {
-            this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+        NorthstarEntityTags(Namespace namespace, String path) {
+            this(namespace, path, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarEntityTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
-            this(namespace, null, optional, alwaysDatagen);
+        NorthstarEntityTags(Namespace namespace, boolean optional, boolean alwaysDataGen) {
+            this(namespace, null, optional, alwaysDataGen);
         }
 
-        NorthstarEntityTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+        NorthstarEntityTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
                 tag = AllTags.optionalTag(BuiltInRegistries.ENTITY_TYPE, id);
             } else {
                 tag = TagKey.create(Registries.ENTITY_TYPE, id);
             }
-            this.alwaysDatagen = alwaysDatagen;
+            this.alwaysDataGen = alwaysDataGen;
         }
 
         public boolean matches(Entity entity) {
@@ -266,31 +275,32 @@ public class NorthstarTags {
     public enum NorthstarBiomeTags {
 
         IS_DUSTY,
-        HAS_AMBIENT_GLOWSTONE_PARTICLE;
+        HAS_AMBIENT_GLOWSTONE_PARTICLE,
+        ;
 
         public final TagKey<Biome> tag;
-        public final boolean alwaysDatagen;
+        public final boolean alwaysDataGen;
 
         NorthstarBiomeTags() {
-            this(NameSpace.MOD);
+            this(MOD);
         }
 
-        NorthstarBiomeTags(NameSpace namespace) {
-            this(namespace, namespace.alwaysDatagenDefault);
+        NorthstarBiomeTags(Namespace namespace) {
+            this(namespace, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarBiomeTags(NameSpace namespace, String path) {
-            this(namespace, path, namespace.alwaysDatagenDefault);
+        NorthstarBiomeTags(Namespace namespace, String path) {
+            this(namespace, path, namespace.optionalDefault, namespace.alwaysDataGenDefault);
         }
 
-        NorthstarBiomeTags(NameSpace namespace, boolean alwaysDatagen) {
-            this(namespace, null, alwaysDatagen);
+        NorthstarBiomeTags(Namespace namespace, boolean optional, boolean alwaysDataGen) {
+            this(namespace, null, optional, alwaysDataGen);
         }
 
-        NorthstarBiomeTags(NameSpace namespace, String path, boolean alwaysDatagen) {
+        NorthstarBiomeTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             tag = TagKey.create(Registries.BIOME, id);
-            this.alwaysDatagen = alwaysDatagen;
+            this.alwaysDataGen = alwaysDataGen;
         }
 
         private static void init() {

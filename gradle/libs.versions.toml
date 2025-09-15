@@ -1,14 +1,16 @@
 [versions]
-flywheel = "1.0.4-30"
+flywheel = "1.0.4"
 mixinextras = "0.4.1"
 ponder = "1.0.56"
 
 [libraries]
 create = "com.simibubi.create:create-1.21.1:6.0.6-107"
 copycats = "com.copycatsplus:copycats:3.0.2+mc.1.21.1-neoforge-build.259"
+embeddium = "maven.modrinth:embeddium:1.0.15+mc1.21.1"
 flywheel-neoforge-api = { module = "dev.engine-room.flywheel:flywheel-neoforge-api-1.21.1", version.ref = "flywheel" }
 flywheel-neoforge = { module = "dev.engine-room.flywheel:flywheel-neoforge-1.21.1", version.ref = "flywheel" }
 geckolib-neoforge = "software.bernie.geckolib:geckolib-neoforge-1.21.1:4.7.2"
+jcpp = "org.anarres:jcpp:1.4.14"
 jei-neoforge = "mezz.jei:jei-1.21.1-neoforge:19.21.2.313"
 mclib = "com.eliotlash.mclib:mclib:20"
 minecraft = "com.mojang:minecraft:1.21.1"

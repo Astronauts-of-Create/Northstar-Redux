@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:waxed_copper_block"
+    },
+    {
+      "amount": 100,
+      "fluid": "northstar:sodium_hydroxide",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:copper_block"
+    }
+  ]
+}

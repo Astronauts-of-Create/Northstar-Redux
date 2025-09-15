@@ -6,7 +6,7 @@ import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachi
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlockEntity;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorBlockEntity;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlockEntity;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsServerHandler;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -35,7 +35,7 @@ public class NorthstarCommonEvents {
         IceBoxBlockEntity.registerCapabilities(event);
         OxygenConcentratorBlockEntity.registerCapabilities(event);
         OxygenFillerBlockEntity.registerCapabilities(event);
-        OxygenGeneratorBlockEntity.registerCapabilities(event);
+        OxygenSealerBlockEntity.registerCapabilities(event);
     }
 
 }

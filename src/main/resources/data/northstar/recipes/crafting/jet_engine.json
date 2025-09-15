@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I#I",
+    "IPI",
+    "I I"
+  ],
+  "key": {
+    "#": {
+      "item": "northstar:rocket_combustion_chamber"
+    },
+    "I": {
+      "item": "northstar:titanium_sheet"
+    },
+    "P": {
+      "item": "create:propeller"
+    }
+  },
+  "result": {
+    "item": "northstar:jet_engine"
+  }
+}

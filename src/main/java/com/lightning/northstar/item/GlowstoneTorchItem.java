@@ -1,6 +1,6 @@
 package com.lightning.northstar.item;
 
-import com.lightning.northstar.block.GlowstoneTorchWallBlock;
+import com.lightning.northstar.block.simple.GlowstoneTorchWallBlock;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,8 +11,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class GlowstoneTorchItem extends BlockItem {
@@ -25,8 +25,7 @@ public class GlowstoneTorchItem extends BlockItem {
     }
 
     @Override
-    @Nullable
-    protected BlockState getPlacementState(BlockPlaceContext context) {
+    protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
         BlockState blockstate = this.wallBlock.getStateForPlacement(context);
         BlockState blockstate1 = null;
         LevelReader levelreader = context.getLevel();

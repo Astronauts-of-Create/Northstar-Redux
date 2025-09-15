@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.oxygen_filler;
 
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -43,7 +43,6 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
     private boolean hasStopped = false;
     private int audioTick = 0;
 
-
     protected IItemHandlerModifiable itemCapability;
     SmartFluidTankBehaviour tank;
     public Container container = new SimpleContainer(1) {
@@ -72,7 +71,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        tank = SmartFluidTankBehaviour.single(this, 10000);
+        tank = SmartFluidTankBehaviour.single(this, 1000);
         behaviours.add(tank);
     }
 
@@ -80,39 +79,18 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         return inventory;
     }
 
-
-    public void slotsChanged(Container pInventory) {
-        if (pInventory == this.container) {
-            ItemStack item = container.getItem(0);
-            if (container.getItem(0).is(NorthstarItemTags.OXYGEN_SOURCES.tag)) {
-                int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
-                if (oxygen < OxygenStuff.maximumOxy) {
-                    int oxygenTarget = OxygenStuff.maximumOxy - oxygen;
-                    if (tank.getPrimaryHandler().getFluidAmount() > oxygenTarget) {
-                        item.set(NorthstarDataComponents.OXYGEN, oxygen + oxygenTarget);
-                        tank.getPrimaryHandler().drain(new FluidStack(NorthstarFluids.OXYGEN.get(), oxygenTarget), FluidAction.EXECUTE);
-                    } else {
-                        item.set(NorthstarDataComponents.OXYGEN, oxygen + tank.getPrimaryHandler().getFluidAmount());
-                        tank.getPrimaryHandler().drain(new FluidStack(NorthstarFluids.OXYGEN.get(), tank.getPrimaryHandler().getFluidAmount()), FluidAction.EXECUTE);
-                    }
-                }
-            }
-        }
-    }
-
     @Override
-    @SuppressWarnings("deprecation")
     public void tick() {
         super.tick();
         ItemStack item = container.getItem(0);
-        Fluid tankFluid = tank.getPrimaryHandler().getFluid().getFluid();
+        Fluid fluid = tank.getPrimaryHandler().getFluid().getFluid();
         int increment = 2;
-        if (item.is(NorthstarItemTags.OXYGEN_SOURCES.tag) && (tankFluid.is(NorthstarTags.NorthstarFluidTags.IS_OXY.tag) || tankFluid.isSame(NorthstarFluids.OXYGEN.get()))) {
+        if (item.is(NorthstarItemTags.OXYGEN_SOURCES.tag) && NorthstarOxygen.isOxygen(fluid)) {
             int currentOxy = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
-            while (currentOxy + increment > OxygenStuff.maximumOxy) {
+            while (currentOxy + increment > NorthstarOxygen.MAXIMUM_OXYGEN) {
                 increment--;
             }
-            increment = increment > 0 ? increment : 0;
+            increment = Math.max(increment, 0);
             if (increment == 0 && !hasStopped) {
                 AllSoundEvents.CONFIRM.playAt(level, worldPosition, 0.4f, 0, true);
                 hasStopped = true;
@@ -134,17 +112,10 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             int newOxyAmount = Mth.clamp(increment, 0, tank.getPrimaryHandler().getFluidAmount());
             int newoxy = currentOxy + newOxyAmount;
             item.set(NorthstarDataComponents.OXYGEN, newoxy);
-
-            this.tank.getPrimaryHandler().drain(new FluidStack(tankFluid, newOxyAmount), FluidAction.EXECUTE);
+            this.tank.getPrimaryHandler().drain(new FluidStack(fluid, newOxyAmount), FluidAction.EXECUTE);
         }
-
-//        if (getSpeed() == 0)
-//            return;         
-//        float abs = Math.abs(getSpeed());
-//        int increment = Mth.clamp(((int) abs - 100) / 200, 1, 5);
-//        airLevel = Math.min(500, airLevel + increment);
-//        tank.getPrimaryHandler().fill(new FluidStack(NorthstarFluids.OXYGEN.get(), increment), FluidAction.EXECUTE);
     }
+
 
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
@@ -152,14 +123,14 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         tag.putInt("Air", airLevel);
         tag.putInt("Timer", airTimer);
-        tag.put("item", container.getItem(0).save(registries));
+        tag.put("item", container.getItem(0).saveOptional(registries));
     }
 
     @Override
     public void writeSafe(CompoundTag tag, HolderLookup.Provider registries) {
         super.writeSafe(tag, registries);
 
-        tag.put("item", container.getItem(0).save(registries));
+        tag.put("item", container.getItem(0).saveOptional(registries));
     }
 
     @Override

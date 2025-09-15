@@ -14,16 +14,18 @@ public class ElectrolysisMachineBlock extends HorizontalKineticBlock implements 
 
     public ElectrolysisMachineBlock(Properties properties) {
         super(properties);
+
+        registerDefaultState(defaultBlockState().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
     public Axis getRotationAxis(BlockState state) {
-        return state.getValue(HORIZONTAL_FACING).getAxis();
+        return Axis.Y;
     }
 
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-        return state.getValue(HORIZONTAL_FACING).getOpposite() == face;
+        return face == Direction.DOWN;
     }
 
     @Override

@@ -1,17 +1,15 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.advancements.NorthstarAdvancements;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraptions.RocketHandler;
-import com.lightning.northstar.data.NorthstarDataGen;
+import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.item.NorthstarTooltipModifier;
 import com.lightning.northstar.particle.NorthstarParticles;
-import com.lightning.northstar.world.OxygenStuff;
-import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.features.NorthstarFeatures;
@@ -24,10 +22,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import com.tterrag.registrate.util.RegistrateDistExecutor;
 import net.createmod.catnip.lang.FontHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -38,6 +33,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 
@@ -56,25 +52,12 @@ public class Northstar {
 
     static {
         REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2)))
-                .andThen(TooltipModifier.mapNull(KineticStats.create(item)))
-                .andThen(context -> {
-                    Integer oxygen = context.getItemStack().get(NorthstarDataComponents.OXYGEN);
-                    if (oxygen != null) {
-                        context.getToolTip().add(Component.literal("Oxygen: " + oxygen + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)));
-                    }
-                }));
-    }
-
-    private void onRegister(RegisterEvent event) {
-        NorthstarContraptionTypes.register();
-        if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
-            NorthstarAdvancements.register();
-        }
+                .andThen(new NorthstarTooltipModifier())
+                .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
     public Northstar(IEventBus modEventBus, ModContainer container) {
         REGISTRATE.registerEventListeners(modEventBus);
-        modEventBus.addListener(this::onRegister);
 
         NorthstarTags.register();
         NorthstarCreativeModeTab.register(modEventBus);
@@ -98,23 +81,33 @@ public class Northstar {
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();
 
-        OxygenStuff.register();
-        TemperatureStuff.register();
-
         RocketHandler.register();
+
+        modEventBus.addListener(this::onRegisterRegistries);
+        modEventBus.addListener(this::onRegister);
 
         NorthstarConfigs.register(container::registerConfig);
         modEventBus.addListener(this::onLoadConfig);
         modEventBus.addListener(this::onReloadConfig);
 
-        modEventBus.addListener(Northstar::init);
+        modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerSpawnPlacements);
-        modEventBus.addListener(NorthstarDataGen::gatherData);
 
         RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus));
     }
 
-    public static void init(FMLCommonSetupEvent event) {
+    private void onRegister(RegisterEvent event) {
+        NorthstarContraptionTypes.register();
+        if (event.getRegistry() == BuiltInRegistries.TRIGGER_TYPES) {
+            NorthstarAdvancements.register();
+        }
+    }
+
+    private void onRegisterRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(NorthstarRegistries.FUEL, FuelType.CODEC, FuelType.CODEC);
+    }
+
+    private void init(FMLCommonSetupEvent event) {
         NorthstarPackets.registerPackets();
     }
 

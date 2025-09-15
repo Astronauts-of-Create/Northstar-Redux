@@ -30,9 +30,9 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
           BlockPos blockpos = pContext.origin();
           StoneClusterConfiguration config = pContext.config();
           RandomSource randomsource = pContext.random();
-//          if (!DripstoneUtils.isEmptyOrWater(worldgenlevel, blockpos)) {
-//             return false;
-//          } else
+    //   if (!DripstoneUtils.isEmptyOrWater(worldgenlevel, blockpos)) {
+    //  return false;
+    //   } else
 
              int i = config.height.sample(randomsource);
              float f = config.wetness.sample(randomsource);
@@ -159,7 +159,7 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
                  blockpos$mutableblockpos.move(pDirection);}
               }
 
-//           }
+    //    }
 
 
        private double getChanceOfStalagmiteOrStalactite(int pXRadius, int pZRadius, int pX, int pZ, StoneClusterConfiguration config) {
@@ -208,13 +208,13 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
 
        protected static void growPointyStone(LevelAccessor pLevel, BlockPos pPos, Direction pDirection, int pHeight, boolean pMergeTip, StoneClusterConfiguration config) {
                  BlockPos.MutableBlockPos blockpos$mutableblockpos = pPos.mutable();
-//                 buildBaseToTipColumn(pDirection, pPos, pHeight, pMergeTip, (p_190846_) -> {
-//                       p_190846_ = (BlockState) (AllPaletteStoneTypes.CRIMSITE.baseBlock);
+    //  buildBaseToTipColumn(pDirection, pPos, pHeight, pMergeTip, (p_190846_) -> {
+    //    p_190846_ = (BlockState) (AllPaletteStoneTypes.CRIMSITE.baseBlock);
                  for(int l = 0; l == pHeight; ++l) {
                     if(!pLevel.getBlockState(blockpos$mutableblockpos).isSolidRender(pLevel, blockpos$mutableblockpos))
                     {pLevel.setBlock(blockpos$mutableblockpos, config.stone_provider.getState(RandomSource.create(), blockpos$mutableblockpos), 2);}
                     blockpos$mutableblockpos.move(pDirection);}
-//                 }, config);
+    //  }, config);
            }
 
 

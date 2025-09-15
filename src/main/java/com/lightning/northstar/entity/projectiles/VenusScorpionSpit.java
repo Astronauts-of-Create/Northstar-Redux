@@ -87,9 +87,6 @@ public class VenusScorpionSpit extends Projectile {
 
     }
 
-    protected void defineSynchedData() {
-    }
-
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);

@@ -1,6 +1,5 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.google.common.base.Objects;
 import com.lightning.northstar.contraptions.RocketContraptionEntity;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -19,23 +18,19 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
         if (!(contraptionEntity instanceof RocketContraptionEntity rce))
             return false;
 
-//        System.out.println("Huhh????");
-
         UUID currentlyControlling = rce.getControllingPlayer().orElse(null);
 
         if (currentlyControlling != null) {
             rce.stopControlling(localPos);
-            if (Objects.equal(currentlyControlling, player.getUUID()))
+            if (player.getUUID().equals(currentlyControlling))
                 return true;
         }
 
-//        System.out.println("I LIVED!!!!!!!!!");
         if (!contraptionEntity.startControlling(localPos, player))
             return false;
 
         rce.setControllingPlayer(player.getUUID());
-        if (player.level().isClientSide)
-            RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsHandler.startControlling(rce, localPos));
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsClientHandler.startControlling(rce, localPos));
         return true;
     }
 

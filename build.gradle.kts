@@ -1,11 +1,11 @@
 import java.time.Instant
 
 plugins {
-    id("architectury-plugin") version "3.4-SNAPSHOT"
-    id("dev.architectury.loom") version "1.9.+"
+    id("architectury-plugin") version "3.4.161"
+    id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.2.7-SNAPSHOT+1.21.1" // https://semver.org/
+version = "0.3.0-SNAPSHOT+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -20,6 +20,7 @@ architectury {
 }
 
 loom {
+    accessWidenerPath = rootProject.file("src/main/resources/northstar.accessWidener")
     neoForge {
     }
 }
@@ -56,6 +57,11 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+    maven("https://maven.parchmentmc.org/") {
+        content {
+            includeGroupByRegex("org\\.parchmentmc.*")
+        }
+    }
 }
 
 dependencies {
@@ -67,6 +73,7 @@ dependencies {
     "neoForge"(libs.neoforge)
 
     annotationProcessor(libs.mixinextras.common)
+    implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.neoforge)
 
     modImplementation(variantOf(libs.create) { classifier("slim") }) {
@@ -83,11 +90,10 @@ dependencies {
     modImplementation(libs.jei.neoforge)
     //modImplementation(libs.copycats)
 
-    modLocalRuntime(files(file("run/mods-obf-1.21.1").listFiles() ?: emptyArray<File>()))
-}
+    modRuntimeOnly(libs.embeddium)
 
-tasks.processResources {
-    outputs.upToDateWhen { false }
+    // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
+    modLocalRuntime(files(file("run/mods-obf-1.21.1").listFiles() ?: emptyArray<File>()))
 }
 
 tasks.jar {
@@ -110,6 +116,7 @@ tasks.processResources {
     filesMatching(listOf("META-INF/mods.toml")) {
         expand(buildProps)
     }
+    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {

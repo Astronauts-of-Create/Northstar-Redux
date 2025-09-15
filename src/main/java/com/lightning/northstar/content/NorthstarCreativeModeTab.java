@@ -1,12 +1,13 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.CreativeModeTab;
@@ -55,7 +56,7 @@ public class NorthstarCreativeModeTab {
 
     private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
         ItemStack stack = new ItemStack(item);
-        stack.set(NorthstarDataComponents.OXYGEN, OxygenStuff.maximumOxy);
+        stack.set(NorthstarDataComponents.OXYGEN, NorthstarOxygen.MAXIMUM_OXYGEN);
         event.accept(stack);
     }
 

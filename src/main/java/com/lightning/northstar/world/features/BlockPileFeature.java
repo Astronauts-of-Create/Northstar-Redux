@@ -1,5 +1,6 @@
 package com.lightning.northstar.world.features;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.world.features.configuration.BlockPileConfig;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -52,11 +53,11 @@ public class BlockPileFeature extends Feature<BlockPileConfig> {
         boolean flag = false;
         BlockState blockstate = pConfig.block_provider.getState(pRandom, pPos);
         float dist = (float) Math.abs(Math.sqrt(Math.pow((pPos.getX() - origin.getX()), 2) + Math.pow((pPos.getZ() - origin.getZ()), 2)));
-//          System.out.println("pPos: " + pPos);
-//          System.out.println("origin: " + origin);
-//          System.out.println("dist: " + dist);
+        Northstar.LOGGER.debug("pPos: {}", pPos);
+        Northstar.LOGGER.debug("origin: {}", origin);
+        Northstar.LOGGER.debug("dist: {}", dist);
         if (radius / 2 == 0) {
-//            System.out.println("What the scallop???");
+            Northstar.LOGGER.debug("What the scallop???");
             return false;
         }
         if (iteration == 1) {
