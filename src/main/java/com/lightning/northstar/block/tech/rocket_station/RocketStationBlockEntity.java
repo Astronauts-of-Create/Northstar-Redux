@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.contraptions.RocketContraption;
@@ -170,7 +171,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             contraption.fuelCost = fuelCost;
             contraption.fuelReturnCost = fuelReturnCost;
             contraption.dest = target;
-            System.out.println(this.container);
             heatCost = (NorthstarTemperature.getHeatRating(target) * (contraption.blockCount)) + NorthstarTemperature.getHeatConstant(target);
             heatCostHome = (NorthstarTemperature.getHeatRating(level.dimension()) * (contraption.blockCount)) + NorthstarTemperature.getHeatConstant(level.dimension());
             if (heatCostHome > heatCost) {
@@ -199,7 +199,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             }
             return;
         } else {
-            System.out.println("Obamna");
+            Northstar.LOGGER.debug("Obamna");
         }
 
         ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
@@ -222,7 +222,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         //Assuming we have everything we need to assemble, let's do it
         if (engines >= requiredJets && hasStation && fuelAmount > (fuelCost + contraption.weightCost) && heatShielding >= heatCost && oxygenSealed && !interplanetaryFlag && contraption.hasControls && contraption.dest != null && contraption.dest != this.level.dimension()) {
             //Create the new contraption entity
-            System.out.println(engines);
+            Northstar.LOGGER.debug("{}", engines);
             contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
             RocketContraptionEntity movedContraption = RocketContraptionEntity.create(level, contraption);
             BlockPos anchor = worldPosition;
@@ -279,9 +279,9 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             }
             contraption.owner.displayClientMessage(Component.literal
                     ("Rocket failed to assemble!").withStyle(ChatFormatting.RED), false);
-//            System.out.println("No station or jet engine, Bruh!");
-//            System.out.println("Heat Cost: " + heatCost + "     Heat Shielding: " + heatShielding);
-//            System.out.println("Weight Cost: " + contraption.weightCost + "      Fuel Cost: " + fuelCost);
+            Northstar.LOGGER.debug("No station or jet engine, Bruh!");
+            Northstar.LOGGER.debug("Heat Cost: {}     Heat Shielding: {}", heatCost, heatShielding);
+            Northstar.LOGGER.debug("Weight Cost: {}      Fuel Cost: {}", contraption.weightCost, fuelCost);
             exception(new AssemblyException(CreateLang.translateDirect("train_assembly.no_controls")), -1);
         }
     }
@@ -306,7 +306,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(this.level.dimension()) + 1000;
 
         if (dif != 0) {
-            //        System.out.println(dif);
+            Northstar.LOGGER.debug("{}", dif);
         }
         return cost * 8;
     }
@@ -326,7 +326,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(target) + 1000;
 
         if (dif != 0) {
-            //        System.out.println(dif);
+            Northstar.LOGGER.debug("{}", dif);
         }
         return cost * 8;
     }

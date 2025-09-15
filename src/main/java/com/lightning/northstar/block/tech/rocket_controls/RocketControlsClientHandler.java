@@ -137,14 +137,14 @@ public class RocketControlsClientHandler {
         if (!releasedKeys.isEmpty()) {
             NorthstarPackets.getChannel()
                     .sendToServer(new RocketControlsInputPacket(releasedKeys, false, rce.getId(), controlsPos, false));
-//            AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
+    // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
         }
 
         // Newly Pressed Keys
         if (!newKeys.isEmpty()) {
             NorthstarPackets.getChannel().sendToServer(new RocketControlsInputPacket(newKeys, true, rce.getId(), controlsPos, false));
             packetCooldown = PACKET_RATE;
-//            AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
+    // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
         }
 
         // Keepalive Pressed Keys

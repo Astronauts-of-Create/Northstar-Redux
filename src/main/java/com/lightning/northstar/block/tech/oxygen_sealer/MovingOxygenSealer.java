@@ -34,11 +34,11 @@ public class MovingOxygenSealer implements SealingProvider {
             sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, Direction.UP);
         }
 
+        active = false;
+
         if (sealer.hasLeak()) {
             return;
         }
-
-        active = false;
 
         MountedFluidStorageWrapper fluids = context.contraption.getStorage().getFluids();
         Fluid oxygen = findOxygenIn(fluids);

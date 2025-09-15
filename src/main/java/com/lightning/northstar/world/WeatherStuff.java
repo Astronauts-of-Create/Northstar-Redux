@@ -24,14 +24,14 @@ public class WeatherStuff {
 
     public static Map<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> managedPlanets = new HashMap<>();
 
-//    @SubscribeEvent
-//    public static void onWorldTick(TickEvent.LevelTickEvent event){
-//        for(Entry<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> entries:    managedPlanets.entrySet()) {
-//            for(Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>> entries2 : entries.getKey()) {
-//                
-//            }
-//        }
-//    }
+    // @SubscribeEvent
+    // public static void onWorldTick(TickEvent.LevelTickEvent event){
+    // for(Entry<Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>>, ResourceKey<Level>> entries:    managedPlanets.entrySet()) {
+    // for(Pair<Pair<Direction, Direction>, Pair<WeatherCondition, Integer>> entries2 : entries.getKey()) {
+    // 
+    // }
+    // }
+    // }
 
     public static void init() {
         managedPlanets.put(null, NorthstarDimensions.MARS_DIM_KEY);

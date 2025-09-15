@@ -119,7 +119,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (dissasemblyTicks > 0) {
             setDeltaMovement(0, 0, 0);
             if (!level().isClientSide) {
-//                System.out.println("Dissasembling in " + dissasemblyTicks + " ticks");
+                Northstar.LOGGER.debug("Dissasembling in {} ticks", dissasemblyTicks);
                 dissasemblyTicks--;
                 if (dissasemblyTicks == 0) disassemble();
             }
@@ -140,7 +140,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 blasting = true;
             }
             if (!fuelBurned) { //We only burn the fuel once
-                System.out.println("BURNING FUEL");
+                Northstar.LOGGER.debug("BURNING FUEL");
                 if (contraption.fuelAmount() < contraption.fuelCost) {  //If we dont have enough fuel, disassemble
                     this.disassemble();
                 } else {

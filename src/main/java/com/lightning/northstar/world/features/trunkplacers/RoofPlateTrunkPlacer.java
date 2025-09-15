@@ -124,8 +124,8 @@ public class RoofPlateTrunkPlacer extends TrunkPlacer {
            @Override
            protected boolean validTreePos(LevelSimulatedReader pLevel, BlockPos pPos) {
                return pLevel.isStateAtPosition(pPos, (state) -> state.is(Blocks.AIR) || state.is(NorthstarBlocks.PLATE_FUNGUS.get()) || state.is(NorthstarBlocks.VENUS_STONE.get()) || state.is(NorthstarBlocks.VENUS_DEEP_STONE.get()));
-//               return pLevel.isStateAtPosition(pPos, (state) -> {
-//                   return state.is(Blocks.AIR);
-//               });
+    //    return pLevel.isStateAtPosition(pPos, (state) -> {
+    //    return state.is(Blocks.AIR);
+    //    });
            }
         }

@@ -49,11 +49,11 @@ public class OxygenAndTempEntityMixin {
         }
 
         // Test code to figure out how changing dimensions works
-//        if(entity instanceof ServerPlayer && entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.FLINT_AND_STEEL && !entity.level.isClientSide && entity.level.dimension() == Level.OVERWORLD) {
-//            ResourceKey<Level> dest = NorthstarDimensions.MOON_DIM_KEY;
-//            ServerLevel destLevel = entity.getLevel().getServer().getLevel(dest);
-//            RocketHandler.changePlayerDimension(destLevel, (ServerPlayer) entity, new PortalForcer(destLevel));
-//        }
+    // if(entity instanceof ServerPlayer && entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.FLINT_AND_STEEL && !entity.level.isClientSide && entity.level.dimension() == Level.OVERWORLD) {
+    // ResourceKey<Level> dest = NorthstarDimensions.MOON_DIM_KEY;
+    // ServerLevel destLevel = entity.getLevel().getServer().getLevel(dest);
+    // RocketHandler.changePlayerDimension(destLevel, (ServerPlayer) entity, new PortalForcer(destLevel));
+    // }
     }
 
     public void sulfurBurn(Entity entity, RandomSource rando) {

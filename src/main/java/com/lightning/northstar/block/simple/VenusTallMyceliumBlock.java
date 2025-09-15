@@ -65,7 +65,6 @@ public class VenusTallMyceliumBlock extends BushBlock {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        System.out.println(pContext.getClickedFace());
         return this.defaultBlockState().setValue(IS_ON_CEILING, pContext.getClickedFace() == Direction.DOWN);
     }
 

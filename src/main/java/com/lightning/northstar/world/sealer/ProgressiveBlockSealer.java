@@ -132,8 +132,6 @@ public class ProgressiveBlockSealer {
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof SealableBlock sealable)
             return sealable.isFaceSealed(level, pos, direction, source);
-        //if (block instanceof EncasedPipeBlock)
-        //    return !state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
         if (source && NorthstarBlockTags.BLOCKS_AIR.matches(state))
             return true;
         return Block.isFaceFull(state.getCollisionShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);

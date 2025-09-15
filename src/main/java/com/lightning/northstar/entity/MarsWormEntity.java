@@ -161,7 +161,7 @@ public class MarsWormEntity extends Monster implements GeoAnimatable, VibrationS
 
         @Override
         public void onReceiveVibration(ServerLevel level, BlockPos pos, GameEvent event, @Nullable Entity entity, @Nullable Entity player, float distance) {
-            //System.out.println("Big Bazinga 24");
+            //Northstar.LOGGER.debug("Big Bazinga 24");
             if (!isDeadOrDying()) {
                 brain.setMemoryWithExpiry(MemoryModuleType.VIBRATION_COOLDOWN, Unit.INSTANCE, 40L);
                 level.broadcastEntityEvent(MarsWormEntity.this, EntityEvent.TENDRILS_SHIVER);
