@@ -9,6 +9,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -16,25 +17,45 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class OxygenConcentratorBlock extends HorizontalKineticBlock implements IBE<OxygenConcentratorBlockEntity> {
 
-    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
+    protected static final VoxelShape AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
 
     public OxygenConcentratorBlock(Properties properties) {
         super(properties);
     }
 
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+//    @Override
+//    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
+//        BlockHitResult pHit) {
+//        if (!pLevel.isClientSide()) {
+//            BlockEntity entity = pLevel.getBlockEntity(pPos);
+//            if(entity instanceof OxygenConcentratorBlockEntity) {
+    //              NetworkHooks.openScreen(((ServerPlayer)pPlayer), (OxygenConcentratorBlockEntity)entity, pPos);
+    //
+    //           } else {
+    //               throw new IllegalStateException("Our Container provider is missing!");
+    //           }
+    //       }
+    //       return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    //   }
 
     @Override
-    public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-        return face == Direction.DOWN;
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return IBE.super.newBlockEntity(pPos, pState);
     }
 
     @Override
     public Axis getRotationAxis(BlockState state) {
         return Axis.Y;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return AABB;
+    }
+
+    @Override
+    public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+        return face == Direction.DOWN;
     }
 
     @Override

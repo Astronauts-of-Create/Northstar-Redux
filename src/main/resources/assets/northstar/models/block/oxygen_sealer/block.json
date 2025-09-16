@@ -2,11 +2,11 @@
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"render_type": "minecraft:cutout_mipped",
-	"parent": "block/block",
 	"texture_size": [64, 32],
 	"textures": {
 		"1": "northstar:block/oxygen_sealer",
-		"2": "northstar:block/oxygen_sealer_front"
+		"2": "northstar:block/oxygen_sealer_front",
+		"particle": "northstar:block/oxygen_sealer"
 	},
 	"elements": [
 		{
@@ -66,12 +66,12 @@
 			"to": [13, 13, 17],
 			"rotation": {"angle": 0, "axis": "y", "origin": [4, 12, 14]},
 			"faces": {
-				"north": {"uv": [8.5, 9, 11.5, 15], "texture": "#1"},
-				"east": {"uv": [11.25, 9, 11.5, 15], "texture": "#1"},
+				"north": {"uv": [8.75, 9.5, 11.25, 14.5], "texture": "#1"},
+				"east": {"uv": [11, 9.5, 11.5, 14.5], "texture": "#1"},
 				"south": {"uv": [8.75, 9.5, 11.25, 14.5], "texture": "#1"},
-				"west": {"uv": [8.5, 9, 8.75, 15], "texture": "#1"},
-				"up": {"uv": [8.5, 9, 11.5, 9.5], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [8.5, 14.5, 11.5, 15], "texture": "#1"}
+				"west": {"uv": [8.5, 9.5, 9, 14.5], "texture": "#1"},
+				"up": {"uv": [8.75, 9, 11.25, 10], "texture": "#1"},
+				"down": {"uv": [8.75, 14, 11.25, 15], "texture": "#1"}
 			}
 		}
 	]

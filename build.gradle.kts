@@ -39,12 +39,12 @@ repositories {
         }
     }
     maven("https://maven.blamejared.com/") // JEI
-    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-        credentials {
-            username = project.property("github.packages.username") as? String
-            password = project.property("github.packages.password") as? String
-        }
-    }
+//    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
+//        credentials {
+//            username = project.property("github.packages.username") as? String
+//            password = project.property("github.packages.password") as? String
+//        }
+//    }
     maven("https://cursemaven.com") {
         content {
             includeGroup("curse.maven")
@@ -89,6 +89,8 @@ dependencies {
     modRuntimeOnly(libs.embeddium)
     modRuntimeOnly(libs.oculus)
     forgeRuntimeLibrary(libs.jcpp)
+
+//    modRuntimeOnly(libs.createdieselgenerators)
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
     modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
