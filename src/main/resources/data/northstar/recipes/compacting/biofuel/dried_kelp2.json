@@ -39,6 +39,10 @@
     },
     {
       "item": "minecraft:bone_block"
+    },
+    {
+      "amount": 250,
+      "fluid": "minecraft:water"
     }
   ],
   "results": [

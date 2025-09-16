@@ -87,6 +87,10 @@
     },
     {
       "item": "minecraft:bone_meal"
+    },
+    {
+      "amount": 100,
+      "fluid": "minecraft:water"
     }
   ],
   "results": [
