@@ -2,8 +2,7 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.content.kinetics.base.HalfShaftInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
@@ -40,7 +39,7 @@ public class TemperatureRegulatorVisual extends HalfShaftInstance<TemperatureReg
     @Override
     public void beginFrame() {
         float speed = blockEntity.getSpeed();
-        boolean warm = blockEntity.temp >= NorthstarPlanets.getPlanetTemp(blockEntity.getLevel().dimension());
+        boolean warm = blockEntity.isCurrentlyWarm();
 
         warmSpinner.setPosition(getInstancePosition())
                 .nudge(0, warm ? 0 : 1e8f, 0)

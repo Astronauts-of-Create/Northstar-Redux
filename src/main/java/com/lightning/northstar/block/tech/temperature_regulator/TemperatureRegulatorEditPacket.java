@@ -1,64 +1,116 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
-import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import com.lightning.northstar.content.NorthstarPackets;
+import com.lightning.northstar.contraption.ActorConfigPacket;
+import com.lightning.northstar.world.NorthstarTemperature;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.lang3.tuple.MutablePair;
 
-public class TemperatureRegulatorEditPacket extends BlockEntityConfigurationPacket<TemperatureRegulatorBlockEntity> {
+public class TemperatureRegulatorEditPacket extends SimplePacketBase {
 
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
-    private int sizeChangeX;
-    private int sizeChangeY;
-    private int sizeChangeZ;
-    private int temp;
-    private boolean envFill;
+    private final int contraptionId;
+    private final BlockPos pos;
+    private final int temperature;
+    private final boolean limit;
+    private final int sizeX;
+    private final int sizeY;
+    private final int sizeZ;
 
     public TemperatureRegulatorEditPacket(FriendlyByteBuf buffer) {
-        super(buffer);
+        contraptionId = buffer.readVarInt();
+        pos = buffer.readBlockPos();
+        temperature = Mth.clamp(buffer.readVarInt(), NorthstarTemperature.MINIMUM_TEMPERATURE, NorthstarTemperature.MAXIMUM_TEMPERATURE);
+        limit = buffer.readBoolean();
+        sizeX = clampSize(buffer.readVarInt());
+        sizeY = clampSize(buffer.readVarInt());
+        sizeZ = clampSize(buffer.readVarInt());
     }
 
-    public TemperatureRegulatorEditPacket(BlockPos pos, int offX, int offY, int offZ, int sizeX, int sizeY, int sizeZ, int tempChange, boolean envFill) {
-        super(pos);
-        this.offsetX = offX;
-        this.offsetY = offY;
-        this.offsetZ = offZ;
-        this.sizeChangeX = sizeX;
-        this.sizeChangeY = sizeY;
-        this.sizeChangeZ = sizeZ;
-        this.temp = tempChange;
-        this.envFill = envFill;
-    }
-
-    @Override
-    protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(offsetX);
-        buffer.writeVarInt(offsetY);
-        buffer.writeVarInt(offsetZ);
-        buffer.writeVarInt(sizeChangeX);
-        buffer.writeVarInt(sizeChangeY);
-        buffer.writeVarInt(sizeChangeZ);
-        buffer.writeVarInt(temp);
-        buffer.writeBoolean(envFill);
+    public TemperatureRegulatorEditPacket(int contraptionId, BlockPos pos, int temperature, boolean limit, int sizeX, int sizeY, int sizeZ) {
+        this.contraptionId = contraptionId;
+        this.pos = pos;
+        this.temperature = temperature;
+        this.limit = limit;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.sizeZ = sizeZ;
     }
 
     @Override
-    protected void readSettings(FriendlyByteBuf buffer) {
-        offsetX = buffer.readVarInt();
-        offsetY = buffer.readVarInt();
-        offsetZ = buffer.readVarInt();
-        sizeChangeX = buffer.readVarInt();
-        sizeChangeY = buffer.readVarInt();
-        sizeChangeZ = buffer.readVarInt();
-        temp = buffer.readVarInt();
-        envFill = buffer.readBoolean();
+    public void write(FriendlyByteBuf buffer) {
+        buffer.writeVarInt(contraptionId);
+        buffer.writeBlockPos(pos);
+        buffer.writeVarInt(temperature);
+        buffer.writeBoolean(limit);
+        buffer.writeVarInt(sizeX);
+        buffer.writeVarInt(sizeY);
+        buffer.writeVarInt(sizeZ);
     }
 
     @Override
-    protected void applySettings(TemperatureRegulatorBlockEntity be) {
-        be.changeTemp(temp);
-        be.changeSize(sizeChangeX, sizeChangeY, sizeChangeZ, offsetX, offsetY, offsetZ, envFill);
+    public boolean handle(NetworkEvent.Context context) {
+        context.enqueueWork(() -> {
+            ServerPlayer player = context.getSender();
+            if (player == null || player.isSpectator() /*|| AdventureUtil.isAdventure(player)*/)
+                return;
+            Level world = player.level();
+            if (world.getEntity(contraptionId) instanceof AbstractContraptionEntity entity) {
+                handleContraption(player, entity);
+            } else {
+                handleWorld(player, world);
+            }
+        });
+        return true;
+    }
+
+    private void handleContraption(ServerPlayer player, AbstractContraptionEntity entity) {
+        MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor = entity.getContraption().getActorAt(pos);
+        if (actor == null)
+            return;
+        if (!(actor.right.temporaryData instanceof MovingTemperatureRegulator regulator))
+            return;
+        BlockPos localPos = regulator.context.localPos;
+        if (!entity.toGlobalVector(Vec3.atBottomCenterOf(localPos), 0).closerThan(player.position(), 20))
+            return;
+
+        regulator.regulator.temperature = temperature;
+        regulator.regulator.setBounds(localPos, limit, sizeX, sizeY, sizeZ);
+
+
+        CompoundTag nbt = actor.left.nbt() == null ? new CompoundTag() : actor.left.nbt().copy(); // needed copy?
+        regulator.regulator.write(nbt);
+        actor.left = new StructureTemplate.StructureBlockInfo(localPos, actor.left.state(), nbt);
+        entity.setBlock(localPos, actor.left);
+
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new ActorConfigPacket(entity.getId(), localPos, nbt));
+    }
+
+    private void handleWorld(ServerPlayer player, Level world) {
+        if (!world.isLoaded(pos) || !pos.closerThan(player.blockPosition(), 20))
+            return;
+
+        if (world.getBlockEntity(pos) instanceof TemperatureRegulatorBlockEntity be) {
+            be.regulator.temperature = temperature;
+            be.regulator.setBounds(be.getBlockPos(), limit, sizeX, sizeY, sizeZ);
+            be.sendData();
+            be.setChanged();
+        }
+    }
+
+    private static int clampSize(int size) {
+        return Mth.clamp(size, 1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE);
     }
 
 }

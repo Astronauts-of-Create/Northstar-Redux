@@ -1,0 +1,28 @@
+{
+  "type": "create:mechanical_crafting",
+  "acceptMirrored": false,
+  "key": {
+    "T": {
+      "item": "northstar:titanium_sheet"
+    },
+    "C": {
+      "item": "northstar:circuit"
+    },
+    "I": {
+      "item": "create:industrial_iron_block"
+    },
+    "L": {
+      "item": "minecraft:lever"
+    }
+  },
+  "pattern": [
+    "L L",
+    "TTT",
+    "CCC",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "item": "northstar:rocket_controls"
+  }
+}

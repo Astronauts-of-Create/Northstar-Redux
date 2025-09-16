@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.oxygen_concentrator;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
@@ -20,7 +20,7 @@ public class OxygenConcentratorVisual extends KineticBlockEntityInstance<OxygenC
         shaft = (RotatingData) materialManager
                 .defaultSolid()
                 .material(AllMaterialSpecs.ROTATING)
-                .getModel(AllPartialModels.SHAFT_HALF)
+                .getModel(AllPartialModels.SHAFT_HALF, entity.getBlockState(), Direction.DOWN)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y)
                 .setPosition(getInstancePosition());

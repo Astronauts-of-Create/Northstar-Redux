@@ -103,7 +103,7 @@ public class NorthstarAdvancement {
         object.addProperty(descriptionKey(), description);
     }
 
-    static enum TaskType {
+    enum TaskType {
 
         SILENT(FrameType.TASK, false, false, false),
         NORMAL(FrameType.TASK, true, false, false),
@@ -118,7 +118,7 @@ public class NorthstarAdvancement {
         private boolean announce;
         private boolean hide;
 
-        private TaskType(FrameType frame, boolean toast, boolean announce, boolean hide) {
+        TaskType(FrameType frame, boolean toast, boolean announce, boolean hide) {
             this.frame = frame;
             this.toast = toast;
             this.announce = announce;

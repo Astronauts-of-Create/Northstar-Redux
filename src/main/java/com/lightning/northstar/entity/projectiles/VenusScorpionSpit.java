@@ -33,6 +33,7 @@ public class VenusScorpionSpit extends Projectile {
            /**
             * Called to update the entity's position/logic.
             */
+    @Override
     public void tick() {
         super.tick();
         Vec3 vec3 = this.getDeltaMovement();
@@ -60,6 +61,7 @@ public class VenusScorpionSpit extends Projectile {
            /**
             * Called when the arrow hits an entity
             */
+    @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         Entity entity = this.getOwner();
@@ -69,6 +71,7 @@ public class VenusScorpionSpit extends Projectile {
 
     }
 
+    @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
         if (!this.level().isClientSide) {
@@ -77,9 +80,11 @@ public class VenusScorpionSpit extends Projectile {
 
     }
 
+    @Override
     protected void defineSynchedData() {
     }
 
+    @Override
     public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
         super.recreateFromPacket(pPacket);
         double d0 = pPacket.getXa();

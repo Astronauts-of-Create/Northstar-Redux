@@ -7,7 +7,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -24,21 +23,19 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class RocketStationScreen extends AbstractContainerScreen<RocketStationMenu> implements ContainerListener {
 
-    private final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/rocket_station.png");
+    private static final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/rocket_station.png");
 
-    public RocketStationScreen(RocketStationMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public RocketStationScreen(RocketStationMenu menu, Inventory inv, Component title) {
+        super(menu, inv, title);
     }
 
-    protected void subInit() {
-    }
-
+    @Override
     protected void init() {
         super.init();
-        this.subInit();
         this.menu.addSlotListener(this);
     }
 
+    @Override
     public void removed() {
         super.removed();
         this.menu.removeSlotListener(this);
@@ -56,11 +53,11 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
     }
 
     protected void renderCost(GuiGraphics pPoseStack, float delta) {
-        this.menu.slotsChanged(this.menu.container);
+        this.menu.slotsChanged(this.menu.contentHolder.container);
         int x = ((width - (imageWidth + (imageWidth / 2))) / 2);
         int y = (height - (imageHeight + (imageHeight / 2))) / 2;
-        if (this.menu.blockEntity == null) {
-            System.out.println("Ruh roh");
+        if (this.menu.contentHolder == null) {
+            Northstar.LOGGER.debug("Ruh roh");
         }
         if (this.menu.target != null)
             pPoseStack.drawString(font, Component.literal("Estimated Fuel Cost: " + this.menu.fuelCost + " gJ"), x + imageWidth - 110, y + imageWidth - 100, 0x313a54);
@@ -75,7 +72,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         IconButton assemble = new IconButton(x + imageWidth - 10, y + imageHeight - 79, AllIcons.I_ADD);
         assemble.setToolTip(Lang.translateDirect("station.assemble_train"));
         assemble.withCallback(() -> {
-            NorthstarPackets.getChannel().sendToServer(RocketStationEditPacket.tryAssemble(menu.blockEntity.getBlockPos()));
+            NorthstarPackets.getChannel().sendToServer(RocketStationEditPacket.tryAssemble(menu.contentHolder.getBlockPos()));
             removed();
             onClose();
         });
@@ -85,28 +82,16 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         if ((Math.abs(x + imageWidth - mouseX) < 9 && Math.abs(y + imageHeight - 79 + 9 - mouseY) < 9)) {
             List<Component> list = Lists.newArrayList();
             RenderSystem.colorMask(true, true, true, true);
-            list.add(Lang.translateDirect("northstar.gui.rocket_station.assemble").withStyle(ChatFormatting.WHITE));
+            list.add(Component.translatable("northstar.gui.rocket_station.assemble"));
 
             pPoseStack.renderComponentTooltip(font, list, mouseX, mouseY);
-        }
-
-    }
-
-    protected void assemble() {
-        if (this.menu != null) {
-            this.menu.assemble();
-        } else {
-            System.out.println("no block entity :(");
-        }
-        if (this.menu == null) {
-            System.out.println("no menu?? :(");
         }
     }
 
     protected void renderFg(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-
     }
 
+    @Override
     protected void renderLabels(GuiGraphics pPoseStack, int pX, int pY) {
         RenderSystem.disableBlend();
         super.renderLabels(pPoseStack, pX, pY);
@@ -123,6 +108,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         }
     }
 
+    @Override
     public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
 
     }
@@ -131,6 +117,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
      * Sends the contents of an inventory slot to the client-side Container. This doesn't have to match the actual
      * contents of that slot.
      */
+    @Override
     public void slotChanged(AbstractContainerMenu pContainerToSend, int pSlotInd, ItemStack pStack) {
     }
 }

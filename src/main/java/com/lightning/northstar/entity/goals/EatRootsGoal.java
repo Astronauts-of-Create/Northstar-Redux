@@ -25,6 +25,7 @@ public class EatRootsGoal extends Goal {
           this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
        }
 
+       @Override
        public boolean canUse() {
           if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 50 : 1000) != 0) {
              return false;
@@ -36,6 +37,7 @@ public class EatRootsGoal extends Goal {
                  return false;
           }
        }
+       @Override
        public void start() {
 
           this.eatAnimationTick = this.adjustedTickDelay(40);
@@ -46,11 +48,13 @@ public class EatRootsGoal extends Goal {
           this.mob.getNavigation().stop();
        }
 
+       @Override
        public void stop() {
           this.eatAnimationTick = 0;
        }
 
 
+       @Override
        public boolean canContinueToUse() {
           return this.eatAnimationTick > 0;
        }
@@ -59,6 +63,7 @@ public class EatRootsGoal extends Goal {
           return this.eatAnimationTick;
        }
 
+       @Override
        public void tick() {
            if(!performedCheck) {
                int rootnumber = 0;

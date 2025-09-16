@@ -15,29 +15,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Player.class)
 public class PlayerMixin {
 
-    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
-    private void attack(Entity pTarget, CallbackInfo info) {
-        float f = (float) ((Player)(Object)this).getAttributeValue(Attributes.ATTACK_DAMAGE);
+    @Inject(method = "attack", at = @At("HEAD"))
+    private void attack(Entity target, CallbackInfo info) {
+        Player self = (Player) (Object) this;
+
+        float f = (float) self.getAttributeValue(Attributes.ATTACK_DAMAGE);
         float f1;
-        if (pTarget instanceof LivingEntity) {
-            f1 = EnchantmentHelper.getDamageBonus(((Player)(Object)this).getMainHandItem(), ((LivingEntity)pTarget).getMobType());
-         } else {
-            f1 = EnchantmentHelper.getDamageBonus(((Player)(Object)this).getMainHandItem(), MobType.UNDEFINED);
-         }
-        float f2 = ((Player)(Object)this).getAttackStrengthScale(0.5F);
+        if (target instanceof LivingEntity) {
+            f1 = EnchantmentHelper.getDamageBonus(self.getMainHandItem(), ((LivingEntity) target).getMobType());
+        } else {
+            f1 = EnchantmentHelper.getDamageBonus(self.getMainHandItem(), MobType.UNDEFINED);
+        }
+        float f2 = self.getAttackStrengthScale(0.5F);
         f *= 0.2F + f2 * f2 * 0.8F;
         f1 *= f2;
 
-
         if (f > 0.0F || f1 > 0.0F) {
-            int j = EnchantmentHelper.getEnchantmentLevel(NorthstarEnchantments.FROSTBITE.get(), (Player)(Object) this);
-            if (pTarget instanceof LivingEntity) {
-               if (j > 0) {
-                   //frezzing
-                  pTarget.setTicksFrozen((j * 80) + 150);
-               }
-            }           
-
+            int j = EnchantmentHelper.getEnchantmentLevel(NorthstarEnchantments.FROSTBITE.get(), self);
+            if (target instanceof LivingEntity) {
+                if (j > 0) {
+                    // freezing
+                    target.setTicksFrozen((j * 80) + 150);
+                }
+            }
         }
     }
 

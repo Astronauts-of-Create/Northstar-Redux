@@ -4,10 +4,11 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import org.joml.Quaternionf;
 
 public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockEntity> implements DynamicInstance {
@@ -18,7 +19,6 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
     private final OrientedData piston4;
     private final OrientedData piston5;
     private final OrientedData piston6;
-    private float time = 0;
 
     public CombustionEngineVisual(MaterialManager materialManager, CombustionEngineBlockEntity entity) {
         super(materialManager, entity);
@@ -61,13 +61,13 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
                 .getModel(NorthstarPartialModels.PISTON6)
                 .createInstance()
                 .setRotation(rotation);
+
+        beginFrame();
     }
 
     @Override
     public void beginFrame() {
-        if (!blockEntity.isOverStressed() && Math.abs(blockEntity.getSpeed()) > 0) {
-            time += blockEntity.getSpeed() * 0.002f;
-        }
+        float time = AnimationTickHolder.getRenderTime() * blockEntity.getSpeed() * 0.005f;
 
         piston1.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time), 0);
         piston2.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time + 2), 0);
@@ -94,8 +94,8 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
         piston6.delete();
     }
 
-    public float getPistonOffset(double time2) {
-        return (float) (Math.sin(time2) * 0.05f);
+    public static float getPistonOffset(double time) {
+        return (float) (Math.sin(time) * 0.05f);
     }
 
 }

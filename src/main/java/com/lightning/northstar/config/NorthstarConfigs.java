@@ -50,9 +50,9 @@ public class NorthstarConfigs {
 
     public static void register(BiConsumer<ModConfig.Type, ForgeConfigSpec> register) {
         // configs are disabled because empty configurations cause a crash on create 5
-        //client = register(ClientConfig::new, ModConfig.Type.CLIENT);
+        client = register(ClientConfig::new, ModConfig.Type.CLIENT);
         //common = register(CommonConfig::new, ModConfig.Type.COMMON);
-        //server = register(ServerConfig::new, ModConfig.Type.SERVER);
+        server = register(ServerConfig::new, ModConfig.Type.SERVER);
 
         for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
             register.accept(pair.getKey(), pair.getValue().specification);

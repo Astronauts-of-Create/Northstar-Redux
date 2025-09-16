@@ -26,6 +26,7 @@ public class OxyFlowParticleData implements ParticleOptions, ICustomParticleData
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<OxyFlowParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public OxyFlowParticleData fromCommand(ParticleType<OxyFlowParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class OxyFlowParticleData implements ParticleOptions, ICustomParticleData
             return new OxyFlowParticleData(x, y, z);
         }
 
+        @Override
         public OxyFlowParticleData fromNetwork(ParticleType<OxyFlowParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new OxyFlowParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

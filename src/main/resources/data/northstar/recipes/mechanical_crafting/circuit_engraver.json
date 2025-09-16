@@ -8,17 +8,20 @@
     "P": {
       "item": "create:polished_rose_quartz"
     },
+    "M": {
+      "item": "create:precision_mechanism"
+    },
     "T": {
-      "tag": "forge:plates/iron"
+      "tag": "forge:plates/brass"
     },
     "F": {
       "item": "create:shaft"
     }
   },
   "pattern": [
-    "TPT",
-    "FPF",
-    "TPT",
+    "TFT",
+    "PPP",
+    "TMT",
     " A "
   ],
   "result": {

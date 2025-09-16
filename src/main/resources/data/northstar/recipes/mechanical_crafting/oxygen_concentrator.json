@@ -3,7 +3,7 @@
   "acceptMirrored": false,
   "key": {
     "A": {
-      "tag": "forge:plates/iron"
+      "tag": "forge:plates/brass"
     },
     "P": {
       "item": "create:propeller"
@@ -19,12 +19,15 @@
     },
     "T": {
       "tag": "minecraft:wool"
+    },
+    "#": {
+      "item": "northstar:oxygen_separator"
     }
   },
   "pattern": [
     "T T",
-    "T T",
-    "APA",
+    "TPT",
+    "A#A",
     "SFS",
     "ALA"
   ],

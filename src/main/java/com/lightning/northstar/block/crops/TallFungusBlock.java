@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class TallFungusBlock extends TallFlowerBlock {
@@ -36,6 +36,7 @@ public class TallFungusBlock extends TallFlowerBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(IS_ON_CEILING, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
     
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(IS_ON_CEILING);
         pBuilder.add(HALF);
@@ -62,6 +63,7 @@ public class TallFungusBlock extends TallFlowerBlock {
         }
     }
     
+    @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         if(!pState.getValue(IS_ON_CEILING)) {
             DoubleBlockHalf doubleblockhalf = pState.getValue(HALF);
@@ -82,19 +84,15 @@ public class TallFungusBlock extends TallFlowerBlock {
             }
         }
     }
-    
-    @Nullable
+
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        System.out.println(pContext.getClickedFace());
-        boolean ceiling_flag = pContext.getClickedFace() == Direction.DOWN;  
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        boolean ceiling_flag = pContext.getClickedFace() == Direction.DOWN;
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
         if(ceiling_flag)
-        return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.below()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag) : null;
-        else
+            return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.below()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag) : null;
         return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.above()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag).setValue(HALF, DoubleBlockHalf.LOWER) : null;
-            
     }
     
     public static void placeAt(LevelAccessor pLevel, BlockState pState, BlockPos pPos, int pFlags) {

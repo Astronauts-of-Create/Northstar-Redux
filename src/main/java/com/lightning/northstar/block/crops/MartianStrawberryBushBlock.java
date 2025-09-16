@@ -41,6 +41,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0));
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if (pState.getValue(AGE) == 0) {
             return SAPLING_SHAPE;
@@ -49,6 +50,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         }
     }
 
+    @Override
     protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return pState.is(NorthstarBlocks.MARS_FARMLAND.get());
     }
@@ -76,6 +78,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     /**
      * @return whether this block needs random ticking.
      */
+    @Override
     public boolean isRandomlyTicking(BlockState pState) {
         return !this.isMaxAge(pState);
     }
@@ -83,6 +86,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     /**
      * Performs a random tick on a block.
      */
+    @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (!pLevel.isAreaLoaded(pPos, 1))
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
@@ -170,10 +174,12 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         return f;
     }
 
+    @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return (pLevel.getRawBrightness(pPos, 0) >= 8 || pLevel.canSeeSky(pPos)) && super.canSurvive(pState, pLevel, pPos);
     }
 
+    @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         if (pEntity instanceof Ravager && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(pLevel, pEntity)) {
             pLevel.destroyBlock(pPos, true, pEntity);
@@ -186,6 +192,7 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
         return NorthstarItems.MARTIAN_STRAWBERRY.get();
     }
 
+    @Override
     public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
         return new ItemStack(this.getBaseSeedId());
     }
@@ -193,18 +200,22 @@ public class MartianStrawberryBushBlock extends BushBlock implements Bonemealabl
     /**
      * @return whether bonemeal can be used on this block
      */
+    @Override
     public boolean isValidBonemealTarget(LevelReader pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
         return !this.isMaxAge(pState);
     }
 
+    @Override
     public boolean isBonemealSuccess(Level pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         return true;
     }
 
+    @Override
     public void performBonemeal(ServerLevel pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         this.growCrops(pLevel, pPos, pState);
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(AGE);
     }

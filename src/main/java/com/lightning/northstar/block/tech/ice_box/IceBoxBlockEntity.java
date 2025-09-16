@@ -1,7 +1,8 @@
 package com.lightning.northstar.block.tech.ice_box;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.lightning.northstar.world.TemperatureStuff;
+import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -43,8 +44,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -219,7 +220,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (recipes.isEmpty())
             return true;
         currentRecipe = recipes.get(0);
-//        System.out.println(currentRecipe.getResultItem());
+        //Northstar.LOGGER.debug(currentRecipe.getResultItem());
         sendData();
         return true;
     }
@@ -279,20 +280,20 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (level.isClientSide)
             return;
         updateRecipe();
-        int temperature = TemperatureStuff.getTemp(worldPosition, level);
+        float temperature = NorthstarTemperature.getTemperatureAt(level, worldPosition);
         float freezespeed = 0;
         if (temperature <= 0) {
             freezespeed = Math.abs(temperature) / 15;
         }
-//        System.out.println("Remaining time: " + inventory.remainingTime);
+        //Northstar.LOGGER.debug("Remaining time: " + inventory.remainingTime);
 
         if (inputInventory.remainingTime <= 0) {
             inputInventory.remainingTime = 500;
         }
-//        if(inventory.remainingTime > 0) {
+        // if(inventory.remainingTime > 0) {
         inputInventory.remainingTime -= freezespeed;
-//        System.out.println(inputInventory.remainingTime);
-//            System.out.println("Applied Recipe: " + inventory.appliedRecipe);
+        //Northstar.LOGGER.debug(inputInventory.remainingTime);
+        //Northstar.LOGGER.debug("Applied Recipe: " + inventory.appliedRecipe);
 
         List<Recipe<?>> recipes = getMatchingRecipes();
         if (!recipes.isEmpty())
@@ -311,7 +312,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
                 inputInventory.remainingTime = 500;
             }
         }
-//        }
+        // }
         IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack itemStack = items.getStackInSlot(i);
@@ -359,9 +360,8 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         ItemHelper.dropContents(level, worldPosition, inputInventory);
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER)
             return itemCapability.cast();
         if (cap == ForgeCapabilities.FLUID_HANDLER)
@@ -472,7 +472,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             int requiredFluid = 0;
             for (Ingredient ingred : ((FreezingRecipe) recipe).getIngredients()) {
                 for (ItemStack item : ingred.getItems()) {
-                    for (int i = 0; i > inputInventory.getContainerSize(); i++) {
+                    for (int i = 0; i < inputInventory.getContainerSize(); i++) {
                         if (inputInventory.getItem(i) != null && inputInventory.getItem(i).getCount() >= item.getCount()) {
                             ingredAmount++;
                         }
@@ -482,7 +482,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             }
             for (FluidIngredient ingred : ((FreezingRecipe) recipe).getFluidIngredients()) {
                 for (FluidStack item : ingred.getMatchingFluidStacks()) {
-                    for (int i = 0; i > inputTank.getTanks().length; i++) {
+                    for (int i = 0; i < inputTank.getTanks().length; i++) {
                         if (inputTank.getPrimaryHandler().getFluid() != null && inputTank.getPrimaryHandler().getFluid().getFluid() == item.getFluid()
                                 && inputTank.getPrimaryHandler().getFluidAmount() > item.getAmount()) {
                             fluidamount += item.getAmount();
@@ -502,11 +502,11 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         List<Recipe<?>> recipes = getMatchingRecipes();
         if (!recipes.isEmpty())
             currentRecipe = recipes.get(0);
-//        System.out.println("Searching for recipe!");;
+        Northstar.LOGGER.debug("Searching for recipe!");
         inputInventory.remainingTime = 500;
-        if (currentRecipe != null)
-//            System.out.println("RECIPE DETECTED!  " + currentRecipe.getResultItem());
-            inputInventory.appliedRecipe = false;
+        //if (currentRecipe != null)
+        //    Northstar.LOGGER.debug("RECIPE DETECTED!  " + currentRecipe.getResultItem());
+        inputInventory.appliedRecipe = false;
     }
 
     protected List<Recipe<?>> getMatchingRecipes() {

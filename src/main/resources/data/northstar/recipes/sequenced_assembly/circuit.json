@@ -6,8 +6,16 @@
   "loops": 5,
   "results": [
     {
-      "chance": 120.0,
+      "chance": 70.0,
       "item": "northstar:circuit"
+    },
+    {
+      "chance": 20.0,
+      "item": "minecraft:iron_nugget"
+    },
+    {
+      "chance": 10.0,
+      "item": "create:copper_nugget"
     }
   ],
   "sequence": [
@@ -34,7 +42,7 @@
           "item": "northstar:unfinished_circuit"
         },
         {
-          "item": "minecraft:copper_ingot"
+          "tag": "forge:plates/copper"
         }
       ],
       "results": [
@@ -50,7 +58,7 @@
           "item": "northstar:unfinished_circuit"
         },
         {
-          "item": "minecraft:gold_ingot"
+          "tag": "forge:plates/gold"
         }
       ],
       "results": [

@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.entity.projectiles.LunargradeSpit;
 import com.lightning.northstar.entity.projectiles.VenusScorpionSpit;

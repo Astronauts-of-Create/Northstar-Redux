@@ -1,12 +1,12 @@
 {
   "type": "create:sequenced_assembly",
   "ingredient": {
-    "item": "northstar:martian_steel_sheet"
+    "item": "northstar:circuit"
   },
   "loops": 5,
   "results": [
     {
-      "chance": 120.0,
+      "chance": 100.0,
       "item": "northstar:advanced_circuit"
     }
   ],
@@ -34,7 +34,7 @@
           "item": "northstar:unfinished_advanced_circuit"
         },
         {
-          "item": "minecraft:copper_ingot"
+          "item": "northstar:martian_steel_sheet"
         }
       ],
       "results": [
@@ -50,7 +50,7 @@
           "item": "northstar:unfinished_advanced_circuit"
         },
         {
-          "item": "minecraft:gold_ingot"
+          "tag": "forge:plates/gold"
         }
       ],
       "results": [

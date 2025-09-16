@@ -1,6 +1,6 @@
 package com.lightning.northstar.item.armor;
 
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.Color;
@@ -33,7 +33,7 @@ public class RemainingOxygenOverlay implements IGuiOverlay {
 
         pose.pushPose();
 
-        ItemStack oxytank = OxygenStuff.getOxy(player);
+        ItemStack oxytank = NorthstarOxygen.getOxy(player);
 
         if (oxytank.isEmpty()) {
             return;

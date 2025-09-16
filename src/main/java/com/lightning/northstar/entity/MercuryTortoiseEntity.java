@@ -112,6 +112,7 @@ public class MercuryTortoiseEntity extends Monster implements GeoAnimatable {
         super.tick();
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {

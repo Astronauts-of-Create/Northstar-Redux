@@ -13,7 +13,7 @@ public class RocketFlameLandingParticle extends SimpleAnimatedParticle {
     protected RocketFlameLandingParticle(ClientLevel world, double x, double y, double z, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet sprite) {
         super(world, x, y, z, sprite, world.random.nextFloat() * 45f);
         this.quadSize *= 1F;
-        this.lifetime = 15;
+        this.lifetime = 8;
         this.scale(6F);
         this.setSize(0.25F, 0.25F);
         double x_off = random.nextInt(2) * (random.nextBoolean() ? -1 : 1) * 0.01;
@@ -31,6 +31,7 @@ public class RocketFlameLandingParticle extends SimpleAnimatedParticle {
         setAlpha(0.6f);
     }
 
+    @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
@@ -39,11 +40,13 @@ public class RocketFlameLandingParticle extends SimpleAnimatedParticle {
         setSprite(sprites.get(index, 8));
     }
 
+    @Override
     public float getQuadSize(float pScaleFactor) {
         //float f = ((float) this.age + pScaleFactor) / (float) this.lifetime;
         return this.quadSize;// * (1.0F - f * f * 0.5F);
     }
 
+    @Override
     public int getLightColor(float pPartialTick) {
         float f = ((float) this.age + pPartialTick) / (float) this.lifetime;
         f = Mth.clamp(f, 0.0F, 1.0F);
@@ -65,6 +68,7 @@ public class RocketFlameLandingParticle extends SimpleAnimatedParticle {
             this.spriteSet = animatedSprite;
         }
 
+        @Override
         public Particle createParticle(RocketFlameLandingParticleData data, ClientLevel worldIn, double x, double y, double z,
                                        double xSpeed, double ySpeed, double zSpeed) {
             return new RocketFlameLandingParticle(worldIn, x, y, z, zSpeed, zSpeed, zSpeed, this.spriteSet);

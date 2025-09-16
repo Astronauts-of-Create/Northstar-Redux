@@ -1,0 +1,42 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "item": "northstar:dry_plant_fiber"
+    },
+    {
+      "amount": 3000,
+      "fluid": "northstar:carbon"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "heatRequirement": "heated"
+}

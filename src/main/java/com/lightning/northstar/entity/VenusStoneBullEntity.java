@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.entity.goals.ChargeAtTargetGoal;
@@ -144,12 +145,11 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
         }
 
         if (!this.level().isClientSide && this.getTarget() != null) {
-//            System.out.println(this.getTarget());
-//            System.out.println("charging: " + charging);
-//            System.out.println("chargeTimer: " + chargeTimer);
+            Northstar.LOGGER.debug("target: {}, charging: {}, chargeTime: {}", getTarget(), charging, chargeTimer);
         }
     }
 
+    @Override
     protected void customServerAiStep() {
         if (chargeTimer > 0)
             chargeTimer = Mth.clamp(chargeTimer, 0, chargeTimer - 1);
@@ -216,14 +216,17 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
             this.setFlags(EnumSet.of(Goal.Flag.LOOK));
         }
 
+        @Override
         public boolean canUse() {
             return true;
         }
 
+        @Override
         public boolean requiresUpdateEveryTick() {
             return true;
         }
 
+        @Override
         public void tick() {
             if (this.starer.charging)
                 return;

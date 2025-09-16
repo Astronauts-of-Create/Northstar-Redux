@@ -1,6 +1,6 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.*;
+import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.crops.*;
 import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlock;
@@ -174,10 +174,18 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
+    // iron/titanium stuff
+    public static final BlockEntry<Block> TITANIUM_BLOCK = REGISTRATE.block("titanium_block", Block::new)
+            .initialProperties(SharedProperties::netheriteMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .strength(10f, 15f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
 
-    // iron stuff
-    public static final BlockEntry<Block> IRON_SHEETMETAL = REGISTRATE
-            .block("iron_sheetmetal", Block::new)
+    public static final BlockEntry<Block> TITANIUM_SHEETMETAL = REGISTRATE
+            .block("titanium_sheetmetal", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -186,8 +194,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<SlabBlock> IRON_SHEETMETAL_SLAB = REGISTRATE
-            .block("iron_sheetmetal_slab", SlabBlock::new)
+    public static final BlockEntry<SlabBlock> TITANIUM_SHEETMETAL_SLAB = REGISTRATE
+            .block("titanium_sheetmetal_slab", SlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -196,8 +204,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<VerticalSlabBlock> IRON_SHEETMETAL_VERTICAL_SLAB = REGISTRATE
-            .block("iron_sheetmetal_vertical_slab", VerticalSlabBlock::new)
+    public static final BlockEntry<VerticalSlabBlock> TITANIUM_SHEETMETAL_VERTICAL_SLAB = REGISTRATE
+            .block("titanium_sheetmetal_vertical_slab", VerticalSlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -206,8 +214,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<Block> IRON_PLATING = REGISTRATE
-            .block("iron_plating", Block::new)
+    public static final BlockEntry<Block> TITANIUM_PLATING = REGISTRATE
+            .block("titanium_plating", Block::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -216,8 +224,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<SlabBlock> IRON_PLATING_SLAB = REGISTRATE
-            .block("iron_plating_slab", SlabBlock::new)
+    public static final BlockEntry<SlabBlock> TITANIUM_PLATING_SLAB = REGISTRATE
+            .block("titanium_plating_slab", SlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -226,8 +234,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<VerticalSlabBlock> IRON_PLATING_VERTICAL_SLAB = REGISTRATE
-            .block("iron_plating_vertical_slab", VerticalSlabBlock::new)
+    public static final BlockEntry<VerticalSlabBlock> TITANIUM_PLATING_VERTICAL_SLAB = REGISTRATE
+            .block("titanium_plating_vertical_slab", VerticalSlabBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -236,8 +244,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<StairBlock> IRON_PLATING_STAIRS = REGISTRATE
-            .block("iron_plating_stairs", p -> new StairBlock(() -> IRON_PLATING.get().defaultBlockState(), p))
+    public static final BlockEntry<StairBlock> TITANIUM_PLATING_STAIRS = REGISTRATE
+            .block("titanium_plating_stairs", p -> new StairBlock(() -> TITANIUM_PLATING.get().defaultBlockState(), p))
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -246,8 +254,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<RotatedPillarBlock> IRON_PILLAR = REGISTRATE
-            .block("iron_pillar", RotatedPillarBlock::new)
+    public static final BlockEntry<RotatedPillarBlock> TITANIUM_PILLAR = REGISTRATE
+            .block("titanium_pillar", RotatedPillarBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -256,8 +264,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<GrateBlock> IRON_GRATE = REGISTRATE
-            .block("iron_grate", GrateBlock::new)
+    public static final BlockEntry<GrateBlock> TITANIUM_GRATE = REGISTRATE
+            .block("titanium_grate", GrateBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -941,6 +949,17 @@ public class NorthstarBlocks {
             .register();
 
     //mars ores
+    public static final BlockEntry<Block> MARS_TITANIUM_ORE = REGISTRATE
+            .block("mars_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
+
     public static final BlockEntry<Block> MARS_IRON_ORE = REGISTRATE
             .block("mars_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1010,6 +1029,16 @@ public class NorthstarBlocks {
 
 
     //mars deep ores
+    public static final BlockEntry<Block> MARS_DEEP_TITANIUM_ORE = REGISTRATE
+            .block("mars_deep_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MARS_DEEP_IRON_ORE = REGISTRATE
             .block("mars_deep_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1248,6 +1277,16 @@ public class NorthstarBlocks {
 
 
     //moon ores
+    public static final BlockEntry<Block> MOON_TITANIUM_ORE = REGISTRATE
+            .block("moon_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MOON_IRON_ORE = REGISTRATE
             .block("moon_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1339,6 +1378,16 @@ public class NorthstarBlocks {
             .register();
 
     //moon deep ores
+    public static final BlockEntry<Block> MOON_DEEP_TITANIUM_ORE = REGISTRATE
+            .block("moon_deep_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MOON_DEEP_IRON_ORE = REGISTRATE
             .block("moon_deep_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1810,6 +1859,16 @@ public class NorthstarBlocks {
             .register();
 
     //venus ores
+    public static final BlockEntry<Block> VENUS_TITANIUM_ORE = REGISTRATE
+            .block("venus_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> VENUS_COAL_ORE = REGISTRATE
             .block("venus_coal_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -1901,6 +1960,16 @@ public class NorthstarBlocks {
             .register();
 
     //venus deep ores
+    public static final BlockEntry<Block> VENUS_DEEP_TITANIUM_ORE = REGISTRATE
+            .block("venus_deep_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> VENUS_DEEP_IRON_ORE = REGISTRATE
             .block("venus_deep_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -2105,6 +2174,16 @@ public class NorthstarBlocks {
             .register();
 
     //mercury ores
+    public static final BlockEntry<Block> MERCURY_TITANIUM_ORE = REGISTRATE
+            .block("mercury_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MERCURY_IRON_ORE = REGISTRATE
             .block("mercury_iron_ore", Block::new)
             .initialProperties(() -> STONE)
@@ -2207,6 +2286,16 @@ public class NorthstarBlocks {
 
 
     //mercury deep ores
+    public static final BlockEntry<Block> MERCURY_DEEP_TITANIUM_ORE = REGISTRATE
+            .block("mercury_deep_titanium_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MERCURY_DEEP_IRON_ORE = REGISTRATE
             .block("mercury_deep_iron_ore", Block::new)
             .initialProperties(() -> STONE)

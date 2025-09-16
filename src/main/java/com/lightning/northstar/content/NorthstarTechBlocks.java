@@ -1,6 +1,6 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.*;
+import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlock;
 import com.lightning.northstar.block.tech.cogs.SpaceCogWheelBlock;
@@ -9,27 +9,33 @@ import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlo
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachineBlock;
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
-import com.lightning.northstar.block.tech.jet_engine.JetEngineItem;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
-import com.lightning.northstar.block.tech.oxygen_generator.OxygenGeneratorBlock;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerMovementBehaviour;
+import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerMovingInteractionBehaviour;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlock;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInteractionBehaviour;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsMovementBehaviour;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockMovingInteraction;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlock;
+import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlock;
+import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovementBehaviour;
+import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovingInteractionBehaviour;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockModel;
 import com.simibubi.create.content.kinetics.simpleRelays.CogwheelBlockItem;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
 import com.simibubi.create.foundation.data.*;
+import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -58,11 +64,10 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
             .transform(BlockStressDefaults.setCapacity(128.0))
-            .transform(BlockStressDefaults.setGeneratorSpeed(SolarPanelBlock::getSpeedRange))
+            .transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0, SolarPanelBlockEntity.MAXIMUM_SPEED)))
             .item()
             .transform(customItemModel())
             .register();
-
 
     public static final BlockEntry<LaserLenseBlock> LASER_LENSE = REGISTRATE
             .block("laser_lense", LaserLenseBlock::new)
@@ -72,8 +77,8 @@ public class NorthstarTechBlocks {
             .properties(p -> p.sound(SoundType.COPPER))
             .transform(pickaxeOnly())
             .simpleItem()
-
             .register();
+
     public static final BlockEntry<LaserBlock> LASER = REGISTRATE
             .block("laser", LaserBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -83,6 +88,7 @@ public class NorthstarTechBlocks {
                     .lightLevel(state -> 15))
             .simpleItem()
             .register();
+
     public static final BlockEntry<CircuitEngraverBlock> CIRCUIT_ENGRAVER = REGISTRATE
             .block("circuit_engraver", CircuitEngraverBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -133,11 +139,13 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .transform(BlockStressDefaults.setCapacity(16))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
             .simpleItem()
             .register();
 
-    public static final BlockEntry<OxygenGeneratorBlock> OXYGEN_GENERATOR = REGISTRATE
-            .block("oxygen_generator", OxygenGeneratorBlock::new)
+    public static final BlockEntry<OxygenSealerBlock> OXYGEN_SEALER = REGISTRATE
+            .block("oxygen_sealer", OxygenSealerBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .noOcclusion()
@@ -145,6 +153,8 @@ public class NorthstarTechBlocks {
                     .strength(8, 8))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new OxygenSealerMovingInteractionBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new OxygenSealerMovementBehaviour()))
             .transform(BlockStressDefaults.setCapacity(16))
             .simpleItem()
             .register();
@@ -160,7 +170,7 @@ public class NorthstarTechBlocks {
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .transform(BlockStressDefaults.setCapacity(256))
-            .transform(BlockStressDefaults.setGeneratorSpeed(CombustionEngineBlock::getSpeedRange))
+            //.transform(BlockStressDefaults.setGeneratorSpeed(CombustionEngineBlock::getSpeedRange))
             .simpleItem()
             .register();
 
@@ -172,8 +182,7 @@ public class NorthstarTechBlocks {
                     .isViewBlocking(NorthstarTechBlocks::never))
             .transform(pickaxeOnly())
             .onRegister(AllMovementBehaviours.movementBehaviour(new JetEngineMovementBehaviour()))
-            .item(JetEngineItem::new)
-            .build()
+            .simpleItem()
             .register();
 
     public static final BlockEntry<AstronomyTableBlock> ASTRONOMY_TABLE = REGISTRATE
@@ -205,9 +214,11 @@ public class NorthstarTechBlocks {
                     .isViewBlocking(NorthstarTechBlocks::never)
                     .sound(SoundType.NETHERITE_BLOCK).noOcclusion())
             .transform(pickaxeOnly())
+            .transform(BlockStressDefaults.setImpact(8))
             .item()
             .transform(customItemModel("_", "block"))
             .register();
+
     public static final BlockEntry<RocketStationBlock> ROCKET_STATION = REGISTRATE
             .block("rocket_station", RocketStationBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -218,6 +229,7 @@ public class NorthstarTechBlocks {
             .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketStationBlockMovingInteraction()))
             .lang("Rocket Station")
             .register();
+
     public static final BlockEntry<RocketControlsBlock> ROCKET_CONTROLS = REGISTRATE
             .block("rocket_controls", RocketControlsBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -230,6 +242,7 @@ public class NorthstarTechBlocks {
             .simpleItem()
             .lang("Rocket Controls")
             .register();
+
     public static final BlockEntry<TargetingComputerRackBlock> COMPUTER_RACK = REGISTRATE
             .block("computer_rack", TargetingComputerRackBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -240,6 +253,7 @@ public class NorthstarTechBlocks {
             .simpleItem()
             .lang("Computer Rack")
             .register();
+
     public static final BlockEntry<OxygenDetectorBlock> OXYGEN_DETECTOR = REGISTRATE
             .block("oxygen_detector", OxygenDetectorBlock::new)
             .initialProperties(SharedProperties::softMetal)
@@ -251,9 +265,9 @@ public class NorthstarTechBlocks {
             .lang("Oxygen Detector")
             .register();
 
-    public static final BlockEntry<SpaceDoorBlock> IRON_SPACE_DOOR = REGISTRATE
-            .block("iron_space_door", p -> new SpaceDoorBlock(p, BlockSetType.IRON, false))
-            .transform(BuilderTransformers.slidingDoor("train"))
+    public static final BlockEntry<SpaceDoorBlock> TITANIUM_SPACE_DOOR = REGISTRATE
+            .block("titanium_space_door", p -> new SpaceDoorBlock(p, BlockSetType.IRON, false))
+            .transform(BuilderTransformers.slidingDoor("titanium"))
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion())

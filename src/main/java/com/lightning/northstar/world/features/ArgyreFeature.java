@@ -56,16 +56,16 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
     }
 
     private boolean doPlace(WorldGenLevel pLevel, RandomSource pRandom, BlockPos pPos, BiConsumer<BlockPos, BlockState> pRootBlockSetter, BiConsumer<BlockPos, BlockState> pTrunkBlockSetter, BiConsumer<BlockPos, BlockState> pFoliageBlockSetter, AlienTreeConfig treeconfiguration, BiConsumer<BlockPos, BlockState> biconsumer_glow) {
-        int i = treeconfiguration.trunkPlacer.getTreeHeight(pRandom);
+        int i = treeconfiguration.trunkPlacer().getTreeHeight(pRandom);
         int k = i - 1;
-        int l = treeconfiguration.foliagePlacer.foliageRadius(pRandom, k);
-        BlockPos blockpos = treeconfiguration.rootPlacer.map(placer -> placer.getTrunkOrigin(pPos, pRandom)).orElse(pPos);
+        int l = treeconfiguration.foliagePlacer().foliageRadius(pRandom, k);
+        BlockPos blockpos = treeconfiguration.rootPlacer().map(placer -> placer.getTrunkOrigin(pPos, pRandom)).orElse(pPos);
         int i1 = Math.min(pPos.getY(), blockpos.getY());
         int j1 = Math.max(pPos.getY(), blockpos.getY()) + i + 1;
         if (i1 >= pLevel.getMinBuildHeight() + 1 && j1 <= pLevel.getMaxBuildHeight()) {
-            OptionalInt optionalint = treeconfiguration.minimumSize.minClippedHeight();
+            OptionalInt optionalint = treeconfiguration.minimumSize().minClippedHeight();
             int k1 = this.getMaxFreeTreeHeight(pLevel, i, blockpos, treeconfiguration);
-            treeconfiguration.trunkPlacer.placeTrunk(pLevel, pTrunkBlockSetter, pRandom, k1, blockpos, treeconfiguration, biconsumer_glow);
+            treeconfiguration.trunkPlacer().placeTrunk(pLevel, pTrunkBlockSetter, pRandom, k1, blockpos, treeconfiguration, biconsumer_glow);
 
             return true;
         } else return false;
@@ -75,12 +75,12 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
         for (int i = 0; i <= pTrunkHeight + 1; ++i) {
-            int j = treeconfiguration.minimumSize.getSizeAtHeight(pTrunkHeight, i);
+            int j = treeconfiguration.minimumSize().getSizeAtHeight(pTrunkHeight, i);
 
             for (int k = -j; k <= j; ++k) {
                 for (int l = -j; l <= j; ++l) {
                     blockpos$mutableblockpos.setWithOffset(pTopPosition, k, i, l);
-                    if (!treeconfiguration.trunkPlacer.isFree(pLevel, blockpos$mutableblockpos) || !treeconfiguration.ignoreVines && isVine(pLevel, blockpos$mutableblockpos)) {
+                    if (!treeconfiguration.trunkPlacer().isFree(pLevel, blockpos$mutableblockpos) || !treeconfiguration.ignoreVines() && isVine(pLevel, blockpos$mutableblockpos)) {
                         return i - 2;
                     }
                 }
@@ -90,6 +90,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
         return pTrunkHeight;
     }
 
+    @Override
     protected void setBlock(LevelWriter pLevel, BlockPos pPos, BlockState pState) {
         setBlockKnownShape(pLevel, pPos, pState);
     }
@@ -101,6 +102,7 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
      *
      * @param pContext A context object with a reference to the level and the position the feature is being placed at
      */
+    @Override
     public final boolean place(FeaturePlaceContext<AlienTreeConfig> pContext) {
         WorldGenLevel worldgenlevel = pContext.level();
         RandomSource randomsource = pContext.random();
@@ -133,9 +135,9 @@ public class ArgyreFeature extends Feature<AlienTreeConfig> {
         };
         boolean flag = this.doPlace(worldgenlevel, randomsource, blockpos, biconsumer, biconsumer1, biconsumer2, treeconfiguration, biconsumer_glow);
         if (flag && (!set1.isEmpty() || !set2.isEmpty())) {
-            if (!treeconfiguration.decorators.isEmpty()) {
+            if (!treeconfiguration.decorators().isEmpty()) {
                 TreeDecorator.Context treedecorator$context = new TreeDecorator.Context(worldgenlevel, biconsumer3, randomsource, set1, set2, set);
-                treeconfiguration.decorators.forEach((p_225282_) -> p_225282_.place(treedecorator$context));
+                treeconfiguration.decorators().forEach((p_225282_) -> p_225282_.place(treedecorator$context));
             }
 
             return BoundingBox.encapsulatingPositions(Iterables.concat(set, set1, set2, set3)).map((p_225270_) -> {

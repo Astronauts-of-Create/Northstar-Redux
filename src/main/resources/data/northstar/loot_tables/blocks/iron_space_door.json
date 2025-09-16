@@ -7,11 +7,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "northstar:iron_space_door",
+          "name": "northstar:titanium_space_door",
           "conditions": [
             {
               "condition": "minecraft:block_state_property",
-              "block": "northstar:iron_space_door",
+              "block": "northstar:titanium_space_door",
               "properties": {
                 "half": "lower"
               }

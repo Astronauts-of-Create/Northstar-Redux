@@ -17,8 +17,8 @@ import net.minecraft.world.level.levelgen.feature.DripstoneUtils;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
@@ -32,6 +32,7 @@ public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
             * that they can safely generate into.
             * @param pContext A context object with a reference to the level and the position the feature is being placed at
             */
+           @Override
            public boolean place(FeaturePlaceContext<StoneColumnConfiguration> pContext) {
               WorldGenLevel worldgenlevel = pContext.level();
               BlockPos blockpos = pContext.origin();
@@ -41,19 +42,19 @@ public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
               if (!isEmptyOrWater(worldgenlevel, blockpos)) {
                  return false;
               } else {
-                 Optional<Column> optional = Column.scan(worldgenlevel, blockpos, largedripstoneconfiguration.floorToCeilingSearchRange, DripstoneUtils::isEmptyOrWater, DripstoneUtils::isDripstoneBaseOrLava);
+                 Optional<Column> optional = Column.scan(worldgenlevel, blockpos, largedripstoneconfiguration.floorToCeilingSearchRange(), DripstoneUtils::isEmptyOrWater, DripstoneUtils::isDripstoneBaseOrLava);
                  if (optional.isPresent() && optional.get() instanceof Column.Range column$range) {
                      if (column$range.height() < 4) {
                        return false;
                     } else {
-                       int i = (int)((float)column$range.height() * largedripstoneconfiguration.maxColumnRadiusToCaveHeightRatio);
-                       int j = Mth.clamp(i, largedripstoneconfiguration.columnRadius.getMinValue(), largedripstoneconfiguration.columnRadius.getMaxValue());
-                       int k = Mth.randomBetweenInclusive(randomsource, largedripstoneconfiguration.columnRadius.getMinValue(), j);
-                       StoneColumnFeature.LargeDripstone largedripstonefeature$largedripstone = makeDripstone(blockpos.atY(column$range.ceiling() - 1), false, randomsource, k, largedripstoneconfiguration.stalactiteBluntness, largedripstoneconfiguration.heightScale);
-                       StoneColumnFeature.LargeDripstone largedripstonefeature$largedripstone1 = makeDripstone(blockpos.atY(column$range.floor() + 1), true, randomsource, k, largedripstoneconfiguration.stalagmiteBluntness, largedripstoneconfiguration.heightScale);
+                       int i = (int)((float)column$range.height() * largedripstoneconfiguration.maxColumnRadiusToCaveHeightRatio());
+                       int j = Mth.clamp(i, largedripstoneconfiguration.columnRadius().getMinValue(), largedripstoneconfiguration.columnRadius().getMaxValue());
+                       int k = Mth.randomBetweenInclusive(randomsource, largedripstoneconfiguration.columnRadius().getMinValue(), j);
+                       StoneColumnFeature.LargeDripstone largedripstonefeature$largedripstone = makeDripstone(blockpos.atY(column$range.ceiling() - 1), false, randomsource, k, largedripstoneconfiguration.stalactiteBluntness(), largedripstoneconfiguration.heightScale());
+                       StoneColumnFeature.LargeDripstone largedripstonefeature$largedripstone1 = makeDripstone(blockpos.atY(column$range.floor() + 1), true, randomsource, k, largedripstoneconfiguration.stalagmiteBluntness(), largedripstoneconfiguration.heightScale());
                        StoneColumnFeature.WindOffsetter largedripstonefeature$windoffsetter;
                        if (largedripstonefeature$largedripstone.isSuitableForWind(largedripstoneconfiguration) && largedripstonefeature$largedripstone1.isSuitableForWind(largedripstoneconfiguration)) {
-                          largedripstonefeature$windoffsetter = new StoneColumnFeature.WindOffsetter(blockpos.getY(), randomsource, largedripstoneconfiguration.windSpeed);
+                          largedripstonefeature$windoffsetter = new StoneColumnFeature.WindOffsetter(blockpos.getY(), randomsource, largedripstoneconfiguration.windSpeed());
                        } else {
                           largedripstonefeature$windoffsetter = StoneColumnFeature.WindOffsetter.noWind();
                        }
@@ -168,7 +169,7 @@ public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
                                 if (isEmptyOrWaterOrLava(pLevel, blockpos)) {
                                    flag = true;
 
-                                   pLevel.setBlock(blockpos, config.stone_provider.getState(pRandom, blockpos$mutableblockpos), 2);
+                                   pLevel.setBlock(blockpos, config.stoneProvider().getState(pRandom, blockpos$mutableblockpos), 2);
                                 } else if (flag) {
                                    break;
                                 }
@@ -183,7 +184,7 @@ public class StoneColumnFeature extends Feature<StoneColumnConfiguration> {
               }
 
               boolean isSuitableForWind(StoneColumnConfiguration pConfig) {
-                 return this.radius >= pConfig.minRadiusForWind && this.bluntness >= (double)pConfig.minBluntnessForWind;
+                 return this.radius >= pConfig.minRadiusForWind() && this.bluntness >= (double) pConfig.minBluntnessForWind();
               }
            }
 

@@ -2,16 +2,19 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "item": "northstar:raw_martian_iron_ore"
+      "item": "northstar:titanium_ingot"
     },
     {
       "item": "northstar:raw_martian_iron_ore"
     },
     {
-      "item": "northstar:volcanic_ash"
+      "item": "northstar:volcanic_ash_item"
     }
   ],
   "results": [
+    {
+      "item": "northstar:martian_steel"
+    },
     {
       "item": "northstar:martian_steel"
     }

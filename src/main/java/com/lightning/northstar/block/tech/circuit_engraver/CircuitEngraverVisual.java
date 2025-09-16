@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.circuit_engraver;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;

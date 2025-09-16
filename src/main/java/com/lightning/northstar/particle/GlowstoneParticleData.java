@@ -26,6 +26,7 @@ public class GlowstoneParticleData implements ParticleOptions, ICustomParticleDa
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<GlowstoneParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public GlowstoneParticleData fromCommand(ParticleType<GlowstoneParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class GlowstoneParticleData implements ParticleOptions, ICustomParticleDa
             return new GlowstoneParticleData(x, y, z);
         }
 
+        @Override
         public GlowstoneParticleData fromNetwork(ParticleType<GlowstoneParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new GlowstoneParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

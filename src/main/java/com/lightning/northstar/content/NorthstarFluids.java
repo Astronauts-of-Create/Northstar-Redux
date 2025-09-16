@@ -1,5 +1,6 @@
 package com.lightning.northstar.content;
 
+import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllTags;
@@ -47,6 +48,12 @@ public class NorthstarFluids {
             .tag(AllTags.forgeFluidTag("hydrogen"))
             .register();
 
+    public static final FluidEntry<VirtualFluid> CHLORINE = REGISTRATE
+            .virtualFluid("chlorine")
+            .lang("Chlorine")
+            .tag(AllTags.forgeFluidTag("chlorine"))
+            .register();
+
     public static final FluidEntry<VirtualFluid> CHOCOLATE_ICE_CREAM = REGISTRATE
             .virtualFluid("chocolate_ice_cream")
             .lang("Chocolate Ice Cream")
@@ -64,6 +71,48 @@ public class NorthstarFluids {
             .lang("Strawberry Ice Cream")
             .tag(AllTags.forgeFluidTag("strawberry_ice_cream"))
             .register();
+
+    public static final FluidEntry<VirtualFluid> SODIUM_HYDROXIDE = REGISTRATE
+            .virtualFluid("sodium_hydroxide")
+            .lang("Sodium Hydroxide")
+            .tag(AllTags.forgeFluidTag("sodium_hydroxide"))
+            .register();
+
+    public static final FluidEntry<VirtualFluid> CARBON = REGISTRATE
+            .virtualFluid("carbon")
+            .lang("Carbon")
+            .tag(AllTags.forgeFluidTag("carbon"))
+            .register();
+
+
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE =
+            REGISTRATE.standardFluid("titanium_tetrachloride",
+                            SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
+                                    () -> 1f / 8f * 0.8f))
+                    .lang("Titanium Tetrachloride")
+                    .properties(b -> b.viscosity(4000).density(1400))
+                    .fluidProperties(p -> p.levelDecreasePerBlock(1)
+                            .tickRate(8).slopeFindDistance(3).explosionResistance(100f))
+                    .source(ForgeFlowingFluid.Source::new)
+                    .block(TitaniumTetrachlorideBlock::new)
+                    .build()
+                    .register();
+
+
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> BRINE = REGISTRATE
+            .standardFluid("brine",
+                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
+                            () -> 1f / 8f * 0.8f))
+            .lang("Brine")
+            .properties(b -> b.viscosity(2000).density(1400))
+            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+                    .tickRate(5).slopeFindDistance(3).explosionResistance(100f))
+            .source(ForgeFlowingFluid.Source::new)
+            .bucket()
+            .properties(t -> t.craftRemainder(Items.BUCKET))
+            .build()
+            .register();
+
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_HYDROGEN = REGISTRATE
             .standardFluid("liquid_hydrogen",
@@ -110,7 +159,6 @@ public class NorthstarFluids {
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .source(ForgeFlowingFluid.Source::new)
-            .tag(NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.tag)
             .bucket()
             .build()
             .register();
@@ -143,7 +191,22 @@ public class NorthstarFluids {
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .source(ForgeFlowingFluid.Source::new)
-            .tag(NorthstarTags.NorthstarFluidTags.TIER_1_ROCKET_FUEL.tag)
+            .bucket()
+            .build()
+            .register();
+
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> BIOFUEL = REGISTRATE
+            .standardFluid("biofuel",
+                    SolidRenderedPlaceableFluidType.create(0xFFFFFF, 0xFFFFFF,
+                            () -> 1f / 8f * 0.25f))
+            .lang("Biofuel")
+            .properties(b -> b.viscosity(1000)
+                    .density(1400))
+            .fluidProperties(p -> p.levelDecreasePerBlock(2)
+                    .tickRate(25)
+                    .slopeFindDistance(3)
+                    .explosionResistance(100f))
+            .source(ForgeFlowingFluid.Source::new)
             .bucket()
             .build()
             .register();

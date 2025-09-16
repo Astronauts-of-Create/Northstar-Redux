@@ -42,10 +42,10 @@ public class EngravingCategory extends CreateRecipeCategory<EngravingRecipe> {
 
     @Override
     public void draw(EngravingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        AllGuiTextures.JEI_SHADOW.render(graphics, 61, 41);
-        AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 54);
+        AllGuiTextures.JEI_SHADOW.render(graphics, 61, 61);
+        // AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 54);
 
-        engraver.draw(graphics, getBackground().getWidth() / 2 - 17, 22);
+        engraver.draw(graphics, getBackground().getWidth() / 2 - 17, 42);
     }
 
 }

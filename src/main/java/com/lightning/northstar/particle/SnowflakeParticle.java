@@ -32,6 +32,7 @@ public class SnowflakeParticle  extends SimpleAnimatedParticle {
         setAlpha(0.6f);
     }
 
+    @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
@@ -39,6 +40,7 @@ public class SnowflakeParticle  extends SimpleAnimatedParticle {
     private void selectSprite(int index) {
         setSprite(sprites.get(index, 8));
     }
+    @Override
     public float getQuadSize(float pScaleFactor) {
         float f = ((float)this.age + pScaleFactor) / (float)this.lifetime;
         return this.quadSize * (1.0F - f * f * 0.5F);
@@ -57,8 +59,9 @@ public class SnowflakeParticle  extends SimpleAnimatedParticle {
             this.spriteSet = animatedSprite;
         }
 
+        @Override
         public Particle createParticle(SnowflakeParticleData data, ClientLevel worldIn, double x, double y, double z,
-                double xSpeed, double ySpeed, double zSpeed) {
+                                       double xSpeed, double ySpeed, double zSpeed) {
             return new SnowflakeParticle(worldIn, x, y, z, zSpeed, zSpeed, zSpeed, this.spriteSet);
         }
     }

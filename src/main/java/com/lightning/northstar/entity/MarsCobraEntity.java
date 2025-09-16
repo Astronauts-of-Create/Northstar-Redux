@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import net.minecraft.core.BlockPos;
@@ -28,13 +29,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -139,6 +140,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
         super.tick();
     }
 
+    @Override
     protected void customServerAiStep() {
         AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (this.getTarget() != null) {
@@ -182,9 +184,8 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             double d0 = vec31.length();
             vec31 = vec31.normalize();
             double d1 = vec3.dot(vec31);
-//             System.out.println(d1);
-//             System.out.println("comparer: " + String.valueOf(1.0D - 0.35D / (d0 / 8)));
-            return d1 > 1.0D - 0.35D / (d0 / 8) ? pPlayer.hasLineOfSight(this) : false;
+            Northstar.LOGGER.debug("{}, comparer: {}", d1, (1.0D - 0.35D / (d0 / 8)));
+            return d1 > 1.0D - 0.35D / (d0 / 8) && pPlayer.hasLineOfSight(this);
         }
     }
 
@@ -198,6 +199,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
         }
 
+        @Override
         public boolean canUse() {
             this.target = this.cobra.getTarget();
             if (!(this.target instanceof Player)) {
@@ -212,10 +214,12 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             }
         }
 
+        @Override
         public void start() {
             this.cobra.getNavigation().stop();
         }
 
+        @Override
         public void tick() {
             this.cobra.getLookControl().setLookAt(this.target.getX(), this.target.getEyeY(), this.target.getZ());
         }
@@ -244,22 +248,25 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             this.startAggroTargetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector((p_32578_) -> coberuh.isLookingAtMe((Player) p_32578_));
         }
 
+        @Override
         public boolean canUse() {
             this.pendingTarget = this.cobra.level().getNearestPlayer(this.startAggroTargetConditions, this.cobra);
             return this.pendingTarget != null;
         }
 
+        @Override
         public void start() {
             this.aggroTime = this.adjustedTickDelay(5);
             this.cobra.lookedAt++;
-            ;
         }
 
+        @Override
         public void stop() {
             this.pendingTarget = null;
             super.stop();
         }
 
+        @Override
         public boolean canContinueToUse() {
             if (this.pendingTarget != null) {
                 if (!this.cobra.isLookingAtMe(this.pendingTarget)) {
@@ -267,7 +274,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
                     return false;
                 } else {
                     stareTimer = Mth.clamp(stareTimer + 1, 0, 120);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                     if (stareTimer >= 32) {
                         this.cobra.lookAt(this.pendingTarget, 10.0F, 10.0F);
                         return true;
@@ -280,6 +287,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             }
         }
 
+        @Override
         public void tick() {
             if (this.cobra.getTarget() == null) {
                 super.setTarget((LivingEntity) null);
@@ -287,7 +295,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             if (this.pendingTarget != null) {
                 if (!this.cobra.isLookingAtMe(this.pendingTarget)) {
                     stareTimer = Mth.clamp(stareTimer, 0, stareTimer - 1);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                 }
                 if (--this.aggroTime <= 0) {
                     this.target = this.pendingTarget;
@@ -296,7 +304,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
                 }
             }
             super.tick();
-
         }
     }
+
 }

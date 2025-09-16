@@ -2,7 +2,7 @@
   "type": "northstar:freezing",
   "ingredients": [
     {
-      "amount": 1000,
+      "amount": 3000,
       "fluid": "minecraft:water",
       "nbt": {}
     }

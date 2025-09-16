@@ -9,6 +9,7 @@ public class MartianFlowerItem extends BlockItem{
         super(pBlock, pProperties);
     }
     
+    @Override
     public String getDescriptionId() {
         return this.getOrCreateDescriptionId();
     }

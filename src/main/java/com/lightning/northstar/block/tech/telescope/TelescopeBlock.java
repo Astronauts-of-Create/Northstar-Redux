@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -30,8 +29,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.joml.Vector3f;
 
-import javax.annotation.Nullable;
-
 public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBlockEntity> {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 24.0D, 12.0D);
@@ -41,10 +38,12 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
+    @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }
@@ -54,6 +53,7 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
         return RenderShape.MODEL;
     }
 
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         Direction player_looking = pContext.getNearestLookingDirection();
         if (player_looking == Direction.UP || player_looking == Direction.DOWN) {
@@ -63,8 +63,6 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
         }
     }
 
-
-    @SuppressWarnings("resource")
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
@@ -98,13 +96,6 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
 
 
         return flag;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, NorthstarBlockEntityTypes.TELESCOPE.get(),
-                TelescopeBlockEntity::tick);
     }
 
     @Override

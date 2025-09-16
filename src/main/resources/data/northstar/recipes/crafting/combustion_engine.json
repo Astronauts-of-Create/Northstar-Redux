@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P#P",
+    "#C#",
+    "AAA"
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:plates/brass"
+    },
+    "A": {
+      "item": "create:industrial_iron_block"
+    },
+    "C": {
+      "item": "northstar:rocket_combustion_chamber"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "item": "northstar:combustion_engine",
+    "count": 1
+  }
+}

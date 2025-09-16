@@ -1,0 +1,15 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 750,
+      "fluid": "northstar:brine"
+    }
+  ],
+  "results": [
+    {
+      "item": "northstar:salt"
+    }
+  ],
+  "heatRequirement": "heated"
+}

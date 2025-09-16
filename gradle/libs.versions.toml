@@ -5,13 +5,17 @@ ponder = "1.0.83"
 
 [libraries]
 create = "com.simibubi.create:create-1.20.1:0.5.1.j-55"
+copycats = "com.copycatsplus:copycats:2.2.0+mc.1.20.1-forge-build.213"
+embeddium = "maven.modrinth:embeddium:0.3.31+mc1.20.1"
 flywheel-forge = { module = "com.jozufozu.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 forge = "net.minecraftforge:forge:1.20.1-47.4.0"
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"
+jcpp = "org.anarres:jcpp:1.4.14"
 jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.112"
 mclib = "com.eliotlash.mclib:mclib:20"
 minecraft = "com.mojang:minecraft:1.20.1"
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
+oculus = "maven.modrinth:oculus:1.20.1-1.8.0"
 ponder-forge = { module = "net.createmod.ponder:Ponder-Forge-1.20.1", version.ref = "ponder" }
 registrate = "com.tterrag.registrate:Registrate:MC1.20-1.3.3"

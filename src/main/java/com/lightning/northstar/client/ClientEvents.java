@@ -1,6 +1,6 @@
 package com.lightning.northstar.client;
 
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.item.client.SpaceSuitFirstPersonRenderer;
 import com.simibubi.create.content.trains.CameraDistanceModifier;
 import net.minecraft.client.Minecraft;
@@ -37,8 +37,6 @@ public class ClientEvents {
         CameraDistanceModifier.zoomOut(6);
     }
 
-
-    @SuppressWarnings("resource")
     protected static boolean isGameActive() {
         return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
     }

@@ -2,18 +2,16 @@ package com.lightning.northstar;
 
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
-import com.lightning.northstar.block.tech.NorthstarPartialModels;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
-import com.lightning.northstar.contraptions.RocketHandler;
-import com.lightning.northstar.data.NorthstarDataGen;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
+import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.item.NorthstarTooltipModifier;
 import com.lightning.northstar.particle.NorthstarParticles;
-import com.lightning.northstar.world.OxygenStuff;
-import com.lightning.northstar.world.TemperatureStuff;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.features.NorthstarFeatures;
@@ -36,6 +34,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
@@ -54,12 +53,9 @@ public class Northstar {
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID);
 
     static {
-        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new TooltipHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2))).andThen(TooltipModifier.mapNull(KineticStats.create(item))));
-    }
-
-
-    private void onRegister(RegisterEvent evt) {
-        NorthstarContraptionTypes.register();
+        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new TooltipHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2)))
+                .andThen(new NorthstarTooltipModifier())
+                .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
     public Northstar(FMLJavaModLoadingContext modContext) {
@@ -67,8 +63,6 @@ public class Northstar {
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
         GeckoLib.initialize();
-        REGISTRATE.registerEventListeners(modEventBus);
-        modEventBus.addListener(this::onRegister);
 
         NorthstarTags.register();
         NorthstarCreativeModeTab.register(modEventBus);
@@ -82,7 +76,7 @@ public class Northstar {
         NorthstarRecipeTypes.register(modEventBus);
         NorthstarParticles.register(modEventBus);
         NorthstarSounds.register(modEventBus);
-        NorthstarMenuTypes.register(modEventBus);
+        NorthstarMenuTypes.register();
         NorthstarPlanets.register();
         NorthstarDimensions.register();
         NorthstarEntityTypes.register(modEventBus);
@@ -91,27 +85,31 @@ public class Northstar {
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();
 
-        OxygenStuff.register();
-        TemperatureStuff.register();
-
         RocketHandler.register();
+
+        REGISTRATE.registerEventListeners(modEventBus);
+        modEventBus.addListener(this::onRegisterRegistries);
+        modEventBus.addListener(this::onRegister);
 
         NorthstarConfigs.register(modContext::registerConfig);
         modEventBus.addListener(this::onLoadConfig);
         modEventBus.addListener(this::onReloadConfig);
 
-        modEventBus.addListener(Northstar::init);
+        modEventBus.addListener(this::init);
         modEventBus.addListener(this::registerSpawnPlacements);
-        modEventBus.addListener(NorthstarDataGen::gatherData);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus, forgeEventBus));
-
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static void init(FMLCommonSetupEvent event) {
+    private void onRegister(RegisterEvent event) {
+        NorthstarContraptionTypes.register();
+    }
+
+    private void onRegisterRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(NorthstarRegistries.FUEL, FuelType.CODEC, FuelType.CODEC);
+    }
+
+    private void init(FMLCommonSetupEvent event) {
         NorthstarPackets.registerPackets();
 
         event.enqueueWork(() -> {

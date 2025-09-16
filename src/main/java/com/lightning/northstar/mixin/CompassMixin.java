@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 @Mixin(CompassItem.class)
@@ -41,7 +41,7 @@ public class CompassMixin {
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
         if (level.getBlockState(blockpos).is(NorthstarTechBlocks.ROCKET_STATION.get())) {
-            level.playSound((Player)null, blockpos, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound((Player) null, blockpos, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
             Player player = pContext.getPlayer();
             ItemStack itemstack = pContext.getItemInHand();
             boolean flag = !player.getAbilities().instabuild && itemstack.getCount() == 1;
@@ -77,26 +77,27 @@ public class CompassMixin {
                 Optional<ResourceKey<Level>> optional = getLodestoneDimension2(compoundtag);
                 if (optional.isPresent() && optional.get() == pLevel.dimension() && compoundtag.contains("LodestonePos")) {
                     BlockPos blockpos = NbtUtils.readBlockPos(compoundtag.getCompound("LodestonePos"));
-                    if (pLevel.isInWorldBounds(blockpos) && ((ServerLevel)pLevel).getBlockState(blockpos).is(NorthstarTechBlocks.ROCKET_STATION.get())) {
+                    if (pLevel.isInWorldBounds(blockpos) && ((ServerLevel) pLevel).getBlockState(blockpos).is(NorthstarTechBlocks.ROCKET_STATION.get())) {
                         info.cancel();
                     }
                 }
             }
         }
     }
-    @Nullable
-    private static GlobalPos getLodestonePosition2(CompoundTag p_220022_) {
+
+    private static @Nullable GlobalPos getLodestonePosition2(CompoundTag p_220022_) {
         boolean flag = p_220022_.contains("LodestonePos");
         boolean flag1 = p_220022_.contains("LodestoneDimension");
         if (flag && flag1) {
             Optional<ResourceKey<Level>> optional = getLodestoneDimension2(p_220022_);
-             if (optional.isPresent()) {
-                 BlockPos blockpos = NbtUtils.readBlockPos(p_220022_.getCompound("LodestonePos"));
-                 return GlobalPos.of(optional.get(), blockpos);
-             }
+            if (optional.isPresent()) {
+                BlockPos blockpos = NbtUtils.readBlockPos(p_220022_.getCompound("LodestonePos"));
+                return GlobalPos.of(optional.get(), blockpos);
+            }
         }
         return null;
     }
+
     private static Optional<ResourceKey<Level>> getLodestoneDimension2(CompoundTag pCompoundTag) {
         return Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, pCompoundTag.get("LodestoneDimension")).result();
     }

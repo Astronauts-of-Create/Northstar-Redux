@@ -26,6 +26,7 @@ public class SnailSlimeParticleData implements ParticleOptions, ICustomParticleD
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<SnailSlimeParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public SnailSlimeParticleData fromCommand(ParticleType<SnailSlimeParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class SnailSlimeParticleData implements ParticleOptions, ICustomParticleD
             return new SnailSlimeParticleData(x, y, z);
         }
 
+        @Override
         public SnailSlimeParticleData fromNetwork(ParticleType<SnailSlimeParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new SnailSlimeParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

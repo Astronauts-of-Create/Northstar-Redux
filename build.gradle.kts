@@ -1,11 +1,11 @@
 import java.time.Instant
 
 plugins {
-    id("architectury-plugin") version "3.4-SNAPSHOT"
-    id("dev.architectury.loom") version "1.9.+"
+    id("architectury-plugin") version "3.4.161"
+    id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.2.7+1.20.1-create5" // https://semver.org/
+version = "0.3.0+1.20.1-create5" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -52,14 +52,28 @@ repositories {
             includeGroup("curse.maven")
         }
     }
+    maven("https://api.modrinth.com/maven") {
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
+    maven("https://maven.parchmentmc.org/") {
+        content {
+            includeGroupByRegex("org\\.parchmentmc.*")
+        }
+    }
 }
 
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.09.03@zip")
+    })
     "forge"(libs.forge)
 
     annotationProcessor(libs.mixinextras.common)
+    implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
 
     modImplementation(variantOf(libs.create) { classifier("slim") })
@@ -70,6 +84,7 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
+    modRuntimeOnly(libs.copycats)
 
     // see https://github.com/cc-tweaked/CC-Tweaked/discussions/1752
     forgeRuntimeLibrary("org.squiddev:Cobalt:0.7.3")
@@ -78,11 +93,12 @@ dependencies {
     forgeRuntimeLibrary("io.netty:netty-codec-socks:4.1.82.Final")
     forgeRuntimeLibrary("io.netty:netty-handler-proxy:4.1.82.Final")
 
-    modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
-}
+    modRuntimeOnly(libs.embeddium)
+    modRuntimeOnly(libs.oculus)
+    forgeRuntimeLibrary(libs.jcpp)
 
-tasks.processResources {
-    outputs.upToDateWhen { false }
+    // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
+    modLocalRuntime(files(file("run/mods-obf").listFiles() ?: emptyArray<File>()))
 }
 
 tasks.jar {
@@ -105,6 +121,7 @@ tasks.processResources {
     filesMatching(listOf("META-INF/mods.toml")) {
         expand(buildProps)
     }
+    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {

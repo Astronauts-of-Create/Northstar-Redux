@@ -1,41 +1,20 @@
 package com.lightning.northstar.mixin.dimensionstuff;
 
-import javax.annotation.Nullable;
-
-
-import com.lightning.northstar.content.NorthstarSounds;
-import com.mojang.math.Axis;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.DustCloudParticleData;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Axis;
+import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -56,6 +35,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(LevelRenderer.class)
@@ -107,6 +96,7 @@ public class LevelRendererMixin {
     @Nullable
     @Shadow
     private ClientLevel level;
+    @Final
     @Shadow
     private Minecraft minecraft;
     private float f_alpha = 1;
@@ -115,8 +105,8 @@ public class LevelRendererMixin {
     private double dust_bounce = 0.01;
     float sc = 1;
 
-    private static final Vector3f VENUS_DIFFUSE_1 = new Vector3f(0.2F, -1.0F, -0.7F).normalize();
-    private static final Vector3f VENUS_DIFFUSE_2 = new Vector3f(-0.2F, -1.0F, 0.7F).normalize();
+    private static final Vector3f VENUS_DIFFUSE_1 = Util.make(new Vector3f(0.2F, -1.0F, -0.7F), Vector3f::normalize);
+    private static final Vector3f VENUS_DIFFUSE_2 = Util.make(new Vector3f(-0.2F, -1.0F, 0.7F), Vector3f::normalize);
 
 
     private final float[] rainSizeX = new float[1024];
@@ -194,7 +184,7 @@ public class LevelRendererMixin {
                         double d1 = (double) this.rainSizeZ[l1] * 1.25D;
                         blockpos$mutableblockpos.set((double) k1, pCamY, (double) j1);
                         Biome biome = level.getBiome(blockpos$mutableblockpos).value();
-                        if (!biome.hasPrecipitation()) {
+                        if (biome.getPrecipitationAt(blockpos$mutableblockpos) == Biome.Precipitation.NONE) {
                             int i2 = level.getHeight(Heightmap.Types.MOTION_BLOCKING, k1, j1);
                             int j2 = j - l;
                             int k2 = j + l;
@@ -242,33 +232,6 @@ public class LevelRendererMixin {
                                     bufferbuilder.vertex((double) k1 - pCamX + d0 + 10.5D, (double) k2 - pCamY, (double) j1 - pCamZ + d1 + -10.5D).uv(1.0F + f2, (float) (0 + dust_bounce / 2)).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
                                     bufferbuilder.vertex((double) k1 - pCamX + d0 + 10.5D, (double) j2 - pCamY, (double) j1 - pCamZ + d1 + -10.5D).uv(1.0F + f2, (float) (1 + dust_bounce / 2)).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
                                     bufferbuilder.vertex((double) k1 - pCamX - d0 + -10.5D, (double) j2 - pCamY, (double) j1 - pCamZ - d1 + 10.5D).uv(0.0F + f2, 1).color(1.0F, 1.0F, 1.0F, 0.2f).uv2(j3).endVertex();
-                                } else {
-                                    if (i1 != 1) {
-                                        if (i1 >= 0) {
-                                            tesselator.end();
-                                        }
-
-                                        i1 = 1;
-                                        RenderSystem.setShaderTexture(0, SNOW_LOCATION);
-                                        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-                                    }
-                                    float f5 = -((float) (this.ticks & 511) + pPartialTick) / 512.0F;
-                                    float f6 = (float) (randomsource.nextDouble() + (double) f1 * 0.01D * (double) ((float) randomsource.nextGaussian()));
-                                    float f7 = (float) (randomsource.nextDouble() + (double) (f1 * (float) randomsource.nextGaussian()) * 0.001D);
-                                    double d3 = (double) k1 + 0.5D - pCamX;
-                                    double d5 = (double) j1 + 0.5D - pCamZ;
-                                    float f8 = (float) Math.sqrt(d3 * d3 + d5 * d5) / (float) l;
-                                    float f9 = ((1.0F - f8 * f8) * 0.3F + 0.5F) * rain_det;
-                                    blockpos$mutableblockpos.set(k1, l2, j1);
-                                    int k3 = 4;
-                                    int l3 = k3 >> 16 & '\uffff';
-                                    int i4 = k3 & '\uffff';
-                                    int j4 = (l3 * 3 + 240) / 4;
-                                    int k4 = (i4 * 3 + 240) / 4;
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + 0.5D, (double) k2 - pCamY, (double) j1 - pCamZ - d1 + 0.5D).uv(0.0F + f6, (float) j2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 0.5D, (double) k2 - pCamY, (double) j1 - pCamZ + d1 + 0.5D).uv(1.0F + f6, (float) j2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX + d0 + 0.5D, (double) j2 - pCamY, (double) j1 - pCamZ + d1 + 0.5D).uv(1.0F + f6, (float) k2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
-                                    bufferbuilder.vertex((double) k1 - pCamX - d0 + 0.5D, (double) j2 - pCamY, (double) j1 - pCamZ - d1 + 0.5D).uv(0.0F + f6, (float) k2 * 0.25F + f5 + f7).color(1.0F, 1.0F, 1.0F, f9).uv2(k4, j4).endVertex();
                                 }
                             }
                         }
@@ -280,10 +243,10 @@ public class LevelRendererMixin {
                     tesselator.end();
                 }
 
-                RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.enableCull();
                 RenderSystem.disableBlend();
-                //pLightTexture.turnOffLightLayer();
+                pLightTexture.turnOffLightLayer();
+                RenderSystem.setShaderColor(1, 1, 1, 1);
 
             }
 
@@ -323,7 +286,7 @@ public class LevelRendererMixin {
                         double d1 = (double) this.rainSizeZ[l1] * 0.5D;
                         blockpos$mutableblockpos.set((double) k1, pCamY, (double) j1);
                         Biome biome = level.getBiome(blockpos$mutableblockpos).value();
-                        if (!biome.hasPrecipitation()) {
+                        if (biome.getPrecipitationAt(blockpos$mutableblockpos) == Biome.Precipitation.NONE) {
                             int i2 = level.getHeight(Heightmap.Types.MOTION_BLOCKING, k1, j1);
                             int j2 = j - l;
                             int k2 = j + l;
@@ -376,16 +339,14 @@ public class LevelRendererMixin {
                     tesselator.end();
                 }
 
-                RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderSystem.enableCull();
                 RenderSystem.disableBlend();
-                //pLightTexture.turnOffLightLayer();
+                pLightTexture.turnOffLightLayer();
             }
         }
 
     }
 
-    @SuppressWarnings("resource")
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
     private void tickRain(Camera pCamera, CallbackInfo info) {
         if (this.minecraft != null) {
@@ -401,7 +362,7 @@ public class LevelRendererMixin {
             info.cancel();
             float rain_det = this.minecraft.level.getRainLevel(3);
             if (level.random.nextInt(2) == 0 && level.isDay()) {
-//	        	System.out.println("tubble weed :)");
+//	        	Northstar.LOGGER.debug("tubble weed :)");
                 BlockPos newpos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING,
                         new BlockPos(pCamera.getBlockPosition().getX() + level.random.nextIntBetweenInclusive(-64, 64), 0, pCamera.getBlockPosition().getZ() + level.random.nextIntBetweenInclusive(-64, 64)));
                 level.isClientSide();
@@ -414,7 +375,7 @@ public class LevelRendererMixin {
                 if (!(f <= 0.0F)) {
                     RandomSource randomsource = RandomSource.create((long) this.ticks * 312987231L);
                     LevelReader levelreader = this.minecraft.level;
-                    BlockPos blockpos = BlockPos.containing(pCamera.getPosition());
+                    BlockPos blockpos = new BlockPos(pCamera.getBlockPosition());
                     BlockPos blockpos1 = null;
                     int i = (int) (100.0F * f * f) / (this.minecraft.options.particles().get() == ParticleStatus.DECREASED ? 2 : 1);
 
@@ -423,7 +384,7 @@ public class LevelRendererMixin {
                         int l = randomsource.nextInt(21) - 10;
                         BlockPos blockpos2 = levelreader.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockpos.offset(k, 0, l));
                         Biome biome = levelreader.getBiome(blockpos2).value();
-                        if (blockpos2.getY() > levelreader.getMinBuildHeight() && blockpos2.getY() <= blockpos.getY() + 10 && blockpos2.getY() >= blockpos.getY() - 10 && !biome.hasPrecipitation() && biome.warmEnoughToRain(blockpos2)) {
+                        if (blockpos2.getY() > levelreader.getMinBuildHeight() && blockpos2.getY() <= blockpos.getY() + 10 && blockpos2.getY() >= blockpos.getY() - 10 && biome.getPrecipitationAt(blockpos2) == Biome.Precipitation.NONE && biome.warmEnoughToRain(blockpos2)) {
                             blockpos1 = blockpos2.below();
                             if (this.minecraft.options.particles().get() == ParticleStatus.MINIMAL) {
                                 break;
@@ -442,12 +403,12 @@ public class LevelRendererMixin {
                             }
                         }
                     }
-                    if (blockpos1 != null && randomsource.nextInt(12) < this.rainSoundTime++) {
+                    if (blockpos1 != null && randomsource.nextInt(80) < this.rainSoundTime++) {
                         this.rainSoundTime = 0;
                         if (blockpos1.getY() > blockpos.getY() + 1 && levelreader.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockpos).getY() > Mth.floor((float) blockpos.getY())) {
-                            this.minecraft.level.playLocalSound(blockpos1, NorthstarSounds.MARTIAN_DUST_STORM_ABOVE.get(), SoundSource.WEATHER, 0.1F, 0.5F, false);
+                            this.minecraft.level.playLocalSound(blockpos1, NorthstarSounds.MARTIAN_DUST_STORM_ABOVE.get(), SoundSource.WEATHER, 0.5F, 0.5F, false);
                         } else {
-                            this.minecraft.level.playLocalSound(blockpos1, NorthstarSounds.MARTIAN_DUST_STORM.get(), SoundSource.WEATHER, 0.5F, 1.0F, false);
+                            this.minecraft.level.playLocalSound(blockpos1, NorthstarSounds.MARTIAN_DUST_STORM.get(), SoundSource.WEATHER, 1F, 1.0F, false);
                         }
                     }
 
@@ -464,7 +425,7 @@ public class LevelRendererMixin {
                 if (!(f <= 0.0F)) {
                     RandomSource randomsource = RandomSource.create((long) this.ticks * 312987231L);
                     LevelReader levelreader = this.minecraft.level;
-                    BlockPos blockpos = BlockPos.containing(pCamera.getPosition());
+                    BlockPos blockpos = new BlockPos(pCamera.getBlockPosition());
                     BlockPos blockpos1 = null;
                     int i = (int) (100.0F * f * f) / (this.minecraft.options.particles().get() == ParticleStatus.DECREASED ? 2 : 1);
 
@@ -473,7 +434,7 @@ public class LevelRendererMixin {
                         int l = randomsource.nextInt(21) - 10;
                         BlockPos blockpos2 = levelreader.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockpos.offset(k, 0, l));
                         Biome biome = levelreader.getBiome(blockpos2).value();
-                        if (blockpos2.getY() > levelreader.getMinBuildHeight() && blockpos2.getY() <= blockpos.getY() + 10 && blockpos2.getY() >= blockpos.getY() - 10 && !biome.hasPrecipitation() && biome.warmEnoughToRain(blockpos2)) {
+                        if (blockpos2.getY() > levelreader.getMinBuildHeight() && blockpos2.getY() <= blockpos.getY() + 10 && blockpos2.getY() >= blockpos.getY() - 10 && biome.getPrecipitationAt(blockpos2) == Biome.Precipitation.NONE && biome.warmEnoughToRain(blockpos2)) {
                             blockpos1 = blockpos2.below();
                             if (this.minecraft.options.particles().get() == ParticleStatus.MINIMAL) {
                                 break;
@@ -537,7 +498,7 @@ public class LevelRendererMixin {
     private BufferBuilder.RenderedBuffer drawStars2(BufferBuilder pBuilder) {
         RandomSource randomsource = RandomSource.create(92410L);
         pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-//		System.out.println("big bingus");
+//		Northstar.LOGGER.debug("big bingus");
         for (int i = 0; i < 2500; ++i) {
             double d0 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
             double d1 = (double) (randomsource.nextFloat() * 2.0F - 1.0F);
@@ -890,7 +851,7 @@ public class LevelRendererMixin {
                     starBrightness2 = Mth.clamp(starBrightness2, 0, 0.67F);
                     starBrightness3 = Mth.clamp(starBrightness2, 0, 0.33F);
 
-//          System.out.println(starBrightness);
+                    Northstar.LOGGER.debug("{}", starBrightness);
 
                     if (starBrightness > 0.0F) {
                         RenderSystem.setShaderColor(starBrightness, starBrightness, starBrightness, starBrightness / 2);
@@ -936,7 +897,7 @@ public class LevelRendererMixin {
                     BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
                     if (playerEyeLevel >= 450) {
-                        RenderSystem.setShaderColor(1, 1, 1, 1);//System.out.println("we gamin");
+                        RenderSystem.setShaderColor(1, 1, 1, 1);//Northstar.LOGGER.debug("we gamin");
                     } else {
                         RenderSystem.setShaderColor(earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness);
                     }
@@ -946,22 +907,23 @@ public class LevelRendererMixin {
                     RenderSystem.setShaderTexture(0, VENUS_FAR);
                     bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                     bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                     BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
                     float MVF = 1;
                     RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                     bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                     bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                     BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
                     RenderSystem.disableBlend();
                     RenderSystem.depthMask(true);
                     RenderSystem.enableBlend();
+
 
                     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                     float f11 = 1.0F - this.level.getRainLevel(pPartialTick);
@@ -1021,9 +983,9 @@ public class LevelRendererMixin {
                         bufferbuilder2.vertex(matrix4f2, EC, -100.0F - earth_dist, EC).uv(0.0F, -1.0F).endVertex();
                         BufferUploader.drawWithShader(bufferbuilder2.end());
                     }
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
                     RenderSystem.depthMask(true);
                     RenderSystem.enableBlend();
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
                     pPoseStack.popPose();
                 }
 
@@ -1041,12 +1003,12 @@ public class LevelRendererMixin {
                 float f = (float) skycolor.x * skydarken;
                 float f1 = (float) skycolor.y * skydarken;
                 float f2 = (float) skycolor.z * skydarken;
-                //       System.out.println(time);
+                Northstar.LOGGER.debug("{}", time);
 
                 if (playerEyeLevel > 600) {
-                    f = (float) (skycolor.x - ((playerEyeLevel - 600) / 300));
-                    f1 = (float) (skycolor.y - ((playerEyeLevel - 600) / 300));
-                    f2 = (float) (skycolor.z - ((playerEyeLevel - 600) / 300));
+                    f = (float) (skycolor.x * skydarken - ((playerEyeLevel - 600) / 300));
+                    f1 = (float) (skycolor.y * skydarken - ((playerEyeLevel - 600) / 300));
+                    f2 = (float) (skycolor.z * skydarken - ((playerEyeLevel - 600) / 300));
                     f_alpha = 1 - ((playerEyeLevel - 600) / 300);
                     if (f_alpha < 0) {
                         f_alpha = 0;
@@ -1135,7 +1097,7 @@ public class LevelRendererMixin {
                 float f11 = 0.5F - this.level.getRainLevel(pPartialTick);
                 float f10 = this.level.getStarBrightness(pPartialTick) * f11;
                 float starHeight = (playerEyeLevel - 600) / 300;
-                //       System.out.println(starHeight + "BRUH");
+                Northstar.LOGGER.debug("{}BRUH", starHeight);
                 float starBrightness;
                 float starBrightness2;
                 float starBrightness3;
@@ -1160,7 +1122,7 @@ public class LevelRendererMixin {
                 }
                 starBrightness2 = Mth.clamp(starBrightness2, 0, 0.67F);
                 starBrightness3 = Mth.clamp(starBrightness2, 0, 0.33F);
-//        System.out.println(starBrightness);
+                Northstar.LOGGER.debug("{}", starBrightness);
                 if (f10 > 0.0F) {
                     RenderSystem.setShaderColor(starBrightness, starBrightness, starBrightness, starBrightness);
                     FogRenderer.setupNoFog();
@@ -1187,9 +1149,9 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder.vertex(matrix4f1, 100, -40f + EF, 50 + EF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + EF, 50 + -EF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + -EF, 50 + -EF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -40f + -EF, 50 + EF).uv(0, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, 100, -39 + EF, 50 - EF).uv(1, 0).endVertex();
+                bufferbuilder.vertex(matrix4f1, 100, -39 - EF, 50 - EF).uv(1, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, 100, -40f - EF, 50 + EF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
 
                 float NS = 2.0F;
@@ -1198,17 +1160,17 @@ public class LevelRendererMixin {
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder.vertex(matrix4f1, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder.vertex(matrix4f1, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder.vertex(matrix4f1, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder.vertex(matrix4f1, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
 
                 float MVF = 1;
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                 bufferbuilder.vertex(matrix4f1, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
                 RenderSystem.depthMask(true);
                 pPoseStack.popPose();
@@ -1294,8 +1256,8 @@ public class LevelRendererMixin {
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -1307,16 +1269,16 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
@@ -1384,6 +1346,7 @@ public class LevelRendererMixin {
                     RenderSystem.depthMask(true);
                 }
                 RenderSystem.depthMask(true);
+                RenderSystem.setShaderColor(1, 1, 1, 1);
             }
             if (player_dim == null) {
                 float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
@@ -1483,8 +1446,8 @@ public class LevelRendererMixin {
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -1496,16 +1459,16 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
@@ -1602,8 +1565,8 @@ public class LevelRendererMixin {
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
 
 
@@ -1617,16 +1580,16 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -58f, -30f + EF, -80 + -EF).uv(0, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -58f, -30f + EF, -80 - EF).uv(0, 0).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -60, -29.65f + EF, -80 + EF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -EF, -80 + EF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -58f, -30f + -EF, -80 + -EF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -60, -29.65f - EF, -80 + EF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -58f, -30f - EF, -80 - EF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -1639,6 +1602,7 @@ public class LevelRendererMixin {
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
+                RenderSystem.setShaderColor(1, 1, 1, 1);
 
 
                 float f11 = 1.0F - this.level.getRainLevel(pPartialTick);
@@ -1688,78 +1652,61 @@ public class LevelRendererMixin {
                 RenderSystem.depthMask(true);
             }
         }
+
     }
 
     //THIS IS FOR THE OVERWORLD ONLY, OTHERWISE IT (probably) WONT BE CALLED
     // THIS IS FOR WHEN THE PLAYER IS **NOT** LEAVING THE PLANET
-    @SuppressWarnings("resource")
-    @Inject(method = "renderSky", at = @At("TAIL"), cancellable = true)
-    private void renderSky2(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
-        if (this.minecraft != null) {
-            ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
-            if (player_dim == Level.OVERWORLD) {
-                float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
-                //venus off in the distance (cool)
-                pPoseStack.pushPose();
-                pPoseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
-                pPoseStack.mulPose(Axis.XP.rotationDegrees(this.level.getTimeOfDay(pPartialTick) * 360.0F));
+    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getStarBrightness(F)F"))
+    private void renderSkyStarsOverworld(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
+        if (this.minecraft == null) {
+            return;
+        }
+        ResourceKey<Level> player_dim = Minecraft.getInstance().level.dimension();
+        if (player_dim != Level.OVERWORLD) {
+            return;
+        }
+        float playerEyeLevel = (float) this.minecraft.player.getEyePosition(pPartialTick).y;
 
+        BufferBuilder bufferbuilder_earth_sky = Tesselator.getInstance().getBuilder();
+        Matrix4f matrix4f_earth_sky = pPoseStack.last().pose();
+        float earth_sky_planet_brightness = (this.level.getStarBrightness(pPartialTick) * 1.5f) * (this.level.isRaining() && playerEyeLevel < 450 ? 0 : 1);
+        float northstar_brightness = earth_sky_planet_brightness * 2f;
 
-                BufferBuilder bufferbuilder_earth_sky = Tesselator.getInstance().getBuilder();
-                Matrix4f matrix4f_earth_sky = pPoseStack.last().pose();
-                float earth_sky_planet_brightness = (float) (this.level.getStarBrightness(pPartialTick) * 1.5) * (this.level.isRaining() && playerEyeLevel < 450 ? 0 : 1);
-                float northstar_brightness = earth_sky_planet_brightness * 2;
+        float NS = 2.0F;
+        RenderSystem.setShaderColor(northstar_brightness, northstar_brightness, northstar_brightness, northstar_brightness);
+        RenderSystem.setShaderTexture(0, NORTHERN_STAR);
+        bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
-                RenderSystem.enableBlend();
-                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-                RenderSystem.depthMask(true);
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
-
-                float NS = 2.0F;
-                RenderSystem.setShaderColor(northstar_brightness, northstar_brightness, northstar_brightness, northstar_brightness);
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                RenderSystem.setShaderTexture(0, NORTHERN_STAR);
-                bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
-
-                if (playerEyeLevel >= 450) {
-                    RenderSystem.setShaderColor(1, 1, 1, 1);//System.out.println("we gamin");
-                } else {
-                    RenderSystem.setShaderColor(earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness);
-                }
-
-
-                float VF = 2;
-                RenderSystem.setShaderTexture(0, VENUS_FAR);
-                bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
-
-                float MVF = 1;
-                RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
-                bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-                RenderSystem.disableBlend();
-                RenderSystem.depthMask(true);
-                RenderSystem.enableBlend();
-                pPoseStack.popPose();
-            }
+        if (playerEyeLevel >= 450) {
+            RenderSystem.setShaderColor(1, 1, 1, 1);//Northstar.LOGGER.debug("we gamin");
+        } else {
+            RenderSystem.setShaderColor(earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness, earth_sky_planet_brightness);
         }
 
+
+        float VF = 2;
+        RenderSystem.setShaderTexture(0, VENUS_FAR);
+        bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
+
+        float MVF = 1;
+        RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
+        bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
     }
 
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
@@ -1962,3 +1909,5 @@ public class LevelRendererMixin {
 
 
 }
+
+

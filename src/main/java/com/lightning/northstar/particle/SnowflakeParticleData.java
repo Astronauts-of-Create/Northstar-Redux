@@ -26,6 +26,7 @@ public class SnowflakeParticleData implements ParticleOptions, ICustomParticleDa
 
     @SuppressWarnings("deprecation")
     public static final ParticleOptions.Deserializer<SnowflakeParticleData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
         public SnowflakeParticleData fromCommand(ParticleType<SnowflakeParticleData> particleTypeIn, StringReader reader)
                 throws CommandSyntaxException {
             reader.expect(' ');
@@ -37,6 +38,7 @@ public class SnowflakeParticleData implements ParticleOptions, ICustomParticleDa
             return new SnowflakeParticleData(x, y, z);
         }
 
+        @Override
         public SnowflakeParticleData fromNetwork(ParticleType<SnowflakeParticleData> particleTypeIn, FriendlyByteBuf buffer) {
             return new SnowflakeParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }

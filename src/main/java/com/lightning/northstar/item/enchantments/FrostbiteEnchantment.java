@@ -16,10 +16,12 @@ public class FrostbiteEnchantment extends Enchantment {
         super(rarity, category, slot);
     }
 
+    @Override
     public int getMinCost(int enchantmentLevel) {
         return enchantmentLevel * 10;
     }
 
+    @Override
     public int getMaxCost(int enchantmentLevel) {
         return getMinCost(enchantmentLevel) + 25;
     }

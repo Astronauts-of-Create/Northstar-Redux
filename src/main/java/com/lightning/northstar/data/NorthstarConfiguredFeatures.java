@@ -54,6 +54,7 @@ public class NorthstarConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_branch"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_UPSIDE_DOWN_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_upside_down_branch"));
 
+    @SuppressWarnings("unchecked")
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         HolderGetter<Block> block = context.lookup(Registries.BLOCK);
 
@@ -93,14 +94,15 @@ public class NorthstarConfiguredFeatures {
         context.register(BLOOM_FUNGUS, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(NorthstarBlocks.BLOOM_FUNGUS_STEM_BLOCK.get()),
-                        new BloomTrunkPlacer(3, 1, 2, UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH), BlockStateProvider.simple(NorthstarBlocks.BLOOM_FUNGUS_BLOCK.get())), BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
+                        new BloomTrunkPlacer(3, 1, 2, BlockStateProvider.simple(NorthstarBlocks.BLOOM_FUNGUS_BLOCK.get()), UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH)),
+                        BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));
 
         context.register(ROOF_BLOOM_FUNGUS, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(NorthstarBlocks.BLOOM_FUNGUS_STEM_BLOCK.get()),
-                        new RoofBloomTrunkPlacer(3, 1, 2, UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH), BlockStateProvider.simple(NorthstarBlocks.BLOOM_FUNGUS_BLOCK.get())),
+                        new RoofBloomTrunkPlacer(3, 1, 2, BlockStateProvider.simple(NorthstarBlocks.BLOOM_FUNGUS_BLOCK.get()), UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH)),
                         BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));
@@ -108,7 +110,7 @@ public class NorthstarConfiguredFeatures {
         context.register(PLATE_FUNGUS, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(NorthstarBlocks.PLATE_FUNGUS_STEM_BLOCK.get()),
-                        new PlateTrunkPlacer(3, 1, 2, UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH), BlockStateProvider.simple(NorthstarBlocks.PLATE_FUNGUS_CAP_BLOCK.get())),
+                        new PlateTrunkPlacer(3, 1, 2, BlockStateProvider.simple(NorthstarBlocks.PLATE_FUNGUS_CAP_BLOCK.get()), UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH)),
                         BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));
@@ -116,7 +118,7 @@ public class NorthstarConfiguredFeatures {
         context.register(ROOF_PLATE_FUNGUS, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(NorthstarBlocks.PLATE_FUNGUS_STEM_BLOCK.get()),
-                        new RoofPlateTrunkPlacer(3, 1, 2, UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH), BlockStateProvider.simple(NorthstarBlocks.PLATE_FUNGUS_CAP_BLOCK.get())),
+                        new RoofPlateTrunkPlacer(3, 1, 2, BlockStateProvider.simple(NorthstarBlocks.PLATE_FUNGUS_CAP_BLOCK.get()), UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH)),
                         BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));
@@ -124,7 +126,7 @@ public class NorthstarConfiguredFeatures {
         context.register(TOWER_FUNGUS, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(NorthstarBlocks.TOWER_FUNGUS_STEM_BLOCK.get()),
-                        new TowerTrunkPlacer(8, 1, 4, UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH), BlockStateProvider.simple(NorthstarBlocks.TOWER_FUNGUS_CAP_BLOCK.get())),
+                        new TowerTrunkPlacer(8, 1, 4, BlockStateProvider.simple(NorthstarBlocks.TOWER_FUNGUS_CAP_BLOCK.get()), UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH)),
                         BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));
@@ -132,7 +134,7 @@ public class NorthstarConfiguredFeatures {
         context.register(ROOF_TOWER_FUNGUS, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(NorthstarBlocks.TOWER_FUNGUS_STEM_BLOCK.get()),
-                        new RoofTowerTrunkPlacer(8, 1, 4, UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH), BlockStateProvider.simple(NorthstarBlocks.TOWER_FUNGUS_CAP_BLOCK.get())),
+                        new RoofTowerTrunkPlacer(8, 1, 4, BlockStateProvider.simple(NorthstarBlocks.TOWER_FUNGUS_CAP_BLOCK.get()), UniformInt.of(4, 4), block.getOrThrow(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH)),
                         BlockStateProvider.simple(NorthstarBlocks.WILTER_LEAVES.get()),
                         new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                         new TwoLayersFeatureSize(2, 0, 2)).build()));

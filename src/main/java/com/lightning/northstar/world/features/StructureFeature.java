@@ -1,5 +1,6 @@
 package com.lightning.northstar.world.features;
 
+import com.lightning.northstar.Northstar;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -19,8 +20,9 @@ public class StructureFeature extends Feature<StructureFeatureConfig>  {
     public StructureFeature(Codec<StructureFeatureConfig> pCodec) {
         super(pCodec);
     }
+    @Override
     public boolean place(FeaturePlaceContext<StructureFeatureConfig> pContext) {
-        System.out.println(pContext.origin());
+        Northstar.LOGGER.debug("{}", pContext.origin());
         RandomSource randomsource = pContext.random();
         WorldGenLevel worldgenlevel = pContext.level();
         BlockPos blockpos = pContext.origin();
@@ -39,8 +41,8 @@ public class StructureFeature extends Feature<StructureFeatureConfig>  {
         BlockPos blockpos1 = blockpos.offset(-vec3i.getX() / 2, 0, -vec3i.getZ() / 2);
         BlockPos blockpos2 = structuretemplate.getZeroPositionWithTransform(blockpos1.atY(blockpos1.getY() - config.verticalOffset), Mirror.NONE, rotation);
 
-        structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4);
-        System.out.println(structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4));
+        boolean placed = structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4);
+        Northstar.LOGGER.debug("{}", placed);
         return true;
 
     }

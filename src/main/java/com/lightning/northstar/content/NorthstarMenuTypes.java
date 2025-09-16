@@ -2,31 +2,32 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableMenu;
+import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationMenu;
+import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
 import com.lightning.northstar.block.tech.telescope.TelescopeMenu;
+import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
+import com.tterrag.registrate.builders.MenuBuilder;
+import com.tterrag.registrate.util.entry.MenuEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 public class NorthstarMenuTypes {
 
-    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Northstar.MOD_ID);
+    public static final MenuEntry<TelescopeMenu> TELESCOPE_MENU = register("telescope", TelescopeMenu::new, () -> TelescopeScreen::new);
+    public static final MenuEntry<AstronomyTableMenu> ASTRONOMY_TABLE_MENU = register("astronomy_table_menu", AstronomyTableMenu::new, () -> AstronomyTableScreen::new);
+    public static final MenuEntry<RocketStationMenu> ROCKET_STATION = register("rocket_station", RocketStationMenu::new, () -> RocketStationScreen::new);
 
-    public static final RegistryObject<MenuType<TelescopeMenu>> TELESCOPE_MENU = registerMenuType(TelescopeMenu::new, "telescope_menu");
-    public static final RegistryObject<MenuType<AstronomyTableMenu>> ASTRONOMY_TABLE_MENU = registerMenuType(AstronomyTableMenu::new, "astronomy_table_menu");
-    public static final RegistryObject<MenuType<RocketStationMenu>> ROCKET_STATION = registerMenuType(RocketStationMenu::new, "rocket_station");
-
-    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
-        return MENUS.register(name, () -> IForgeMenuType.create(factory));
+    private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
+            String name, MenuBuilder.ForgeMenuFactory<C> factory, NonNullSupplier<MenuBuilder.ScreenFactory<C, S>> screenFactory) {
+        return Northstar.REGISTRATE
+                .menu(name, factory, screenFactory)
+                .register();
     }
 
-    public static void register(IEventBus eventBus) {
-        MENUS.register(eventBus);
+    public static void register() {
     }
 
 }

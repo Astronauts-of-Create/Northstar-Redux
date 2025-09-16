@@ -1,14 +1,12 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.world.OxygenStuff;
+import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.CreativeModeTab;
@@ -59,10 +57,7 @@ public class NorthstarCreativeModeTab {
     private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
         ItemStack stack = new ItemStack(item);
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt("Oxygen", OxygenStuff.maximumOxy);
-        ListTag lore = new ListTag();
-        lore.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal("Oxygen: " + OxygenStuff.maximumOxy + "mb").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false)))));
-        stack.getOrCreateTagElement("display").put("Lore", lore);
+        tag.putInt("Oxygen", NorthstarOxygen.MAXIMUM_OXYGEN);
         event.accept(stack);
     }
 

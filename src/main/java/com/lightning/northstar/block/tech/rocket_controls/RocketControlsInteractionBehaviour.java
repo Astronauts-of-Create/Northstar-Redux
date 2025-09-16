@@ -1,7 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.google.common.base.Objects;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import net.minecraft.client.Minecraft;
@@ -25,24 +24,16 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
 
         if (currentlyControlling != null) {
             rce.stopControlling(localPos);
-            if (Objects.equal(currentlyControlling, player.getUUID()))
+            if (player.getUUID().equals(currentlyControlling))
                 return true;
         }
 
-        //If we cant start controlling, return false
         if (!contraptionEntity.startControlling(localPos, player))
             return false;
 
-        if (rce.isAllPlayersSeated()) {
-            rce.setControllingPlayer(player.getUUID());
-            if (player.level().isClientSide)
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsClientHandler.startControlling(rce, localPos));
-            return true;
-        } else {//If all players are not seated,return false
-            Minecraft.getInstance().player.displayClientMessage(
-                    Component.translatable("northstar.contraption.controls.sit_down", rce.getContraptionName()), true);
-        }
-        return false;
+        rce.setControllingPlayer(player.getUUID());
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsClientHandler.startControlling(rce, localPos));
+        return true;
     }
 
 }

@@ -65,6 +65,7 @@ public class MoonEelEntity extends Monster implements GeoAnimatable {
 
     // endregion
 
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));

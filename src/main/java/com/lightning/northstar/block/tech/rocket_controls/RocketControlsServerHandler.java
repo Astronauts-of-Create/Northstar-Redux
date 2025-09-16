@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
