@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
+@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE, value = Dist.CLIENT)
 public class NorthstarOxygen {
 
     /** Maximum oxygen for spacesuits, in mB; use is 1 mB/s, defaults to 30 minutes so 1.5 minecraft days */
@@ -141,6 +143,7 @@ public class NorthstarOxygen {
         return true;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onPostRender(RenderLevelStageEvent event) {
         if (!NorthstarConfigs.client().debugSealerBounds.get())

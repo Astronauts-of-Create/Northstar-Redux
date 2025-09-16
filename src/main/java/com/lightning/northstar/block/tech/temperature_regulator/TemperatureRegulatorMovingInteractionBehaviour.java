@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -24,9 +25,13 @@ public class TemperatureRegulatorMovingInteractionBehaviour extends MovingIntera
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingTemperatureRegulator regulator))
             return false;
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                ScreenOpener.open(new TemperatureRegulatorScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos)));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos));
         return true;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(BaseTemperatureRegulator regulator, int entityId, BlockPos localPos) {
+        ScreenOpener.open(new TemperatureRegulatorScreen(regulator, entityId, localPos));
     }
 
 }

@@ -19,9 +19,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
+@OnlyIn(Dist.CLIENT)
 public class OxygenSealerScreen extends AbstractSimiScreen {
 
     private static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/oxygen_sealer.png");
