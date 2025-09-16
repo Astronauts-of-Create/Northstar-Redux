@@ -4,9 +4,9 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.contraptions.RocketContraption;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
-import com.lightning.northstar.contraptions.RocketHandler;
+import com.lightning.northstar.contraption.rocket.RocketContraption;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.data.WorldAttached;
@@ -99,6 +100,12 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        ItemHelper.dropContents(level, worldPosition, inventory);
     }
 
     public void queueAssembly(Player player) {

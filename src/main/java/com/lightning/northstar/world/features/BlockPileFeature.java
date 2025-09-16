@@ -25,14 +25,14 @@ public class BlockPileFeature extends Feature<BlockPileConfig> {
         RandomSource randomsource = pContext.random();
         boolean flag = false;
         int i = blockpos.getY();
-        int j = i + config.half_height.sample(randomsource);
-        int k = i - config.half_height.sample(randomsource) - 1;
-        int radius = config.radius.sample(randomsource);
+        int j = i + config.halfHeight().sample(randomsource);
+        int k = i - config.halfHeight().sample(randomsource) - 1;
+        int radius = config.radius().sample(randomsource);
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
         int pp = 0;
         int iteration = 0;
         for (int old_radius = radius; radius > old_radius / j; radius = (int) (radius / 1.5)) {
-            if (pp < config.depth.sample(randomsource)) {
+            if (pp < config.depth().sample(randomsource)) {
                 pp++;
                 blockpos = blockpos.above();
                 iteration++;
@@ -51,7 +51,7 @@ public class BlockPileFeature extends Feature<BlockPileConfig> {
 
     protected boolean placeColumn(BlockPileConfig pConfig, WorldGenLevel pLevel, RandomSource pRandom, int pMaxY, int pMinY, BlockPos.MutableBlockPos pPos, int iteration, float radius, BlockPos origin) {
         boolean flag = false;
-        BlockState blockstate = pConfig.block_provider.getState(pRandom, pPos);
+        BlockState blockstate = pConfig.blockProvider().getState(pRandom, pPos);
         float dist = (float) Math.abs(Math.sqrt(Math.pow((pPos.getX() - origin.getX()), 2) + Math.pow((pPos.getZ() - origin.getZ()), 2)));
         Northstar.LOGGER.debug("pPos: {}", pPos);
         Northstar.LOGGER.debug("origin: {}", origin);
@@ -76,7 +76,7 @@ public class BlockPileFeature extends Feature<BlockPileConfig> {
 
     protected boolean clearAir(BlockPileConfig pConfig, WorldGenLevel pLevel, RandomSource pRandom, int pMaxY, int pMinY, BlockPos.MutableBlockPos pPos) {
         boolean flag = false;
-        BlockState blockstate = pConfig.air_provider.getState(pRandom, pPos);
+        BlockState blockstate = pConfig.airProvider().getState(pRandom, pPos);
         for (int i = 0; i < 12; i++) {
             pLevel.setBlock(pPos.atY(pPos.getY() + i), blockstate, 2);
             flag = true;

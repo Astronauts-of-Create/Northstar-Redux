@@ -1,4 +1,4 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraption.rocket;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;

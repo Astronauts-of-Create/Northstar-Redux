@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.rocket_controls;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;

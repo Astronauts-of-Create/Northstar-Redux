@@ -5,6 +5,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,18 +29,24 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class RoofBloomTrunkPlacer extends TrunkPlacer {
-    public static final MapCodec<RoofBloomTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough), BlockStateProvider.CODEC.fieldOf("cap_provider").forGetter((p_161248_) -> p_161248_.capProvider))).apply(p_226236_, RoofBloomTrunkPlacer::new));
+
+    public static final MapCodec<RoofBloomTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(i -> trunkPlacerParts(i).and(i.group(
+            BlockStateProvider.CODEC.fieldOf("cap_provider").forGetter(p -> p.capProvider),
+            IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter(p -> p.extraBranchSteps),
+            RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter(p -> p.canGrowThrough)
+    )).apply(i, RoofBloomTrunkPlacer::new));
+
     public final BlockStateProvider capProvider;
     private final IntProvider extraBranchSteps;
     private final HolderSet<Block> canGrowThrough;
     private BlockPos pos;
     private Direction trunkDir;
 
-    public RoofBloomTrunkPlacer(int int1, int int2, int int3, IntProvider int4, HolderSet<Block> int7, BlockStateProvider cap) {
-        super(int1, int2, int3);
-        this.extraBranchSteps = int4;
-        this.canGrowThrough = int7;
-        this.capProvider = cap;
+    public RoofBloomTrunkPlacer(int baseHeight, int heightRandA, int heightRandB, BlockStateProvider capProvider, IntProvider extraBranchSteps, HolderSet<Block> canGrowThrough) {
+        super(baseHeight, heightRandA, heightRandB);
+        this.capProvider = capProvider;
+        this.extraBranchSteps = extraBranchSteps;
+        this.canGrowThrough = canGrowThrough;
     }
 
     @Override

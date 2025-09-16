@@ -28,18 +28,24 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class PlateTrunkPlacer extends TrunkPlacer {
-    public static final MapCodec<PlateTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough), BlockStateProvider.CODEC.fieldOf("cap_provider").forGetter((p_161248_) -> p_161248_.capProvider))).apply(p_226236_, PlateTrunkPlacer::new));
+
+    public static final MapCodec<PlateTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(i -> trunkPlacerParts(i).and(i.group(
+            BlockStateProvider.CODEC.fieldOf("cap_provider").forGetter(p -> p.capProvider),
+            IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter(p -> p.extraBranchSteps),
+            RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter(p -> p.canGrowThrough)
+    )).apply(i, PlateTrunkPlacer::new));
+
     public final BlockStateProvider capProvider;
     private final IntProvider extraBranchSteps;
     private final HolderSet<Block> canGrowThrough;
     private BlockPos pos;
     private Direction trunkDir;
 
-    public PlateTrunkPlacer(int BaseHeight, int randA, int randB, IntProvider int4, HolderSet<Block> int7, BlockStateProvider cap) {
-        super(BaseHeight, randA, randB);
-        this.extraBranchSteps = int4;
-        this.canGrowThrough = int7;
-        this.capProvider = cap;
+    public PlateTrunkPlacer(int baseHeight, int heightRandA, int heightRandB, BlockStateProvider capProvider, IntProvider extraBranchSteps, HolderSet<Block> canGrowThrough) {
+        super(baseHeight, heightRandA, heightRandB);
+        this.capProvider = capProvider;
+        this.extraBranchSteps = extraBranchSteps;
+        this.canGrowThrough = canGrowThrough;
     }
 
     @Override

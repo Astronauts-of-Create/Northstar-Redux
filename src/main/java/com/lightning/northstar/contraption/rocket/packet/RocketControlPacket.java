@@ -1,7 +1,7 @@
-package com.lightning.northstar.contraptions.packets;
+package com.lightning.northstar.contraption.rocket.packet;
 
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.contraptions.RocketHandler;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;

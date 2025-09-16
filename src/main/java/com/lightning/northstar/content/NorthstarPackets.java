@@ -5,10 +5,10 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInputPac
 import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket;
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
-import com.lightning.northstar.contraptions.ActorConfigPacket;
-import com.lightning.northstar.contraptions.packets.RocketContraptionQuickSyncPacket;
-import com.lightning.northstar.contraptions.packets.RocketContraptionSyncPacket;
-import com.lightning.northstar.contraptions.packets.RocketControlPacket;
+import com.lightning.northstar.contraption.ActorConfigPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;

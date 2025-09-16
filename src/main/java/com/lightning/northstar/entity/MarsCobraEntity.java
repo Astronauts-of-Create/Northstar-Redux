@@ -257,7 +257,6 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
         public void start() {
             this.aggroTime = this.adjustedTickDelay(5);
             this.cobra.lookedAt++;
-            ;
         }
 
         @Override

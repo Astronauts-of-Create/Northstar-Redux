@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.contraptions.ActorConfigPacket;
+import com.lightning.northstar.contraption.ActorConfigPacket;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.AdventureUtil;

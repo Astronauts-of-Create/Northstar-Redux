@@ -27,16 +27,21 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class SpikeTrunkPlacer extends TrunkPlacer {
-    public static final MapCodec<SpikeTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough))).apply(p_226236_, SpikeTrunkPlacer::new));
+
+    public static final MapCodec<SpikeTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(i -> trunkPlacerParts(i).and(i.group(
+            IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter(p -> p.extraBranchSteps),
+            RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter(p -> p.canGrowThrough)
+    )).apply(i, SpikeTrunkPlacer::new));
+
     private final IntProvider extraBranchSteps;
     private final HolderSet<Block> canGrowThrough;
     private BlockPos pos;
     private Direction trunkDir;
 
-    public SpikeTrunkPlacer(int int1, int int2, int int3, IntProvider int4, HolderSet<Block> int7) {
-        super(int1, int2, int3);
-        this.extraBranchSteps = int4;
-        this.canGrowThrough = int7;
+    public SpikeTrunkPlacer(int baseHeight, int heightRandA, int heightRandB, IntProvider extraBranchSteps, HolderSet<Block> canGrowThrough) {
+        super(baseHeight, heightRandA, heightRandB);
+        this.extraBranchSteps = extraBranchSteps;
+        this.canGrowThrough = canGrowThrough;
     }
 
     @Override

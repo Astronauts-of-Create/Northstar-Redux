@@ -16,13 +16,11 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -30,12 +28,14 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
 
     private static final MapCodec<RocketStationBlock> CODEC = simpleCodec(RocketStationBlock::new);
 
-    public static final VoxelShape SHAPE = Shapes.or(Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.box(1.0D, 4.0D, 1.0D, 15.0D, 16.0D, 15.0D));
     public static final BooleanProperty ASSEMBLING = BooleanProperty.create("assembling");
 
     public RocketStationBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(ASSEMBLING, false));
+
+        registerDefaultState(defaultBlockState()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(ASSEMBLING, false));
     }
 
     @Override
@@ -44,17 +44,14 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        BlockState state = defaultBlockState();
-        Direction horizontalDirection = pContext.getHorizontalDirection();
-
-        state = state.setValue(FACING, horizontalDirection.getOpposite());
-        return state;
+    protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+        super.createBlockStateDefinition(pBuilder.add(FACING, ASSEMBLING));
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return SHAPE;
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
@@ -70,37 +67,19 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return IBE.super.newBlockEntity(pPos, pState);
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos updatePos,
-                                boolean p_220069_6_) {
-    }
-
-    @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity be = worldIn.getBlockEntity(pos);
-            if (!(be instanceof RocketStationBlockEntity stationBE))
-                return;
-            Block.popResource(worldIn, pos, stationBE.container.getItem(0));
-        }
         IBE.onRemove(state, worldIn, pos, newState);
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
-        super.createBlockStateDefinition(pBuilder.add(FACING, ASSEMBLING));
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
     }
-
 
     @Override
     public Class<RocketStationBlockEntity> getBlockEntityClass() {
         return RocketStationBlockEntity.class;
     }
-
 
     @Override
     public BlockEntityType<? extends RocketStationBlockEntity> getBlockEntityType() {

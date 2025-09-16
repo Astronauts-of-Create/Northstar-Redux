@@ -15,45 +15,31 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import java.util.List;
 import java.util.Optional;
 
-public class AlienTreeConfig implements FeatureConfiguration {
-    public static final Codec<AlienTreeConfig> CODEC = RecordCodecBuilder.create((p_225468_) -> p_225468_.group(
-            BlockStateProvider.CODEC.fieldOf("trunk_provider").forGetter((p_161248_) -> p_161248_.trunkProvider),
-            BlockStateProvider.CODEC.fieldOf("glow_provider").forGetter((p_161244_) -> p_161244_.glowProvider),
-            ArgyreTrunkPlacer.CODEC.fieldOf("trunk_placer").forGetter((p_161246_) -> p_161246_.trunkPlacer),
-            BlockStateProvider.CODEC.fieldOf("foliage_provider").forGetter((p_161244_) -> p_161244_.foliageProvider),
-            FoliagePlacer.CODEC.fieldOf("foliage_placer").forGetter((p_191357_) -> p_191357_.foliagePlacer),
-            RootPlacer.CODEC.optionalFieldOf("root_placer").forGetter((p_225478_) -> p_225478_.rootPlacer),
-            BlockStateProvider.CODEC.fieldOf("dirt_provider").forGetter((p_225476_) -> p_225476_.dirtProvider),
-            FeatureSize.CODEC.fieldOf("minimum_size").forGetter((p_225474_) -> p_225474_.minimumSize),
-            TreeDecorator.CODEC.listOf().fieldOf("decorators").forGetter((p_225472_) -> p_225472_.decorators),
-            Codec.BOOL.fieldOf("ignore_vines").orElse(false).forGetter((p_161232_) -> p_161232_.ignoreVines),
-            Codec.BOOL.fieldOf("force_dirt").orElse(false).forGetter((p_225470_) -> p_225470_.forceDirt)
-    ).apply(p_225468_, AlienTreeConfig::new));
-    public final BlockStateProvider trunkProvider;
-    public final BlockStateProvider glowProvider;
-    public final BlockStateProvider dirtProvider;
-    public final ArgyreTrunkPlacer trunkPlacer;
-    public final BlockStateProvider foliageProvider;
-    public final FoliagePlacer foliagePlacer;
-    public final Optional<RootPlacer> rootPlacer;
-    public final FeatureSize minimumSize;
-    public final List<TreeDecorator> decorators;
-    public final boolean ignoreVines;
-    public final boolean forceDirt;
+public record AlienTreeConfig(BlockStateProvider trunkProvider,
+                              BlockStateProvider glowProvider,
+                              ArgyreTrunkPlacer trunkPlacer,
+                              BlockStateProvider foliageProvider,
+                              FoliagePlacer foliagePlacer,
+                              Optional<RootPlacer> rootPlacer,
+                              BlockStateProvider dirtProvider,
+                              FeatureSize minimumSize,
+                              List<TreeDecorator> decorators,
+                              boolean ignoreVines,
+                              boolean forceDirt) implements FeatureConfiguration {
 
-    protected AlienTreeConfig(BlockStateProvider p_225457_, BlockStateProvider glow, ArgyreTrunkPlacer trunkPlacer2, BlockStateProvider p_225459_, FoliagePlacer p_225460_, Optional<RootPlacer> p_225461_, BlockStateProvider p_225462_, FeatureSize p_225463_, List<TreeDecorator> p_225464_, boolean p_225465_, boolean p_225466_) {
-        this.trunkProvider = p_225457_;
-        this.glowProvider = glow;
-        this.trunkPlacer = trunkPlacer2;
-        this.foliageProvider = p_225459_;
-        this.foliagePlacer = p_225460_;
-        this.rootPlacer = p_225461_;
-        this.dirtProvider = p_225462_;
-        this.minimumSize = p_225463_;
-        this.decorators = p_225464_;
-        this.ignoreVines = p_225465_;
-        this.forceDirt = p_225466_;
-    }
+    public static final Codec<AlienTreeConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
+            BlockStateProvider.CODEC.fieldOf("trunk_provider").forGetter(AlienTreeConfig::trunkProvider),
+            BlockStateProvider.CODEC.fieldOf("glow_provider").forGetter(AlienTreeConfig::glowProvider),
+            ArgyreTrunkPlacer.CODEC.fieldOf("trunk_placer").forGetter(AlienTreeConfig::trunkPlacer),
+            BlockStateProvider.CODEC.fieldOf("foliage_provider").forGetter(AlienTreeConfig::foliageProvider),
+            FoliagePlacer.CODEC.fieldOf("foliage_placer").forGetter(AlienTreeConfig::foliagePlacer),
+            RootPlacer.CODEC.optionalFieldOf("root_placer").forGetter(AlienTreeConfig::rootPlacer),
+            BlockStateProvider.CODEC.fieldOf("dirt_provider").forGetter(AlienTreeConfig::dirtProvider),
+            FeatureSize.CODEC.fieldOf("minimum_size").forGetter(AlienTreeConfig::minimumSize),
+            TreeDecorator.CODEC.listOf().fieldOf("decorators").forGetter(AlienTreeConfig::decorators),
+            Codec.BOOL.fieldOf("ignore_vines").orElse(false).forGetter(AlienTreeConfig::ignoreVines),
+            Codec.BOOL.fieldOf("force_dirt").orElse(false).forGetter(AlienTreeConfig::forceDirt)
+    ).apply(i, AlienTreeConfig::new));
 
     public static class AlienTreeConfigBuilder {
         public final BlockStateProvider trunkProvider;

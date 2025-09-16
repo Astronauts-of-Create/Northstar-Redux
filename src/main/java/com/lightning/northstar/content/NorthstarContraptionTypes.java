@@ -1,6 +1,6 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.contraptions.RocketContraption;
+import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.simibubi.create.api.contraption.ContraptionType;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.contraptions.Contraption;

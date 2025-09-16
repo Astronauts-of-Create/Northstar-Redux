@@ -1,10 +1,10 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.*;
-import com.lightning.northstar.contraptions.packets.RocketContraptionQuickSyncPacket;
-import com.lightning.northstar.contraptions.packets.RocketContraptionSyncPacket;
-import com.lightning.northstar.contraptions.packets.RocketControlPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -79,7 +79,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
     public float final_lift_vel = lift_vel;
     public ResourceKey<Level> home;
     public ResourceKey<Level> destination;
-    private byte dissasemblyTicks;
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -111,25 +110,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
             }
         }
 
-        //If we wait 1 second before disassembling, it helps preventing entities clipping into the ground after disassembling
-        if (dissasemblyTicks > 0) {
-            setDeltaMovement(0, 0, 0);
-            if (!level().isClientSide) {
-                Northstar.LOGGER.debug("Dissasembling in {} ticks", dissasemblyTicks);
-                dissasemblyTicks--;
-                if (dissasemblyTicks == 0) disassemble();
-            }
-            return;
-        }
-
         var contraption = getContraption();
 
-        entitiesWithinContraption = level().getEntities(this, getBoundingBox().expandTowards(0, 3, 0));
+        tickActors();
+
+        entitiesWithinContraption = level().getEntities(this, getBoundingBox().inflate(0, lift_vel * 2 + 2, 0));
 
         if (launchTime > 0 && activeLaunch) {
             launchTime--;
         }
-        tickActors();
 
         if (launchingMode && launchTime == 0 && activeLaunch) {//Start blasting off
             if (!blasting) {//Only do this once
@@ -250,6 +239,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
                     if (this.landingMode && isUsingTicket) {//Consume the ticket
                         RocketHandler.deleteTicket(level(), this.blockPosition());
                     }
+                    landingMode = false;
                 }
 
                 //If auto-landing is disabled, explode the rocket if it hits the ground
@@ -276,10 +266,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
     }
 
     private void writeSyncPacket() {
-        RocketContraptionSyncPacket packet = new RocketContraptionSyncPacket(
-                getId(), position(), lift_vel, launchTime,
-                launchingMode, landingMode, blasting, slowing,
-                activeLaunch);
+        RocketContraptionSyncPacket packet = new RocketContraptionSyncPacket(getId(), position(), lift_vel, launchTime,
+                launchingMode, landingMode, blasting, slowing, activeLaunch);
         CatnipServices.NETWORK.sendToClientsTrackingEntity(this, packet);
     }
 
@@ -313,6 +301,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
         for (Entity passenger : level().getEntities(this, getBoundingBox().inflate(2, 50, 2))) {
             Vec3 offset = passenger.position().subtract(position());
             int seat = contraption.getSeats().indexOf(contraption.getSeatOf(passenger.getUUID()));
+            if (passenger instanceof Player && seat == -1) {
+                // for some reason players end up out of the rocket on the server
+                offset = offset.add(0, final_lift_vel, 0);
+            }
             passengers.add(new PassengerData(passenger, offset, seat));
         }
 
@@ -327,12 +319,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
                 continue; // shouldn't happen unless this method is misused by another mod
 
             newPassenger.setPos(newRocket.position().add(data.offset));
-
-            if (newPassenger instanceof Player player && data.seat == -1) {
-                // assign a fake seat for the player otherwise they might phase out while loading chunks
-                // it's still possible to get out and roam around once loaded
-                player.startRiding(this, true);
-            }
 
             if (data.seat != -1)
                 addSittingPassenger(newPassenger, data.seat);
@@ -360,28 +346,19 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
         }
     }
 
-    public void stopAndDissasembleInTicks(int nTicks) {
-        dissasemblyTicks = (byte) nTicks;
-        lift_vel = 0;
-        blasting = false;
-        if (!level().isClientSide()) {
-            writeSyncPacket();
-        }
-    }
-
     @OnlyIn(Dist.CLIENT)
     public static void handleSyncPacket(RocketContraptionSyncPacket packet) {
-        Entity entity = Minecraft.getInstance().level.getEntity(packet.contraptionEntityId);
+        Entity entity = Minecraft.getInstance().level.getEntity(packet.contraptionEntityId());
         if (!(entity instanceof RocketContraptionEntity rce)) return;
 
-        rce.setPos(packet.pos.x, packet.pos.y, packet.pos.z);
-        rce.lift_vel = packet.lift_vel;
-        rce.launchTime = packet.launchTime;
-        rce.launchingMode = packet.launched;
-        rce.landingMode = packet.landing;
-        rce.blasting = packet.blasting;
-        rce.slowing = packet.slowing;
-        rce.activeLaunch = packet.activeLaunch;
+        rce.setPos(packet.pos().x, packet.pos().y, packet.pos().z);
+        rce.lift_vel = packet.lift_vel();
+        rce.launchTime = packet.launchTime();
+        rce.launchingMode = packet.launched();
+        rce.landingMode = packet.landing();
+        rce.blasting = packet.blasting();
+        rce.slowing = packet.slowing();
+        rce.activeLaunch = packet.activeLaunch();
     }
 
     @OnlyIn(Dist.CLIENT)

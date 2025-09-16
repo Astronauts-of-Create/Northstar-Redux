@@ -1,7 +1,7 @@
-package com.lightning.northstar.contraptions.packets;
+package com.lightning.northstar.contraption.rocket.packet;
 
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.tterrag.registrate.util.RegistrateDistExecutor;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;

@@ -1,4 +1,4 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraption;
 
 import com.lightning.northstar.content.NorthstarPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;

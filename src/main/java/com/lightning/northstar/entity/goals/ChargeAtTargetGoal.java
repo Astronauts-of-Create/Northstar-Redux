@@ -67,7 +67,6 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
             Northstar.LOGGER.debug("DOING THINGS!!!!!!");
             chargingMob.ticksSpentCharging = 0;
             this.chargingMob.playSound(NorthstarSounds.VENUS_STONE_BULL_CHARGE.get(), 1.0F, 1.0F);
-            ;
             chargingMob.chargeTimer = 150;
             chargingMob.targetPos = this.chargingMob.getTarget().blockPosition();
         }

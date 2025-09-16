@@ -377,7 +377,6 @@ public class MarsMothEntity extends Monster implements GeoAnimatable {
                                 pollinating = true;
                                 return blockpo;
                             }
-                            ;
 
                         } else if (state.getBlock() instanceof MartianTallFlowerBlock && this.level().random.nextInt(4) == 0) {
                             timeForPollination = 400;

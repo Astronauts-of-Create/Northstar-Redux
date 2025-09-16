@@ -28,25 +28,24 @@ public class OxygenSealerBlock extends HorizontalKineticBlock implements IBE<Oxy
             box(1, 12, 1, 15, 16, 15)
     );
 
-    public static final BooleanProperty VARIANT = BooleanProperty.create("variant");
+    public static final BooleanProperty CAPPED = BooleanProperty.create("capped");
 
     public OxygenSealerBlock(Properties properties) {
         super(properties);
 
         registerDefaultState(defaultBlockState()
-                .setValue(VARIANT, false));
+                .setValue(CAPPED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder.add(VARIANT));
+        super.createBlockStateDefinition(builder.add(CAPPED));
     }
 
     @Override
     public InteractionResult onWrenched(BlockState state, UseOnContext context) {
         if (context.getClickedFace().getAxis().isHorizontal()) {
-            BlockState newState = state.setValue(VARIANT, !state.getValue(VARIANT));
-            context.getLevel().setBlock(context.getClickedPos(), newState, Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
+            context.getLevel().setBlock(context.getClickedPos(), state.cycle(CAPPED), Block.UPDATE_ALL | Block.UPDATE_KNOWN_SHAPE);
             IWrenchable.playRotateSound(context.getLevel(), context.getClickedPos());
             return InteractionResult.SUCCESS;
         }
@@ -56,7 +55,7 @@ public class OxygenSealerBlock extends HorizontalKineticBlock implements IBE<Oxy
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(VARIANT) ? Shapes.block() : SHAPE;
+        return state.getValue(CAPPED) ? Shapes.block() : SHAPE;
     }
 
     @Override

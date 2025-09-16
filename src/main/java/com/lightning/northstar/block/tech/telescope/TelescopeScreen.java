@@ -272,8 +272,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.mars.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.mars.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.mars.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.mars_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.mars_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.mars_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.mars_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs(NorthstarPlanets.earth_x + scrollX + 8 - mouseX) < 8 && Math.abs(NorthstarPlanets.earth_y + scrollY + 8 - mouseY) < 8) && player_dim != ClientLevel.OVERWORLD) {
@@ -284,8 +284,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.earth.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.earth.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.earth.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.earth_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.earth_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.earth_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.earth_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs(NorthstarPlanets.moon_x + scrollX + 8 - mouseX) < 8 && Math.abs(NorthstarPlanets.moon_y + scrollY + 8 - mouseY) < 8) && player_dim != ClientLevel.OVERWORLD && player_dim != NorthstarDimensions.MOON_DIM_KEY) {
@@ -296,8 +296,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.moon.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.moon.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.moon.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.moon_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.moon_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.moon_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.moon_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs((NorthstarPlanets.pd_x) + scrollX + 5 - mouseX) < 5 && Math.abs((NorthstarPlanets.pd_y) + scrollY + 5 - mouseY) < 5) && player_dim != NorthstarDimensions.MARS_DIM_KEY) {
@@ -308,8 +308,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.phobos_deimos.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.phobos_deimos.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.phobos_deimos.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.pd_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.pd_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.pd_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.pd_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs((NorthstarPlanets.venus_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.venus_y) + scrollY + 8 - mouseY) < 8) && player_dim != NorthstarDimensions.VENUS_DIM_KEY) {
@@ -320,8 +320,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.venus.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.venus.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.venus.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.venus_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.venus_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.venus_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.venus_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs(NorthstarPlanets.mercury_x + scrollX + 7 - mouseX) < 8 && Math.abs(NorthstarPlanets.mercury_y + scrollY + 7 - mouseY) < 8) && player_dim != NorthstarDimensions.MERCURY_DIM_KEY) {
@@ -332,8 +332,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.mercury.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.mercury.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.mercury.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.mercury_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.mercury_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.mercury_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.mercury_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs(NorthstarPlanets.earth_moon_x + scrollX - mouseX) < 24 && Math.abs(NorthstarPlanets.earth_moon_y + scrollY - mouseY) < 24) && player_dim == ClientLevel.OVERWORLD && player_dim != NorthstarDimensions.MOON_DIM_KEY) {
@@ -344,8 +344,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.moon.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.moon.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.moon.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.earth_moon_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.earth_moon_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.earth_moon_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.earth_moon_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if ((Math.abs(NorthstarPlanets.ceres_x + scrollX + 6 - mouseX) < 6 && Math.abs(NorthstarPlanets.ceres_y + scrollY + 6 - mouseY) < 6)) {
@@ -356,8 +356,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.ceres.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.ceres.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.ceres.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.ceres_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.ceres_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.ceres_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.ceres_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.jupiter_x) + scrollX + 12 - mouseX) < 12 && Math.abs((NorthstarPlanets.jupiter_y) + scrollY + 12 - mouseY) < 12) {
@@ -368,8 +368,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.jupiter.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.jupiter.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.jupiter.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.jupiter_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.jupiter_x)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.jupiter_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.jupiter_x).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.saturn_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.saturn_y) + scrollY + 8 - mouseY) < 8) {
@@ -380,8 +380,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.saturn.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.saturn.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.saturn.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.saturn_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.saturn_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.saturn_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.saturn_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.uranus_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.uranus_y) + scrollY + 8 - mouseY) < 8) {
@@ -392,8 +392,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.uranus.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.uranus.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.uranus.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.uranus_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.uranus_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.uranus_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.uranus_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.neptune_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.neptune_y) + scrollY + 8 - mouseY) < 8) {
@@ -404,8 +404,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.neptune.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.neptune.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.neptune.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.neptune_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.neptune_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.neptune_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.neptune_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.pluto_x) + scrollX + 6 - mouseX) < 6 && Math.abs((NorthstarPlanets.pluto_y) + scrollY + 6 - mouseY) < 6) {
@@ -416,8 +416,8 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.translatable("planets.pluto.grav").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.pluto.temp").withStyle(ChatFormatting.GRAY)));
             list.add((Component.translatable("planets.pluto.atmosphere").withStyle(ChatFormatting.GRAY)));
-            list.add((Component.literal("X:  " + String.valueOf((int) NorthstarPlanets.pluto_x)).withStyle(ChatFormatting.WHITE)));
-            list.add((Component.literal("Y:  " + String.valueOf((int) NorthstarPlanets.pluto_y)).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.pluto_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.pluto_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.eris_x) + scrollX + 6 - mouseX) < 6 && Math.abs((NorthstarPlanets.eris_y) + scrollY + 6 - mouseY) < 6) {

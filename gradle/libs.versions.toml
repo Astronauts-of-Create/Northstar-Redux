@@ -5,7 +5,7 @@ ponder = "1.0.56"
 
 [libraries]
 create = "com.simibubi.create:create-1.21.1:6.0.6-107"
-copycats = "com.copycatsplus:copycats:3.0.2+mc.1.21.1-neoforge-build.259"
+copycats = "com.copycatsplus:copycats:3.0.2+mc.1.21.1-neoforge-build.258"
 embeddium = "maven.modrinth:embeddium:1.0.15+mc1.21.1"
 flywheel-neoforge-api = { module = "dev.engine-room.flywheel:flywheel-neoforge-api-1.21.1", version.ref = "flywheel" }
 flywheel-neoforge = { module = "dev.engine-room.flywheel:flywheel-neoforge-1.21.1", version.ref = "flywheel" }

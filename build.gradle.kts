@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.3.0-SNAPSHOT+1.21.1" // https://semver.org/
+version = "0.3.0+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -113,7 +113,7 @@ tasks.jar {
 tasks.processResources {
     val buildProps = project.properties.toMutableMap()
     buildProps["file"] = mapOf("jarVersion" to project.version)
-    filesMatching(listOf("META-INF/mods.toml")) {
+    filesMatching(listOf("META-INF/neoforge.mods.toml")) {
         expand(buildProps)
     }
     outputs.upToDateWhen { false }

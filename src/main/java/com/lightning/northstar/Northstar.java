@@ -3,7 +3,7 @@ package com.lightning.northstar;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
-import com.lightning.northstar.contraptions.RocketHandler;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarPotions;

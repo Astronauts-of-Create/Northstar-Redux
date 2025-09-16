@@ -1,20 +1,11 @@
-package com.lightning.northstar.contraptions;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.phys.Vec3;
+package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.LevelData;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -75,10 +67,7 @@ public class RocketHandler {
             }
         }
 
-
-        /**
-         * All server side code
-         */
+        // All server side code
         if (event.getLevel().isClientSide)
             return;
 

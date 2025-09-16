@@ -1,32 +1,32 @@
 {
   "variants": {
-    "facing=north,variant=false": {
+    "facing=north,capped=false": {
       "model": "northstar:block/oxygen_sealer/block"
     },
-    "facing=east,variant=false": {
+    "facing=east,capped=false": {
       "model": "northstar:block/oxygen_sealer/block",
       "y": 90
     },
-    "facing=south,variant=false": {
+    "facing=south,capped=false": {
       "model": "northstar:block/oxygen_sealer/block",
       "y": 180
     },
-    "facing=west,variant=false": {
+    "facing=west,capped=false": {
       "model": "northstar:block/oxygen_sealer/block",
       "y": 270
     },
-    "facing=north,variant=true": {
+    "facing=north,capped=true": {
       "model": "northstar:block/oxygen_sealer/full"
     },
-    "facing=east,variant=true": {
+    "facing=east,capped=true": {
       "model": "northstar:block/oxygen_sealer/full",
       "y": 90
     },
-    "facing=south,variant=true": {
+    "facing=south,capped=true": {
       "model": "northstar:block/oxygen_sealer/full",
       "y": 180
     },
-    "facing=west,variant=true": {
+    "facing=west,capped=true": {
       "model": "northstar:block/oxygen_sealer/full",
       "y": 270
     }
