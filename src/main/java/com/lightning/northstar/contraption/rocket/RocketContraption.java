@@ -1,4 +1,4 @@
-package com.lightning.northstar.contraptions;
+package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlockEntity;

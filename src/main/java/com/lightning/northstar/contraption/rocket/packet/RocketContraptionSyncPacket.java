@@ -1,6 +1,6 @@
-package com.lightning.northstar.contraptions.packets;
+package com.lightning.northstar.contraption.rocket.packet;
 
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
@@ -9,6 +9,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class RocketContraptionSyncPacket extends SimplePacketBase {
+
     public int contraptionEntityId;
     public Vec3 pos;
     public float lift_vel;
@@ -18,11 +19,10 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
     public boolean blasting;
     public boolean slowing;
     public boolean activeLaunch;
-    public byte disassemblyTicks;
 
     public RocketContraptionSyncPacket(int contraptionEntityId, Vec3 pos, float lift_vel, int launchTime,
                                        boolean launched, boolean landing, boolean blasting, boolean slowing,
-                                       boolean activeLaunch, byte disassemblyTicks) {
+                                       boolean activeLaunch) {
         this.contraptionEntityId = contraptionEntityId;
         this.pos = pos;
         this.lift_vel = lift_vel;
@@ -32,7 +32,6 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         this.blasting = blasting;
         this.slowing = slowing;
         this.activeLaunch = activeLaunch;
-        this.disassemblyTicks = disassemblyTicks;
     }
 
     public RocketContraptionSyncPacket(FriendlyByteBuf buffer) {
@@ -45,7 +44,6 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         blasting = buffer.readBoolean();
         slowing = buffer.readBoolean();
         activeLaunch = buffer.readBoolean();
-        disassemblyTicks = buffer.readByte();
     }
 
     @Override
@@ -61,7 +59,6 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         buffer.writeBoolean(blasting);
         buffer.writeBoolean(slowing);
         buffer.writeBoolean(activeLaunch);
-        buffer.writeByte(disassemblyTicks);
     }
 
     @Override

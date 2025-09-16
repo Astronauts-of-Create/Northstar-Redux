@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
-import com.lightning.northstar.contraptions.RocketContraption;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraption;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
