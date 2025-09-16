@@ -1,6 +1,6 @@
-package com.lightning.northstar.contraptions.packets;
+package com.lightning.northstar.contraption.rocket.packet;
 
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;

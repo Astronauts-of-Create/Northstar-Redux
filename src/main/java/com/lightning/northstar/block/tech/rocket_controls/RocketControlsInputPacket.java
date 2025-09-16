@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
