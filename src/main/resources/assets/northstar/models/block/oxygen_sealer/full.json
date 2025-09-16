@@ -6,7 +6,8 @@
 	"texture_size": [64, 32],
 	"textures": {
 		"2": "northstar:block/oxygen_sealer",
-		"front": "northstar:block/oxygen_sealer_front"
+		"front": "northstar:block/oxygen_sealer_front",
+      "particle": "northstar:block/oxygen_sealer"
 	},
 	"elements": [
 		{
