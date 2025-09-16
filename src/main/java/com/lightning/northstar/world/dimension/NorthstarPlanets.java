@@ -429,14 +429,6 @@ public class NorthstarPlanets {
         return 1;
     }
 
-    public static String targetGetter(String thing) {
-        String newthing = "";
-        for(int i = 0;i < thing.length(); i++) {
-            if(i > 6 && i < thing.length() - 2) {newthing += thing.charAt(i);}
-        }
-        return newthing;
-    }
-
     public static boolean isInOrbit(ResourceKey<Level> level) {
         if(level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {return true;}
         return false;

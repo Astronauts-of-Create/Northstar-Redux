@@ -91,10 +91,8 @@ public class TallFungusBlock extends TallFlowerBlock {
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
         if(ceiling_flag)
-        return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.below()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag) : null;
-        else
+            return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.below()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag) : null;
         return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.above()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag).setValue(HALF, DoubleBlockHalf.LOWER) : null;
-            
     }
     
     public static void placeAt(LevelAccessor pLevel, BlockState pState, BlockPos pPos, int pFlags) {

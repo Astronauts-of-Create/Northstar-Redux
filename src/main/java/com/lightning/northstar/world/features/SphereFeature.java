@@ -42,17 +42,17 @@ public class SphereFeature extends Feature<SphereConfig>  {
           RandomSource randomsource = context.random();
           BlockPos blockpos = context.origin();
           WorldGenLevel worldgenlevel = context.level();
-          int i = config.minGenOffset;
-          int j = config.maxGenOffset;
+          int i = config.minGenOffset();
+          int j = config.maxGenOffset();
           List<Pair<BlockPos, Integer>> list = Lists.newLinkedList();
-          int k = config.distributionPoints.sample(randomsource);
+          int k = config.distributionPoints().sample(randomsource);
           WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(worldgenlevel.getSeed()));
           NormalNoise normalnoise = NormalNoise.create(worldgenrandom, -4, 1.0D);
           List<BlockPos> list1 = Lists.newLinkedList();
-          double d0 = (double)k / (double)config.outerWallDistance.getMaxValue();
-          GeodeLayerSettings geodelayersettings = config.geodeLayerSettings;
-          GeodeBlockSettings geodeblocksettings = config.geodeBlockSettings;
-          GeodeCrackSettings geodecracksettings = config.geodeCrackSettings;
+          double d0 = (double)k / (double) config.outerWallDistance().getMaxValue();
+          GeodeLayerSettings geodelayersettings = config.geodeLayerSettings();
+          GeodeBlockSettings geodeblocksettings = config.geodeBlockSettings();
+          GeodeCrackSettings geodecracksettings = config.geodeCrackSettings();
           double d1 = 1.0D / Math.sqrt(geodelayersettings.filling);
           double d2 = 1.0D / Math.sqrt(geodelayersettings.innerLayer + d0);
           double d3 = 1.0D / Math.sqrt(geodelayersettings.middleLayer + d0);
@@ -62,19 +62,19 @@ public class SphereFeature extends Feature<SphereConfig>  {
           int l = 0;
 
           for(int i1 = 0; i1 < k; ++i1) {
-             int j1 = config.outerWallDistance.sample(randomsource);
-             int k1 = config.outerWallDistance.sample(randomsource);
-             int l1 = config.outerWallDistance.sample(randomsource);
+             int j1 = config.outerWallDistance().sample(randomsource);
+             int k1 = config.outerWallDistance().sample(randomsource);
+             int l1 = config.outerWallDistance().sample(randomsource);
              BlockPos blockpos1 = blockpos.offset(j1, k1, l1);
              BlockState blockstate = worldgenlevel.getBlockState(blockpos1);
              if (blockstate.isAir() || blockstate.is(BlockTags.GEODE_INVALID_BLOCKS)) {
                 ++l;
-                if (l > config.invalidBlocksThreshold) {
+                if (l > config.invalidBlocksThreshold()) {
                    return false;
                 }
              }
 
-             list.add(Pair.of(blockpos1, config.pointOffset.sample(randomsource)));
+             list.add(Pair.of(blockpos1, config.pointOffset().sample(randomsource)));
           }
 
           if (flag) {
@@ -100,10 +100,10 @@ public class SphereFeature extends Feature<SphereConfig>  {
           }
 
           List<BlockPos> list2 = Lists.newArrayList();
-          Predicate<BlockState> predicate = isReplaceable(config.geodeBlockSettings.cannotReplace);
+          Predicate<BlockState> predicate = isReplaceable(config.geodeBlockSettings().cannotReplace);
 
           for(BlockPos blockpos3 : BlockPos.betweenClosed(blockpos.offset(i, i, i), blockpos.offset(j, j, j))) {
-             double d8 = normalnoise.getValue((double)blockpos3.getX(), (double)blockpos3.getY(), (double)blockpos3.getZ()) * config.noiseMultiplier;
+             double d8 = normalnoise.getValue((double)blockpos3.getX(), (double)blockpos3.getY(), (double)blockpos3.getZ()) * config.noiseMultiplier();
              double d6 = 0.0D;
              double d7 = 0.0D;
 
@@ -129,14 +129,14 @@ public class SphereFeature extends Feature<SphereConfig>  {
                 } else if (d6 >= d1) {
                    this.safeSetBlock(worldgenlevel, blockpos3, geodeblocksettings.fillingProvider.getState(randomsource, blockpos3), predicate);
                 } else if (d6 >= d2) {
-                   boolean flag1 = (double)randomsource.nextFloat() < config.useAlternateLayer0Chance;
+                   boolean flag1 = (double)randomsource.nextFloat() < config.useAlternateLayer0Chance();
                    if (flag1) {
                       this.safeSetBlock(worldgenlevel, blockpos3, geodeblocksettings.alternateInnerLayerProvider.getState(randomsource, blockpos3), predicate);
                    } else {
                       this.safeSetBlock(worldgenlevel, blockpos3, geodeblocksettings.innerLayerProvider.getState(randomsource, blockpos3), predicate);
                    }
 
-                   if ((!config.placementsRequireLayer0Alternate || flag1) && (double)randomsource.nextFloat() < config.usePotentialPlacementsChance) {
+                   if ((!config.placementsRequireLayer0Alternate() || flag1) && (double)randomsource.nextFloat() < config.usePotentialPlacementsChance()) {
                       list2.add(blockpos3.immutable());
                    }
                 } else if (d6 >= d3) {

@@ -82,7 +82,7 @@ public class RocketStationMenu extends MenuBase<RocketStationBlockEntity> {
         ItemStack item = contentHolder.container.getItem(0);
         if (contentHolder.container.getItem(0).getItem() == NorthstarItems.STAR_MAP.get() || contentHolder.container.getItem(0).getItem() == NorthstarItems.RETURN_TICKET.get()) {
             if (item.getTagElement("Planet") != null)
-                target = NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(item.getTagElement("Planet").toString()));
+                target = NorthstarPlanets.getPlanetDimension(item.getTagElement("Planet").getString("name"));
         }
         fuelCost = fuelCalc();
     }

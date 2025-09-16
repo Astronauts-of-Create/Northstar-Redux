@@ -116,7 +116,7 @@ public class RocketContraption extends TranslatingContraption {
 
                 if (rsbe.container.getItem(0).is(NorthstarItems.RETURN_TICKET.get())) {
                     if (rsbe.container.getItem(0).getTagElement("Planet") != null) {
-                        if (NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(rsbe.container.getItem(0).getTagElement("Planet").toString())) == dest)
+                        if (NorthstarPlanets.getPlanetDimension(rsbe.container.getItem(0).getTagElement("Planet").getString("name")) == dest)
                             this.isUsingTicket = true;
                         this.isUsingTicket = true;
                     }

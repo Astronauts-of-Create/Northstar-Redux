@@ -11,7 +11,6 @@ import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,23 +25,29 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-//
-
 public class ArgyreTrunkPlacer extends TrunkPlacer {
-    public static final Codec<ArgyreTrunkPlacer> CODEC = RecordCodecBuilder.create((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), Codec.floatRange(0.0F, 1.0F).fieldOf("place_branch_per_log_probability").forGetter((p_226240_) -> p_226240_.placeBranchPerLogProbability), IntProvider.NON_NEGATIVE_CODEC.fieldOf("extra_branch_length").forGetter((p_226238_) -> p_226238_.extraBranchLength), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough), IntProvider.NON_NEGATIVE_CODEC.fieldOf("size").forGetter((p_226238_) -> p_226238_.spinFactor))).apply(p_226236_, ArgyreTrunkPlacer::new));
+
+    public static final Codec<ArgyreTrunkPlacer> CODEC = RecordCodecBuilder.create(i -> trunkPlacerParts(i).and(i.group(
+            IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter(p -> p.extraBranchSteps), 
+            Codec.floatRange(0.0F, 1.0F).fieldOf("place_branch_per_log_probability").forGetter(p -> p.placeBranchPerLogProbability),
+            IntProvider.NON_NEGATIVE_CODEC.fieldOf("extra_branch_length").forGetter(p -> p.extraBranchLength),
+            RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter(p -> p.canGrowThrough),
+            IntProvider.NON_NEGATIVE_CODEC.fieldOf("size").forGetter(p -> p.spinFactor))
+    ).apply(i, ArgyreTrunkPlacer::new));
+    
     private final IntProvider extraBranchSteps;
     private final float placeBranchPerLogProbability;
     private final IntProvider extraBranchLength;
     private final HolderSet<Block> canGrowThrough;
     private final IntProvider spinFactor;
 
-    public ArgyreTrunkPlacer(int int1, int int2, int int3, IntProvider int4, float int5, IntProvider int6, HolderSet<Block> int7, IntProvider spinfacto) {
-        super(int1, int2, int3);
-        this.extraBranchSteps = int4;
-        this.placeBranchPerLogProbability = int5;
-        this.extraBranchLength = int6;
-        this.canGrowThrough = int7;
-        this.spinFactor = UniformInt.of(1, 1);
+    public ArgyreTrunkPlacer(int baseHeight, int heightRandA, int heightRandB, IntProvider extraBranchSteps, float placeBranchPerLogProbability, IntProvider extraBranchLength, HolderSet<Block> canGrowThrough, IntProvider spinFactor) {
+        super(baseHeight, heightRandA, heightRandB);
+        this.extraBranchSteps = extraBranchSteps;
+        this.placeBranchPerLogProbability = placeBranchPerLogProbability;
+        this.extraBranchLength = extraBranchLength;
+        this.canGrowThrough = canGrowThrough;
+        this.spinFactor = spinFactor;
     }
 
     @Override
@@ -179,7 +184,7 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
 
     protected boolean placeLog(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, RandomSource pRandom, BlockPos pPos, AlienTreeConfig treeconfiguration, Function<Object, Object> function) {
         if (this.validTreePos(pLevel, pPos)) {
-            pBlockSetter.accept(pPos, (BlockState) function.apply(treeconfiguration.trunkProvider.getState(pRandom, pPos)));
+            pBlockSetter.accept(pPos, (BlockState) function.apply(treeconfiguration.trunkProvider().getState(pRandom, pPos)));
             return true;
         } else {
             return false;

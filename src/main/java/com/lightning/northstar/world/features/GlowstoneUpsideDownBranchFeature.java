@@ -23,7 +23,7 @@ public class GlowstoneUpsideDownBranchFeature extends Feature<GlowstoneBranchCon
           WorldGenLevel worldgenlevel = context.level();
           BlockPos blockpos = context.origin();
           RandomSource randomsource = context.random();
-          BlockStateProvider block = context.config().glowProvider;
+          BlockStateProvider block = context.config().glowProvider();
           if (!worldgenlevel.isEmptyBlock(blockpos)) {
              return false;
           } else {

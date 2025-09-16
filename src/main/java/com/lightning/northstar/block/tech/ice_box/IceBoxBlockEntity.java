@@ -477,7 +477,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             int requiredFluid = 0;
             for (Ingredient ingred : ((FreezingRecipe) recipe).getIngredients()) {
                 for (ItemStack item : ingred.getItems()) {
-                    for (int i = 0; i > inputInventory.getContainerSize(); i++) {
+                    for (int i = 0; i < inputInventory.getContainerSize(); i++) {
                         if (inputInventory.getItem(i) != null && inputInventory.getItem(i).getCount() >= item.getCount()) {
                             ingredAmount++;
                         }
@@ -487,7 +487,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             }
             for (FluidIngredient ingred : ((FreezingRecipe) recipe).getFluidIngredients()) {
                 for (FluidStack item : ingred.getMatchingFluidStacks()) {
-                    for (int i = 0; i > inputTank.getTanks().length; i++) {
+                    for (int i = 0; i < inputTank.getTanks().length; i++) {
                         if (inputTank.getPrimaryHandler().getFluid() != null && inputTank.getPrimaryHandler().getFluid().getFluid() == item.getFluid()
                                 && inputTank.getPrimaryHandler().getFluidAmount() > item.getAmount()) {
                             fluidamount += item.getAmount();

@@ -27,18 +27,24 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class BloomTrunkPlacer extends TrunkPlacer {
-    public static final Codec<BloomTrunkPlacer> CODEC = RecordCodecBuilder.create((p_226236_) -> trunkPlacerParts(p_226236_).and(p_226236_.group(IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter((p_226242_) -> p_226242_.extraBranchSteps), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter((p_226234_) -> p_226234_.canGrowThrough), BlockStateProvider.CODEC.fieldOf("cap_provider").forGetter((p_161248_) -> p_161248_.capProvider))).apply(p_226236_, BloomTrunkPlacer::new));
+
+    public static final Codec<BloomTrunkPlacer> CODEC = RecordCodecBuilder.create(i -> trunkPlacerParts(i).and(i.group(
+            BlockStateProvider.CODEC.fieldOf("cap_provider").forGetter(p -> p.capProvider),
+            IntProvider.POSITIVE_CODEC.fieldOf("extra_branch_steps").forGetter(p -> p.extraBranchSteps),
+            RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("can_grow_through").forGetter(p -> p.canGrowThrough)
+    )).apply(i, BloomTrunkPlacer::new));
+
     public final BlockStateProvider capProvider;
     private final IntProvider extraBranchSteps;
     private final HolderSet<Block> canGrowThrough;
     private BlockPos pos;
     private Direction trunkDir;
 
-    public BloomTrunkPlacer(int int1, int int2, int int3, IntProvider int4, HolderSet<Block> int7, BlockStateProvider cap) {
-        super(int1, int2, int3);
-        this.extraBranchSteps = int4;
-        this.canGrowThrough = int7;
-        this.capProvider = cap;
+    public BloomTrunkPlacer(int baseHeight, int heightRandA, int heightRandB, BlockStateProvider capProvider, IntProvider extraBranchSteps, HolderSet<Block> canGrowThrough) {
+        super(baseHeight, heightRandA, heightRandB);
+        this.capProvider = capProvider;
+        this.extraBranchSteps = extraBranchSteps;
+        this.canGrowThrough = canGrowThrough;
     }
 
     @Override
@@ -178,7 +184,7 @@ public class BloomTrunkPlacer extends TrunkPlacer {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos.MutableBlockPos blockpos$mutableblockpos3 = new BlockPos.MutableBlockPos();
         this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY() + 12, pPos.getZ()), pConfig);
-        Northstar.LOGGER.debug("{}", this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY()+12, pPos.getZ()), pConfig));
+        Northstar.LOGGER.debug("{}", this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY() + 12, pPos.getZ()), pConfig));
         Northstar.LOGGER.debug("YOOOOOOOOOOOOOOOO, BIOLUMINESCENCE");
         Northstar.LOGGER.debug("{}X    {}Y    {}Z", pPos.getX(), pPos.getY() + 12, pPos.getZ());
 

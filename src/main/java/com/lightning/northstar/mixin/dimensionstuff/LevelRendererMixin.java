@@ -1,41 +1,20 @@
 package com.lightning.northstar.mixin.dimensionstuff;
 
-import javax.annotation.Nullable;
-
-import com.lightning.northstar.content.NorthstarSounds;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.DustCloudParticleData;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-
 import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CloudStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -56,6 +35,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(LevelRenderer.class)
@@ -107,6 +96,7 @@ public class LevelRendererMixin {
     @Nullable
     @Shadow
     private ClientLevel level;
+    @Final
     @Shadow
     private Minecraft minecraft;
     private float f_alpha = 1;
@@ -475,7 +465,7 @@ public class LevelRendererMixin {
         }
     }
 
-    @Inject(method = "createStars", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "createStars", at = @At("TAIL"))
     private void createStars(CallbackInfo ci) {
         //stars 2
         Tesselator tesselator2 = Tesselator.getInstance();
@@ -917,18 +907,18 @@ public class LevelRendererMixin {
                     RenderSystem.setShaderTexture(0, VENUS_FAR);
                     bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                     bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                     BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
                     float MVF = 1;
                     RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                     bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                     bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                    bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                     BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
                     RenderSystem.disableBlend();
                     RenderSystem.depthMask(true);
@@ -1159,9 +1149,9 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder.vertex(matrix4f1, 100, -40f + EF, 50 + EF).uv(0, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + EF, 50 + -EF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -39 + -EF, 50 + -EF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, 100, -40f + -EF, 50 + EF).uv(0, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, 100, -39 + EF, 50 - EF).uv(1, 0).endVertex();
+                bufferbuilder.vertex(matrix4f1, 100, -39 - EF, 50 - EF).uv(1, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, 100, -40f - EF, 50 + EF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
 
                 float NS = 2.0F;
@@ -1170,17 +1160,17 @@ public class LevelRendererMixin {
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder.vertex(matrix4f1, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder.vertex(matrix4f1, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder.vertex(matrix4f1, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder.vertex(matrix4f1, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder.vertex(matrix4f1, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
 
                 float MVF = 1;
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                 bufferbuilder.vertex(matrix4f1, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder.vertex(matrix4f1, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder.vertex(matrix4f1, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                bufferbuilder.vertex(matrix4f1, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
                 RenderSystem.depthMask(true);
                 pPoseStack.popPose();
@@ -1266,8 +1256,8 @@ public class LevelRendererMixin {
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -1279,16 +1269,16 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
@@ -1456,8 +1446,8 @@ public class LevelRendererMixin {
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -1469,16 +1459,16 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 pPoseStack.popPose();
                 RenderSystem.depthMask(true);
@@ -1575,8 +1565,8 @@ public class LevelRendererMixin {
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
 
 
@@ -1590,16 +1580,16 @@ public class LevelRendererMixin {
                 RenderSystem.setShaderTexture(0, VENUS_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 bufferbuilder3.vertex(matrix4f3, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.setShaderTexture(0, EARTH_FAR);
                 bufferbuilder3.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                bufferbuilder3.vertex(matrix4f3, -58f, -30f + EF, -80 + -EF).uv(0, 0).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -58f, -30f + EF, -80 - EF).uv(0, 0).endVertex();
                 bufferbuilder3.vertex(matrix4f3, -60, -29.65f + EF, -80 + EF).uv(1, 0).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -60, -29.65f + -EF, -80 + EF).uv(1, -1).endVertex();
-                bufferbuilder3.vertex(matrix4f3, -58f, -30f + -EF, -80 + -EF).uv(0, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -60, -29.65f - EF, -80 + EF).uv(1, -1).endVertex();
+                bufferbuilder3.vertex(matrix4f3, -58f, -30f - EF, -80 - EF).uv(0, -1).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder3.end());
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -1667,7 +1657,7 @@ public class LevelRendererMixin {
 
     //THIS IS FOR THE OVERWORLD ONLY, OTHERWISE IT (probably) WONT BE CALLED
     // THIS IS FOR WHEN THE PLAYER IS **NOT** LEAVING THE PLANET
-    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getStarBrightness(F)F"), cancellable = true)
+    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getStarBrightness(F)F"))
     private void renderSkyStarsOverworld(PoseStack pPoseStack, Matrix4f pProjectionMatrix, float pPartialTick, Camera camera, boolean thing, Runnable runnable, CallbackInfo info) {
         if (this.minecraft == null) {
             return;
@@ -1689,8 +1679,8 @@ public class LevelRendererMixin {
         bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, -NS).uv(0.0F, 0.0F).endVertex();
         bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + NS, NS).uv(1.0F, 0.0F).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, NS).uv(1.0F, 1.0F).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 + -NS, -NS).uv(0.0F, 1.0F).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 - NS, NS).uv(1.0F, 1.0F).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -100, -30 - NS, -NS).uv(0.0F, 1.0F).endVertex();
         BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
         if (playerEyeLevel >= 450) {
@@ -1704,18 +1694,18 @@ public class LevelRendererMixin {
         RenderSystem.setShaderTexture(0, VENUS_FAR);
         bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + VF, 50 + VF).uv(0, 0).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 + -VF).uv(1, 0).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + -VF, 50 + -VF).uv(1, -1).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f + -VF, 50 + VF).uv(0, -1).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f + VF, 50 - VF).uv(1, 0).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -39.4f - VF, 50 - VF).uv(1, -1).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, 100, -40f - VF, 50 + VF).uv(0, -1).endVertex();
         BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
 
         float MVF = 1;
         RenderSystem.setShaderTexture(0, MARS_VERY_FAR);
         bufferbuilder_earth_sky.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 + -MVF).uv(0, 0).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + MVF, -80 - MVF).uv(0, 0).endVertex();
         bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + MVF, -80 + MVF).uv(1, 0).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f + -MVF, -80 + MVF).uv(1, -1).endVertex();
-        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f + -MVF, -80 + -MVF).uv(0, -1).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -60, -29.65f - MVF, -80 + MVF).uv(1, -1).endVertex();
+        bufferbuilder_earth_sky.vertex(matrix4f_earth_sky, -59.25f, -30f - MVF, -80 - MVF).uv(0, -1).endVertex();
         BufferUploader.drawWithShader(bufferbuilder_earth_sky.end());
     }
 

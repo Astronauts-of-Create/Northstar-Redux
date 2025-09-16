@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.data.WorldAttached;
@@ -100,6 +101,12 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        ItemHelper.dropContents(level, worldPosition, inventory);
+    }
+
     public void queueAssembly(Player player) {
         owner = player;
         assembleNextTick = true;
@@ -121,7 +128,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         ItemStack item = container.getItem(0);
         if (item.getItem() == NorthstarItems.STAR_MAP.get() || item.getItem() == NorthstarItems.RETURN_TICKET.get()) {
             if (item.getTagElement("Planet") != null)
-                target = NorthstarPlanets.getPlanetDimension(NorthstarPlanets.targetGetter(item.getTagElement("Planet").toString()));
+                target = NorthstarPlanets.getPlanetDimension(item.getTagElement("Planet").getString("name"));
         }
         if (getBlockState().getValue(RocketStationBlock.ASSEMBLING)) {
             assembleNextTick = true;

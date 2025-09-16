@@ -49,7 +49,7 @@ public class RoofVinesFeature extends Feature<RoofVinesConfig> {
              if (pLevel.isEmptyBlock(blockpos$mutableblockpos)) {
                 BlockState blockstate = pLevel.getBlockState(blockpos$mutableblockpos.above());
                 if (blockstate.isSolidRender(pLevel, blockpos$mutableblockpos.above())) {
-                   int j = Mth.nextInt(pRandom, 1, config.size.sample(pRandom));
+                   int j = Mth.nextInt(pRandom, 1, config.size().sample(pRandom));
                    if (pRandom.nextInt(6) == 0) {
                       j *= 2;
                    }
@@ -57,7 +57,7 @@ public class RoofVinesFeature extends Feature<RoofVinesConfig> {
                    if (pRandom.nextInt(5) == 0) {
                       j = 1;
                    }
-                   placeWeepingVinesColumn(pLevel, pRandom, blockpos$mutableblockpos, j, config.blockProvider, config.glowProvider);
+                   placeWeepingVinesColumn(pLevel, pRandom, blockpos$mutableblockpos, j, config.blockProvider(), config.glowProvider());
                 }
              }
           }

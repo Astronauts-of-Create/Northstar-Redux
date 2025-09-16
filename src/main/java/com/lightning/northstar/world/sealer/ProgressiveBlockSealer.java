@@ -134,7 +134,7 @@ public class ProgressiveBlockSealer {
             return sealable.isFaceSealed(level, pos, direction, source);
         if (source && NorthstarBlockTags.BLOCKS_AIR.matches(state))
             return true;
-        return Block.isFaceFull(state.getCollisionShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
+        return Block.isFaceFull(state.getShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
     }
 
     public void addToGoggleTooltip(List<Component> tooltip, int maximumSealed) {
