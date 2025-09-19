@@ -4,7 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.client.TilingAnchor;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
@@ -32,7 +32,7 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
     private final MovingOxygenSealer sealer;
 
     public OxygenSealerScreen(MovingOxygenSealer sealer) {
-        super(NorthstarTechBlocks.OXYGEN_SEALER.get().getName());
+        super(NorthstarBlocks.OXYGEN_SEALER.get().getName());
         this.sealer = sealer;
 
         setWindowSize(204, 64);

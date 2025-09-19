@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,7 +50,7 @@ public class WallTorchBlockMixin extends Block {
 
     @Unique
     private BlockState northstar$copyStateExtinguished(BlockState state) {
-        return NorthstarTechBlocks.EXTINGUISHED_TORCH_WALL
+        return NorthstarBlocks.EXTINGUISHED_TORCH_WALL
                 .get()
                 .defaultBlockState()
                 .setValue(ExtinguishedTorchWallBlock.FACING, state.getValue(FACING));

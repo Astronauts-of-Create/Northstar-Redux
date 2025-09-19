@@ -7,7 +7,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:venus_stone_replaceables"
+          "tag": "northstar:venus_stone_replaceable"
         },
         "state": {
           "Name": "northstar:venus_redstone_ore"
@@ -16,7 +16,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:venus_deep_stone_replaceables"
+          "tag": "northstar:venus_deep_stone_replaceable"
         },
         "state": {
           "Name": "northstar:venus_deep_redstone_ore"

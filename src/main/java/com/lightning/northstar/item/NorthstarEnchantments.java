@@ -14,7 +14,6 @@ public class NorthstarEnchantments {
             .object("frostbite")
             .enchantment(EnchantmentCategory.WEAPON, FrostbiteEnchantment::new)
             .addSlots(EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)
-            .lang("Frostbite")
             .rarity(Rarity.VERY_RARE)
             .register();
 
