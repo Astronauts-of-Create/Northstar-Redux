@@ -72,32 +72,14 @@
     },
     {
       "item": "northstar:dry_plant_fiber"
-    },
-    {
-      "item": "northstar:dry_plant_fiber"
-    },
-    {
-      "item": "northstar:dry_plant_fiber"
-    },
-    {
-      "item": "northstar:dry_plant_fiber"
-    },
-    {
-      "item": "northstar:dry_plant_fiber"
-    },
-    {
-      "item": "minecraft:bone_meal"
-    },
-    {
-      "amount": 100,
-      "fluid": "minecraft:water"
     }
   ],
   "results": [
     {
-      "amount": 200,
+      "_comment": "Since this recipe doesn't require bone meal (doing so would prevent it from being made in space) We have to reduce the amount of biofuel produced significantly",
+      "amount": 50,
       "fluid": "northstar:biofuel"
     }
   ],
-  "heatRequirement": "heated"
+  "heatRequirement": "superheated"
 }

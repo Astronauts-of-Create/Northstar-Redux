@@ -8,13 +8,13 @@
       "item": "northstar:rutile_concentrate"
     },
     {
-      "item": "create:zinc_ingot"
+      "item": "northstar:rutile_concentrate"
     },
     {
       "item": "create:zinc_ingot"
     },
     {
-      "amount": 500,
+      "amount": 1000,
       "fluid": "northstar:carbon"
     },
     {
