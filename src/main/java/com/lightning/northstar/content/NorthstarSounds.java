@@ -87,6 +87,7 @@ public class NorthstarSounds {
     public static final RegistryObject<SoundEvent> ROCKET_BLAST = registerRangedSound("rocket_blast", 32f);
     public static final RegistryObject<SoundEvent> ROCKET_LANDING = registerRangedSound("rocket_landing", 32f);
     public static final RegistryObject<SoundEvent> AIRFLOW = registerSound("airflow");
+    public static final RegistryObject<SoundEvent> COMBUSTION_ENGINE = registerSound("combustion_engine");
 
     public static void register(IEventBus eventbus) {
         SOUNDS.register(eventbus);
