@@ -18,6 +18,7 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
 
     private int lastLight = -1;
     private float generatedSpeed;
+    private int ticksSinceChange;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -28,9 +29,10 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
         super.tick();
 
         int light = Math.max(0, level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken());
-        if (light != lastLight) {
+        if (light != lastLight && ticksSinceChange++ >= 40) {
             lastLight = light;
             generatedSpeed = MAXIMUM_SPEED * light / 15f * NorthstarPlanets.getSunMultiplier(level.dimension());
+            ticksSinceChange = 0;
             updateGeneratedRotation();
         }
 
