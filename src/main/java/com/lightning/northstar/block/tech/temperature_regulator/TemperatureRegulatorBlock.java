@@ -19,11 +19,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements IBE<TemperatureRegulatorBlockEntity> {
 
-    protected static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
+    protected static final VoxelShape SHAPE = box(0, 0, 0, 16, 13, 16);
 
     public TemperatureRegulatorBlock(Properties properties) {
         super(properties);
@@ -31,9 +32,13 @@ public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos,
-                be -> ScreenOpener.open(new TemperatureRegulatorScreen(be.regulator, -1, be.getBlockPos()))));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, this::openScreen));
         return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(TemperatureRegulatorBlockEntity be) {
+        ScreenOpener.open(new TemperatureRegulatorScreen(be.regulator, -1, be.getBlockPos()));
     }
 
     @Override

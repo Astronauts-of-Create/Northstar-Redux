@@ -20,7 +20,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
     private static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/temperature_regulator.png");

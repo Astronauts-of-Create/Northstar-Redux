@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.3.0+1.20.1-create5" // https://semver.org/
+version = "0.3.1+1.20.1-create5" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -24,6 +24,7 @@ loom {
     forge {
         mixinConfig("northstar.mixins.json")
     }
+    runs["server"].runDir = "run-server/"
 }
 
 repositories {
@@ -93,8 +94,7 @@ dependencies {
     forgeRuntimeLibrary("io.netty:netty-codec-socks:4.1.82.Final")
     forgeRuntimeLibrary("io.netty:netty-handler-proxy:4.1.82.Final")
 
-    modRuntimeOnly(libs.embeddium)
-    modRuntimeOnly(libs.oculus)
+    // keep jCPP as oculus crashes without it, Embedium and Oculus have to be installed manually on the client as not to crash the server
     forgeRuntimeLibrary(libs.jcpp)
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here

@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -24,8 +25,13 @@ public class OxygenSealerMovingInteractionBehaviour extends MovingInteractionBeh
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingOxygenSealer sealer))
             return false;
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ScreenOpener.open(new OxygenSealerScreen(sealer)));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(sealer));
         return true;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(MovingOxygenSealer sealer) {
+        ScreenOpener.open(new OxygenSealerScreen(sealer));
     }
 
 }

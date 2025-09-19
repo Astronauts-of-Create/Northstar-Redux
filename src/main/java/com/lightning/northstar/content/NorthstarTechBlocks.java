@@ -111,7 +111,6 @@ public class NorthstarTechBlocks {
                     .strength(6, 6))
             .transform(axeOrPickaxe())
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
-            //.transform(CStress.setImpact(16.0))
             .transform(BlockStressDefaults.setCapacity(16))
             .simpleItem()
             .register();
@@ -127,7 +126,6 @@ public class NorthstarTechBlocks {
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .simpleItem()
             .register();
-
 
     public static final BlockEntry<TemperatureRegulatorBlock> TEMPERATURE_REGULATOR = REGISTRATE
             .block("temperature_regulator", TemperatureRegulatorBlock::new)
@@ -158,7 +156,6 @@ public class NorthstarTechBlocks {
             .transform(BlockStressDefaults.setCapacity(16))
             .simpleItem()
             .register();
-
 
     public static final BlockEntry<CombustionEngineBlock> COMBUSTION_ENGINE = REGISTRATE
             .block("combustion_engine", CombustionEngineBlock::new)

@@ -20,7 +20,7 @@ public class CandleBlockMixin {
     @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
     public void northstar$updateLit(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                                     BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
-        if (!NorthstarOxygen.hasOxygen(((Level) level), pos) && state.getValue(CandleBlock.LIT)) {
+        if (level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos) && state.getValue(CandleBlock.LIT)) {
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 0);
             info.setReturnValue(state.setValue(CandleBlock.LIT, false));
         }

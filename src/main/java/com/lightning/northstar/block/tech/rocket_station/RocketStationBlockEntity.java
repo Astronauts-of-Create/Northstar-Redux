@@ -213,8 +213,9 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         // cannot rely on getContraptionWorld() yet as it depends on the entity to get the level
         Level contraptionWorld = new ContraptionWorld(level, contraption);
         int maximumSealedBlocks = NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get();
-        boolean oxygenSealed = sealer.beginSeal(contraptionWorld, worldPosition.subtract(contraption.anchor).above(), Direction.UP) &&
-                sealer.updateSeal(contraptionWorld, maximumSealedBlocks, maximumSealedBlocks);
+        boolean oxygenSealed = sealer.beginSeal(contraptionWorld, BlockPos.ZERO, Direction.UP) &&
+                sealer.updateSeal(contraptionWorld, maximumSealedBlocks, maximumSealedBlocks) &&
+                !sealer.hasLeak();
 
         boolean interplanetaryFlag = NorthstarPlanets.isInterplanetary(level.dimension(), target);
         if (interplanetaryFlag) {

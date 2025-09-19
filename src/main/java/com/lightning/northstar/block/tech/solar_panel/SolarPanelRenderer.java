@@ -50,7 +50,6 @@ public class SolarPanelRenderer extends KineticBlockEntityRenderer<SolarPanelBlo
 
         CachedBufferer.partial(model, state)
                 .light(light)
-                .overlay(overlay)
                 .renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
         ms.popPose();
