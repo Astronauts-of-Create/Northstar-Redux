@@ -3,7 +3,7 @@
   "acceptMirrored": false,
   "key": {
     "A": {
-      "tag": "forge:plates/brass"
+      "item": "northstar:titanium_sheet"
     },
     "P": {
       "item": "create:propeller"

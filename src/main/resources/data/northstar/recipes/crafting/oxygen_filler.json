@@ -10,7 +10,7 @@
       "tag": "forge:plates/iron"
     },
     "A": {
-      "item": "create:brass_ingot"
+      "item": "northstar:titanium_ingot"
     },
     "T": {
       "item": "northstar:oxygen_separator"

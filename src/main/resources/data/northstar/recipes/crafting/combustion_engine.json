@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "tag": "forge:plates/brass"
+      "item": "northstar:titanium_sheet"
     },
     "A": {
       "item": "create:industrial_iron_block"
