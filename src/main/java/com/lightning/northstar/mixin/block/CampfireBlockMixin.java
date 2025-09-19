@@ -35,7 +35,7 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock {
     @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
     public void northstar$updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                                       BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> cir) {
-        if (!NorthstarOxygen.hasOxygen((Level) level, pos)) {
+        if (level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             cir.setReturnValue(defaultBlockState().setValue(CampfireBlock.LIT, false));
         }
     }

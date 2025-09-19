@@ -43,7 +43,7 @@ public class WallTorchBlockMixin extends Block {
     @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
     public void northstar$updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                                       BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
-        if (!NorthstarOxygen.hasOxygen((Level) level, pos)) {
+        if (level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             info.setReturnValue(northstar$copyStateExtinguished(state));
         }
     }

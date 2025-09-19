@@ -63,6 +63,7 @@ public class Northstar {
         IEventBus modEventBus = modContext.getModEventBus();
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
+        REGISTRATE.registerEventListeners(modEventBus);
         GeckoLib.initialize();
 
         NorthstarTags.register();
@@ -88,7 +89,6 @@ public class Northstar {
 
         RocketHandler.register();
 
-        REGISTRATE.registerEventListeners(modEventBus);
         modEventBus.addListener(this::onRegisterRegistries);
         modEventBus.addListener(this::onRegister);
 
