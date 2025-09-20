@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "northstar:auto_lander",
     "northstar:mars_stone",
     "northstar:mars_deep_stone",
     "northstar:mars_copper_ore",
