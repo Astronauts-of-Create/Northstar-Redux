@@ -4,12 +4,12 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.lightning.northstar.data.FuelType;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mezz.jei.common.util.RegistryUtil;
@@ -43,8 +43,10 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
                 .map(fluid -> new FluidStack(fluid, 1))
                 .toList();
 
-        CreateRecipeCategory.addFluidSlot(builder, 5, 5, FluidIngredient.EMPTY)
-                .addIngredients(NeoForgeTypes.FLUID_STACK, fluids);
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 5)
+                .setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)
+                .addIngredients(NeoForgeTypes.FLUID_STACK, fluids)
+                .setFluidRenderer(1, false, 16, 16);
     }
 
     @Override
