@@ -7,23 +7,13 @@
     },
     {
       "amount": 1000,
-      "fluid": "minecraft:water"
-    },
-    {
-      "item": "northstar:sodium_catalyst"
-    },
-    {
-      "item": "northstar:sodium_catalyst"
-    },
-    {
-      "item": "northstar:sodium_catalyst"
+      "fluid": "northstar:hydrogen"
     }
   ],
   "results": [
     {
-      "amount": 1000,
+      "amount": 2000,
       "fluid": "northstar:hydrocarbon"
     }
-  ],
-  "heatRequirement": "superheated"
+  ]
 }

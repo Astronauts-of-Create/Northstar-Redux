@@ -2,7 +2,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "amount": 750,
+      "amount": 600,
       "fluid": "northstar:brine"
     }
   ],

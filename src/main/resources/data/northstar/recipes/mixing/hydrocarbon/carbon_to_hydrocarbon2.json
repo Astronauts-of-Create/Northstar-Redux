@@ -6,19 +6,21 @@
       "fluid": "northstar:carbon"
     },
     {
-      "amount": 100,
-      "fluid": "northstar:sodium_hydroxide"
+      "amount": 1000,
+      "fluid": "minecraft:water"
     },
     {
-      "amount": 750,
-      "fluid": "minecraft:water"
+      "item": "northstar:sodium_catalyst"
+    },
+    {
+      "item": "northstar:sodium_catalyst"
     }
   ],
   "results": [
     {
-      "amount": 1500,
+      "amount": 750,
       "fluid": "northstar:hydrocarbon"
     }
   ],
-  "heatRequirement": "heated"
+  "heatRequirement": "superheated"
 }

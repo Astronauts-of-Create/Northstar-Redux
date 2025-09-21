@@ -1,0 +1,9 @@
+{
+  "fluids": [
+    "northstar:hydrogen",
+    "northstar:flowing_hydrogen"
+  ],
+  "rocket_multiplier": 1.5,
+  "combustion_engine_use": 4.0,
+  "combustion_engine_rpm": 32.0
+}
