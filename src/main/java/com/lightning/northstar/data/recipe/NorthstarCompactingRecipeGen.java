@@ -4,6 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.data.ModCompat;
 import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.data.recipe.Mods;
@@ -76,11 +77,11 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .output(NorthstarFluids.BIOFUEL.get(), 20)
                     .whenModLoaded(Mods.MEK.getId())),
 
-    //CARBON_FROM_BIODIESEL = create("carbon_from_biodiesel",
-    //        b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-    //                .require(ModCompat.CDG.loc("biodiesel"))// TODO: check it works
-    //                .output(NorthstarFluids.CARBON.get(), 500)
-    //                .whenModLoaded(ModCompat.CDG.getModId())),
+    CARBON_FROM_BIODIESEL = create("carbon_from_biodiesel",
+            b -> b.requiresHeat(HeatCondition.SUPERHEATED)
+                    .require(ModCompat.CDG.fluidIngredient("biodiesel", 1000))
+                    .output(NorthstarFluids.CARBON.get(), 500)
+                    .whenModLoaded(ModCompat.CDG.getModId())),
 
     CARBON_FROM_BIOFUEL = create("carbon_from_biofuel",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)

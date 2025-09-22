@@ -1,6 +1,5 @@
 package com.lightning.northstar.data;
 
-import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
@@ -164,21 +163,7 @@ public class NorthstarTagGen {
     private static void entities(RegistrateTagsProvider<EntityType<?>> provider) {
         Tags<EntityType<?>, EntityType<?>> tags = new Tags<>(provider, EntityType::builtInRegistryHolder, Function.identity());
 
-        // TODO: moves the tags to the entity declarations
-
         tags.tag(NorthstarEntityTags.CAN_SURVIVE_COLD)
-                .add(NorthstarEntityTypes.FROZEN_ZOMBIE.get())
-                .add(NorthstarEntityTypes.MARS_COBRA.get())
-                .add(NorthstarEntityTypes.MARS_MOTH.get())
-                .add(NorthstarEntityTypes.MARS_TOAD.get())
-                .add(NorthstarEntityTypes.MARS_WORM.get())
-                .add(NorthstarEntityTypes.MERCURY_RAPTOR.get())
-                .add(NorthstarEntityTypes.MERCURY_ROACH.get())
-                .add(NorthstarEntityTypes.MERCURY_TORTOISE.get())
-                .add(NorthstarEntityTypes.MOON_EEL.get())
-                .add(NorthstarEntityTypes.MOON_LUNARGRADE.get())
-                .add(NorthstarEntityTypes.MOON_SNAIL.get())
-
                 .add(EntityType.SKELETON)
                 .add(EntityType.SNOW_GOLEM)
                 .add(EntityType.STRAY)
@@ -186,22 +171,6 @@ public class NorthstarTagGen {
                 .add(EntityType.WITHER_SKELETON);
 
         tags.tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN)
-                .add(NorthstarEntityTypes.VENUS_MIMIC.get())
-                .add(NorthstarEntityTypes.VENUS_SCORPION.get())
-                .add(NorthstarEntityTypes.VENUS_STONE_BULL.get())
-                .add(NorthstarEntityTypes.VENUS_VULTURE.get())
-                .add(NorthstarEntityTypes.MARS_WORM.get())
-                .add(NorthstarEntityTypes.MARS_COBRA.get())
-                .add(NorthstarEntityTypes.MARS_TOAD.get())
-                .add(NorthstarEntityTypes.MARS_MOTH.get())
-                .add(NorthstarEntityTypes.MOON_LUNARGRADE.get())
-                .add(NorthstarEntityTypes.MOON_SNAIL.get())
-                .add(NorthstarEntityTypes.MOON_EEL.get())
-                .add(NorthstarEntityTypes.MERCURY_RAPTOR.get())
-                .add(NorthstarEntityTypes.MERCURY_ROACH.get())
-                .add(NorthstarEntityTypes.MERCURY_TORTOISE.get())
-                .add(NorthstarEntityTypes.FROZEN_ZOMBIE.get())
-
                 .add(EntityType.COD)
                 .add(EntityType.IRON_GOLEM)
                 .add(EntityType.SALMON)

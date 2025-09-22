@@ -1,5 +1,6 @@
 package com.lightning.northstar.content;
 
+import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.entity.projectiles.LunargradeSpit;
@@ -25,6 +26,7 @@ public class NorthstarEntityTypes {
             .properties(p -> p.sized(1.0f, 1.0f)
                     .fireImmune()
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -33,6 +35,7 @@ public class NorthstarEntityTypes {
             .properties(p -> p.sized(0.8f, 1.5f)
                     .fireImmune()
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -41,6 +44,7 @@ public class NorthstarEntityTypes {
             .properties(p -> p.sized(1.85f, 1.5f)
                     .fireImmune()
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -49,6 +53,7 @@ public class NorthstarEntityTypes {
             .properties(p -> p.sized(0.8f, 0.9f)
                     .fireImmune()
                     .clientTrackingRange(16))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -60,6 +65,8 @@ public class NorthstarEntityTypes {
             .lang("Mars Echo Worm")
             .properties(p -> p.sized(1.5f, 0.75f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -68,6 +75,8 @@ public class NorthstarEntityTypes {
             .lang("Mars Root Toad")
             .properties(p -> p.sized(0.7f, 0.5f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -75,6 +84,8 @@ public class NorthstarEntityTypes {
             .entity("mars_cobra", MarsCobraEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(1f, 0.7f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -83,6 +94,8 @@ public class NorthstarEntityTypes {
             .lang("Mars Devil Moth")
             .properties(p -> p.sized(0.8f, 0.9f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -93,6 +106,8 @@ public class NorthstarEntityTypes {
             .entity("moon_lunargrade", MoonLunargradeEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(0.9f, 0.7f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -100,6 +115,8 @@ public class NorthstarEntityTypes {
             .entity("moon_snail", MoonSnailEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(0.5f, 0.5f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -107,6 +124,8 @@ public class NorthstarEntityTypes {
             .entity("moon_eel", MoonEelEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(0.5f, 0.3f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -114,6 +133,8 @@ public class NorthstarEntityTypes {
             .entity("frozen_zombie", FrozenZombieEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(0.6f, 1.95f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -125,6 +146,8 @@ public class NorthstarEntityTypes {
             .lang("Mercurian Raptor")
             .properties(p -> p.sized(0.7f, 1.4f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -132,6 +155,8 @@ public class NorthstarEntityTypes {
             .entity("mercury_roach", MercuryRoachEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(0.6f, 0.5f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
@@ -139,6 +164,8 @@ public class NorthstarEntityTypes {
             .entity("mercury_tortoise", MercuryTortoiseEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(1f, 0.9f)
                     .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
