@@ -16,7 +16,6 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
     GeneratedRecipe
             $ = null,
 
-    // least boilerplate Java code
     BIOFUEL_FROM_DRIED_KELP = create("biofuel_from_dried_kelp",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(Items.DRIED_KELP)
@@ -27,16 +26,9 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
                     .require(Items.BONE_MEAL)
-                    .output(NorthstarFluids.BIOFUEL.get(), 300)),
+                    .output(NorthstarFluids.BIOFUEL.get(), 150)),
 
-    // yup, definitely Java
-    // say, what's a loop anyway?
     BIOFUEL_FROM_DRY_PLANT_FIBER = create("biofuel_from_dry_plant_fiber",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarItems.DRY_PLANT_FIBER)
@@ -44,31 +36,8 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(NorthstarItems.DRY_PLANT_FIBER)
                     .require(NorthstarItems.DRY_PLANT_FIBER)
                     .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
                     .require(Items.BONE_MEAL)
-                    .output(NorthstarFluids.BIOFUEL.get(), 200)),
+                    .output(NorthstarFluids.BIOFUEL.get(), 20)),
 
     BIOFUEL_MEKANISM = create("biofuel_from_mekanism",
             b -> b.requiresHeat(HeatCondition.HEATED)
