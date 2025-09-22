@@ -182,6 +182,11 @@ public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
     }
 
     @Override
+    protected boolean canSpecifyDuration() {
+        return true;
+    }
+
+    @Override
     public boolean matches(RecipeInput input, Level world) {
         return false;
     }

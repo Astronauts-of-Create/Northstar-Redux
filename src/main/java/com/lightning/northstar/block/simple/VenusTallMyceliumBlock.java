@@ -53,7 +53,7 @@ public class VenusTallMyceliumBlock extends BushBlock {
         Direction direction = state.getValue(IS_ON_CEILING) ? Direction.DOWN : Direction.UP;
 
         BlockState blockstate = level.getBlockState(otherPos);
-        return blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockstate.canSustainPlant(level, otherPos, direction, this);
+        return blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockstate.canSustainPlant(level, otherPos, direction, state).isTrue();
     }
 
     @Override

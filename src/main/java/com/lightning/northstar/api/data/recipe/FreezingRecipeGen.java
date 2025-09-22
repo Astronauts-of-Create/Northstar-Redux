@@ -1,14 +1,18 @@
 package com.lightning.northstar.api.data.recipe;
 
+import com.lightning.northstar.block.tech.ice_box.FreezingRecipe;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
+import com.simibubi.create.api.data.recipe.StandardProcessingRecipeGen;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
-public abstract class FreezingRecipeGen extends ProcessingRecipeGen {
+import java.util.concurrent.CompletableFuture;
 
-    public FreezingRecipeGen(PackOutput generator, String defaultNamespace) {
-        super(generator, defaultNamespace);
+public abstract class FreezingRecipeGen extends StandardProcessingRecipeGen<FreezingRecipe> {
+
+    public FreezingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
+        super(output, registries, defaultNamespace);
     }
 
     @Override

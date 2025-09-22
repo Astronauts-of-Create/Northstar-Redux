@@ -3,8 +3,11 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.api.data.recipe.ElectrolysisRecipeGen;
 import com.lightning.northstar.content.NorthstarFluids;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarElectrolysisRecipeGen extends ElectrolysisRecipeGen {
 
@@ -21,8 +24,8 @@ public class NorthstarElectrolysisRecipeGen extends ElectrolysisRecipeGen {
                     .output(NorthstarFluids.OXYGEN.get(), 7)
                     .output(NorthstarFluids.HYDROGEN.get(), 2));
 
-    public NorthstarElectrolysisRecipeGen(PackOutput generator) {
-        super(generator, Northstar.MOD_ID);
+    public NorthstarElectrolysisRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

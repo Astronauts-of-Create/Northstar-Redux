@@ -6,6 +6,7 @@ import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.entity.*;
+import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.item.NorthstarTooltipModifier;
@@ -66,7 +67,6 @@ public class Northstar {
         NorthstarBlocks.register();
         NorthstarBlockEntityTypes.register();
         NorthstarPotions.register(modEventBus);
-        NorthstarEnchantments.register();
         NorthstarBlocks.register();
         NorthstarFeatures.register(modEventBus);
         NorthstarRecipeTypes.register(modEventBus);
@@ -78,6 +78,7 @@ public class Northstar {
         NorthstarEntityTypes.register();
         NorthstarFluids.register();
         NorthstarArmorMaterials.register(modEventBus);
+        NorthstarEnchantments.register(modEventBus);
 
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();

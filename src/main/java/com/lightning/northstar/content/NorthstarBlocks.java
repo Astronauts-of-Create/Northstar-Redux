@@ -33,9 +33,6 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.data.NorthstarConfiguredFeatures;
 import com.lightning.northstar.util.NorthstarDataGenHelper;
-import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
-import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
-import com.lightning.northstar.world.features.grower.WilterTreeGrower;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -53,6 +50,7 @@ import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
@@ -196,7 +194,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> MARTIAN_STEEL_PLATING_STAIRS = REGISTRATE
-            .block("martian_steel_plating_stairs", p -> new StairBlock(() -> MARTIAN_STEEL_PLATING.get().defaultBlockState(), p))
+            .block("martian_steel_plating_stairs", p -> new StairBlock(MARTIAN_STEEL_PLATING.get().defaultBlockState(), p))
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -365,7 +363,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> TITANIUM_PLATING_STAIRS = REGISTRATE
-            .block("titanium_plating_stairs", p -> new StairBlock(() -> TITANIUM_PLATING.get().defaultBlockState(), p))
+            .block("titanium_plating_stairs", p -> new StairBlock(TITANIUM_PLATING.get().defaultBlockState(), p))
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -510,7 +508,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> TUNGSTEN_PLATING_STAIRS = REGISTRATE
-            .block("tungsten_plating_stairs", p -> new StairBlock(() -> TUNGSTEN_PLATING.get().defaultBlockState(), p))
+            .block("tungsten_plating_stairs", p -> new StairBlock(TUNGSTEN_PLATING.get().defaultBlockState(), p))
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -557,8 +555,9 @@ public class NorthstarBlocks {
     // endregion
     // region Mars
 
-    public static final BlockEntry<GravelBlock> MARS_SAND = REGISTRATE
-            .block("mars_sand", GravelBlock::new)
+    // TODO: color
+    public static final BlockEntry<ColoredFallingBlock> MARS_SAND = REGISTRATE
+            .block("mars_sand", p -> new ColoredFallingBlock(new ColorRGBA(0), p))
             .initialProperties(() -> SAND)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.GRAVEL)
@@ -572,8 +571,9 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<GravelBlock> MARS_GRAVEL = REGISTRATE
-            .block("mars_gravel", GravelBlock::new)
+    // TODO: color
+    public static final BlockEntry<ColoredFallingBlock> MARS_GRAVEL = REGISTRATE
+            .block("mars_gravel", p -> new ColoredFallingBlock(new ColorRGBA(0), p))
             .initialProperties(() -> SAND)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.GRAVEL)
@@ -690,7 +690,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.ARGYRE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, RegistrateBlockLootTables.HAS_SILK_TOUCH)))
+            .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, c.hasSilkTouch())))
             .item()
             .model(NorthstarDataGenHelper.itemGeneratedBlock())
             .build()
@@ -713,7 +713,7 @@ public class NorthstarBlocks {
                                             .hasProperty(MartianStrawberryBushBlock.AGE, 5)))
                             .add(LootItem.lootTableItem(NorthstarItems.MARTIAN_STRAWBERRY))
                             .apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))
-                            .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))))))
+                            .apply(ApplyBonusCount.addUniformBonusCount(c.getRegistries().holderOrThrow(Enchantments.FORTUNE)))))))
             .item()
             .model((c, p) -> p.generated(c::get, p.modLoc("block/strawberry_bush_stage5")))
             .build()
@@ -872,7 +872,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> MARS_STONE_BRICK_STAIRS = REGISTRATE
-            .block("mars_stone_brick_stairs", p -> new StairBlock(STONE::defaultBlockState, p))
+            .block("mars_stone_brick_stairs", p -> new StairBlock(STONE.defaultBlockState(), p))
             /*.initalProperties(STONE)*/
             .properties(p -> p.sound(SoundType.DEEPSLATE_BRICKS)
                     .strength(3.5f, 12f)
@@ -1023,7 +1023,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DIAMOND_ORE = REGISTRATE
-            .block("mars_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("mars_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE)
@@ -1061,7 +1061,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_QUARTZ_ORE = REGISTRATE
-            .block("mars_quartz_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mars_quartz_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE)
@@ -1150,7 +1150,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DEEP_DIAMOND_ORE = REGISTRATE
-            .block("mars_deep_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("mars_deep_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE)
@@ -1188,7 +1188,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DEEP_QUARTZ_ORE = REGISTRATE
-            .block("mars_deep_quartz_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mars_deep_quartz_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE)
@@ -1290,7 +1290,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> WILTER_STAIRS = REGISTRATE
-            .block("wilter_stairs", p -> new StairBlock(OAK_PLANKS::defaultBlockState, p))
+            .block("wilter_stairs", p -> new StairBlock(OAK_PLANKS.defaultBlockState(), p))
             .initialProperties(SharedProperties::wooden)
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .sound(SoundType.WOOD)
@@ -1302,7 +1302,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<SaplingBlock> WILTER_SAPLING = REGISTRATE
-            .block("wilter_sapling", p -> new SaplingBlock(new WilterTreeGrower(), p))
+            .block("wilter_sapling", p -> new SaplingBlock(NorthstarTreeGrowers.WILTER, p))
             /*BlockBehaviour.Properties.of(Material.PLANT)*/
             .properties(p -> p.sound(SoundType.GRASS)
                     .randomTicks()
@@ -1359,7 +1359,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<SaplingBlock> ARGYRE_SAPLING = REGISTRATE
-            .block("argyre_sapling", p -> new SaplingBlock(new ArgyreSaplingTreeGrower(), p))
+            .block("argyre_sapling", p -> new SaplingBlock(NorthstarTreeGrowers.ARGYRE_SAPLING, p))
             /*BlockBehaviour.Properties.of(Material.PLANT)*/
             .properties(p -> p.sound(SoundType.GRASS)
                     .randomTicks()
@@ -1414,7 +1414,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> ARGYRE_STAIRS = REGISTRATE
-            .block("argyre_stairs", p -> new StairBlock(OAK_PLANKS::defaultBlockState, p))
+            .block("argyre_stairs", p -> new StairBlock(OAK_PLANKS.defaultBlockState(), p))
             .initialProperties(SharedProperties::wooden)
             .properties(p -> p.mapColor(MapColor.COLOR_RED)
                     .sound(SoundType.WOOD)
@@ -1482,7 +1482,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> COILER_STAIRS = REGISTRATE
-            .block("coiler_stairs", p -> new StairBlock(OAK_PLANKS::defaultBlockState, p))
+            .block("coiler_stairs", p -> new StairBlock(OAK_PLANKS.defaultBlockState(), p))
             /*/BlockBehaviour.Properties.of(Material.WOOD*/
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GREEN)
                     .sound(SoundType.WOOD)
@@ -1493,7 +1493,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<SaplingBlock> COILER_SAPLING = REGISTRATE
-            .block("coiler_sapling", p -> new SaplingBlock(new CoilerTreeGrower(), p))
+            .block("coiler_sapling", p -> new SaplingBlock(NorthstarTreeGrowers.COILER, p))
             /*BlockBehaviour.Properties.of(Material.PLANT)*/
             .properties(p -> p.sound(SoundType.GRASS)
                     .randomTicks()
@@ -1542,8 +1542,9 @@ public class NorthstarBlocks {
     // endregion
     // region Moon
 
-    public static final BlockEntry<GravelBlock> MOON_SAND = REGISTRATE
-            .block("moon_sand", GravelBlock::new)
+    // TODO: color
+    public static final BlockEntry<ColoredFallingBlock> MOON_SAND = REGISTRATE
+            .block("moon_sand", p -> new ColoredFallingBlock(new ColorRGBA(0), p))
             .initialProperties(() -> SAND)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.SAND)
@@ -1603,7 +1604,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, RegistrateBlockLootTables.HAS_SILK_TOUCH)))
+            .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, c.hasSilkTouch())))
             .simpleItem()
             .register();
 
@@ -1649,7 +1650,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> MOON_STONE_BRICK_STAIRS = REGISTRATE
-            .block("moon_stone_brick_stairs", p -> new StairBlock(STONE::defaultBlockState, p))
+            .block("moon_stone_brick_stairs", p -> new StairBlock(STONE.defaultBlockState(), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE_BRICKS)
@@ -1801,7 +1802,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DIAMOND_ORE = REGISTRATE
-            .block("moon_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("moon_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -1839,7 +1840,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_LAPIS_ORE = REGISTRATE
-            .block("moon_lapis_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("moon_lapis_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -1856,7 +1857,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_ZINC_ORE = REGISTRATE
-            .block("moon_zinc_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("moon_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -1963,7 +1964,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DEEP_DIAMOND_ORE = REGISTRATE
-            .block("moon_deep_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("moon_deep_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -2001,7 +2002,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DEEP_LAPIS_ORE = REGISTRATE
-            .block("moon_deep_lapis_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("moon_deep_lapis_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -2018,7 +2019,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DEEP_ZINC_ORE = REGISTRATE
-            .block("moon_deep_zinc_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("moon_deep_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -2164,8 +2165,9 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<GravelBlock> VENUS_GRAVEL = REGISTRATE
-            .block("venus_gravel", GravelBlock::new)
+    // TODO: color
+    public static final BlockEntry<ColoredFallingBlock> VENUS_GRAVEL = REGISTRATE
+            .block("venus_gravel", p -> new ColoredFallingBlock(new ColorRGBA(0), p))
             .initialProperties(() -> SAND)
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
                     .sound(SoundType.GRAVEL)
@@ -2429,7 +2431,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> VENUS_STONE_BRICK_STAIRS = REGISTRATE
-            .block("venus_stone_brick_stairs", p -> new StairBlock(STONE::defaultBlockState, p))
+            .block("venus_stone_brick_stairs", p -> new StairBlock(STONE.defaultBlockState(), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE_BRICKS)
@@ -2589,7 +2591,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DIAMOND_ORE = REGISTRATE
-            .block("venus_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("venus_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
                     .sound(SoundType.DEEPSLATE)
@@ -2625,7 +2627,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_QUARTZ_ORE = REGISTRATE
-            .block("venus_quartz_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("venus_quartz_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
                     .sound(SoundType.DEEPSLATE)
@@ -2727,7 +2729,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DEEP_DIAMOND_ORE = REGISTRATE
-            .block("venus_deep_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("venus_deep_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE)
@@ -2763,7 +2765,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DEEP_QUARTZ_ORE = REGISTRATE
-            .block("venus_deep_quartz_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("venus_deep_quartz_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE)
@@ -2872,7 +2874,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> MERCURY_STONE_BRICK_STAIRS = REGISTRATE
-            .block("mercury_stone_brick_stairs", p -> new StairBlock(STONE::defaultBlockState, p))
+            .block("mercury_stone_brick_stairs", p -> new StairBlock(STONE.defaultBlockState(), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE_BRICKS)
@@ -3018,7 +3020,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DIAMOND_ORE = REGISTRATE
-            .block("mercury_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("mercury_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3054,7 +3056,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_LAPIS_ORE = REGISTRATE
-            .block("mercury_lapis_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mercury_lapis_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3070,7 +3072,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_ZINC_ORE = REGISTRATE
-            .block("mercury_zinc_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mercury_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3104,7 +3106,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_TUNGSTEN_ORE = REGISTRATE
-            .block("mercury_tungsten_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mercury_tungsten_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3187,7 +3189,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_DIAMOND_ORE = REGISTRATE
-            .block("mercury_deep_diamond_ore", p -> new DropExperienceBlock(p, UniformInt.of(3, 7)))
+            .block("mercury_deep_diamond_ore", p -> new DropExperienceBlock(UniformInt.of(3, 7), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3223,7 +3225,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_LAPIS_ORE = REGISTRATE
-            .block("mercury_deep_lapis_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mercury_deep_lapis_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3239,7 +3241,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_ZINC_ORE = REGISTRATE
-            .block("mercury_deep_zinc_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mercury_deep_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3273,7 +3275,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_TUNGSTEN_ORE = REGISTRATE
-            .block("mercury_deep_tungsten_ore", p -> new DropExperienceBlock(p, UniformInt.of(2, 5)))
+            .block("mercury_deep_tungsten_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.DEEPSLATE)
@@ -3326,7 +3328,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<StairBlock> CALORIAN_STAIRS = REGISTRATE
-            .block("calorian_stairs", p -> new StairBlock(() -> CALORIAN_PLANKS.get().defaultBlockState(), p))
+            .block("calorian_stairs", p -> new StairBlock(CALORIAN_PLANKS.get().defaultBlockState(), p))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.BASALT)

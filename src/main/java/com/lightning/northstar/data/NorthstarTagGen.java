@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Function;
 
@@ -25,6 +27,17 @@ public class NorthstarTagGen {
         REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, NorthstarTagGen::blocks);
         REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, NorthstarTagGen::items);
         REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, NorthstarTagGen::entities);
+        REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, NorthstarTagGen::fluids);
+    }
+
+    private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
+        Tags<Fluid, Fluid> tags = new Tags<>(provider, Fluid::builtInRegistryHolder, Function.identity());
+
+        tags.tag(NorthstarTags.NorthstarFluidTags.CBC_BIODIESEL)
+                .opt(ModCompat.CBC, "biodiesel");
+
+        tags.tag(NorthstarTags.NorthstarFluidTags.CBC_MOLTEN_CAST_IRON)
+                .opt(ModCompat.CBC, "molten_cast_iron");
     }
 
     private static void blocks(RegistrateTagsProvider<Block> provider) {

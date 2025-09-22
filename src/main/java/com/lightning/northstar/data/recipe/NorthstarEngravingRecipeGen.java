@@ -3,7 +3,10 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.api.data.recipe.EngravingRecipeGen;
 import com.lightning.northstar.content.NorthstarItems;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarEngravingRecipeGen extends EngravingRecipeGen {
 
@@ -13,8 +16,8 @@ public class NorthstarEngravingRecipeGen extends EngravingRecipeGen {
     ENRICHED_GLOWSTONE_ORE = create(() -> NorthstarItems.RAW_GLOWSTONE_ORE,
             b -> b.output(NorthstarItems.ENRICHED_GLOWSTONE_ORE));
 
-    public NorthstarEngravingRecipeGen(PackOutput generator) {
-        super(generator, Northstar.MOD_ID);
+    public NorthstarEngravingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

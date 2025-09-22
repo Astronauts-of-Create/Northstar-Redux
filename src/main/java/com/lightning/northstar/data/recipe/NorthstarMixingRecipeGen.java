@@ -9,13 +9,17 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
+import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarMixingRecipeGen extends MixingRecipeGen {
 
@@ -54,19 +58,19 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .output(NorthstarFluids.HYDROCARBON.get(), 750)),
 
     POTION_REGENERATION_3 = create("potion_regeneration_3",
-            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_REGENERATION, PotionFluid.BottleType.REGULAR)))
+            b -> b.require(PotionFluidHandler.potionIngredient(Potions.STRONG_REGENERATION, 50))
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
-                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))),
+                    .output(PotionFluid.of(50, new PotionContents(NorthstarPotions.ENHANCED_REGENERATION), PotionFluid.BottleType.REGULAR))),
 
     POTION_HEALING_3 = create("potion_healing_3",
-            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_HEALING, PotionFluid.BottleType.REGULAR)))
+            b -> b.require(PotionFluidHandler.potionIngredient(Potions.STRONG_HEALING, 50))
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
-                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_HEALING.get(), PotionFluid.BottleType.REGULAR))),
+                    .output(PotionFluid.of(50, new PotionContents(NorthstarPotions.ENHANCED_HEALING), PotionFluid.BottleType.REGULAR))),
 
     POTION_STRENGTH_3 = create("potion_strength_3",
-            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_STRENGTH, PotionFluid.BottleType.REGULAR)))
+            b -> b.require(PotionFluidHandler.potionIngredient(Potions.STRONG_STRENGTH, 50))
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
-                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))),
+                    .output(PotionFluid.of(50, new PotionContents(NorthstarPotions.ENHANCED_STRENGTH), PotionFluid.BottleType.REGULAR))),
 
     SALT_FROM_SODIUM = create("salt_from_sodium",
             b -> b.requiresHeat(HeatCondition.HEATED)
@@ -124,9 +128,8 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(Blocks.SNOW_BLOCK)
                     .output(Fluids.WATER, 250));
 
-
-    public NorthstarMixingRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarMixingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

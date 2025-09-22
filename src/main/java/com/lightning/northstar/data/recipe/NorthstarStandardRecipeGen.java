@@ -8,13 +8,16 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.data.Tags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 public class NorthstarStandardRecipeGen extends StandardRecipeGen {
@@ -419,7 +422,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
 
     // endregion
 
-    private GeneratedRecipe createLamp(ItemProviderEntry<? extends ItemLike> lamp, Supplier<? extends ItemLike> casing, Supplier<? extends ItemLike> core) {
+    private GeneratedRecipe createLamp(ItemProviderEntry<? extends ItemLike, ? extends ItemLike> lamp, Supplier<? extends ItemLike> casing, Supplier<? extends ItemLike> core) {
         return create(lamp)
                 .returns(4)
                 .unlockedBy(casing::get)
@@ -430,7 +433,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                         .pattern(" # "));
     }
 
-    private GeneratedRecipe createLamp(ItemProviderEntry<? extends ItemLike> lamp, Tags.Tag<Item> casing, Supplier<? extends ItemLike> core) {
+    private GeneratedRecipe createLamp(ItemProviderEntry<? extends ItemLike, ? extends ItemLike> lamp, Tags.Tag<Item> casing, Supplier<? extends ItemLike> core) {
         return create(lamp)
                 .returns(4)
                 .unlockedByTag(casing::tag)
@@ -455,8 +458,8 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                         .pattern("##"));
     }
 
-    public NorthstarStandardRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarStandardRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
 
         interchangeable(NorthstarBlocks.MARTIAN_STEEL_PLATING, NorthstarBlocks.MARTIAN_STEEL_LARGE_PLATING);
 

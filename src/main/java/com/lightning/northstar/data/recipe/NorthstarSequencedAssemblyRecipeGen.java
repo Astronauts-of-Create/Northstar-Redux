@@ -5,20 +5,23 @@ import com.lightning.northstar.accessor.NorthstarSequencedAssemblyRecipeBuilder;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
-import com.simibubi.create.content.fluids.potion.PotionFluid;
+import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen {
 
@@ -54,9 +57,9 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addOutput(NorthstarBlocks.COILER_SAPLING, 1)
                     .loops(2)
                     .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 500))
-                    .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_HEALING.get(), PotionFluid.BottleType.REGULAR))))
-                    .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))))
-                    .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))))),
+                    .addStep(FillingRecipe::new, r -> r.require(PotionFluidHandler.potionIngredient(NorthstarPotions.ENHANCED_HEALING, 25)))
+                    .addStep(FillingRecipe::new, r -> r.require(PotionFluidHandler.potionIngredient(NorthstarPotions.ENHANCED_STRENGTH, 25)))
+                    .addStep(FillingRecipe::new, r -> r.require(PotionFluidHandler.potionIngredient(NorthstarPotions.ENHANCED_REGENERATION, 25)))),
 
     DORMANT_MARTIAN_SEED = create("dormant_martian_seed",
             b -> b.require(NorthstarItems.DORMANT_MARTIAN_SEED)
@@ -66,9 +69,9 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addOutput(NorthstarItems.MARS_TULIP_SEEDS, 1)
                     .loops(2)
                     .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 500))
-                    .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_HEALING.get(), PotionFluid.BottleType.REGULAR))))
-                    .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))))
-                    .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))))),
+                    .addStep(FillingRecipe::new, r -> r.require(PotionFluidHandler.potionIngredient(NorthstarPotions.ENHANCED_HEALING, 25)))
+                    .addStep(FillingRecipe::new, r -> r.require(PotionFluidHandler.potionIngredient(NorthstarPotions.ENHANCED_STRENGTH, 25)))
+                    .addStep(FillingRecipe::new, r -> r.require(PotionFluidHandler.potionIngredient(NorthstarPotions.ENHANCED_REGENERATION, 25)))),
 
     HARDENED_PRECISION_MECHANISM = create("hardened_precision_mechanism",
             b -> b.require(NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
@@ -110,14 +113,14 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .transitionTo(NorthstarItems.INCOMPLETE_TITANIUM_INGOT)
                     .addOutput(NorthstarItems.TITANIUM_INGOT, 1)
                     .loops(2)
-                    .addStep(FillingRecipe::new, r -> r.require(ModCompat.CBC.fluidIngredient("molten_cast_iron", 250)))
+                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluidTags.CBC_MOLTEN_CAST_IRON.tag, 250))
                     .addStep(FillingRecipe::new, r -> r.require(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500))
                     .addStep(PressingRecipe::new, r -> r)
                     .addStep(PressingRecipe::new, r -> r)
                     .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 1000)));
 
-    public NorthstarSequencedAssemblyRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarSequencedAssemblyRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

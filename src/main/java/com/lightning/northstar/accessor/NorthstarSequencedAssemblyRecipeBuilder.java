@@ -2,8 +2,8 @@ package com.lightning.northstar.accessor;
 
 import com.lightning.northstar.data.Tags;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 public interface NorthstarSequencedAssemblyRecipeBuilder {
 

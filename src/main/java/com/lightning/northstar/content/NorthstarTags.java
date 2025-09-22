@@ -5,6 +5,7 @@ import com.lightning.northstar.data.Tags;
 import com.simibubi.create.AllTags;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -21,8 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import static com.lightning.northstar.content.NorthstarTags.Namespace.*;
 
@@ -57,8 +57,10 @@ public class NorthstarTags {
         }
     }
 
-    public enum NorthstarFluidTags {
+    public enum NorthstarFluidTags implements Tags.Tag<Fluid> {
 
+        CBC_BIODIESEL,
+        CBC_MOLTEN_CAST_IRON,
         COMMON_BIOFUEL(COMMON, "biofuel"),
         COMMON_BRINE(COMMON, "brine"),
         COMMON_CARBON(COMMON, "carbon"),
@@ -99,7 +101,7 @@ public class NorthstarTags {
         NorthstarFluidTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = AllTags.optionalTag(ForgeRegistries.FLUIDS, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.FLUID, id);
             } else {
                 tag = FluidTags.create(id);
             }
@@ -116,6 +118,11 @@ public class NorthstarTags {
 
         public boolean matches(FluidState state) {
             return state.is(tag);
+        }
+
+        @Override
+        public TagKey<Fluid> tag() {
+            return tag;
         }
 
         private static void init() {
@@ -194,7 +201,7 @@ public class NorthstarTags {
         NorthstarBlockTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = AllTags.optionalTag(ForgeRegistries.BLOCKS, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.BLOCK, id);
             } else {
                 tag = BlockTags.create(id);
             }
@@ -284,7 +291,7 @@ public class NorthstarTags {
         NorthstarItemTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = AllTags.optionalTag(ForgeRegistries.ITEMS, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.ITEM, id);
             } else {
                 tag = ItemTags.create(id);
             }
@@ -339,7 +346,7 @@ public class NorthstarTags {
         NorthstarEntityTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = AllTags.optionalTag(ForgeRegistries.ENTITY_TYPES, id);
+                tag = AllTags.optionalTag(BuiltInRegistries.ENTITY_TYPE, id);
             } else {
                 tag = TagKey.create(Registries.ENTITY_TYPE, id);
             }
@@ -387,11 +394,7 @@ public class NorthstarTags {
 
         NorthstarBiomeTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
-            if (optional) {
-                tag = AllTags.optionalTag(ForgeRegistries.BIOMES, id);
-            } else {
-                tag = TagKey.create(Registries.BIOME, id);
-            }
+            this.tag = TagKey.create(Registries.BIOME, id);
             this.alwaysDataGen = alwaysDataGen;
         }
 

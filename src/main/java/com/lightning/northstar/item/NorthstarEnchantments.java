@@ -13,6 +13,8 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class NorthstarEnchantments {
 
@@ -54,8 +56,10 @@ public class NorthstarEnchantments {
         context.register(key, builder.build(key.location()));
     }
 
-    public static void bootstrapEffects(BootstrapContext<MapCodec<? extends EnchantmentEntityEffect>> context) {
-        context.register(ResourceKey.create(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Northstar.asResource("frostbite")), FrostbiteEffect.CODEC);
+    public static void register(IEventBus bus) {
+        DeferredRegister<MapCodec<? extends EnchantmentEntityEffect>> register = DeferredRegister.create(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Northstar.MOD_ID);
+        register.register("frostbite", () -> FrostbiteEffect.CODEC);
+        register.register(bus);
     }
 
 }

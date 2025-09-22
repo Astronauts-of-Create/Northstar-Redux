@@ -22,8 +22,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.level.SaplingGrowTreeEvent;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -134,7 +134,7 @@ public class TallFungusBlock extends TallFlowerBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return true;
     }
 
@@ -156,7 +156,7 @@ public class TallFungusBlock extends TallFlowerBlock {
             placePos = placePos.above();
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER && !state.getValue(IS_ON_CEILING))
             placePos = placePos.below();
-        SaplingGrowTreeEvent event = ForgeEventFactory.blockGrowFeature(level, random, placePos, feature.get());
+        BlockGrowFeatureEvent event = EventHooks.fireBlockGrowFeature(level, random, placePos, feature.get());
         if (event.isCanceled())
             return;
 

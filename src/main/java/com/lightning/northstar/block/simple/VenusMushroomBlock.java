@@ -1,5 +1,7 @@
 package com.lightning.northstar.block.simple;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -21,13 +23,19 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.level.SaplingGrowTreeEvent;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
+
+    private static final MapCodec<VenusMushroomBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+            Properties.CODEC.fieldOf("properties").forGetter(VenusMushroomBlock::properties),
+            ResourceKey.codec(Registries.CONFIGURED_FEATURE).fieldOf("ground").forGetter(b -> b.ground),
+            ResourceKey.codec(Registries.CONFIGURED_FEATURE).fieldOf("ceiling").forGetter(b -> b.ceiling)
+    ).apply(i, VenusMushroomBlock::new));
 
     protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
 
@@ -47,6 +55,11 @@ public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(IS_ON_CEILING));
     }
@@ -62,7 +75,7 @@ public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
         Direction direction = state.getValue(IS_ON_CEILING) ? Direction.DOWN : Direction.UP;
 
         BlockState blockstate = level.getBlockState(otherPos);
-        return blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockstate.canSustainPlant(level, otherPos, direction, this);
+        return blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockstate.canSustainPlant(level, otherPos, direction, state).isTrue();
     }
 
     @Override
@@ -77,7 +90,7 @@ public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return state.getValue(IS_ON_CEILING) ? ((VenusMushroomBlock) (state.getBlock())).ceiling != null : ((VenusMushroomBlock) (state.getBlock())).ground != null;
     }
 
@@ -94,7 +107,7 @@ public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
         if (feature.isEmpty())
             return;
 
-        SaplingGrowTreeEvent event = ForgeEventFactory.blockGrowFeature(level, random, pos, feature.get());
+        BlockGrowFeatureEvent event = EventHooks.fireBlockGrowFeature(level, random, pos, feature.get());
         if (event.isCanceled())
             return;
 

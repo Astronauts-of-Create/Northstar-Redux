@@ -342,7 +342,7 @@ public class NorthstarItems {
             .item("vanilla_ice_cream", Item::new)
             .properties(p -> p.food(new FoodProperties.Builder()
                     .nutrition(6)
-                    .saturationMod(0.7F)
+                    .saturationModifier(0.7F)
                     .build()))
             .model((c, p) -> p.generated(c::get, p.modLoc("item/ice_cream_vanilla")))
             .register();

@@ -4,7 +4,10 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarItems;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.PressingRecipeGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarPressingRecipeGen extends PressingRecipeGen {
 
@@ -23,8 +26,8 @@ public class NorthstarPressingRecipeGen extends PressingRecipeGen {
     TUNGSTEN_SHEET = create(() -> NorthstarItems.TUNGSTEN_INGOT,
             b -> b.output(NorthstarItems.TUNGSTEN_SHEET));
 
-    public NorthstarPressingRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarPressingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

@@ -7,9 +7,12 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.CrushingRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
 
@@ -122,8 +125,8 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
                     .output(NorthstarItems.LUNAR_SAPPHIRE_SHARD, 3)
                     .output(0.5f, NorthstarItems.LUNAR_SAPPHIRE_SHARD));
 
-    public NorthstarCrushingRecipeGen(PackOutput generator) {
-        super(generator, Northstar.MOD_ID);
+    public NorthstarCrushingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

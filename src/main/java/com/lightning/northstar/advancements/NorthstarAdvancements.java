@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import com.lightning.northstar.content.NorthstarBlocks;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -48,38 +50,34 @@ public class NorthstarAdvancements implements DataProvider {
     // region DataGen
 
     private final PackOutput output;
+    private final CompletableFuture<HolderLookup.Provider> registries;
 
-    public NorthstarAdvancements(PackOutput output) {
+    public NorthstarAdvancements(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         this.output = output;
+        this.registries = registries;
     }
 
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
-        List<CompletableFuture<?>> futures = new ArrayList<>();
+        return this.registries.thenCompose(provider -> {
+            PackOutput.PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancement");
+            List<CompletableFuture<?>> futures = new ArrayList<>();
 
-        Path path = output.getOutputFolder();
-        Set<ResourceLocation> set = Sets.newHashSet();
-        Consumer<Advancement> consumer = (p_204017_3_) -> {
-            if (!set.add(p_204017_3_.getId()))
-                throw new IllegalStateException("Duplicate advancement " + p_204017_3_.getId());
+            Set<ResourceLocation> set = Sets.newHashSet();
+            Consumer<AdvancementHolder> consumer = (advancement) -> {
+                ResourceLocation id = advancement.id();
+                if (!set.add(id))
+                    throw new IllegalStateException("Duplicate advancement " + id);
+                Path path = pathProvider.json(id);
+                LOGGER.info("Saving advancement {}", id);
+                futures.add(DataProvider.saveStable(cache, provider, Advancement.CODEC, advancement.value(), path));
+            };
 
-            Path path1 = getPath(path, p_204017_3_);
+            for (NorthstarAdvancement advancement : ENTRIES)
+                advancement.save(consumer, provider);
 
-            futures.add(DataProvider.saveStable(cache, p_204017_3_.deconstruct().serializeToJson(), path1));
-        };
-
-        for (NorthstarAdvancement advancement : ENTRIES)
-            advancement.save(consumer);
-
-        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-    }
-
-    private static Path getPath(Path pathIn, Advancement advancementIn) {
-        return pathIn.resolve("data/" + advancementIn.getId()
-                .getNamespace() + "/advancements/"
-                + advancementIn.getId()
-                .getPath()
-                + ".json");
+            return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+        });
     }
 
     @Override

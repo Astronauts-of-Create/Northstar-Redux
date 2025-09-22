@@ -4,11 +4,14 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.simibubi.create.api.data.recipe.FillingRecipeGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarFillingRecipeGen extends FillingRecipeGen {
 
@@ -55,8 +58,8 @@ public class NorthstarFillingRecipeGen extends FillingRecipeGen {
         }
     }
 
-    public NorthstarFillingRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarFillingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
 
         createOxidization(250, 100, Blocks.COPPER_BLOCK, Blocks.EXPOSED_COPPER, Blocks.WEATHERED_COPPER, Blocks.OXIDIZED_COPPER);
         createOxidization(250, 100, Blocks.CUT_COPPER, Blocks.EXPOSED_CUT_COPPER, Blocks.WEATHERED_CUT_COPPER, Blocks.OXIDIZED_CUT_COPPER);

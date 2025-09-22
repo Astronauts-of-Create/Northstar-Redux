@@ -111,7 +111,7 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
             return;
         if (!entityIn.isAlive())
             return;
-        withBlockEntityDo(level, entityIn.blockPosition(), be -> {
+        withBlockEntityDo(worldIn, entityIn.blockPosition(), be -> {
 
             // Tossed items bypass the quarter-stack limit
             be.inputInventory.withMaxStackSize(64);

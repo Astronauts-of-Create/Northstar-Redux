@@ -5,9 +5,12 @@ import com.lightning.northstar.api.data.recipe.FreezingRecipeGen;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
 
@@ -40,8 +43,8 @@ public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
                     .require(Items.SUGAR)
                     .output(NorthstarFluids.VANILLA_ICE_CREAM.get(), 200));
 
-    public NorthstarFreezingRecipeGen(PackOutput generator) {
-        super(generator, Northstar.MOD_ID);
+    public NorthstarFreezingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }

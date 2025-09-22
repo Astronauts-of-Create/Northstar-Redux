@@ -1,15 +1,11 @@
 package com.lightning.northstar.data;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.internal.Streams;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -103,18 +99,6 @@ public final class Tags<T, R> {
 
         default ResourceLocation loc(String path) {
             return ResourceLocation.fromNamespaceAndPath(getModId(), path);
-        }
-
-        default Ingredient fluidIngredient(String path, int amount) {
-            return new Ingredient(Stream.empty()) {
-                @Override
-                public JsonElement toJson() {
-                    JsonObject json = new JsonObject();
-                    json.addProperty("fluid", loc(path).toString());
-                    json.addProperty("amount", amount);
-                    return json;
-                }
-            };
         }
     }
 

@@ -4,26 +4,24 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.data.ModCompat;
 import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.data.recipe.Mods;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
+
+import java.util.concurrent.CompletableFuture;
 
 public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
 
     GeneratedRecipe
             $ = null,
 
-    // least boilerplate Java code
     BIOFUEL_FROM_DRIED_KELP = create("biofuel_from_dried_kelp",
             b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
@@ -35,8 +33,6 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(Items.BONE_MEAL)
                     .output(NorthstarFluids.BIOFUEL.get(), 300)),
 
-    // yup, definitely Java
-    // say, what's a loop anyway?
     BIOFUEL_FROM_DRY_PLANT_FIBER = create("biofuel_from_dry_plant_fiber",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarItems.DRY_PLANT_FIBER)
@@ -44,31 +40,8 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(NorthstarItems.DRY_PLANT_FIBER)
                     .require(NorthstarItems.DRY_PLANT_FIBER)
                     .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
-                    .require(NorthstarItems.DRY_PLANT_FIBER)
                     .require(Items.BONE_MEAL)
-                    .output(NorthstarFluids.BIOFUEL.get(), 200)),
+                    .output(NorthstarFluids.BIOFUEL.get(), 20)),
 
     BIOFUEL_MEKANISM = create("biofuel_from_mekanism",
             b -> b.requiresHeat(HeatCondition.HEATED)
@@ -79,7 +52,7 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
 
     CARBON_FROM_BIODIESEL = create("carbon_from_biodiesel",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(ModCompat.CDG.fluidIngredient("biodiesel", 1000))
+                    .require(NorthstarFluidTags.CBC_BIODIESEL.tag, 1000)
                     .output(NorthstarFluids.CARBON.get(), 500)
                     .whenModLoaded(ModCompat.CDG.getModId())),
 
@@ -140,8 +113,8 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(NorthstarBlocks.TOWER_FUNGUS_STEM_BLOCK)
                     .output(NorthstarFluids.SODIUM_HYDROXIDE.get(), 1000));
 
-    public NorthstarCompactingRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarCompactingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
 }
