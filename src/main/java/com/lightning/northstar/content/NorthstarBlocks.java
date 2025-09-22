@@ -36,6 +36,7 @@ import com.lightning.northstar.util.NorthstarDataGenHelper;
 import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
 import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
 import com.lightning.northstar.world.features.grower.WilterTreeGrower;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -965,7 +966,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MARS_IRON_ORE = REGISTRATE
@@ -1092,7 +1095,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MARS_DEEP_IRON_ORE = REGISTRATE
@@ -1743,7 +1748,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MOON_IRON_ORE = REGISTRATE
@@ -1850,6 +1857,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
             .build()
@@ -1867,6 +1875,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
@@ -1905,7 +1914,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_IRON_ORE = REGISTRATE
@@ -2012,6 +2023,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
             .build()
@@ -2029,6 +2041,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
@@ -2522,7 +2535,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> VENUS_COAL_ORE = REGISTRATE
@@ -2672,7 +2687,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_IRON_ORE = REGISTRATE
@@ -2963,7 +2980,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MERCURY_IRON_ORE = REGISTRATE
@@ -3064,6 +3083,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.COMMON_ORES_LAPIS.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
             .build()
@@ -3080,6 +3100,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.COMMON_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
@@ -3132,7 +3153,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_IRON_ORE = REGISTRATE
@@ -3233,6 +3256,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.COMMON_ORES_LAPIS.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
             .build()
@@ -3249,6 +3273,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.COMMON_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
