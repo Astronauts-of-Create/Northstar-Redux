@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.3.1+1.20.1" // https://semver.org/
+version = "0.4.0-SNAPSHOT+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -19,12 +19,29 @@ architectury {
     forge()
 }
 
+val generatedResources = file("src/generated")
+
+sourceSets.main {
+    resources.srcDir(generatedResources)
+}
+
 loom {
     accessWidenerPath = rootProject.file("src/main/resources/northstar.accessWidener")
     forge {
         mixinConfig("northstar.mixins.json")
     }
     runs["server"].runDir = "run-server/"
+    runs.create("data") {
+        data()
+        property("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
+        property("forge.logging.console.level", "debug")
+        programArgs(
+            "--all",
+            "--mod", "northstar",
+            "--output", generatedResources.absolutePath,
+            "--existing", file("src/main/resources").absolutePath
+        )
+    }
 }
 
 repositories {
@@ -87,7 +104,7 @@ dependencies {
     modImplementation(libs.jei.forge)
     modRuntimeOnly(libs.copycats)
 
-    // keep jCPP as oculus crashes without it, Embedium and Oculus have to be installed manually on the client as not to crash the server
+    // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.
     forgeRuntimeLibrary(libs.jcpp)
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here

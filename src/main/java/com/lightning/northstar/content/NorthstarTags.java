@@ -1,6 +1,8 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.data.Tags;
+import com.simibubi.create.AllTags;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -21,9 +23,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.Collections;
 
 import static com.lightning.northstar.content.NorthstarTags.Namespace.*;
 
@@ -37,30 +36,10 @@ public class NorthstarTags {
         NorthstarBiomeTags.init();
     }
 
-    public static <T> TagKey<T> optionalTag(IForgeRegistry<T> registry, ResourceLocation id) {
-        return registry.tags().createOptionalTagKey(id, Collections.emptySet());
-    }
-
-    public static <T> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
-        return optionalTag(registry, ResourceLocation.fromNamespaceAndPath("forge", path));
-    }
-
-    public static TagKey<Block> forgeBlockTag(String path) {
-        return forgeTag(ForgeRegistries.BLOCKS, path);
-    }
-
-    public static TagKey<Item> forgeItemTag(String path) {
-        return forgeTag(ForgeRegistries.ITEMS, path);
-    }
-
-    public static TagKey<Fluid> forgeFluidTag(String path) {
-        return forgeTag(ForgeRegistries.FLUIDS, path);
-    }
-
     enum Namespace {
 
         MOD(Northstar.MOD_ID, false, true),
-        FORGE("forge"),
+        COMMON("forge"), // "forge" on Forge, "c" on NeoForge/fabric
         ;
 
         public final String id;
@@ -80,9 +59,23 @@ public class NorthstarTags {
 
     public enum NorthstarFluidTags {
 
-        IS_OXY,
-        FORGE_OXYGEN(FORGE, "oxygen"),
-        ;
+        COMMON_BIOFUEL(COMMON, "biofuel"),
+        COMMON_BRINE(COMMON, "brine"),
+        COMMON_CARBON(COMMON, "carbon"),
+        COMMON_CHLORINE(COMMON, "chlorine"),
+        COMMON_CHOCOLATE_ICE_CREAM(COMMON, "chocolate_ice_cream"),
+        COMMON_HYDROCARBON(COMMON, "hydrocarbon"),
+        COMMON_HYDROGEN(COMMON, "hydrogen"),
+        COMMON_LIQUID_HYDROGEN(COMMON, "liquid_hydrogen"),
+        COMMON_LIQUID_OXYGEN(COMMON, "liquid_oxygen"),
+        COMMON_METHANE(COMMON, "methane"),
+        COMMON_MILK(COMMON, "milk"),
+        COMMON_OXYGEN(COMMON, "oxygen"),
+        COMMON_SODIUM_HYDROXIDE(COMMON, "sodium_hydroxide"),
+        COMMON_STRAWBERRY_ICE_CREAM(COMMON, "strawberry_ice_cream"), COMMON_SULFURIC_ACID(COMMON, "sulfuric_acid"),
+        COMMON_TITANIUM_TETRACHLORIDE(COMMON, "titanium_tetrachloride"),
+        COMMON_VANILLA_ICE_CREAM(COMMON, "vanilla_ice_cream"),
+        IS_OXY;
 
         public final TagKey<Fluid> tag;
         public final boolean alwaysDataGen;
@@ -106,7 +99,7 @@ public class NorthstarTags {
         NorthstarFluidTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.FLUIDS, id);
+                tag = AllTags.optionalTag(ForgeRegistries.FLUIDS, id);
             } else {
                 tag = FluidTags.create(id);
             }
@@ -130,31 +123,60 @@ public class NorthstarTags {
 
     }
 
-    public enum NorthstarBlockTags {
+    public enum NorthstarBlockTags implements Tags.Tag<Block> {
 
         AIR_PASSES_THROUGH,
+        ARGYRE_REPLACEABLE,
+        BASE_STONE_MARS,
+        BASE_STONE_MERCURY,
+        BASE_STONE_MOON,
+        BASE_STONE_VENUS,
+        BASE_SURFACE_BLOCKS_MARS,
         /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
         @Deprecated
         BLOCKS_AIR,
-        ARGYRE_REPLACES,
-        NATURAL_MARS_BLOCKS,
-        NATURAL_VENUS_BLOCKS,
-        NATURAL_MOON_BLOCKS,
-        NATURAL_MERCURY_BLOCKS,
+        COMMON_ORES_COPPER(COMMON, "ores/copper"),
+        COMMON_ORES_DIAMOND(COMMON, "ores/diamond"),
+        COMMON_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
+        COMMON_ORES_GOLD(COMMON, "ores/gold"),
+        COMMON_ORES_IRON(COMMON, "ores/iron"),
+        COMMON_ORES_LAPIS(COMMON, "ores/lapis"),
+        COMMON_ORES_QUARTZ(COMMON, "ores/quartz"),
+        COMMON_ORES_REDSTONE(COMMON, "ores/redstone"),
+        COMMON_ORES_TITANIUM(COMMON, "ores/titanium"),
+        COMMON_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
+        COMMON_ORES_ZINC(COMMON, "ores/zinc"),
         HEAVY_BLOCKS,
+        MARS_BLOCKS,
+        MARS_DEEP_STONE_REPLACEABLE,
+        MARS_STONE_REPLACEABLE,
+        MERCURY_DEEP_STONE_REPLACEABLE,
+        MERCURY_STONE_REPLACEABLE,
+        MOON_BLOCKS,
+        MOON_DEEP_STONE_REPLACEABLE,
+        MOON_STONE_REPLACEABLE,
+        MOON_SURFACE_REPLACEABLE,
+        NATURAL_MARS_BLOCKS,
+        NATURAL_MERCURY_BLOCKS,
+        NATURAL_MOON_BLOCKS,
+        NATURAL_VENUS_BLOCKS,
         SUPER_HEAVY_BLOCKS,
         TIER_1_HEAT_RESISTANCE,
         TIER_2_HEAT_RESISTANCE,
         TIER_3_HEAT_RESISTANCE,
-        MOON_BLOCKS,
-        MARS_BLOCKS,
-        ;
+        VENUS_DEEP_STONE_REPLACEABLE,
+        VENUS_STONE,
+        VENUS_STONE_REPLACEABLE;
 
         public final TagKey<Block> tag;
         public final boolean alwaysDataGen;
 
         NorthstarBlockTags() {
             this(MOD);
+        }
+
+        NorthstarBlockTags(String path) {
+            this(MOD, path);
         }
 
         NorthstarBlockTags(Namespace namespace) {
@@ -172,11 +194,16 @@ public class NorthstarTags {
         NorthstarBlockTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.BLOCKS, id);
+                tag = AllTags.optionalTag(ForgeRegistries.BLOCKS, id);
             } else {
                 tag = BlockTags.create(id);
             }
             this.alwaysDataGen = alwaysDataGen;
+        }
+
+        @Override
+        public TagKey<Block> tag() {
+            return tag;
         }
 
         @SuppressWarnings("deprecation")
@@ -197,19 +224,49 @@ public class NorthstarTags {
 
     }
 
-    public enum NorthstarItemTags {
+    public enum NorthstarItemTags implements Tags.Tag<Item> {
 
-        INSULATING,
+        ARGYRE_LOGS,
+        COILER_LOGS,
+        COMMON_INGOTS_BRASS(COMMON, "ingots/brass"),
+        COMMON_INGOTS_MARTIAN_STEEL(COMMON, "ingots/martian_steel"),
+        COMMON_INGOTS_TITANIUM(COMMON, "ingots/titanium"),
+        COMMON_INGOTS_TUNGSTEN(COMMON, "ingots/tungsten"),
+        COMMON_SHEETS_BRASS(COMMON, "plates/brass"),
+        COMMON_SHEETS_COPPER(COMMON, "plates/copper"),
+        COMMON_SHEETS_GOLD(COMMON, "plates/gold"),
+        COMMON_SHEETS_IRON(COMMON, "plates/iron"),
+        COMMON_SHEETS_MARTIAN_STEEL(COMMON, "plates/martian_steel"),
+        COMMON_SHEETS_TITANIUM(COMMON, "plates/titanium"),
+        COMMON_SHEETS_TUNGSTEN(COMMON, "plates/tungsten"),
+        COMMON_STRIPPED_LOGS(COMMON, "stripped_logs"),
         HEAT_RESISTANT,
+        INSULATING,
         OXYGEN_SEALING,
         OXYGEN_SOURCES,
-        ;
+        // Space ores, used for crushing recipes
+        SPACE_ORE_COPPER("space_ore/copper"),
+        SPACE_ORE_DIAMOND("space_ore/diamond"),
+        SPACE_ORE_GLOWSTONE("space_ore/glowstone"),
+        SPACE_ORE_GOLD("space_ore/gold"),
+        SPACE_ORE_IRON("space_ore/iron"),
+        SPACE_ORE_LAPIS("space_ore/lapis"),
+        SPACE_ORE_QUARTZ("space_ore/quartz"),
+        SPACE_ORE_REDSTONE("space_ore/redstone"),
+        SPACE_ORE_TITANIUM("space_ore/titanium"),
+        SPACE_ORE_TUNGSTEN("space_ore/tungsten"),
+        SPACE_ORE_ZINC("space_ore/zinc"),
+        WILTER_LOGS;
 
         public final TagKey<Item> tag;
         public final boolean alwaysDataGen;
 
         NorthstarItemTags() {
             this(MOD);
+        }
+
+        NorthstarItemTags(String path) {
+            this(MOD, path);
         }
 
         NorthstarItemTags(Namespace namespace) {
@@ -227,11 +284,16 @@ public class NorthstarTags {
         NorthstarItemTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.ITEMS, id);
+                tag = AllTags.optionalTag(ForgeRegistries.ITEMS, id);
             } else {
                 tag = ItemTags.create(id);
             }
             this.alwaysDataGen = alwaysDataGen;
+        }
+
+        @Override
+        public TagKey<Item> tag() {
+            return tag;
         }
 
         @SuppressWarnings("deprecation")
@@ -249,7 +311,7 @@ public class NorthstarTags {
 
     }
 
-    public enum NorthstarEntityTags {
+    public enum NorthstarEntityTags implements Tags.Tag<EntityType<?>> {
 
         DOESNT_REQUIRE_OXYGEN,
         CAN_SURVIVE_COLD,
@@ -277,11 +339,16 @@ public class NorthstarTags {
         NorthstarEntityTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.ENTITY_TYPES, id);
+                tag = AllTags.optionalTag(ForgeRegistries.ENTITY_TYPES, id);
             } else {
                 tag = TagKey.create(Registries.ENTITY_TYPE, id);
             }
             this.alwaysDataGen = alwaysDataGen;
+        }
+
+        @Override
+        public TagKey<EntityType<?>> tag() {
+            return tag;
         }
 
         public boolean matches(Entity entity) {
@@ -321,7 +388,7 @@ public class NorthstarTags {
         NorthstarBiomeTags(Namespace namespace, String path, boolean optional, boolean alwaysDataGen) {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace.id, path == null ? Lang.asId(name()) : path);
             if (optional) {
-                tag = optionalTag(ForgeRegistries.BIOMES, id);
+                tag = AllTags.optionalTag(ForgeRegistries.BIOMES, id);
             } else {
                 tag = TagKey.create(Registries.BIOME, id);
             }

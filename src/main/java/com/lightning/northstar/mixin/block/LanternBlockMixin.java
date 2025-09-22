@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.block.simple.ExtinguishedLanternBlock;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +53,7 @@ public class LanternBlockMixin extends Block {
 
     @Unique
     private BlockState northstar$copyStateExtinguished(BlockState state) {
-        return NorthstarTechBlocks.EXTINGUISHED_LANTERN
+        return NorthstarBlocks.EXTINGUISHED_LANTERN
                 .get()
                 .defaultBlockState()
                 .setValue(ExtinguishedLanternBlock.HANGING, state.getValue(HANGING))

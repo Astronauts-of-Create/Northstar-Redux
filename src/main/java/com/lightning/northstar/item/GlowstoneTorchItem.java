@@ -1,7 +1,7 @@
 package com.lightning.northstar.item;
 
 import com.lightning.northstar.block.simple.GlowstoneTorchWallBlock;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -21,7 +21,7 @@ public class GlowstoneTorchItem extends BlockItem {
 
     public GlowstoneTorchItem(GlowstoneTorchWallBlock pStandingBlock, Properties pProperties) {
         super(pStandingBlock, pProperties);
-        this.wallBlock = NorthstarTechBlocks.GLOWSTONE_TORCH_WALL.get();
+        this.wallBlock = NorthstarBlocks.GLOWSTONE_TORCH_WALL.get();
     }
 
     @Override

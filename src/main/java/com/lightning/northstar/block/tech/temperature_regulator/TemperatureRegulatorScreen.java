@@ -3,7 +3,7 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.NorthstarTemperature;
@@ -33,7 +33,7 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
     private final BlockPos pos;
 
     public TemperatureRegulatorScreen(BaseTemperatureRegulator regulator, int entityId, BlockPos pos) {
-        super(NorthstarTechBlocks.TEMPERATURE_REGULATOR.get().getName());
+        super(NorthstarBlocks.TEMPERATURE_REGULATOR.get().getName());
         this.regulator = regulator;
         this.entityId = entityId;
         this.pos = pos;

@@ -21,12 +21,4 @@ build
 eclipse
 run*/
 *.*~
-
-# Files from Forge MDK
-forge*changelog.txt
-/logs/
-/CREDITS.txt
-/forge-1.19.2-43.2.18-mdk.zip
-/LICENSE.txt
-/README.txt
-/assets/
+src/generated/
