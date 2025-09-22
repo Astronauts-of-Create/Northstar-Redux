@@ -25,21 +25,11 @@ public class ElectrolysisMachineRenderer extends KineticBlockEntityRenderer<Elec
 
     @Override
     protected void renderSafe(ElectrolysisMachineBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        if (!VisualizationManager.supportsVisualization(be.getLevel())) {
-            SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
-            standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
-        }
+        if (VisualizationManager.supportsVisualization(be.getLevel()))
+            return;
 
-        TankSegment tank = be.getBehaviour(SmartFluidTankBehaviour.INPUT).getTanks()[0];
-        float level = tank.getFluidLevel().getValue(partialTicks);
-        NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(tank.getRenderedFluid(),
-                2f / 16f,
-                2f / 16f,
-                2f / 16f,
-                2f / 16f,
-                2f / 16f + 12f / 16f * level,
-                14f / 16f,
-                buffer, ms, light, false, false);
+        SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
+        standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
     }
 
 }

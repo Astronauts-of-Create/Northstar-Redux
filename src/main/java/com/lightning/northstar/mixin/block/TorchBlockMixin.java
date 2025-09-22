@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.block;
 
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,8 +24,8 @@ public class TorchBlockMixin extends Block {
     /*@Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
     public void northstar$updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                                       BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
-        if (!NorthstarOxygen.hasOxygen((Level) level, pos)) {
-            info.setReturnValue(NorthstarTechBlocks.EXTINGUISHED_TORCH.get().defaultBlockState());
+        if (level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
+            info.setReturnValue(NorthstarBlocks.EXTINGUISHED_TORCH.get().defaultBlockState());
         }
     }*/
 

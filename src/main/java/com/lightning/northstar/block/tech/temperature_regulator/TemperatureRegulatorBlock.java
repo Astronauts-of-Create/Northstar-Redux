@@ -27,7 +27,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements IBE<TemperatureRegulatorBlockEntity> {
 
-    protected static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
+    protected static final VoxelShape SHAPE = box(0, 0, 0, 16, 13, 16);
 
     public TemperatureRegulatorBlock(Properties properties) {
         super(properties);
@@ -35,20 +35,19 @@ public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, this::openScreen));
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, this::openScreen));
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void displayScreen(TemperatureRegulatorBlockEntity be, Player player) {
-        if (player instanceof LocalPlayer)
-            ScreenOpener.open(new TemperatureRegulatorScreen(be.regulator, -1, be.getBlockPos()));
+    private void openScreen(TemperatureRegulatorBlockEntity be) {
+        ScreenOpener.open(new TemperatureRegulatorScreen(be.regulator, -1, be.getBlockPos()));
     }
 
     @Override

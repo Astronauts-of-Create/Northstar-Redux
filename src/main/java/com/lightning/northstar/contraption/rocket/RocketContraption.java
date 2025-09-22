@@ -10,7 +10,6 @@ import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.contraption.ContraptionType;
 import com.simibubi.create.content.contraptions.AssemblyException;
-import com.simibubi.create.content.contraptions.MountedStorageManager;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
@@ -53,22 +52,11 @@ public class RocketContraption extends TranslatingContraption {
     private int visual_jet_engines = 0;
     public float computingPower = 0;
     private List<BlockPos> assembledJets;
-    public int fuelTicks;
     public String name = "Rocket";
     public Player owner;
     public BlockPos localControlsPos;
 
-    protected MountedStorageManager storageProxy;
-
     public ResourceKey<Level> dest = null;
-
-    static final IItemHandlerModifiable fallbackItems = new ItemStackHandler();
-    static final IFluidHandler fallbackFluids = new FluidTank(0);
-
-
-    public float prevYaw;
-    public float yaw;
-    public float targetYaw;
 
     public RocketContraption() {
         assembledJets = new ArrayList<>();
@@ -107,7 +95,7 @@ public class RocketContraption extends TranslatingContraption {
     protected Pair<StructureBlockInfo, BlockEntity> capture(Level world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
 
-        if (NorthstarTechBlocks.ROCKET_STATION.has(blockState)) {
+        if (NorthstarBlocks.ROCKET_STATION.has(blockState)) {
             rocket_station = true;
             BlockEntity ent = world.getBlockEntity(pos);
             if (ent instanceof RocketStationBlockEntity rsbe) {
@@ -133,7 +121,7 @@ public class RocketContraption extends TranslatingContraption {
         if (blockState.is(NorthstarBlocks.INTERPLANETARY_NAVIGATOR.get())) {
             this.hasInterplanetaryNavigation = true;
         }
-        if (NorthstarTechBlocks.COMPUTER_RACK.has(blockState)) {
+        if (NorthstarBlocks.COMPUTER_RACK.has(blockState)) {
             BlockEntity ent = world.getBlockEntity(pos);
             if (ent instanceof TargetingComputerRackBlockEntity crbe) {
                 for (int b = 0; b < crbe.container.getContainerSize(); b++) {
@@ -145,7 +133,7 @@ public class RocketContraption extends TranslatingContraption {
             }
         }
 
-        if (NorthstarTechBlocks.ROCKET_CONTROLS.has(blockState)) {
+        if (NorthstarBlocks.ROCKET_CONTROLS.has(blockState)) {
             hasControls = true;
             if (this.localControlsPos == null) {
                 this.localControlsPos = this.toLocalPos(pos);

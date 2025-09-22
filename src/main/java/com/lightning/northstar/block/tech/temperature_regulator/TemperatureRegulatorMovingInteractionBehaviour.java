@@ -24,9 +24,13 @@ public class TemperatureRegulatorMovingInteractionBehaviour extends MovingIntera
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingTemperatureRegulator regulator))
             return false;
 
-        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                ScreenOpener.open(new TemperatureRegulatorScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos)));
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos));
         return true;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(BaseTemperatureRegulator regulator, int entityId, BlockPos localPos) {
+        ScreenOpener.open(new TemperatureRegulatorScreen(regulator, entityId, localPos));
     }
 
 }

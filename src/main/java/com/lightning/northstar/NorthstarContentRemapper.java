@@ -1,7 +1,6 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.content.NorthstarTechBlocks;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -28,9 +27,9 @@ public class NorthstarContentRemapper {
         remap("iron_plating_stairs", NorthstarBlocks.TITANIUM_PLATING_STAIRS);
         remap("iron_pillar", NorthstarBlocks.TITANIUM_PILLAR);
         remap("iron_grate", NorthstarBlocks.TITANIUM_GRATE);
-        remap("iron_space_door", NorthstarTechBlocks.TITANIUM_SPACE_DOOR);
+        remap("iron_space_door", NorthstarBlocks.TITANIUM_SPACE_DOOR);
         // 0.3.0: Rename the oxygen_generator to oxygen_sealer
-        remap("oxygen_generator", NorthstarTechBlocks.OXYGEN_SEALER);
+        remap("oxygen_generator", NorthstarBlocks.OXYGEN_SEALER);
     }
 
     public static void remap(String oldValue, RegistryEntry<?, ?> newValue) {

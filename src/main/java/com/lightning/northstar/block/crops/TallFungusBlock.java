@@ -22,29 +22,32 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.level.SaplingGrowTreeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public class TallFungusBlock extends TallFlowerBlock {
-    protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
-    private final ResourceKey<ConfiguredFeature<?, ?>> featureSupplier;
-    private final ResourceKey<ConfiguredFeature<?, ?>> ceilingFeatureSupplier;
 
-    public TallFungusBlock(Properties pProperties, ResourceKey<ConfiguredFeature<?, ?>> feature, ResourceKey<ConfiguredFeature<?, ?>> ceilingFeature) {
-        super(pProperties);
-        featureSupplier = feature;
-        ceilingFeatureSupplier = ceilingFeature;
-        this.registerDefaultState(this.defaultBlockState().setValue(IS_ON_CEILING, false).setValue(HALF, DoubleBlockHalf.LOWER));
+    protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
+
+    private final ResourceKey<ConfiguredFeature<?, ?>> ground;
+    private final ResourceKey<ConfiguredFeature<?, ?>> ceiling;
+
+    public TallFungusBlock(Properties properties, ResourceKey<ConfiguredFeature<?, ?>> ground, ResourceKey<ConfiguredFeature<?, ?>> ceiling) {
+        super(properties);
+        this.ground = ground;
+        this.ceiling = ceiling;
+
+        registerDefaultState(defaultBlockState()
+                .setValue(IS_ON_CEILING, false)
+                .setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(IS_ON_CEILING);
-        pBuilder.add(HALF);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(IS_ON_CEILING));
     }
 
     @Override
@@ -95,7 +98,7 @@ public class TallFungusBlock extends TallFlowerBlock {
         boolean ceiling_flag = pContext.getClickedFace() == Direction.DOWN;
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
-        if(ceiling_flag)
+        if (ceiling_flag)
             return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.below()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag) : null;
         return blockpos.getY() < level.getMaxBuildHeight() && level.getBlockState(blockpos.above()).canBeReplaced(pContext) ? this.defaultBlockState().setValue(IS_ON_CEILING, ceiling_flag).setValue(HALF, DoubleBlockHalf.LOWER) : null;
     }
@@ -121,45 +124,47 @@ public class TallFungusBlock extends TallFlowerBlock {
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
-        if (pState.getValue(IS_ON_CEILING)) {
-            BlockPos blockpos = pPos.below();
-            pLevel.setBlock(blockpos, copyWaterloggedFrom(pLevel, blockpos, this.defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER).setValue(IS_ON_CEILING, true)), 3);
-        } else {
-            BlockPos blockpos = pPos.above();
-            pLevel.setBlock(blockpos, copyWaterloggedFrom(pLevel, blockpos, this.defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER)), 3);
-        }
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        BlockPos otherPos = state.getValue(IS_ON_CEILING) ? pos.below() : pos.above();
+        BlockState otherState = copyWaterloggedFrom(level, otherPos, defaultBlockState()
+                .setValue(HALF, DoubleBlockHalf.UPPER)
+                .setValue(IS_ON_CEILING, true));
+
+        level.setBlock(otherPos, otherState, Block.UPDATE_ALL);
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
         return true;
     }
 
     @Override
-    public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
         return true;
     }
 
     @Override
     public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
+        Optional<Holder.Reference<ConfiguredFeature<?, ?>>> feature = level.registryAccess()
+                .registryOrThrow(Registries.CONFIGURED_FEATURE)
+                .getHolder(state.getValue(IS_ON_CEILING) ? ceiling : ground);
+        if (feature.isEmpty())
+            return;
+
         BlockPos placePos = pos;
-        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            placePos = new BlockPos(pos.getX(), pos.getY() + (state.getValue(IS_ON_CEILING) ? +1 : -1), pos.getZ());
-        }
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER && state.getValue(IS_ON_CEILING))
+            placePos = placePos.above();
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER && !state.getValue(IS_ON_CEILING))
+            placePos = placePos.below();
+        SaplingGrowTreeEvent event = ForgeEventFactory.blockGrowFeature(level, random, placePos, feature.get());
+        if (event.isCanceled())
+            return;
+
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 0);
         level.setBlock(placePos, Blocks.AIR.defaultBlockState(), 0);
 
-        ResourceKey<ConfiguredFeature<?, ?>> feature = state.getValue(IS_ON_CEILING) ? ceilingFeatureSupplier : featureSupplier;
-        Optional<? extends Holder<ConfiguredFeature<?, ?>>> optional = level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE).getHolder(feature);
-        BlockGrowFeatureEvent event = EventHooks.fireBlockGrowFeature(level, random, pos, optional.orElse(null));
-        if (event.isCanceled() || event.getFeature() == null) {
+        if (event.getFeature().value().place(level, level.getChunkSource().getGenerator(), random, placePos))
             return;
-        }
-
-        if (event.getFeature().value().place(level, level.getChunkSource().getGenerator(), random, placePos)) {
-            return;
-        }
 
         level.setBlock(pos, state, 3);
     }

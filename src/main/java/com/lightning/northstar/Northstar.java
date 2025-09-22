@@ -66,7 +66,8 @@ public class Northstar {
         NorthstarBlocks.register();
         NorthstarBlockEntityTypes.register();
         NorthstarPotions.register(modEventBus);
-        NorthstarTechBlocks.register();
+        NorthstarEnchantments.register();
+        NorthstarBlocks.register();
         NorthstarFeatures.register(modEventBus);
         NorthstarRecipeTypes.register(modEventBus);
         NorthstarParticles.register(modEventBus);
@@ -74,7 +75,7 @@ public class Northstar {
         NorthstarMenuTypes.register();
         NorthstarPlanets.register();
         NorthstarDimensions.register();
-        NorthstarEntityTypes.register(modEventBus);
+        NorthstarEntityTypes.register();
         NorthstarFluids.register();
         NorthstarArmorMaterials.register(modEventBus);
 

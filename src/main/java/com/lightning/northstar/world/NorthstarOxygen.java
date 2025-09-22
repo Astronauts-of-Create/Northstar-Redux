@@ -26,7 +26,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID)
+@EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
 public class NorthstarOxygen {
 
     /** Maximum oxygen for spacesuits, in mB; use is 1 mB/s, defaults to 30 minutes so 1.5 minecraft days */
@@ -72,7 +72,7 @@ public class NorthstarOxygen {
     }
 
     public static boolean isOxygen(Fluid fluid) {
-        return NorthstarFluidTags.FORGE_OXYGEN.matches(fluid) || NorthstarFluidTags.IS_OXY.matches(fluid);
+        return NorthstarFluidTags.COMMON_OXYGEN.matches(fluid) || NorthstarFluidTags.IS_OXY.matches(fluid);
     }
 
     public static boolean hasOxygen(Level level, Vec3 pos) {
@@ -140,6 +140,7 @@ public class NorthstarOxygen {
         return true;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onPostRender(RenderLevelStageEvent event) {
         if (!NorthstarConfigs.client().debugSealerBounds.get())

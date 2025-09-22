@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
@@ -103,9 +103,9 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public void updateEntityAfterFallOn(BlockGetter level, Entity entityIn) {
-        super.updateEntityAfterFallOn(level, entityIn);
-        if (!NorthstarTechBlocks.ICE_BOX.has(level.getBlockState(entityIn.blockPosition())))
+    public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
+        super.updateEntityAfterFallOn(worldIn, entityIn);
+        if (!NorthstarBlocks.ICE_BOX.has(worldIn.getBlockState(entityIn.blockPosition())))
             return;
         if (!(entityIn instanceof ItemEntity itemEntity))
             return;

@@ -9,7 +9,7 @@ import com.lightning.northstar.compat.jei.category.EngravingCategory;
 import com.lightning.northstar.compat.jei.category.FreezingCategory;
 import com.lightning.northstar.compat.jei.category.FuelTypeCategory;
 import com.lightning.northstar.content.NorthstarRegistries;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.simibubi.create.compat.jei.*;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
@@ -53,22 +53,22 @@ public class NorthstarJEI implements IModPlugin {
                 start = null,
                 engraving = builder(EngravingRecipe.class)
                         .addTypedRecipes(NorthstarRecipeTypes.ENGRAVING)
-                        .catalyst(NorthstarTechBlocks.CIRCUIT_ENGRAVER::get)
-                        .itemIcon(NorthstarTechBlocks.CIRCUIT_ENGRAVER.get())
+                        .catalyst(NorthstarBlocks.CIRCUIT_ENGRAVER::get)
+                        .itemIcon(NorthstarBlocks.CIRCUIT_ENGRAVER.get())
                         .emptyBackground(177, 70)
                         .build("engraving", EngravingCategory::new),
 
                 freezing = builder(FreezingRecipe.class)
                         .addTypedRecipes(NorthstarRecipeTypes.FREEZING)
-                        .catalyst(NorthstarTechBlocks.ICE_BOX::get)
-                        .itemIcon(NorthstarTechBlocks.ICE_BOX.get())
+                        .catalyst(NorthstarBlocks.ICE_BOX::get)
+                        .itemIcon(NorthstarBlocks.ICE_BOX.get())
                         .emptyBackground(177, 70)
                         .build("freezing", FreezingCategory::new),
 
                 electrolysis = builder(ElectrolysisRecipe.class)
                         .addTypedRecipes(NorthstarRecipeTypes.ELECTROLYSIS)
-                        .catalyst(NorthstarTechBlocks.ELECTROLYSIS_MACHINE::get)
-                        .itemIcon(NorthstarTechBlocks.ELECTROLYSIS_MACHINE.get())
+                        .catalyst(NorthstarBlocks.ELECTROLYSIS_MACHINE::get)
+                        .itemIcon(NorthstarBlocks.ELECTROLYSIS_MACHINE.get())
                         .emptyBackground(177, 70)
                         .build("electrolysis", ElectrolysisCategory::new);
     }
@@ -106,7 +106,7 @@ public class NorthstarJEI implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         northstarCategories.forEach(c -> c.registerCatalysts(registration));
-        registration.addRecipeCatalysts(FuelTypeCategory.RECIPE_TYPE, NorthstarTechBlocks.JET_ENGINE, NorthstarTechBlocks.COMBUSTION_ENGINE);
+        registration.addRecipeCatalysts(FuelTypeCategory.RECIPE_TYPE, NorthstarBlocks.JET_ENGINE, NorthstarBlocks.COMBUSTION_ENGINE);
     }
 
     private class CategoryBuilder<T extends Recipe<?>> extends CreateRecipeCategory.Builder<T> {

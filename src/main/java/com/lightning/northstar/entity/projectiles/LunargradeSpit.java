@@ -32,7 +32,7 @@ public class LunargradeSpit extends Projectile {
         lunargrade.getEyeY() - (double)0.1F, lunargrade.getZ() + (double)(lunargrade.getBbWidth() + 1.0F) * 0.5D * (double)Mth.cos(lunargrade.yBodyRot * ((float)Math.PI / 180F)));
     }
 
-           /**
+    /**
             * Called to update the entity's position/logic.
             */
     @Override

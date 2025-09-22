@@ -24,8 +24,13 @@ public class OxygenSealerMovingInteractionBehaviour extends MovingInteractionBeh
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingOxygenSealer sealer))
             return false;
 
-        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ScreenOpener.open(new OxygenSealerScreen(sealer)));
+        RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(sealer));
         return true;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(MovingOxygenSealer sealer) {
+        ScreenOpener.open(new OxygenSealerScreen(sealer));
     }
 
 }

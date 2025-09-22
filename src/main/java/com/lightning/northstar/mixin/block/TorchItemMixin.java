@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,9 +26,9 @@ public class TorchItemMixin {
             return;
 
         if (state.is(Blocks.TORCH)) {
-            info.setReturnValue(NorthstarTechBlocks.EXTINGUISHED_TORCH.get().defaultBlockState());
+            info.setReturnValue(NorthstarBlocks.EXTINGUISHED_TORCH.get().defaultBlockState());
         } else if (state.is(Blocks.WALL_TORCH)) {
-            info.setReturnValue(NorthstarTechBlocks.EXTINGUISHED_TORCH_WALL.get()
+            info.setReturnValue(NorthstarBlocks.EXTINGUISHED_TORCH_WALL.get()
                     .defaultBlockState()
                     .setValue(ExtinguishedTorchWallBlock.FACING, state.getValue(WallTorchBlock.FACING)));
         }

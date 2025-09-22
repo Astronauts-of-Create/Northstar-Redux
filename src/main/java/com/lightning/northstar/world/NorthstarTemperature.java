@@ -22,6 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
@@ -29,7 +31,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID)
+@EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
 public class NorthstarTemperature {
 
     public static final int MINIMUM_TEMPERATURE = -273;
@@ -215,6 +217,7 @@ public class NorthstarTemperature {
         return 1;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void onPostRender(RenderLevelStageEvent event) {
         if (!NorthstarConfigs.client().debugSealerBounds.get())

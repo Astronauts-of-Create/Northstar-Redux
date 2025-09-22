@@ -1,7 +1,7 @@
 package com.lightning.northstar.ponder;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.ponder.scene.RocketStationPonder;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -24,16 +24,16 @@ public class NorthstarPonderPlugin implements PonderPlugin {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         // FIXME: those register under northstar and are missing the translation keys
-        /*HELPER.forComponents(NorthstarTechBlocks.IRON_COGWHEEL)
+        /*HELPER.forComponents(NorthstarBlocks.IRON_COGWHEEL)
                 .addStoryBoard(ResourceLocation.parse("create:cog/small"), KineticsScenes::cogAsRelay, AllCreatePonderTags.KINETIC_RELAYS)
                 .addStoryBoard(ResourceLocation.parse("create:cog/speedup"), KineticsScenes::cogsSpeedUp)
                 .addStoryBoard(ResourceLocation.parse("create:cog/encasing"), KineticsScenes::cogwheelsCanBeEncased);
-        HELPER.forComponents(NorthstarTechBlocks.IRON_LARGE_COGWHEEL)
+        HELPER.forComponents(NorthstarBlocks.IRON_LARGE_COGWHEEL)
                 .addStoryBoard(ResourceLocation.parse("create:cog/large"), KineticsScenes::largeCogAsRelay, AllCreatePonderTags.KINETIC_RELAYS)
                 .addStoryBoard(ResourceLocation.parse("create:cog/speedup"), KineticsScenes::cogsSpeedUp)
                 .addStoryBoard(ResourceLocation.parse("create:cog/encasing"), KineticsScenes::cogwheelsCanBeEncased);*/
 
-        HELPER.forComponents(NorthstarTechBlocks.ROCKET_STATION, NorthstarTechBlocks.ROCKET_CONTROLS)
+        HELPER.forComponents(NorthstarBlocks.ROCKET_STATION, NorthstarBlocks.ROCKET_CONTROLS)
                 .addStoryBoard("rocket", RocketStationPonder::program, AllCreatePonderTags.MOVEMENT_ANCHOR);
     }
 

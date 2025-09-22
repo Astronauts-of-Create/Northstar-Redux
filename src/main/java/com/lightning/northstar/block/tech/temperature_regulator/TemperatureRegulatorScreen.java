@@ -3,7 +3,7 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.NorthstarTemperature;
@@ -23,7 +23,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
     private static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/temperature_regulator.png");
@@ -33,7 +36,7 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
     private final BlockPos pos;
 
     public TemperatureRegulatorScreen(BaseTemperatureRegulator regulator, int entityId, BlockPos pos) {
-        super(NorthstarTechBlocks.TEMPERATURE_REGULATOR.get().getName());
+        super(NorthstarBlocks.TEMPERATURE_REGULATOR.get().getName());
         this.regulator = regulator;
         this.entityId = entityId;
         this.pos = pos;

@@ -194,7 +194,7 @@ public class ArgyreTrunkPlacer extends TrunkPlacer {
 
     @Override
     protected boolean validTreePos(LevelSimulatedReader pLevel, BlockPos pPos) {
-        return pLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pPos).getY() > pPos.getY() && pLevel.isStateAtPosition(pPos, block -> block.is(NorthstarBlockTags.ARGYRE_REPLACES.tag));
+        return pLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pPos).getY() > pPos.getY() && pLevel.isStateAtPosition(pPos, block -> block.is(NorthstarBlockTags.ARGYRE_REPLACEABLE.tag));
     }
 
     @Override

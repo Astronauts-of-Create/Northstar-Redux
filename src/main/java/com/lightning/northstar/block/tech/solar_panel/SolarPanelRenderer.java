@@ -50,7 +50,6 @@ public class SolarPanelRenderer extends ShaftRenderer<SolarPanelBlockEntity> {
 
         CachedBuffers.partial(model, state)
                 .light(light)
-                .overlay(overlay)
                 .renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
         ms.popPose();

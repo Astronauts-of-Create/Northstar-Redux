@@ -4,7 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.client.TilingAnchor;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
@@ -19,9 +19,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+@OnlyIn(Dist.CLIENT)
 public class OxygenSealerScreen extends AbstractSimiScreen {
 
     private static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/oxygen_sealer.png");
@@ -29,7 +32,7 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
     private final MovingOxygenSealer sealer;
 
     public OxygenSealerScreen(MovingOxygenSealer sealer) {
-        super(NorthstarTechBlocks.OXYGEN_SEALER.get().getName());
+        super(NorthstarBlocks.OXYGEN_SEALER.get().getName());
         this.sealer = sealer;
 
         setWindowSize(204, 64);
