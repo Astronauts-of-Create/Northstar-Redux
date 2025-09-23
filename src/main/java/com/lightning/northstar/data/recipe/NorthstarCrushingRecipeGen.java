@@ -30,13 +30,17 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
 
     LIMESTONE = create(() -> AllPaletteStoneTypes.LIMESTONE.baseBlock.get(),
             b -> b.duration(800)
-                    .output(0.5f, NorthstarItems.RUTILE_CONCENTRATE, 2)),
+                    .output(0.25f, NorthstarItems.RUTILE_CONCENTRATE, 2)),
+
+    VENUS_GRAVEL = create(() -> NorthstarBlocks.VENUS_GRAVEL,
+            b -> b.duration(800)
+                    .output(0.75f, NorthstarItems.RUTILE_CONCENTRATE, 2)),
 
     MARS_GRAVEL = create(() -> NorthstarBlocks.MARS_GRAVEL,
             b -> b.duration(500)
                     .output(NorthstarBlocks.MARS_SAND)
-                    .output(0.75f, NorthstarItems.SALT, 4)
-                    .output(0.25f, NorthstarItems.SALT, 2)),
+                    .output(0.5f, NorthstarItems.SALT)
+                    .output(0.25f, NorthstarItems.SALT)),
 
     MARS_STONE = create(() -> NorthstarBlocks.MARS_STONE,
             b -> b.duration(500)

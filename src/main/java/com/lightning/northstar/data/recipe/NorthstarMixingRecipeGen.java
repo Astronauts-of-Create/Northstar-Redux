@@ -7,6 +7,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
@@ -68,17 +69,23 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarItems.MARTIAN_STRAWBERRY)
                     .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
 
-    // Pre electrolysis, uses brines directly but has a bad ratio
-    TITANIUM1 = create("titanium_from_brine",
+    // Pre electrolysis (Exactly the same recipe as before but):
+    // - requires an extra 0.5 zinc ingots per titanium ingot,
+    // - replace brine with sodium catalyst (Sodium catalyst was designed for this to begin with) (1 salt -> 0.5 salt; 1b water -> 0.5b lava)
+
+    TITANIUM1 = create("titanium_pre_electrolysys",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarFluidTags.C_BRINE.tag, 500)
-                    .require(NorthstarFluidTags.C_CARBON.tag, 500)
-                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500)),
+                    .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(AllItems.ZINC_INGOT)
+                    .require(NorthstarItems.SODIUM_CATALYST)
+                    .require(NorthstarFluidTags.C_CARBON.tag, 1000)
+                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
 
     // Post electrolysis, better ratios
-    TITANIUM2 = create("titanium_from_sodium",
+    TITANIUM2 = create("titanium_from_chlorine",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)

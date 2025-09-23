@@ -3,6 +3,7 @@ package com.lightning.northstar.content;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.data.Tags;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -271,6 +272,7 @@ public class NorthstarTags {
         SPACE_ORE_TITANIUM("space_ore/titanium"),
         SPACE_ORE_TUNGSTEN("space_ore/tungsten"),
         SPACE_ORE_ZINC("space_ore/zinc"),
+        RAW_IRON("raw_iron"),
         WILTER_LOGS;
 
         public final TagKey<Item> tag;

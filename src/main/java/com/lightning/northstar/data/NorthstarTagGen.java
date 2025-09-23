@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
@@ -162,6 +163,10 @@ public class NorthstarTagGen {
                 .add(Items.LEATHER_CHESTPLATE)
                 .add(Items.LEATHER_LEGGINGS)
                 .add(Items.LEATHER_BOOTS);
+
+        tags.tag(NorthstarItemTags.RAW_IRON)
+                .add(Items.RAW_IRON)
+                .add(NorthstarItems.RAW_MARTIAN_IRON_ORE);
     }
 
     private static void entities(RegistrateTagsProvider<EntityType<?>> provider) {
