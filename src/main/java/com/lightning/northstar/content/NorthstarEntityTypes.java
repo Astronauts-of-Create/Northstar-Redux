@@ -8,7 +8,6 @@ import com.lightning.northstar.entity.projectiles.VenusScorpionSpit;
 import com.lightning.northstar.entity.variants.FrozenZombieEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
-import com.simibubi.create.content.contraptions.render.ContraptionVisual;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -187,7 +186,6 @@ public class NorthstarEntityTypes {
 
     public static final EntityEntry<RocketContraptionEntity> ROCKET_CONTRAPTION = REGISTRATE
             .entity("rocket_contraption", RocketContraptionEntity::new, MobCategory.MISC)
-            .visual(() -> ContraptionVisual::new)
             .lang("Rocket")
             .properties(b -> b.setTrackingRange(200)
                     .setUpdateInterval(40)

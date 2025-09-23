@@ -5,12 +5,18 @@ import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.api.data.recipe.CrushingRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.data.recipe.CrushingRecipeGen;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
 
@@ -131,7 +137,15 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
                     .output(0.5f, NorthstarItems.LUNAR_SAPPHIRE_SHARD));
 
     public NorthstarCrushingRecipeGen(PackOutput generator) {
-        super(generator, Northstar.MOD_ID);
+        super(generator);
+    }
+
+    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.createWithDeferredId(() -> Northstar.asResource(name), transform);
+    }
+
+    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.create(Northstar.MOD_ID, singleIngredient, transform);
     }
 
 }

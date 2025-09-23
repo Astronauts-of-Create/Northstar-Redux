@@ -27,4 +27,8 @@ public class BackportUtil {
                 .setFluidRenderer(1, false, 16, 16); // make fluid take up the full slot;
     }
 
+    public static float wrapAngle180(float angle) {
+        return (angle + 180) % 360 - 180;
+    }
+
 }

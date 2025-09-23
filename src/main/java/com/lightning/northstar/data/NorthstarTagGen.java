@@ -48,7 +48,7 @@ public class NorthstarTagGen {
 
                 .add(AllBlocks.BLAZE_BURNER.get(), AllBlocks.ANDESITE_LADDER.get(), AllBlocks.BRASS_LADDER.get(),
                         AllBlocks.COPPER_LADDER.get(), AllBlocks.ANDESITE_SCAFFOLD.get(), AllBlocks.BRASS_SCAFFOLD.get(),
-                        AllBlocks.COPPER_SCAFFOLD.get(), AllBlocks.PACKAGER.get(), AllBlocks.REPACKAGER.get());
+                        AllBlocks.COPPER_SCAFFOLD.get());
 
         tags.tag(NorthstarBlockTags.ARGYRE_REPLACEABLE)
                 .add(Blocks.AIR, Blocks.CAVE_AIR,

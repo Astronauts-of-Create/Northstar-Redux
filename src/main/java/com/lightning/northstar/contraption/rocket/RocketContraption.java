@@ -9,6 +9,7 @@ import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.AssemblyException;
+import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;

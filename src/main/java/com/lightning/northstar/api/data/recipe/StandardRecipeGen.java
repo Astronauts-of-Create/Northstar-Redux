@@ -5,9 +5,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.data.Tags;
-import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-public abstract class StandardRecipeGen extends BaseRecipeProvider {
+public abstract class StandardRecipeGen extends CreateRecipeProvider {
 
     public void createMaterial(ItemLike nuggets, ItemLike ingot, ItemLike block) {
         if (nuggets != null) {
@@ -60,11 +60,11 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
     public void interchangeable(ItemLike item1, ItemLike item2) {
         create(() -> item1)
                 .unlockedBy(() -> item2)
-                .withSuffix("_from_" + CatnipServices.REGISTRIES.getKeyOrThrow(item2.asItem()).getPath())
+                .withSuffix("_from_" + RegisteredObjects.getKeyOrThrow(item2.asItem()).getPath())
                 .viaShapeless(b -> b.requires(item2));
         create(() -> item2)
                 .unlockedBy(() -> item1)
-                .withSuffix("_from_" + CatnipServices.REGISTRIES.getKeyOrThrow(item1.asItem()).getPath())
+                .withSuffix("_from_" + RegisteredObjects.getKeyOrThrow(item1.asItem()).getPath())
                 .viaShapeless(b -> b.requires(item1));
     }
 
@@ -183,7 +183,7 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
         }
 
         private ResourceLocation getRegistryName() {
-            return CatnipServices.REGISTRIES.getKeyOrThrow(result.get().asItem());
+            return RegisteredObjects.getKeyOrThrow(result.get().asItem());
         }
 
         public class Cooking {
@@ -248,7 +248,7 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
                     if (unlockedBy != null)
                         b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
 
-                    b.save(consumer, createLocation(CatnipServices.REGISTRIES.getKeyOrThrow(serializer).getPath()));
+                    b.save(consumer, createLocation(RegisteredObjects.getKeyOrThrow(serializer).getPath()));
                 });
             }
         }
@@ -287,7 +287,7 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
     }
 
     public StandardRecipeGen(PackOutput output, String defaultNamespace) {
-        super(output, defaultNamespace);
+        super(output);
     }
 
 }

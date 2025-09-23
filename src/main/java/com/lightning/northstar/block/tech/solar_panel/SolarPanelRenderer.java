@@ -3,10 +3,10 @@ package com.lightning.northstar.block.tech.solar_panel;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.lightning.northstar.content.NorthstarPartialModels;
+import com.lightning.northstar.util.BackportUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -38,7 +38,7 @@ public class SolarPanelRenderer extends KineticBlockEntityRenderer<SolarPanelBlo
             model = NorthstarPartialModels.SOLAR_PANEL_SLIM;
         }
 
-        float angle = Mth.clamp(AngleHelper.wrapAngle180(be.getLevel().getTimeOfDay(partialTicks) * 360), -45, +45);
+        float angle = Mth.clamp(BackportUtil.wrapAngle180(be.getLevel().getTimeOfDay(partialTicks) * 360), -45, +45);
         be.targetAngle.chase(angle, 0.2, LerpedFloat.Chaser.EXP);
 
         ms.pushPose();

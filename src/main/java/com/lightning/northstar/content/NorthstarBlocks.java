@@ -36,11 +36,11 @@ import com.lightning.northstar.util.NorthstarDataGenHelper;
 import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
 import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
 import com.lightning.northstar.world.features.grower.WilterTreeGrower;
+import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
-import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-import com.simibubi.create.api.stress.BlockStressValues;
+import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockModel;
 import com.simibubi.create.content.kinetics.simpleRelays.CogwheelBlockItem;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
@@ -48,6 +48,7 @@ import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -76,7 +77,6 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -84,7 +84,6 @@ import java.util.stream.IntStream;
 import static com.lightning.northstar.Northstar.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.*;
-import static net.minecraft.world.item.Items.registerBlock;
 import static net.minecraft.world.level.block.Blocks.*;
 
 public class NorthstarBlocks {
@@ -3674,7 +3673,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.METAL))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 0))
+            .transform(BlockStressDefaults.setImpact(0))
             .onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
             .item(CogwheelBlockItem::new)
             .build()
@@ -3687,7 +3686,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.METAL))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 0))
+            .transform(BlockStressDefaults.setImpact(0))
             .onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
             .lang("Large Iron Cogwheel")
             .item(CogwheelBlockItem::new)
@@ -3701,8 +3700,8 @@ public class NorthstarBlocks {
                     .noOcclusion())
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 128.0))
-            .onRegister(BlockStressValues.setGeneratorSpeed(SolarPanelBlockEntity.MAXIMUM_SPEED, true))
+            .transform(BlockStressDefaults.setCapacity(128.0))
+            .transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0,SolarPanelBlockEntity.MAXIMUM_SPEED)))
             .item()
             .transform(customItemModel())
             .register();
@@ -3716,8 +3715,8 @@ public class NorthstarBlocks {
                     .strength(8, 8))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 256))
-            //.onRegister(BlockStressValues.setGeneratorSpeed(CombustionEngineBlock.getSpeedRange().getSecond(), true))
+            .transform(BlockStressDefaults.setCapacity(256))
+            //.transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(CombustionEngineBlock.getSpeedRange().getSecond(), true))
             .item()
             .transform(customItemModel())
             .register();
@@ -3730,7 +3729,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
+            .transform(BlockStressDefaults.setImpact(8))
             .item(AssemblyOperatorBlockItem::new)
             .transform(customItemModel())
             .register();
@@ -3743,7 +3742,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK).noOcclusion())
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
+            .transform(BlockStressDefaults.setImpact(8))
             .simpleItem()
             .register();
 
@@ -3757,7 +3756,7 @@ public class NorthstarBlocks {
                     .strength(6, 6))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
+            .transform(BlockStressDefaults.setImpact(16))
             .item()
             .transform(customItemModel())
             .register();
@@ -3784,9 +3783,9 @@ public class NorthstarBlocks {
                     .strength(8, 8))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new OxygenSealerMovingInteractionBehaviour()))
-            .onRegister(MovementBehaviour.movementBehaviour(new OxygenSealerMovementBehaviour()))
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new OxygenSealerMovingInteractionBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new OxygenSealerMovementBehaviour()))
+            .transform(BlockStressDefaults.setImpact(16))
             .item()
             .transform(customItemModel())
             .register();
@@ -3811,9 +3810,9 @@ public class NorthstarBlocks {
                     .strength(8, 8))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
-            .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
-            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
+            .transform(BlockStressDefaults.setImpact(16))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
             .simpleItem()
             .register();
 
@@ -3824,7 +3823,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(MovementBehaviour.movementBehaviour(new BasinMovementBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new BasinMovementBehaviour()))
             .simpleItem()
             .register();
 
@@ -3836,7 +3835,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
-            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketStationBlockMovingInteraction()))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketStationBlockMovingInteraction()))
             .register();
 
     public static final BlockEntry<RocketControlsBlock> ROCKET_CONTROLS = REGISTRATE
@@ -3847,8 +3846,8 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(MovementBehaviour.movementBehaviour(new RocketControlsMovementBehaviour()))
-            .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketControlsInteractionBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new RocketControlsMovementBehaviour()))
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketControlsInteractionBehaviour()))
             .item()
             .transform(customItemModel())
             .register();
@@ -3876,7 +3875,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(MovementBehaviour.movementBehaviour(new JetEngineMovementBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new JetEngineMovementBehaviour()))
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/jet_engine/jet_single")))
             .build()

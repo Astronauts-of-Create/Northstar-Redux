@@ -7,16 +7,23 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
+import com.simibubi.create.foundation.data.recipe.MixingRecipeGen;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class NorthstarMixingRecipeGen extends MixingRecipeGen {
 
@@ -49,19 +56,19 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .output(NorthstarFluids.HYDROCARBON.get(), 750)),
 
     POTION_REGENERATION_3 = create("potion_regeneration_3",
-            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_REGENERATION, PotionFluid.BottleType.REGULAR)))
+            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_REGENERATION)))
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
-                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))),
+                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_REGENERATION.get()))),
 
     POTION_HEALING_3 = create("potion_healing_3",
-            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_HEALING, PotionFluid.BottleType.REGULAR)))
+            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_HEALING)))
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
-                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_HEALING.get(), PotionFluid.BottleType.REGULAR))),
+                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_HEALING.get()))),
 
     POTION_STRENGTH_3 = create("potion_strength_3",
-            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_STRENGTH, PotionFluid.BottleType.REGULAR)))
+            b -> b.require(FluidIngredient.fromFluidStack(PotionFluid.of(50, Potions.STRONG_STRENGTH)))
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
-                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))),
+                    .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_STRENGTH.get()))),
 
     STRAWBERRY_ICE_CREAM = create("strawberry_ice_cream",
             b -> b.require(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag, 200)
@@ -107,7 +114,15 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .output(Fluids.WATER, 250));
 
     public NorthstarMixingRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+        super(output);
+    }
+
+    protected <T extends ProcessingRecipe<?>> CreateRecipeProvider.GeneratedRecipe create(String name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.createWithDeferredId(() -> Northstar.asResource(name), transform);
+    }
+
+    protected <T extends ProcessingRecipe<?>> CreateRecipeProvider.GeneratedRecipe create(Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.create(Northstar.MOD_ID, singleIngredient, transform);
     }
 
 }

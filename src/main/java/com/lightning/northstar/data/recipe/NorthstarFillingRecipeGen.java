@@ -4,13 +4,18 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.simibubi.create.api.data.recipe.FillingRecipeGen;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.data.recipe.FillingRecipeGen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluids;
+
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class NorthstarFillingRecipeGen extends FillingRecipeGen {
 
@@ -58,7 +63,7 @@ public class NorthstarFillingRecipeGen extends FillingRecipeGen {
     }
 
     public NorthstarFillingRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+        super(output);
 
         createOxidization(250, 100, Blocks.COPPER_BLOCK, Blocks.EXPOSED_COPPER, Blocks.WEATHERED_COPPER, Blocks.OXIDIZED_COPPER);
         createOxidization(250, 100, Blocks.CUT_COPPER, Blocks.EXPOSED_CUT_COPPER, Blocks.WEATHERED_CUT_COPPER, Blocks.OXIDIZED_CUT_COPPER);
@@ -68,6 +73,14 @@ public class NorthstarFillingRecipeGen extends FillingRecipeGen {
         createOxidization(250, 100, Blocks.WAXED_CUT_COPPER, Blocks.WAXED_EXPOSED_CUT_COPPER, Blocks.WAXED_WEATHERED_CUT_COPPER, Blocks.WAXED_OXIDIZED_CUT_COPPER);
         createOxidization(180, 75, Blocks.WAXED_CUT_COPPER_STAIRS, Blocks.WAXED_EXPOSED_CUT_COPPER_STAIRS, Blocks.WAXED_WEATHERED_CUT_COPPER_STAIRS, Blocks.WAXED_OXIDIZED_CUT_COPPER_STAIRS);
         createOxidization(125, 50, Blocks.WAXED_CUT_COPPER_SLAB, Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB, Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB, Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB);
+    }
+
+    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.createWithDeferredId(() -> Northstar.asResource(name), transform);
+    }
+
+    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.create(Northstar.MOD_ID, singleIngredient, transform);
     }
 
 }

@@ -35,11 +35,6 @@ public class RocketControlsMovementBehaviour implements MovementBehaviour {
     }
 
     @Override
-    public boolean hasSpecialInstancedRendering() {
-        return true;
-    }
-
-    @Override
     @OnlyIn(Dist.CLIENT)
     public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
         if (!(context.temporaryData instanceof LerpedFloat angle))

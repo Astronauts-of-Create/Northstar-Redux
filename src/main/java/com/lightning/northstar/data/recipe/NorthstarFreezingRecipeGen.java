@@ -5,10 +5,15 @@ import com.lightning.northstar.api.data.recipe.FreezingRecipeGen;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.ItemLike;
+
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
 
@@ -43,6 +48,14 @@ public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
 
     public NorthstarFreezingRecipeGen(PackOutput generator) {
         super(generator, Northstar.MOD_ID);
+    }
+
+    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String name, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.createWithDeferredId(() -> Northstar.asResource(name), transform);
+    }
+
+    protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
+        return super.create(Northstar.MOD_ID, singleIngredient, transform);
     }
 
 }

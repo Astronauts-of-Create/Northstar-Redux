@@ -1,15 +1,20 @@
 package com.lightning.northstar.data.recipe;
 
-import com.lightning.northstar.Northstar;
+import com.google.common.base.Supplier;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeBuilder;
+import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+
+import java.lang.reflect.Method;
+import java.util.function.UnaryOperator;
 
 public class NorthstarMechanicalCraftingGen extends MechanicalCraftingRecipeGen {
 
@@ -169,7 +174,52 @@ public class NorthstarMechanicalCraftingGen extends MechanicalCraftingRecipeGen 
                     .disallowMirrored());
 
     public NorthstarMechanicalCraftingGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+        super(output);
+    }
+
+    private static final Method CREATE;
+    private static final Method RETURNS;
+    private static final Method RECIPE;
+
+    static {
+        try {
+            CREATE = MechanicalCraftingRecipeGen.class.getDeclaredMethod("create", Supplier.class);
+            CREATE.setAccessible(true);
+            Class<?> builder = Class.forName("com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen$GeneratedRecipeBuilder");
+            RETURNS = builder.getDeclaredMethod("returns", int.class);
+            RETURNS.setAccessible(true);
+            RECIPE = builder.getDeclaredMethod("recipe", UnaryOperator.class);
+            RECIPE.setAccessible(true);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    Builder create(Supplier<ItemLike> result) {
+        try {
+            return new Builder(CREATE.invoke(this, result));
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    private record Builder(Object delegate) {
+        public Builder returns(int amount) {
+            try {
+                RETURNS.invoke(delegate, amount);
+            } catch (Exception exception) {
+                throw new RuntimeException(exception);
+            }
+            return this;
+        }
+
+        public GeneratedRecipe recipe(UnaryOperator<MechanicalCraftingRecipeBuilder> builder) {
+            try {
+                return (GeneratedRecipe) RECIPE.invoke(delegate, builder);
+            } catch (Exception exception) {
+                throw new RuntimeException(exception);
+            }
+        }
     }
 
 }
