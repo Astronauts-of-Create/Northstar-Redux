@@ -34,18 +34,18 @@ public class RemainingOxygenOverlay implements LayeredDraw.Layer {
         ItemStack tank = NorthstarOxygen.getOxy(player);
         if (tank.isEmpty())
             return;
-        int remainingTime = tank.has(NorthstarDataComponents.OXYGEN) ? oxygenTank.get(NorthstarDataComponents.OXYGEN) : 0;
+        int remainingTime = tank.has(NorthstarDataComponents.OXYGEN) ? tank.get(NorthstarDataComponents.OXYGEN) : 0;
 
         pose.pushPose();
 
-        pose.translate(screenWidth / 2f + 95, screenHeight - 40, 0);
+        pose.translate(graphics.guiWidth() / 2f + 95, graphics.guiHeight() - 40, 0);
         int color = 0xFF_FFFFFF;
         if (remainingTime <= 60 && remainingTime % 2 == 0)
             color = Color.mixColors(0xFF_FF0000, color, Math.max(remainingTime / 60f, .25f));
         GuiGameElement.of(tank)
                 .at(0, 0)
                 .render(graphics);
-        graphics.drawString(mc.font, StringUtil.formatTickDuration(Math.max(0, remainingTime - 1) * 20), 18, 5, color);
+        graphics.drawString(mc.font, StringUtil.formatTickDuration(Math.max(0, remainingTime - 1) * 20, 20), 18, 5, color);
 
         pose.popPose();
     }

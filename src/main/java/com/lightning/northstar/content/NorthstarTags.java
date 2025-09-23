@@ -39,7 +39,7 @@ public class NorthstarTags {
     enum Namespace {
 
         MOD(Northstar.MOD_ID, false, true),
-        COMMON("forge"), // "forge" on Forge, "c" on NeoForge/fabric
+        COMMON("c"), // "forge" on Forge, "c" on NeoForge/fabric
         ;
 
         public final String id;
