@@ -184,6 +184,11 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
     }
 
     @Override
+    protected boolean canSpecifyDuration() {
+        return true;
+    }
+
+    @Override
     public boolean matches(SmartInventory pContainer, Level pLevel) {
         // TODO Auto-generated method stub
         return false;

@@ -2,9 +2,11 @@ package com.lightning.northstar.data;
 
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import net.minecraft.tags.BlockTags;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.function.Function;
 
@@ -25,6 +28,7 @@ public class NorthstarTagGen {
         REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, NorthstarTagGen::blocks);
         REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, NorthstarTagGen::items);
         REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, NorthstarTagGen::entities);
+        REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, NorthstarTagGen::fluids);
     }
 
     private static void blocks(RegistrateTagsProvider<Block> provider) {
@@ -49,11 +53,11 @@ public class NorthstarTagGen {
         tags.tag(NorthstarBlockTags.ARGYRE_REPLACEABLE)
                 .add(Blocks.AIR, Blocks.CAVE_AIR,
                         Blocks.ANDESITE, Blocks.BASALT)
-                .add(ModCompat.CREATE, "crimsite");
+                .add(AllPaletteStoneTypes.CRIMSITE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.BASE_STONE_MARS)
                 .add(Blocks.ANDESITE, Blocks.BASALT, Blocks.DEEPSLATE, Blocks.TUFF)
-                .add(ModCompat.CREATE, "crimsite");
+                .add(AllPaletteStoneTypes.CRIMSITE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.BASE_STONE_MOON)
                 .add(Blocks.SMOOTH_BASALT);
@@ -83,41 +87,41 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarBlockTags.MARS_DEEP_STONE_REPLACEABLE)
                 .add(Blocks.TUFF)
-                .add(ModCompat.CREATE, "crimsite");
+                .add(AllPaletteStoneTypes.CRIMSITE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.MARS_STONE_REPLACEABLE)
                 .add(Blocks.ANDESITE)
-                .add(ModCompat.CREATE, "crimsite");
+                .add(AllPaletteStoneTypes.CRIMSITE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.MERCURY_DEEP_STONE_REPLACEABLE)
                 .add(Blocks.BLACKSTONE)
-                .add(ModCompat.CREATE, "scorchia");
+                .add(AllPaletteStoneTypes.CRIMSITE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.MERCURY_STONE_REPLACEABLE)
                 .add(Blocks.ANDESITE);
 
         tags.tag(NorthstarBlockTags.MOON_DEEP_STONE_REPLACEABLE)
                 .add(Blocks.ANDESITE, Blocks.SMOOTH_BASALT, Blocks.PACKED_ICE)
-                .add(ModCompat.CREATE, "asurine");
+                .add(AllPaletteStoneTypes.ASURINE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.MOON_STONE_REPLACEABLE)
                 .add(Blocks.ANDESITE);
 
         tags.tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS)
                 .add(Blocks.ANDESITE, Blocks.BASALT)
-                .add(ModCompat.CREATE, "crimsite");
+                .add(AllPaletteStoneTypes.CRIMSITE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS)
                 .add(Blocks.ANDESITE, Blocks.BLACKSTONE)
-                .add(ModCompat.CREATE, "scorchia");
+                .add(AllPaletteStoneTypes.SCORCHIA.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS)
                 .add(Blocks.BLACKSTONE, Blocks.PACKED_ICE)
-                .add(ModCompat.CREATE, "asurine");
+                .add(AllPaletteStoneTypes.ASURINE.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS)
                 .add(Blocks.BASALT, Blocks.TUFF)
-                .add(ModCompat.CREATE, "scorchia");
+                .add(AllPaletteStoneTypes.SCORCHIA.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.TIER_1_HEAT_RESISTANCE)
                 .add(Blocks.IRON_BLOCK)
@@ -131,11 +135,11 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarBlockTags.VENUS_DEEP_STONE_REPLACEABLE)
                 .add(Blocks.TUFF)
-                .add(ModCompat.CREATE, "scorchia");
+                .add(AllPaletteStoneTypes.SCORCHIA.baseBlock.get());
 
         tags.tag(NorthstarBlockTags.VENUS_STONE_REPLACEABLE)
-                .add(ModCompat.CREATE, "scorchia")
-                .add(ModCompat.CREATE, "ochrum");
+                .add(AllPaletteStoneTypes.SCORCHIA.baseBlock.get())
+                .add(AllPaletteStoneTypes.OCHRUM.baseBlock.get());
     }
 
     private static void items(RegistrateTagsProvider<Item> provider) {
@@ -180,7 +184,16 @@ public class NorthstarTagGen {
                 .add(EntityType.TROPICAL_FISH)
                 .add(EntityType.WITHER)
                 .add(EntityType.WITHER_SKELETON);
+    }
 
+    private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
+        Tags<Fluid, Fluid> tags = new Tags<>(provider, Fluid::builtInRegistryHolder, Function.identity());
+
+        tags.tag(NorthstarFluidTags.COMPAT_CBC_MOLTEN_CAST_IRON)
+                .opt(ModCompat.CBC, "molten_cast_iron");
+
+        tags.tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
+                .opt(ModCompat.CDG, "biodiesel");
     }
 
 }

@@ -42,24 +42,30 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
             .item("titanium_ingot", Item::new)
-            .tag(NorthstarItemTags.COMMON_INGOTS_TITANIUM.tag)
+            .tag(NorthstarItemTags.C_INGOTS.tag)
+            .tag(NorthstarItemTags.C_INGOTS_TITANIUM.tag)
             .register();
 
     public static final ItemEntry<Item> TITANIUM_SHEET = REGISTRATE
             .item("titanium_sheet", Item::new)
-            .tag(NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+            .tag(NorthstarItemTags.C_SHEETS.tag)
+            .tag(NorthstarItemTags.C_SHEETS_TITANIUM.tag)
             .register();
 
     public static final ItemEntry<Item> TITANIUM_NUGGET = REGISTRATE
             .item("titanium_nugget", Item::new)
+            .tag(NorthstarItemTags.C_NUGGETS.tag)
+            .tag(NorthstarItemTags.C_NUGGETS_TITANIUM.tag)
             .register();
 
     public static final ItemEntry<Item> DURABLE_FABRIC = REGISTRATE
             .item("durable_fabric", Item::new)
             .register();
 
+    // TODO: "dusts/ash", "dusts/volcanic_ash"?
     public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
             .item("volcanic_ash_item", Item::new)
+            .tag(NorthstarItemTags.C_DUSTS.tag)
             .model((c, p) -> p.generated(c::get, p.modLoc("item/volcanic_ash")))
             .register();
 
@@ -93,6 +99,8 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TUNGSTEN_NUGGET = REGISTRATE
             .item("tungsten_nugget", Item::new)
+            .tag(NorthstarItemTags.C_NUGGETS.tag)
+            .tag(NorthstarItemTags.C_NUGGETS_TUNGSTEN.tag)
             .register();
 
     public static final ItemEntry<Item> RAW_GLOWSTONE_ORE = REGISTRATE
@@ -107,21 +115,26 @@ public class NorthstarItems {
     public static final ItemEntry<Item> MARTIAN_STEEL = REGISTRATE
             .item("martian_steel", Item::new)
             .lang("Martian Steel Ingot")
-            .tag(NorthstarItemTags.COMMON_INGOTS_MARTIAN_STEEL.tag)
+            .tag(NorthstarItemTags.C_INGOTS.tag)
+            .tag(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL.tag)
             .register();
 
     public static final ItemEntry<Item> MARTIAN_STEEL_SHEET = REGISTRATE
             .item("martian_steel_sheet", Item::new)
+            .tag(NorthstarItemTags.C_SHEETS.tag)
+            .tag(NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
             .register();
 
     public static final ItemEntry<Item> TUNGSTEN_INGOT = REGISTRATE
             .item("tungsten_ingot", Item::new)
-            .tag(NorthstarItemTags.COMMON_INGOTS_TUNGSTEN.tag)
+            .tag(NorthstarItemTags.C_INGOTS.tag)
+            .tag(NorthstarItemTags.C_INGOTS_TUNGSTEN.tag)
             .register();
 
     public static final ItemEntry<Item> TUNGSTEN_SHEET = REGISTRATE
             .item("tungsten_sheet", Item::new)
-            .tag(NorthstarItemTags.COMMON_SHEETS_TUNGSTEN.tag)
+            .tag(NorthstarItemTags.C_SHEETS.tag)
+            .tag(NorthstarItemTags.C_SHEETS_TUNGSTEN.tag)
             .register();
 
     public static final ItemEntry<Item> DORMANT_MARTIAN_SAPLING = REGISTRATE
@@ -442,17 +455,16 @@ public class NorthstarItems {
             .properties(p -> p.defaultDurability(512))
             .register();
 
-    //Chlorine
     public static final ItemEntry<Item> SALT = REGISTRATE
             .item("salt", Item::new)
+            .tag(NorthstarItemTags.C_DUSTS.tag)
+            .tag(NorthstarItemTags.C_DUSTS_SALT.tag)
             .register();
 
-    //An alternative to chlorine (pre-electrolysis)
     public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
             .item("sodium_catalyst", Item::new)
             .register();
 
-    //minerals
     public static final ItemEntry<Item> RUTILE_CONCENTRATE = REGISTRATE
             .item("rutile_concentrate", Item::new)
             .register();

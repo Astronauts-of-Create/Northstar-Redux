@@ -3,8 +3,7 @@ package com.lightning.northstar.data;
 public enum ModCompat implements Tags.Mod {
 
     CBC("createbigcannons"),
-    CDG("createdieselgenerators"),
-    CREATE("create");
+    CDG("createdieselgenerators");
 
     public final String name;
 
