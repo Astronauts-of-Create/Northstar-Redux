@@ -1,7 +1,7 @@
 package com.lightning.northstar.compat.jei.category;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.data.FuelType;
 import com.lightning.northstar.util.BackportUtil;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
@@ -31,7 +31,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
     private static final int HEIGHT = 110;
 
     public FuelTypeCategory(IGuiHelper guiHelper) {
-        super(RECIPE_TYPE, Component.literal("Fuel Type"), guiHelper.createDrawableItemLike(NorthstarTechBlocks.JET_ENGINE), WIDTH, HEIGHT);
+        super(RECIPE_TYPE, Component.literal("Fuel Type"), guiHelper.createDrawableItemLike(NorthstarBlocks.JET_ENGINE), WIDTH, HEIGHT);
     }
 
     @Override

@@ -7,7 +7,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mars_stone_replaceables"
+          "tag": "northstar:mars_stone_replaceable"
         },
         "state": {
           "Name": "northstar:mars_quartz_ore"
@@ -16,7 +16,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mars_deep_stone_replaceables"
+          "tag": "northstar:mars_deep_stone_replaceable"
         },
         "state": {
           "Name": "northstar:mars_deep_quartz_ore"

@@ -19,10 +19,11 @@ public class ElectrolysisMachineRenderer extends KineticBlockEntityRenderer<Elec
 
     @Override
     protected void renderSafe(ElectrolysisMachineBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        if (!Backend.canUseInstancing(be.getLevel())) {
-            SuperByteBuffer shaft = CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
-            standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
-        }
+        if (Backend.canUseInstancing(be.getLevel()))
+            return;
+
+        SuperByteBuffer shaft = CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
+        standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
     }
 
 }

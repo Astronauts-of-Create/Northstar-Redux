@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin;
 
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -40,7 +40,7 @@ public class CompassMixin {
     private void useOn(UseOnContext pContext, CallbackInfoReturnable<InteractionResult> info) {
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
-        if (level.getBlockState(blockpos).is(NorthstarTechBlocks.ROCKET_STATION.get())) {
+        if (level.getBlockState(blockpos).is(NorthstarBlocks.ROCKET_STATION.get())) {
             level.playSound((Player) null, blockpos, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
             Player player = pContext.getPlayer();
             ItemStack itemstack = pContext.getItemInHand();
@@ -77,7 +77,7 @@ public class CompassMixin {
                 Optional<ResourceKey<Level>> optional = getLodestoneDimension2(compoundtag);
                 if (optional.isPresent() && optional.get() == pLevel.dimension() && compoundtag.contains("LodestonePos")) {
                     BlockPos blockpos = NbtUtils.readBlockPos(compoundtag.getCompound("LodestonePos"));
-                    if (pLevel.isInWorldBounds(blockpos) && ((ServerLevel) pLevel).getBlockState(blockpos).is(NorthstarTechBlocks.ROCKET_STATION.get())) {
+                    if (pLevel.isInWorldBounds(blockpos) && ((ServerLevel) pLevel).getBlockState(blockpos).is(NorthstarBlocks.ROCKET_STATION.get())) {
                         info.cancel();
                     }
                 }

@@ -26,7 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterloggedBlock {
-    public static final EnumProperty<VerticalSlabTypes> TYPE = EnumProperty.create("type", VerticalSlabTypes.class);
+    public static final EnumProperty<VerticalSlabType> TYPE = EnumProperty.create("type", VerticalSlabType.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     protected static final VoxelShape NORTH_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 8.0D);
     protected static final VoxelShape SOUTH_SHAPE = Block.box(0.0D, 0.0D, 8.0D, 16.0D, 16.0D, 16.0D);
@@ -36,12 +36,12 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
 
     public VerticalSlabBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.defaultBlockState().setValue(TYPE, VerticalSlabTypes.NORTH).setValue(WATERLOGGED, Boolean.FALSE));
+        this.registerDefaultState(this.defaultBlockState().setValue(TYPE, VerticalSlabType.NORTH).setValue(WATERLOGGED, Boolean.FALSE));
     }
 
     @Override
     public boolean useShapeForLightOcclusion(BlockState pState) {
-        return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE;
+        return pState.getValue(TYPE) != VerticalSlabType.DOUBLE;
     }
 
     @Override
@@ -65,15 +65,15 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
         BlockPos blockpos = pContext.getClickedPos();
         BlockState blockstate = pContext.getLevel().getBlockState(blockpos);
         if (blockstate.is(this)) {
-            return blockstate.setValue(TYPE, VerticalSlabTypes.DOUBLE).setValue(WATERLOGGED, Boolean.FALSE);
+            return blockstate.setValue(TYPE, VerticalSlabType.DOUBLE).setValue(WATERLOGGED, Boolean.FALSE);
         } else {
             FluidState fluidstate = pContext.getLevel().getFluidState(blockpos);
             Direction direction = pContext.getHorizontalDirection();
-            VerticalSlabTypes bob = switch (direction) {
-                case SOUTH -> VerticalSlabTypes.SOUTH;
-                case EAST -> VerticalSlabTypes.EAST;
-                case WEST -> VerticalSlabTypes.WEST;
-                default -> VerticalSlabTypes.NORTH;
+            VerticalSlabType bob = switch (direction) {
+                case SOUTH -> VerticalSlabType.SOUTH;
+                case EAST -> VerticalSlabType.EAST;
+                case WEST -> VerticalSlabType.WEST;
+                default -> VerticalSlabType.NORTH;
             };
             return defaultBlockState()
                     .setValue(TYPE, bob)
@@ -84,12 +84,12 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
     @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
         ItemStack itemstack = pUseContext.getItemInHand();
-        VerticalSlabTypes slabtype = pState.getValue(TYPE);
-        if (slabtype != VerticalSlabTypes.DOUBLE && itemstack.is(this.asItem())) {
+        VerticalSlabType slabtype = pState.getValue(TYPE);
+        if (slabtype != VerticalSlabType.DOUBLE && itemstack.is(this.asItem())) {
             if (pUseContext.replacingClickedOnBlock()) {
                 boolean flag = pUseContext.getClickLocation().y - (double) pUseContext.getClickedPos().getY() > 0.5D;
                 Direction direction = pUseContext.getClickedFace();
-                if (slabtype == VerticalSlabTypes.NORTH) {
+                if (slabtype == VerticalSlabType.NORTH) {
                     return direction == Direction.EAST || flag && direction.getAxis().isHorizontal();
                 } else {
                     return direction == Direction.WEST || !flag && direction.getAxis().isHorizontal();
@@ -110,12 +110,12 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
 
     @Override
     public boolean placeLiquid(LevelAccessor pLevel, BlockPos pPos, BlockState pState, FluidState pFluidState) {
-        return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.placeLiquid(pLevel, pPos, pState, pFluidState) : false;
+        return pState.getValue(TYPE) != VerticalSlabType.DOUBLE ? SimpleWaterloggedBlock.super.placeLiquid(pLevel, pPos, pState, pFluidState) : false;
     }
 
     @Override
     public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
-        return pState.getValue(TYPE) != VerticalSlabTypes.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(pLevel, pPos, pState, pFluid) : false;
+        return pState.getValue(TYPE) != VerticalSlabType.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(pLevel, pPos, pState, pFluid) : false;
     }
 
 
@@ -132,13 +132,13 @@ public class VerticalSlabBlock extends DirectionalBlock implements SimpleWaterlo
 
     @Override
     public BlockState rotate(BlockState blockState, net.minecraft.world.level.block.Rotation rotation) {
-        return blockState.setValue(TYPE, VerticalSlabTypes.fromDir(rotation.rotate(VerticalSlabTypes.toDir(blockState.getValue(TYPE)))));
+        return blockState.setValue(TYPE, VerticalSlabType.fromDir(rotation.rotate(VerticalSlabType.toDir(blockState.getValue(TYPE)))));
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState blockState, net.minecraft.world.level.block.Mirror mirror) {
-        return blockState.rotate(mirror.getRotation(VerticalSlabTypes.toDir(blockState.getValue(TYPE))));
+        return blockState.rotate(mirror.getRotation(VerticalSlabType.toDir(blockState.getValue(TYPE))));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
 import com.lightning.northstar.compat.jei.subcategory.AssemblyEngraving;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
@@ -44,7 +44,7 @@ public class EngravingRecipe extends ProcessingRecipe<RecipeWrapper> implements 
 
     @Override
     public void addRequiredMachines(Set<ItemLike> list) {
-        list.add(NorthstarTechBlocks.CIRCUIT_ENGRAVER.get());
+        list.add(NorthstarBlocks.CIRCUIT_ENGRAVER.get());
     }
 
     @Override

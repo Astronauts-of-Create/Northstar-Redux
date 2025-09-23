@@ -33,7 +33,7 @@ public class TitaniumTetrachlorideBlock extends LiquidBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        //Titanium tetrachloride is extremely volatile when exposed to open air.
+        // Titanium tetrachloride is extremely volatile when exposed to open air.
         world.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3.0f, Level.ExplosionInteraction.NONE);
 
         MutableBlockPos neighborPos = new MutableBlockPos();

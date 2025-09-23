@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "northstar:item/broken_iron_space_suit_leggings"
-  }
-}

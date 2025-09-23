@@ -1,6 +1,6 @@
 package com.lightning.northstar.compat.jei.animations;
 
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,7 +15,7 @@ public class AnimatedElectrolysisMachine extends AnimatedKinetics {
         pose.translate(xOffset, yOffset + 22, 200);
         int scale = 24;
 
-        blockElement(NorthstarTechBlocks.ELECTROLYSIS_MACHINE.getDefaultState())
+        blockElement(NorthstarBlocks.ELECTROLYSIS_MACHINE.getDefaultState())
                 .rotateBlock(22.5, 22.5, 0)
                 .scale(scale)
                 .render(graphics);

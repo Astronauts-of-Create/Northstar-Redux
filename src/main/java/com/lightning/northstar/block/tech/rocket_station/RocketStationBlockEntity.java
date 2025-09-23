@@ -130,14 +130,10 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
             if (item.getTagElement("Planet") != null)
                 target = NorthstarPlanets.getPlanetDimension(item.getTagElement("Planet").getString("name"));
         }
-        if (getBlockState().getValue(RocketStationBlock.ASSEMBLING)) {
-            assembleNextTick = true;
-        }
         fuelCost = fuelCalc();
         fuelReturnCost = fuelReturnCalc();
 
         if (assembleNextTick) {
-            level.setBlock(worldPosition, getBlockState().setValue(RocketStationBlock.ASSEMBLING, false), assemblyLength);
             tryAssemble();
             assembleNextTick = false;
         }
