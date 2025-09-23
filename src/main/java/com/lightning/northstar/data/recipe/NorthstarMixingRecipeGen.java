@@ -89,12 +89,12 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
     WATER_FROM_BLUE_ICE = create("water_from_blue_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(Items.BLUE_ICE)
-                    .output(Fluids.WATER, 20000)),
+                    .output(Fluids.WATER, 1000 * 9 * 9)),
 
     WATER_FROM_PACKED_BLUE_ICE = create("water_from_packed_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(Items.PACKED_ICE)
-                    .output(Fluids.WATER, 5000)),
+                    .output(Fluids.WATER, 1000 * 9)),
 
     WATER_FROM_ICE = create("water_from_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)

@@ -84,6 +84,7 @@ public class NorthstarItems {
     public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_HARDENED_PRECISION_MECHANISM
             = sequencedIngredient("incomplete_hardened_precision_mechanism");
 
+    //TODO: Remove this and just replace it with regular raw iron? Why should you need raw iron from mars anyway?
     public static final ItemEntry<Item> RAW_MARTIAN_IRON_ORE = REGISTRATE
             .item("raw_martian_iron_ore", Item::new)
             .register();

@@ -87,6 +87,8 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(NorthstarItems.VOLCANIC_ASH)
                     .output(NorthstarItems.MARTIAN_STEEL, 2)),
 
+    // sodium hydroxide from fungus plants
+
     SODIUM_FROM_BLOOM_FUNGUS = create("sodium_from_bloom_fungus",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarBlocks.BLOOM_FUNGUS_BLOCK)

@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 1000,
+      "fluid": "northstar:carbon"
+    },
+    {
+      "amount": 1000,
+      "fluid": "northstar:hydrogen"
+    }
+  ],
+  "results": [
+    {
+      "amount": 2000,
+      "fluid": "northstar:hydrocarbon"
+    }
+  ]
+}

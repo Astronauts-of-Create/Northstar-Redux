@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +24,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -39,9 +42,14 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     private Fluid lastFluid;
     private FuelType fuelType;
 
+    //For some reason the sound is not playing, I'm gonna just let Red figure it out
+    @OnlyIn(Dist.CLIENT)
+//    private EngineHumSound sound;
+
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
     }
+
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
@@ -106,6 +114,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             updateGeneratedRotation();
         }
     }
+
 
     @Override
     public float getGeneratedSpeed() {
