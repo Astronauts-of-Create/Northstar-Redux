@@ -29,7 +29,6 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .transitionTo(NorthstarItems.UNFINISHED_ADVANCED_CIRCUIT)
                     .addOutput(NorthstarItems.ADVANCED_CIRCUIT, 1)
                     .loops(5)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.ADVANCED_CIRCUIT))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_LUNAR_SAPPHIRE))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.MARTIAN_STEEL_SHEET))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_GOLD.tag))
