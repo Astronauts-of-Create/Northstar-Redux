@@ -4,6 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.accessor.NorthstarSequencedAssemblyRecipeBuilder;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.content.NorthstarBlocks;
@@ -76,9 +77,9 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addOutput(Items.IRON_NUGGET, 5)
                     .addOutput(NorthstarBlocks.IRON_COGWHEEL, 10)
                     .loops(5)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.TITANIUM_INGOT))
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_COGWHEEL)))
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_LARGE_COGWHEEL)),
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarTags.NorthstarItemTags.C_INGOTS_TITANIUM.tag))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_COGWHEEL))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_LARGE_COGWHEEL))),
 
     TARGETING_COMPUTER = create("targeting_computer",
             b -> b.require(NorthstarItemTags.C_SHEETS_IRON.tag)
