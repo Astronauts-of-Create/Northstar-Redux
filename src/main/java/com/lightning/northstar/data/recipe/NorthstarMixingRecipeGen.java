@@ -4,14 +4,15 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
@@ -23,25 +24,19 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
             $ = null,
 
     BRINE = create("brine",
-            b -> b.require(Fluids.WATER, 500)
-                    .require(NorthstarItems.SALT)
+            b -> b.require(FluidTags.WATER, 500)
+                    .require(NorthstarItemTags.C_DUSTS_SALT.tag)
                     .output(NorthstarFluids.BRINE.get(), 550)),
 
-    BRINE_TO_SALT = create("brine_to_salt",
-            b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(NorthstarFluidTags.COMMON_BRINE.tag, 750)
-                    .output(NorthstarItems.SALT)),
-
     CHOCOLATE_ICE_CREAM = create("chocolate_ice_cream",
-            b -> b.require(NorthstarFluids.VANILLA_ICE_CREAM.get(), 200)
+            b -> b.require(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag, 200)
                     .require(AllFluids.CHOCOLATE.get(), 50)
                     .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
 
-
     HYDROCARBON_FROM_CARBON = create("hydrocarbon_from_carbon",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(NorthstarFluids.CARBON.get(), 500)
-                    .require(Fluids.WATER, 500)
+                    .require(NorthstarFluidTags.C_CARBON.tag, 500)
+                    .require(FluidTags.WATER, 500)
                     .require(NorthstarItems.SODIUM_CATALYST)
                     .require(NorthstarItems.SODIUM_CATALYST)
                     .require(NorthstarItems.SODIUM_CATALYST)
@@ -49,8 +44,8 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
 
     HYDROCARBON_FROM_SODIUM = create("hydrocarbon_from_sodium",
             b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(NorthstarFluids.CARBON.get(), 750)
-                    .require(NorthstarFluids.SODIUM_HYDROXIDE.get(), 100)
+                    .require(NorthstarFluidTags.C_CARBON.tag, 750)
+                    .require(NorthstarFluidTags.C_SODIUM.tag, 100)
                     .output(NorthstarFluids.HYDROCARBON.get(), 750)),
 
     POTION_REGENERATION_3 = create("potion_regeneration_3",
@@ -68,41 +63,28 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarItems.ENRICHED_GLOWSTONE_ORE)
                     .output(PotionFluid.of(50, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))),
 
-    SALT_FROM_SODIUM = create("salt_from_sodium",
-            b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(NorthstarFluids.SODIUM_HYDROXIDE.get(), 250)
-                    .output(NorthstarItems.SALT)),
-
     STRAWBERRY_ICE_CREAM = create("strawberry_ice_cream",
-            b -> b.require(NorthstarFluids.VANILLA_ICE_CREAM.get(), 200)
+            b -> b.require(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag, 200)
                     .require(NorthstarItems.MARTIAN_STRAWBERRY)
                     .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
 
-    // TODO: titanium needs a serious rebalancing or changing
-    //  the titanium_* blocks back to iron
-    TITANIUM1 = create("titanium1",
+    // Pre electrolysis, uses brines directly but has a bad ratio
+    TITANIUM1 = create("titanium_from_brine",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.SODIUM_CATALYST)
-                    .require(NorthstarItems.SODIUM_CATALYST)
-                    .require(NorthstarItems.SODIUM_CATALYST)
-                    .require(AllItems.ZINC_INGOT)
-                    .require(AllItems.ZINC_INGOT)
-                    .require(NorthstarFluids.CARBON.get(), 500)
-                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
+                    .require(NorthstarFluidTags.C_BRINE.tag, 500)
+                    .require(NorthstarFluidTags.C_CARBON.tag, 500)
+                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500)),
 
-    TITANIUM2 = create("titanium2",
+    // Post electrolysis, better ratios
+    TITANIUM2 = create("titanium_from_sodium",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(AllItems.ZINC_INGOT)
-                    .require(AllItems.ZINC_INGOT)
-                    .require(NorthstarFluids.CARBON.get(), 500)
-                    .require(NorthstarFluids.CHLORINE.get(), 1000)
-                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 2500)),
+                    .require(NorthstarFluidTags.C_CHLORINE.tag, 250)
+                    .require(NorthstarFluidTags.C_CARBON.tag, 500)
+                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
 
     WATER_FROM_BLUE_ICE = create("water_from_blue_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)
@@ -123,7 +105,6 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(Blocks.SNOW_BLOCK)
                     .output(Fluids.WATER, 250));
-
 
     public NorthstarMixingRecipeGen(PackOutput output) {
         super(output, Northstar.MOD_ID);

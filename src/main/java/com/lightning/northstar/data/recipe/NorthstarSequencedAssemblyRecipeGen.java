@@ -3,8 +3,8 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.accessor.NorthstarSequencedAssemblyRecipeBuilder;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
-import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.data.ModCompat;
@@ -17,8 +17,8 @@ import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.material.Fluids;
 
 public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen {
 
@@ -33,19 +33,19 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.ADVANCED_CIRCUIT))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_LUNAR_SAPPHIRE))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.MARTIAN_STEEL_SHEET))
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.COMMON_SHEETS_GOLD.tag))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_GOLD.tag))
                     .addStep(EngravingRecipe::new, r -> r)),
 
     CIRCUIT = create("circuit",
-            b -> b.require(NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+            b -> b.require(NorthstarItemTags.C_SHEETS_IRON.tag)
                     .transitionTo(NorthstarItems.UNFINISHED_CIRCUIT)
                     .addOutput(NorthstarItems.CIRCUIT, 70)
                     .addOutput(Items.IRON_NUGGET, 20)
                     .addOutput(AllItems.COPPER_NUGGET, 10)
                     .loops(5)
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_AMETHYST))
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.COMMON_SHEETS_COPPER.tag))
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.COMMON_SHEETS_GOLD.tag))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_COPPER.tag))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_GOLD.tag))
                     .addStep(EngravingRecipe::new, r -> r)),
 
     DORMANT_MARTIAN_SAPLING = create("dormant_martian_sapling",
@@ -53,7 +53,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .transitionTo(NorthstarItems.DORMANT_MARTIAN_SAPLING_SEQUENCED)
                     .addOutput(NorthstarBlocks.COILER_SAPLING, 1)
                     .loops(2)
-                    .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 500))
+                    .addStep(FillingRecipe::new, r -> r.require(FluidTags.WATER, 500))
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_HEALING.get(), PotionFluid.BottleType.REGULAR))))
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))))
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))))),
@@ -65,13 +65,13 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addOutput(NorthstarItems.MARS_PALM_SEEDS, 1)
                     .addOutput(NorthstarItems.MARS_TULIP_SEEDS, 1)
                     .loops(2)
-                    .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 500))
+                    .addStep(FillingRecipe::new, r -> r.require(FluidTags.WATER, 500))
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_HEALING.get(), PotionFluid.BottleType.REGULAR))))
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_STRENGTH.get(), PotionFluid.BottleType.REGULAR))))
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))))),
 
     HARDENED_PRECISION_MECHANISM = create("hardened_precision_mechanism",
-            b -> b.require(NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+            b -> b.require(NorthstarItemTags.C_SHEETS_TITANIUM.tag)
                     .transitionTo(NorthstarItems.INCOMPLETE_HARDENED_PRECISION_MECHANISM)
                     .addOutput(NorthstarItems.HARDENED_PRECISION_MECHANISM, 80)
                     .addOutput(Items.IRON_NUGGET, 10)
@@ -82,7 +82,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_COGWHEEL))),
 
     TARGETING_COMPUTER = create("targeting_computer",
-            b -> b.require(NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+            b -> b.require(NorthstarItemTags.C_SHEETS_IRON.tag)
                     .transitionTo(NorthstarItems.UNFINISHED_TARGETING_COMPUTER)
                     .addOutput(NorthstarItems.TARGETING_COMPUTER, 1)
                     .loops(8)
@@ -96,12 +96,12 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
             b -> b.require(AllItems.STURDY_SHEET)
                     .transitionTo(NorthstarItems.INCOMPLETE_TITANIUM_INGOT)
                     .addOutput(NorthstarItems.TITANIUM_INGOT, 1)
-                    .loops(2)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(Items.IRON_INGOT))
+                    .loops(1)
+                    .addStep(FillingRecipe::new, r -> r.require(FluidTags.LAVA, 500))
                     .addStep(PressingRecipe::new, r -> r)
-                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500))
+                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluidTags.C_TITANIUM_TETRACHLORIDE.tag(), 500))
                     .addStep(PressingRecipe::new, r -> r)
-                    .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 1000))),
+                    .addStep(FillingRecipe::new, r -> r.require(FluidTags.WATER, 1000))),
 
     TITANIUM_CBC = create("titanium_compat_cbc",
             b -> ((NorthstarSequencedAssemblyRecipeBuilder) b)
@@ -110,11 +110,11 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .transitionTo(NorthstarItems.INCOMPLETE_TITANIUM_INGOT)
                     .addOutput(NorthstarItems.TITANIUM_INGOT, 1)
                     .loops(2)
-                    .addStep(FillingRecipe::new, r -> r.require(ModCompat.CBC.fluidIngredient("molten_cast_iron", 250)))
-                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500))
+                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluidTags.COMPAT_CBC_MOLTEN_CAST_IRON.tag, 250))
+                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluidTags.C_TITANIUM_TETRACHLORIDE.tag(), 250))
                     .addStep(PressingRecipe::new, r -> r)
                     .addStep(PressingRecipe::new, r -> r)
-                    .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 1000)));
+                    .addStep(FillingRecipe::new, r -> r.require(FluidTags.WATER, 1000)));
 
     public NorthstarSequencedAssemblyRecipeGen(PackOutput output) {
         super(output, Northstar.MOD_ID);
