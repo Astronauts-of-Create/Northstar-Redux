@@ -78,41 +78,35 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarItems.MARTIAN_STRAWBERRY)
                     .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
 
-    // TODO: titanium needs a serious rebalancing or changing
-    //  the titanium_* blocks back to iron
+    //Easy enough?
     TITANIUM1 = create("titanium1",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.SODIUM_CATALYST)
-                    .require(NorthstarItems.SODIUM_CATALYST)
                     .require(NorthstarItems.SODIUM_CATALYST)
                     .require(AllItems.ZINC_INGOT)
-                    .require(AllItems.ZINC_INGOT)
-                    .require(NorthstarFluids.CARBON.get(), 500)
-                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
+                    .require(NorthstarFluids.CARBON.get(), 200)
+                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 750)),
 
     TITANIUM2 = create("titanium2",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(AllItems.ZINC_INGOT)
-                    .require(AllItems.ZINC_INGOT)
-                    .require(NorthstarFluids.CARBON.get(), 500)
+                    .require(NorthstarFluids.CARBON.get(), 1000)
                     .require(NorthstarFluids.CHLORINE.get(), 1000)
-                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 2500)),
+                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 3000)),
 
     WATER_FROM_BLUE_ICE = create("water_from_blue_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(Items.BLUE_ICE)
-                    .output(Fluids.WATER, 20000)),
+                    .output(Fluids.WATER, 1000 * 9 * 9)),
 
     WATER_FROM_PACKED_BLUE_ICE = create("water_from_packed_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(Items.PACKED_ICE)
-                    .output(Fluids.WATER, 5000)),
+                    .output(Fluids.WATER, 1000 * 9)),
 
     WATER_FROM_ICE = create("water_from_ice",
             b -> b.requiresHeat(HeatCondition.HEATED)

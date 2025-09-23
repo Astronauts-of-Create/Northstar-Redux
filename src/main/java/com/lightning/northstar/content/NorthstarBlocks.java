@@ -1217,6 +1217,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.dropOther(b, NorthstarItems.VOLCANIC_ASH))
             .simpleItem()
             .register();
 

@@ -32,8 +32,9 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
+                    .require(Items.DRIED_KELP)
                     .require(Items.BONE_MEAL)
-                    .output(NorthstarFluids.BIOFUEL.get(), 300)),
+                    .output(NorthstarFluids.BIOFUEL.get(), 350)),
 
     // yup, definitely Java
     // say, what's a loop anyway?
@@ -111,6 +112,8 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(NorthstarItems.RAW_MARTIAN_IRON_ORE)
                     .require(NorthstarItems.VOLCANIC_ASH)
                     .output(NorthstarItems.MARTIAN_STEEL, 2)),
+
+    // sodium hydroxide from fungus plants
 
     SODIUM_FROM_BLOOM_FUNGUS = create("sodium_from_bloom_fungus",
             b -> b.requiresHeat(HeatCondition.HEATED)

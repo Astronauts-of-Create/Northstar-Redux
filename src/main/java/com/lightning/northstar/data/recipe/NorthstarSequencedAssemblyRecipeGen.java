@@ -71,13 +71,13 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addStep(FillingRecipe::new, r -> r.require(FluidIngredient.fromFluidStack(PotionFluid.of(25, NorthstarPotions.ENHANCED_REGENERATION.get(), PotionFluid.BottleType.REGULAR))))),
 
     HARDENED_PRECISION_MECHANISM = create("hardened_precision_mechanism",
-            b -> b.require(NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+            b -> b.require(AllItems.PRECISION_MECHANISM)
                     .transitionTo(NorthstarItems.INCOMPLETE_HARDENED_PRECISION_MECHANISM)
-                    .addOutput(NorthstarItems.HARDENED_PRECISION_MECHANISM, 80)
-                    .addOutput(Items.IRON_NUGGET, 10)
+                    .addOutput(NorthstarItems.HARDENED_PRECISION_MECHANISM, 85)
+                    .addOutput(Items.IRON_NUGGET, 5)
                     .addOutput(NorthstarBlocks.IRON_COGWHEEL, 10)
-                    .loops(8)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(Items.IRON_NUGGET))
+                    .loops(5)
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.TITANIUM_INGOT))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_LARGE_COGWHEEL))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_COGWHEEL))),
 
@@ -92,14 +92,15 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.CIRCUIT))
                     .addStep(EngravingRecipe::new, r -> r)),
 
+    //An easy way to make titanium easier? Remove the iron ingots
     TITANIUM = create("titanium",
-            b -> b.require(AllItems.STURDY_SHEET)
+            b -> b.require(AllItems.STURDY_SHEET)//Replace sturdy sheet with iron?
                     .transitionTo(NorthstarItems.INCOMPLETE_TITANIUM_INGOT)
                     .addOutput(NorthstarItems.TITANIUM_INGOT, 1)
                     .loops(2)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(Items.IRON_INGOT))
-                    .addStep(PressingRecipe::new, r -> r)
                     .addStep(FillingRecipe::new, r -> r.require(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500))
+//                    .addStep(DeployerApplicationRecipe::new, r -> r.require(Items.IRON_INGOT))
+                    .addStep(PressingRecipe::new, r -> r)
                     .addStep(PressingRecipe::new, r -> r)
                     .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 1000))),
 
@@ -110,8 +111,8 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .transitionTo(NorthstarItems.INCOMPLETE_TITANIUM_INGOT)
                     .addOutput(NorthstarItems.TITANIUM_INGOT, 1)
                     .loops(2)
-                    .addStep(FillingRecipe::new, r -> r.require(ModCompat.CBC.fluidIngredient("molten_cast_iron", 250)))
-                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500))
+                    .addStep(FillingRecipe::new, r -> r.require(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 450))//Somehow molten cast iron just sounds cool, but im guessing if there is no iron ingots, you probably want this gone too
+                    .addStep(FillingRecipe::new, r -> r.require(ModCompat.CBC.fluidIngredient("molten_cast_iron", 100)))
                     .addStep(PressingRecipe::new, r -> r)
                     .addStep(PressingRecipe::new, r -> r)
                     .addStep(FillingRecipe::new, r -> r.require(Fluids.WATER, 1000)));
