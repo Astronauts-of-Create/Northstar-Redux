@@ -59,24 +59,25 @@ public class NorthstarTags {
 
     public enum NorthstarFluidTags implements Tags.Tag<Fluid> {
 
-        CBC_BIODIESEL,
-        CBC_MOLTEN_CAST_IRON,
-        COMMON_BIOFUEL(COMMON, "biofuel"),
-        COMMON_BRINE(COMMON, "brine"),
-        COMMON_CARBON(COMMON, "carbon"),
-        COMMON_CHLORINE(COMMON, "chlorine"),
-        COMMON_CHOCOLATE_ICE_CREAM(COMMON, "chocolate_ice_cream"),
-        COMMON_HYDROCARBON(COMMON, "hydrocarbon"),
-        COMMON_HYDROGEN(COMMON, "hydrogen"),
-        COMMON_LIQUID_HYDROGEN(COMMON, "liquid_hydrogen"),
-        COMMON_LIQUID_OXYGEN(COMMON, "liquid_oxygen"),
-        COMMON_METHANE(COMMON, "methane"),
-        COMMON_MILK(COMMON, "milk"),
-        COMMON_OXYGEN(COMMON, "oxygen"),
-        COMMON_SODIUM_HYDROXIDE(COMMON, "sodium_hydroxide"),
-        COMMON_STRAWBERRY_ICE_CREAM(COMMON, "strawberry_ice_cream"), COMMON_SULFURIC_ACID(COMMON, "sulfuric_acid"),
-        COMMON_TITANIUM_TETRACHLORIDE(COMMON, "titanium_tetrachloride"),
-        COMMON_VANILLA_ICE_CREAM(COMMON, "vanilla_ice_cream"),
+        C_BIOFUEL(COMMON, "biofuel"),
+        C_BRINE(COMMON, "brine"),
+        C_CARBON(COMMON, "carbon"),
+        C_CHLORINE(COMMON, "chlorine"),
+        C_CHOCOLATE_ICE_CREAM(COMMON, "chocolate_ice_cream"),
+        C_HYDROCARBON(COMMON, "hydrocarbon"),
+        C_HYDROGEN(COMMON, "hydrogen"),
+        C_LIQUID_HYDROGEN(COMMON, "liquid_hydrogen"),
+        C_LIQUID_OXYGEN(COMMON, "liquid_oxygen"),
+        C_METHANE(COMMON, "methane"),
+        C_MILK(COMMON, "milk"),
+        C_OXYGEN(COMMON, "oxygen"),
+        C_SODIUM(COMMON, "sodium"),
+        C_STRAWBERRY_ICE_CREAM(COMMON, "strawberry_ice_cream"),
+        C_SULFURIC_ACID(COMMON, "sulfuric_acid"),
+        C_TITANIUM_TETRACHLORIDE(COMMON, "titanium_tetrachloride"),
+        C_VANILLA_ICE_CREAM(COMMON, "vanilla_ice_cream"),
+        COMPAT_CBC_MOLTEN_CAST_IRON,
+        COMPAT_CDG_BIODIESEL,
         IS_OXY;
 
         public final TagKey<Fluid> tag;
@@ -108,6 +109,11 @@ public class NorthstarTags {
             this.alwaysDataGen = alwaysDataGen;
         }
 
+        @Override
+        public TagKey<Fluid> tag() {
+            return tag;
+        }
+
         public boolean matches(FluidStack fluid) {
             return fluid.getFluid().defaultFluidState().is(tag);
         }
@@ -118,11 +124,6 @@ public class NorthstarTags {
 
         public boolean matches(FluidState state) {
             return state.is(tag);
-        }
-
-        @Override
-        public TagKey<Fluid> tag() {
-            return tag;
         }
 
         private static void init() {
@@ -142,17 +143,17 @@ public class NorthstarTags {
         /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
         @Deprecated
         BLOCKS_AIR,
-        COMMON_ORES_COPPER(COMMON, "ores/copper"),
-        COMMON_ORES_DIAMOND(COMMON, "ores/diamond"),
-        COMMON_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
-        COMMON_ORES_GOLD(COMMON, "ores/gold"),
-        COMMON_ORES_IRON(COMMON, "ores/iron"),
-        COMMON_ORES_LAPIS(COMMON, "ores/lapis"),
-        COMMON_ORES_QUARTZ(COMMON, "ores/quartz"),
-        COMMON_ORES_REDSTONE(COMMON, "ores/redstone"),
-        COMMON_ORES_TITANIUM(COMMON, "ores/titanium"),
-        COMMON_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
-        COMMON_ORES_ZINC(COMMON, "ores/zinc"),
+        C_ORES_COPPER(COMMON, "ores/copper"),
+        C_ORES_DIAMOND(COMMON, "ores/diamond"),
+        C_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
+        C_ORES_GOLD(COMMON, "ores/gold"),
+        C_ORES_IRON(COMMON, "ores/iron"),
+        C_ORES_LAPIS(COMMON, "ores/lapis"),
+        C_ORES_QUARTZ(COMMON, "ores/quartz"),
+        C_ORES_REDSTONE(COMMON, "ores/redstone"),
+        C_ORES_TITANIUM(COMMON, "ores/titanium"),
+        C_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
+        C_ORES_ZINC(COMMON, "ores/zinc"),
         HEAVY_BLOCKS,
         MARS_BLOCKS,
         MARS_DEEP_STONE_REPLACEABLE,
@@ -235,18 +236,25 @@ public class NorthstarTags {
 
         ARGYRE_LOGS,
         COILER_LOGS,
-        COMMON_INGOTS_BRASS(COMMON, "ingots/brass"),
-        COMMON_INGOTS_MARTIAN_STEEL(COMMON, "ingots/martian_steel"),
-        COMMON_INGOTS_TITANIUM(COMMON, "ingots/titanium"),
-        COMMON_INGOTS_TUNGSTEN(COMMON, "ingots/tungsten"),
-        COMMON_SHEETS_BRASS(COMMON, "plates/brass"),
-        COMMON_SHEETS_COPPER(COMMON, "plates/copper"),
-        COMMON_SHEETS_GOLD(COMMON, "plates/gold"),
-        COMMON_SHEETS_IRON(COMMON, "plates/iron"),
-        COMMON_SHEETS_MARTIAN_STEEL(COMMON, "plates/martian_steel"),
-        COMMON_SHEETS_TITANIUM(COMMON, "plates/titanium"),
-        COMMON_SHEETS_TUNGSTEN(COMMON, "plates/tungsten"),
-        COMMON_STRIPPED_LOGS(COMMON, "stripped_logs"),
+        C_DUSTS(COMMON, "dusts"),
+        C_DUSTS_SALT(COMMON, "dusts/salt"),
+        C_INGOTS(COMMON, "ingots"),
+        C_INGOTS_BRASS(COMMON, "ingots/brass"),
+        C_INGOTS_MARTIAN_STEEL(COMMON, "ingots/martian_steel"),
+        C_INGOTS_TITANIUM(COMMON, "ingots/titanium"),
+        C_INGOTS_TUNGSTEN(COMMON, "ingots/tungsten"),
+        C_NUGGETS(COMMON, "nuggets"),
+        C_NUGGETS_TITANIUM(COMMON, "nuggets/titanium"),
+        C_NUGGETS_TUNGSTEN(COMMON, "nuggets/tungsten"),
+        C_SHEETS(COMMON, "plates"),
+        C_SHEETS_BRASS(COMMON, "plates/brass"),
+        C_SHEETS_COPPER(COMMON, "plates/copper"),
+        C_SHEETS_GOLD(COMMON, "plates/gold"),
+        C_SHEETS_IRON(COMMON, "plates/iron"),
+        C_SHEETS_MARTIAN_STEEL(COMMON, "plates/martian_steel"),
+        C_SHEETS_TITANIUM(COMMON, "plates/titanium"),
+        C_SHEETS_TUNGSTEN(COMMON, "plates/tungsten"),
+        C_STRIPPED_LOGS(COMMON, "stripped_logs"),
         HEAT_RESISTANT,
         INSULATING,
         OXYGEN_SEALING,

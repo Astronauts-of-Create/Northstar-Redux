@@ -37,18 +37,18 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                     .pattern("IAI")),
 
     ASTRONOMY_TABLE = create(NorthstarBlocks.ASTRONOMY_TABLE)
-            .unlockedByTag(() -> NorthstarItemTags.COMMON_STRIPPED_LOGS.tag)
+            .unlockedByTag(() -> NorthstarItemTags.C_STRIPPED_LOGS.tag)
             .viaShaped(b -> b.define('#', Items.PAPER)
                     .define('X', ItemTags.WOODEN_SLABS)
                     .define('S', Items.IRON_INGOT)
-                    .define('P', NorthstarItemTags.COMMON_STRIPPED_LOGS.tag)
+                    .define('P', NorthstarItemTags.C_STRIPPED_LOGS.tag)
                     .pattern("X#X")
                     .pattern(" S ")
                     .pattern("XPX")),
 
     COMBUSTION_ENGINE = create(NorthstarBlocks.COMBUSTION_ENGINE)
             .unlockedBy(() -> NorthstarItems.ROCKET_COMBUSTION_CHAMBER)
-            .viaShaped(b -> b.define('#', NorthstarItemTags.COMMON_SHEETS_BRASS.tag)
+            .viaShaped(b -> b.define('#', NorthstarItemTags.C_SHEETS_BRASS.tag)
                     .define('A', AllBlocks.INDUSTRIAL_IRON_BLOCK)
                     .define('C', NorthstarItems.ROCKET_COMBUSTION_CHAMBER)
                     .define('P', Items.PISTON)
@@ -82,7 +82,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
     ICE_BOX = create(NorthstarBlocks.ICE_BOX)
             .unlockedBy(() -> AllBlocks.BASIN)
             .viaShaped(b -> b.define('B', Items.BLUE_ICE)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .define('C', AllBlocks.BASIN)
                     .pattern("IBI")
                     .pattern("BCB")
@@ -115,7 +115,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> Items.IRON_BOOTS)
             .viaShaped(b -> b.define('A', Items.IRON_BOOTS)
                     .define('F', NorthstarItems.DURABLE_FABRIC)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .pattern("IFI")
                     .pattern("FAF")
                     .pattern("IFI")),
@@ -124,7 +124,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> Items.IRON_LEGGINGS)
             .viaShaped(b -> b.define('A', Items.IRON_LEGGINGS)
                     .define('F', NorthstarItems.DURABLE_FABRIC)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .pattern("IFI")
                     .pattern("FAF")
                     .pattern("IFI")),
@@ -133,7 +133,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> Items.IRON_CHESTPLATE)
             .viaShaped(b -> b.define('A', Items.IRON_CHESTPLATE)
                     .define('F', NorthstarItems.DURABLE_FABRIC)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .define('C', AllItems.COPPER_BACKTANK)
                     .pattern("ICI")
                     .pattern("FAF")
@@ -143,7 +143,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> Items.IRON_HELMET)
             .viaShaped(b -> b.define('A', Items.IRON_HELMET)
                     .define('G', Items.TINTED_GLASS)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .pattern("GGG")
                     .pattern("GAG")
                     .pattern("III")),
@@ -152,7 +152,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> NorthstarItems.ROCKET_COMBUSTION_CHAMBER)
             .viaShaped(b -> b.define('C', NorthstarItems.ROCKET_COMBUSTION_CHAMBER)
                     .define('P', AllItems.PROPELLER)
-                    .define('T', NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+                    .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
                     .pattern("TCT")
                     .pattern("TPT")
                     .pattern("T T")),
@@ -181,11 +181,11 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             () -> Items.GLOWSTONE),
 
     MARTIAN_STEEL_BLUE_LAMP = createLamp(NorthstarBlocks.MARTIAN_STEEL_BLUE_LAMP,
-            NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL,
+            NorthstarItemTags.C_SHEETS_MARTIAN_STEEL,
             () -> Items.SEA_LANTERN),
 
     MARTIAN_STEEL_LAMP = createLamp(NorthstarBlocks.MARTIAN_STEEL_LAMP,
-            NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL,
+            NorthstarItemTags.C_SHEETS_MARTIAN_STEEL,
             () -> Items.GLOWSTONE),
 
     // TODO: do those need mirrored recipes or does it work out of the box?
@@ -259,7 +259,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_BOOTS)
             .viaShaped(b -> b.define('A', NorthstarItems.MARTIAN_STEEL_BOOTS)
                     .define('F', NorthstarItems.DURABLE_FABRIC)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
                     .pattern("IFI")
                     .pattern("FAF")
                     .pattern("IFI")),
@@ -268,7 +268,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_LEGGINGS)
             .viaShaped(b -> b.define('A', NorthstarItems.MARTIAN_STEEL_LEGGINGS)
                     .define('F', NorthstarItems.DURABLE_FABRIC)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
                     .pattern("IFI")
                     .pattern("FAF")
                     .pattern("IFI")),
@@ -277,7 +277,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_CHESTPLATE)
             .viaShaped(b -> b.define('A', NorthstarItems.MARTIAN_STEEL_CHESTPLATE)
                     .define('F', NorthstarItems.DURABLE_FABRIC)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
                     .define('C', AllItems.COPPER_BACKTANK)
                     .pattern("ICI")
                     .pattern("FAF")
@@ -287,7 +287,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_HELMET)
             .viaShaped(b -> b.define('A', NorthstarItems.MARTIAN_STEEL_HELMET)
                     .define('G', Items.TINTED_GLASS)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
                     .pattern("GGG")
                     .pattern("GAG")
                     .pattern("III")),
@@ -316,10 +316,10 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
     // TODO: maybe have the oxygen* recipes be unlocked after
     //  obtaining oxygen in any ways?
     OXYGEN_DETECTOR = create(NorthstarBlocks.OXYGEN_DETECTOR)
-            .unlockedByTag(() -> NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL.tag)
+            .unlockedByTag(() -> NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
             .viaShaped(b -> b.define('C', NorthstarItems.ADVANCED_CIRCUIT)
                     .define('O', Items.OBSERVER)
-                    .define('S', NorthstarItemTags.COMMON_SHEETS_MARTIAN_STEEL.tag)
+                    .define('S', NorthstarItemTags.C_SHEETS_MARTIAN_STEEL.tag)
                     .define('W', ItemTags.WOOL)
                     .pattern("SCS")
                     .pattern("SOS")
@@ -328,9 +328,9 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
     // TODO: unlock: circuit, titanium?
     OXYGEN_FILLER = create(NorthstarBlocks.OXYGEN_FILLER)
             .unlockedBy(() -> NorthstarItems.CIRCUIT)
-            .viaShaped(b -> b.define('B', NorthstarItemTags.COMMON_INGOTS_BRASS.tag)
+            .viaShaped(b -> b.define('B', NorthstarItemTags.C_INGOTS_BRASS.tag)
                     .define('C', NorthstarItems.CIRCUIT)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .define('S', NorthstarItems.OXYGEN_SEPARATOR)
                     .pattern("BCB")
                     .pattern("BSB")
@@ -340,7 +340,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .returns(2)
             .unlockedBy(() -> AllBlocks.FLUID_PIPE)
             .viaShaped(b -> b.define('E', AllItems.ELECTRON_TUBE)
-                    .define('I', NorthstarItemTags.COMMON_SHEETS_IRON.tag)
+                    .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .define('P', AllBlocks.FLUID_PIPE)
                     .pattern("III")
                     .pattern("PEP")
@@ -356,7 +356,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .viaShaped(b -> b.define('M', NorthstarItems.HARDENED_PRECISION_MECHANISM)
                     .define('P', AllItems.PROPELLER)
                     .define('S', NorthstarItems.OXYGEN_SEPARATOR)
-                    .define('T', NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+                    .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
                     .pattern("TST")
                     .pattern("TMT")
                     .pattern(" P ")),
@@ -364,17 +364,17 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
     TELESCOPE = create(NorthstarBlocks.TELESCOPE)
             .unlockedBy(() -> Items.AMETHYST_SHARD)
             .viaShaped(b -> b.define('A', Items.AMETHYST_SHARD)
-                    .define('B', NorthstarItemTags.COMMON_INGOTS_BRASS.tag)
+                    .define('B', NorthstarItemTags.C_INGOTS_BRASS.tag)
                     .define('S', Items.STICK)
                     .pattern("ABB")
                     .pattern(" S ")
                     .pattern("S S")),
 
     TITANIUM_SPACE_DOOR = create(NorthstarBlocks.TITANIUM_SPACE_DOOR)
-            .unlockedByTag(() -> NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+            .unlockedByTag(() -> NorthstarItemTags.C_SHEETS_TITANIUM.tag)
             .viaShaped(b -> b.define('C', NorthstarItems.CIRCUIT)
                     .define('G', Items.GLASS)
-                    .define('T', NorthstarItemTags.COMMON_SHEETS_TITANIUM.tag)
+                    .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
                     .pattern("GG ")
                     .pattern("TTC")
                     .pattern("TT ")),

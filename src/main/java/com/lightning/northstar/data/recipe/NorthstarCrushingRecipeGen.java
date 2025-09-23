@@ -9,6 +9,7 @@ import com.simibubi.create.api.data.recipe.CrushingRecipeGen;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
@@ -25,6 +26,11 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
                     .output(0.75f, NorthstarItems.SALT)
                     .output(0.25f, NorthstarItems.SALT)),
 
+    SAND = create("sand",
+            b -> b.duration(200)
+                    .require(ItemTags.SAND)
+                    .output(0.25f, NorthstarItems.RUTILE_CONCENTRATE)),
+
     LIMESTONE = create(() -> AllPaletteStoneTypes.LIMESTONE.baseBlock.get(),
             b -> b.duration(800)
                     .output(0.5f, NorthstarItems.RUTILE_CONCENTRATE, 2)),
@@ -34,10 +40,6 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
                     .output(NorthstarBlocks.MARS_SAND)
                     .output(0.75f, NorthstarItems.SALT, 4)
                     .output(0.25f, NorthstarItems.SALT, 2)),
-
-    MARS_SAND = create(() -> NorthstarBlocks.MARS_SAND,
-            b -> b.duration(200)
-                    .output(0.15f, NorthstarItems.RUTILE_CONCENTRATE)),
 
     MARS_STONE = create(() -> NorthstarBlocks.MARS_STONE,
             b -> b.duration(500)
@@ -69,8 +71,14 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
             b -> b.duration(350)
                     .require(NorthstarItemTags.SPACE_ORE_IRON.tag)
                     .output(AllItems.CRUSHED_IRON, 3)
-                    .output(0.75f, AllItems.CRUSHED_IRON)
                     .output(0.25f, AllItems.CRUSHED_IRON)
+                    .output(0.75f, AllItems.EXP_NUGGET)),
+
+    SPACE_TITANIUM_ORE = create("space_titanium_ore",
+            b -> b.duration(500)
+                    .require(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+                    .output(NorthstarItems.RAW_TITANIUM)
+                    .output(0.75f, NorthstarItems.RAW_TITANIUM)
                     .output(0.75f, AllItems.EXP_NUGGET)),
 
     SPACE_TUNGSTEN_ORE = create("space_tungsten_ore",

@@ -25,13 +25,8 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
                     .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
-                    .require(Items.DRIED_KELP)
                     .require(Items.BONE_MEAL)
-                    .output(NorthstarFluids.BIOFUEL.get(), 300)),
+                    .output(NorthstarFluids.BIOFUEL.get(), 150)),
 
     BIOFUEL_FROM_DRY_PLANT_FIBER = create("biofuel_from_dry_plant_fiber",
             b -> b.requiresHeat(HeatCondition.HEATED)
@@ -50,15 +45,20 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .output(NorthstarFluids.BIOFUEL.get(), 20)
                     .whenModLoaded(Mods.MEK.getId())),
 
+    BRINE_TO_SALT = create("brine_to_salt",
+            b -> b.requiresHeat(HeatCondition.HEATED)
+                    .require(NorthstarFluidTags.C_BRINE.tag, 750)
+                    .output(NorthstarItems.SALT)),
+
     CARBON_FROM_BIODIESEL = create("carbon_from_biodiesel",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(NorthstarFluidTags.CBC_BIODIESEL.tag, 1000)
+                    .require(NorthstarFluidTags.COMPAT_CDG_BIODIESEL.tag, 1000)
                     .output(NorthstarFluids.CARBON.get(), 500)
                     .whenModLoaded(ModCompat.CDG.getModId())),
 
     CARBON_FROM_BIOFUEL = create("carbon_from_biofuel",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(NorthstarFluids.BIOFUEL.get(), 1000)
+                    .require(NorthstarFluidTags.C_BIOFUEL.tag, 1000)
                     .output(NorthstarFluids.CARBON.get(), 500)),
 
     CARBON_FROM_COAL = create("carbon_from_coal",
@@ -90,28 +90,28 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
                     .require(NorthstarBlocks.BLOOM_FUNGUS_BLOCK)
                     .require(NorthstarBlocks.BLOOM_FUNGUS_BLOCK)
                     .require(NorthstarBlocks.BLOOM_FUNGUS_BLOCK)
-                    .output(NorthstarFluids.SODIUM_HYDROXIDE.get(), 1000)),
+                    .output(NorthstarFluids.SODIUM.get(), 1000)),
 
     SODIUM_FROM_PLATE_FUNGUS = create("sodium_from_plate_fungus",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarBlocks.PLATE_FUNGUS_STEM_BLOCK)
                     .require(NorthstarBlocks.PLATE_FUNGUS_STEM_BLOCK)
                     .require(NorthstarBlocks.PLATE_FUNGUS_STEM_BLOCK)
-                    .output(NorthstarFluids.SODIUM_HYDROXIDE.get(), 1000)),
+                    .output(NorthstarFluids.SODIUM.get(), 1000)),
 
     SODIUM_FROM_SPIKE_FUNGUS = create("sodium_from_spike_fungus",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarBlocks.SPIKE_FUNGUS_BLOCK)
                     .require(NorthstarBlocks.SPIKE_FUNGUS_BLOCK)
                     .require(NorthstarBlocks.SPIKE_FUNGUS_BLOCK)
-                    .output(NorthstarFluids.SODIUM_HYDROXIDE.get(), 1000)),
+                    .output(NorthstarFluids.SODIUM.get(), 1000)),
 
     SODIUM_FROM_TOWER_FUNGUS = create("sodium_from_tower_fungus",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarBlocks.TOWER_FUNGUS_STEM_BLOCK)
                     .require(NorthstarBlocks.TOWER_FUNGUS_STEM_BLOCK)
                     .require(NorthstarBlocks.TOWER_FUNGUS_STEM_BLOCK)
-                    .output(NorthstarFluids.SODIUM_HYDROXIDE.get(), 1000));
+                    .output(NorthstarFluids.SODIUM.get(), 1000));
 
     public NorthstarCompactingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, Northstar.MOD_ID);

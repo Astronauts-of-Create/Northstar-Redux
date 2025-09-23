@@ -3,10 +3,12 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.simibubi.create.api.data.recipe.FillingRecipeGen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
@@ -19,23 +21,23 @@ public class NorthstarFillingRecipeGen extends FillingRecipeGen {
             $ = null,
 
     CHOCOLATE_ICE_CREAM = create("chocolate_ice_cream",
-            b -> b.require(NorthstarFluidTags.COMMON_CHOCOLATE_ICE_CREAM.tag, 200)
+            b -> b.require(NorthstarFluidTags.C_CHOCOLATE_ICE_CREAM.tag, 200)
                     .require(NorthstarItems.ICE_CREAM_CONE)
                     .output(NorthstarItems.CHOCOLATE_ICE_CREAM)),
 
     VANILLA_ICE_CREAM = create("vanilla_ice_cream",
-            b -> b.require(NorthstarFluidTags.COMMON_VANILLA_ICE_CREAM.tag, 200)
+            b -> b.require(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag, 200)
                     .require(NorthstarItems.ICE_CREAM_CONE)
                     .output(NorthstarItems.VANILLA_ICE_CREAM)),
 
     STRAWBERRY_ICE_CREAM = create("strawberry_ice_cream",
-            b -> b.require(NorthstarFluidTags.COMMON_STRAWBERRY_ICE_CREAM.tag, 200)
+            b -> b.require(NorthstarFluidTags.C_STRAWBERRY_ICE_CREAM.tag, 200)
                     .require(NorthstarItems.ICE_CREAM_CONE)
                     .output(NorthstarItems.VANILLA_ICE_CREAM)),
 
     SODIUM_CATALYST = create("sodium_catalyst",
-            b -> b.require(Fluids.LAVA, 1000)
-                    .require(NorthstarItems.SALT)
+            b -> b.require(FluidTags.LAVA, 500)
+                    .require(NorthstarItemTags.C_DUSTS_SALT.tag)
                     .output(NorthstarItems.SODIUM_CATALYST))
     ;
 
@@ -48,11 +50,11 @@ public class NorthstarFillingRecipeGen extends FillingRecipeGen {
             String name2 = BuiltInRegistries.BLOCK.getKey(block2).getPath();
 
             create("oxidization/%s_to_%s".formatted(name1, name2),
-                    b -> b.require(NorthstarFluidTags.COMMON_LIQUID_OXYGEN.tag, oxidizeAmount)
+                    b -> b.require(NorthstarFluidTags.C_LIQUID_OXYGEN.tag, oxidizeAmount)
                             .require(block1)
                             .output(block2));
             create("reduction/%s_to_%s".formatted(name2, name1),
-                    b -> b.require(NorthstarFluidTags.COMMON_SODIUM_HYDROXIDE.tag, reductionAmount)
+                    b -> b.require(NorthstarFluidTags.C_SODIUM.tag, reductionAmount)
                             .require(block2)
                             .output(block1));
         }

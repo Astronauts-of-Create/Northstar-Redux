@@ -38,42 +38,42 @@ public class NorthstarFluids {
 
     public static final FluidEntry<VirtualFluid> OXYGEN = REGISTRATE
             .virtualFluid("oxygen")
-            .tag(NorthstarFluidTags.COMMON_OXYGEN.tag)
+            .tag(NorthstarFluidTags.C_OXYGEN.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> HYDROGEN = REGISTRATE
             .virtualFluid("hydrogen")
-            .tag(NorthstarFluidTags.COMMON_HYDROGEN.tag)
+            .tag(NorthstarFluidTags.C_HYDROGEN.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> CHLORINE = REGISTRATE
             .virtualFluid("chlorine")
-            .tag(NorthstarFluidTags.COMMON_CHLORINE.tag)
+            .tag(NorthstarFluidTags.C_CHLORINE.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> CHOCOLATE_ICE_CREAM = REGISTRATE
             .virtualFluid("chocolate_ice_cream")
-            .tag(NorthstarFluidTags.COMMON_CHOCOLATE_ICE_CREAM.tag)
+            .tag(NorthstarFluidTags.C_CHOCOLATE_ICE_CREAM.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> VANILLA_ICE_CREAM = REGISTRATE
             .virtualFluid("vanilla_ice_cream")
-            .tag(NorthstarFluidTags.COMMON_VANILLA_ICE_CREAM.tag)
+            .tag(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> STRAWBERRY_ICE_CREAM = REGISTRATE
             .virtualFluid("strawberry_ice_cream")
-            .tag(NorthstarFluidTags.COMMON_STRAWBERRY_ICE_CREAM.tag)
+            .tag(NorthstarFluidTags.C_STRAWBERRY_ICE_CREAM.tag)
             .register();
 
-    public static final FluidEntry<VirtualFluid> SODIUM_HYDROXIDE = REGISTRATE
-            .virtualFluid("sodium_hydroxide")
-            .tag(NorthstarFluidTags.COMMON_SODIUM_HYDROXIDE.tag)
+    public static final FluidEntry<VirtualFluid> SODIUM = REGISTRATE
+            .virtualFluid("sodium")
+            .tag(NorthstarFluidTags.C_SODIUM.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> CARBON = REGISTRATE
             .virtualFluid("carbon")
-            .tag(NorthstarFluidTags.COMMON_CARBON.tag)
+            .tag(NorthstarFluidTags.C_CARBON.tag)
             .register();
 
     public static final FluidEntry<BaseFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE = REGISTRATE
@@ -85,7 +85,7 @@ public class NorthstarFluids {
                     .tickRate(8)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_TITANIUM_TETRACHLORIDE.tag)
+            .tag(NorthstarFluidTags.C_TITANIUM_TETRACHLORIDE.tag)
             .source(BaseFlowingFluid.Source::new)
             .block(TitaniumTetrachlorideBlock::new)
             .build()
@@ -100,7 +100,7 @@ public class NorthstarFluids {
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_BRINE.tag)
+            .tag(NorthstarFluidTags.C_BRINE.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .build()
@@ -117,7 +117,7 @@ public class NorthstarFluids {
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_LIQUID_HYDROGEN.tag)
+            .tag(NorthstarFluidTags.C_LIQUID_HYDROGEN.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .tag(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.tag)
@@ -134,8 +134,8 @@ public class NorthstarFluids {
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_LIQUID_OXYGEN.tag)
-            .tag(NorthstarFluidTags.COMMON_OXYGEN.tag)
+            .tag(NorthstarFluidTags.C_LIQUID_OXYGEN.tag)
+            .tag(NorthstarFluidTags.C_OXYGEN.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .build()
@@ -151,7 +151,7 @@ public class NorthstarFluids {
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_METHANE.tag)
+            .tag(NorthstarFluidTags.C_METHANE.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
@@ -168,7 +168,7 @@ public class NorthstarFluids {
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_SULFURIC_ACID.tag)
+            .tag(NorthstarFluidTags.C_SULFURIC_ACID.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .build()
@@ -185,7 +185,7 @@ public class NorthstarFluids {
                     .tickRate(25)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_HYDROCARBON.tag)
+            .tag(NorthstarFluidTags.C_HYDROCARBON.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
@@ -202,7 +202,7 @@ public class NorthstarFluids {
                     .tickRate(25)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
-            .tag(NorthstarFluidTags.COMMON_BIOFUEL.tag)
+            .tag(NorthstarFluidTags.C_BIOFUEL.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
             .build()

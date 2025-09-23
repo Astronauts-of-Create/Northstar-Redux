@@ -82,13 +82,13 @@ public final class Tags<T, R> {
             return opt(value.tag());
         }
 
-        public Appender<T, R> add(Mod mod, String value) {
-            builder.addElement(ResourceLocation.fromNamespaceAndPath(mod.getModId(), value));
+        public Appender<T, R> add(Mod mod, String path) {
+            builder.addElement(mod.loc(path));
             return this;
         }
 
-        public Appender<T, R> opt(Mod mod, String value) {
-            builder.addOptionalElement(ResourceLocation.fromNamespaceAndPath(mod.getModId(), value));
+        public Appender<T, R> opt(Mod mod, String path) {
+            builder.addOptionalElement(mod.loc(path));
             return this;
         }
 

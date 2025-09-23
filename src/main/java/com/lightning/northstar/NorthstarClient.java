@@ -25,7 +25,7 @@ import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
 public class NorthstarClient {
 
     public static void onCtorClient(IEventBus modEventBus) {
@@ -63,13 +63,13 @@ public class NorthstarClient {
     }
 
     @SubscribeEvent
-    public static void onTick(ClientTickEvent.Pre event) {
-        RocketControlsClientHandler.tick();
+    public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Northstar.asResource("remaining_oxygen"), RemainingOxygenOverlay.INSTANCE);
     }
 
     @SubscribeEvent
-    public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Northstar.asResource("remaining_oxygen"), RemainingOxygenOverlay.INSTANCE);
+    public static void onTick(ClientTickEvent.Pre event) {
+        RocketControlsClientHandler.tick();
     }
 
 }

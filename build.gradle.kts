@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.4.0-SNAPSHOT+1.21.1" // https://semver.org/
+version = "0.4.0+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
