@@ -29,8 +29,7 @@ public class RocketStationPonder {
         Selection seat = util.select().position(7, 9, 7);
         Selection station = util.select().position(8, 9, 8);
         Selection controls = util.select().position(7, 9, 8);
-        Selection oxygen = util.select().position(6, 9, 8);
-        Selection navigator = util.select().fromTo(8, 9, 6, 8, 10, 6);
+        Selection navigator = util.select().fromTo(6, 9, 8, 6, 10, 8);
 
         AABB glue1 = new AABB(util.grid().at(3, 1, 3));
         AABB glue2 = new AABB(Vec3.atLowerCornerOf(util.grid().at(3, 1, 3)), Vec3.atLowerCornerWithOffset(util.grid().at(11, 18, 11), 1, 1, 1));
@@ -69,12 +68,6 @@ public class RocketStationPonder {
         scene.overlay()
                 .showOutlineWithText(seat, 80)
                 .text("Rockets also need at least one seat to sit on during the flight.");
-        scene.idle(80);
-
-        scene.addKeyframe();
-        scene.overlay()
-                .showOutlineWithText(oxygen, 80)
-                .text("The oxygen sealer allows to breath inside the rocket during the flight.");
         scene.idle(80);
 
         scene.addKeyframe();
