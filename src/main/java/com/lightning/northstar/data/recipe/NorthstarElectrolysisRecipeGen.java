@@ -3,12 +3,10 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.api.data.recipe.ElectrolysisRecipeGen;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.level.material.Fluids;
 
 import java.util.concurrent.CompletableFuture;
 

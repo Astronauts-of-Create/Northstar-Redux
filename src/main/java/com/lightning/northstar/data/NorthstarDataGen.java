@@ -1,7 +1,6 @@
 package com.lightning.northstar.data;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.content.NorthstarDamageTypes;

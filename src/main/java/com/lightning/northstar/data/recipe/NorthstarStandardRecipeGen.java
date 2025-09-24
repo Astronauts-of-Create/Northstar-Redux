@@ -48,12 +48,12 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
 
     COMBUSTION_ENGINE = create(NorthstarBlocks.COMBUSTION_ENGINE)
             .unlockedBy(() -> NorthstarItems.ROCKET_COMBUSTION_CHAMBER)
-            .viaShaped(b -> b.define('#', NorthstarItemTags.C_SHEETS_BRASS.tag)
-                    .define('A', AllBlocks.INDUSTRIAL_IRON_BLOCK)
+            .viaShaped(b -> b.define('A', AllBlocks.INDUSTRIAL_IRON_BLOCK)
                     .define('C', NorthstarItems.ROCKET_COMBUSTION_CHAMBER)
                     .define('P', Items.PISTON)
-                    .pattern("P#P")
-                    .pattern("#C#")
+                    .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .pattern("PTP")
+                    .pattern("TCT")
                     .pattern("AAA")),
 
     DURABLE_FABRIC = create(NorthstarItems.DURABLE_FABRIC)
@@ -328,12 +328,12 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
     // TODO: unlock: circuit, titanium?
     OXYGEN_FILLER = create(NorthstarBlocks.OXYGEN_FILLER)
             .unlockedBy(() -> NorthstarItems.CIRCUIT)
-            .viaShaped(b -> b.define('B', NorthstarItemTags.C_INGOTS_BRASS.tag)
-                    .define('C', NorthstarItems.CIRCUIT)
+            .viaShaped(b -> b.define('C', NorthstarItems.CIRCUIT)
                     .define('I', NorthstarItemTags.C_SHEETS_IRON.tag)
                     .define('S', NorthstarItems.OXYGEN_SEPARATOR)
-                    .pattern("BCB")
-                    .pattern("BSB")
+                    .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .pattern("TCT")
+                    .pattern("TST")
                     .pattern("III")),
 
     OXYGEN_SEPARATOR = create(NorthstarItems.OXYGEN_SEPARATOR)

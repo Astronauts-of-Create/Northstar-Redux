@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -25,6 +26,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -36,9 +39,12 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     public SmartFluidTankBehaviour tank;
-    private float generatorSpeed;
-    private Fluid lastFluid;
-    private FuelType fuelType;
+    protected float generatorSpeed;
+    protected Fluid lastFluid;
+    protected FuelType fuelType;
+
+    @OnlyIn(Dist.CLIENT)
+    protected EngineHumSound sound;
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -114,6 +120,22 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             this.generatorSpeed = generatorSpeed;
             updateGeneratedRotation();
         }
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void tickAudio() {
+        super.tickAudio();
+
+        if (sound == null || sound.isStopped()) {
+            sound = new EngineHumSound(this);
+            Minecraft.getInstance().getSoundManager().play(sound);
+        }
+    }
+
+    @Override
+    protected boolean isNoisy() {
+        return false; // we're still noisy but disable the base Create sounds
     }
 
     @Override

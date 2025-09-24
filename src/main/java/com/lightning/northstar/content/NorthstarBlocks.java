@@ -1007,7 +1007,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
             .build()
@@ -1136,7 +1136,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
             .build()
@@ -1246,6 +1246,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.dropOther(b, NorthstarItems.VOLCANIC_ASH))
             .simpleItem()
             .register();
 

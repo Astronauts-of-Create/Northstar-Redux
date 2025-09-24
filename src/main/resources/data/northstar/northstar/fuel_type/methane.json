@@ -1,9 +1,7 @@
 {
   "fluids": [
     "northstar:methane",
-    "northstar:flowing_methane",
-    "northstar:hydrogen",
-    "northstar:flowing_hydrogen"
+    "northstar:flowing_methane"
   ],
   "rocket_multiplier": 2.0,
   "combustion_engine_use": 2.0,

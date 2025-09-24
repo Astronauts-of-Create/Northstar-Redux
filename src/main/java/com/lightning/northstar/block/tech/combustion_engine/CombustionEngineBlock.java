@@ -16,8 +16,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE<CombustionEngineBlockEntity> {
 
-    protected static final VoxelShape SHAPE_AXIS_X = Block.box(3, 0, 0, 13, 13, 16);
-    protected static final VoxelShape SHAPE_AXIS_Z = Block.box(0, 0, 3, 16, 13, 13);
+    protected static final VoxelShape SHAPE_AXIS_X = Block.box(0, 0, 2, 16, 13, 14);
+    protected static final VoxelShape SHAPE_AXIS_Z = Block.box(2, 0, 0, 14, 13, 16);
 
     public CombustionEngineBlock(Properties properties) {
         super(properties);
