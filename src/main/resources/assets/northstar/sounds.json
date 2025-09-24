@@ -473,5 +473,11 @@
       "northstar:airflow_5"
     ],
     "subtitle": "northstar.subtitle.airflow"
+  },
+  "combustion_engine": {
+    "sounds": [
+      "northstar:combustion_engine"
+    ],
+    "subtitle": "northstar.subtitle.combustion_engine"
   }
 }

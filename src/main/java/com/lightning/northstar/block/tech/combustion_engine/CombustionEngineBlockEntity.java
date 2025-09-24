@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -34,9 +37,12 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     public SmartFluidTankBehaviour tank;
-    private float generatorSpeed;
-    private Fluid lastFluid;
-    private FuelType fuelType;
+    protected float generatorSpeed;
+    protected Fluid lastFluid;
+    protected FuelType fuelType;
+
+    @OnlyIn(Dist.CLIENT)
+    protected EngineHumSound sound;
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -109,6 +115,22 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     //1 large water wheel can spin a mill at 128 (half) speed before it overstresses
     //10 torque can move 3 mills at full speed before overstressing
     final static float TORQUE = 10; //128 was original
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void tickAudio() {
+        super.tickAudio();
+
+        if (sound == null || sound.isStopped()) {
+            sound = new EngineHumSound(this);
+            Minecraft.getInstance().getSoundManager().play(sound);
+        }
+    }
+
+    @Override
+    protected boolean isNoisy() {
+        return false; // we're still noisy but disable the base Create sounds
+    }
 
     @Override
     public float getGeneratedSpeed() {

@@ -13,6 +13,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -42,6 +43,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
             .item("titanium_ingot", Item::new)
+            .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(NorthstarItemTags.C_INGOTS.tag)
             .tag(NorthstarItemTags.C_INGOTS_TITANIUM.tag)
             .register();
@@ -65,6 +67,7 @@ public class NorthstarItems {
     // TODO: "dusts/ash", "dusts/volcanic_ash"?
     public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
             .item("volcanic_ash_item", Item::new)
+            .lang("Volcanic Ash")
             .tag(NorthstarItemTags.C_DUSTS.tag)
             .model((c, p) -> p.generated(c::get, p.modLoc("item/volcanic_ash")))
             .register();
@@ -114,6 +117,7 @@ public class NorthstarItems {
     public static final ItemEntry<Item> MARTIAN_STEEL = REGISTRATE
             .item("martian_steel", Item::new)
             .lang("Martian Steel Ingot")
+            .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(NorthstarItemTags.C_INGOTS.tag)
             .tag(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL.tag)
             .register();
@@ -126,6 +130,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TUNGSTEN_INGOT = REGISTRATE
             .item("tungsten_ingot", Item::new)
+            .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(NorthstarItemTags.C_INGOTS.tag)
             .tag(NorthstarItemTags.C_INGOTS_TUNGSTEN.tag)
             .register();
