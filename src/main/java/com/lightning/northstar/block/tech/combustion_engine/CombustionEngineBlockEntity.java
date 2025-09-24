@@ -38,9 +38,12 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     public SmartFluidTankBehaviour tank;
-    private float generatorSpeed;
-    private Fluid lastFluid;
-    private FuelType fuelType;
+    protected float generatorSpeed;
+    protected Fluid lastFluid;
+    protected FuelType fuelType;
+
+    @OnlyIn(Dist.CLIENT)
+    protected EngineHumSound sound;
 
     //For some reason the sound is not playing, I'm gonna just let Red figure it out
     @OnlyIn(Dist.CLIENT)
@@ -115,6 +118,22 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
         }
     }
 
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void tickAudio() {
+        super.tickAudio();
+
+        if (sound == null || sound.isStopped()) {
+            sound = new EngineHumSound(this);
+            Minecraft.getInstance().getSoundManager().play(sound);
+        }
+    }
+
+    @Override
+    protected boolean isNoisy() {
+        return false; // we're still noisy but disable the base Create sounds
+    }
 
     @Override
     public float getGeneratedSpeed() {

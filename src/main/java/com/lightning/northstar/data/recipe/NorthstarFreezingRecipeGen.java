@@ -8,7 +8,6 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.material.Fluids;
 
 public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
 

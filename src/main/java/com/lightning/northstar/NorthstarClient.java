@@ -24,9 +24,10 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class NorthstarClient {
 
     public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
@@ -63,18 +64,18 @@ public class NorthstarClient {
         ItemBlockRenderTypes.setRenderLayer(NorthstarFluids.METHANE.get(), RenderType.translucent());
     }
 
-    @EventBusSubscriber(Dist.CLIENT)
+    @SubscribeEvent
+    public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_oxygen", RemainingOxygenOverlay.INSTANCE);
+    }
+
+    @EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
     public static class ForgeBusEvents {
         @SubscribeEvent
         public static void onTick(ClientTickEvent event) {
             if (event.phase == Phase.START) {
                 RocketControlsClientHandler.tick();
             }
-        }
-
-        @SubscribeEvent
-        public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "remaining_oxygen", RemainingOxygenOverlay.INSTANCE);
         }
     }
 

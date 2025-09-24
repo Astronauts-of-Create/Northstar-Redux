@@ -47,7 +47,6 @@ public class NorthstarSounds {
     public static final RegistryObject<SoundEvent> MOON_LUNARGRADE_DIE = registerSound("moon_lunargrade_die");
     public static final RegistryObject<SoundEvent> MOON_LUNARGRADE_IDLE = registerSound("moon_lunargrade_idle");
 
-
     public static final RegistryObject<SoundEvent> VENUS_STONE_BULL_HURT = registerSound("venus_stone_bull_hurt");
     public static final RegistryObject<SoundEvent> VENUS_STONE_BULL_DEATH = registerSound("venus_stone_bull_death");
     public static final RegistryObject<SoundEvent> VENUS_STONE_BULL_IDLE = registerSound("venus_stone_bull_idle");
@@ -66,7 +65,6 @@ public class NorthstarSounds {
     public static final RegistryObject<SoundEvent> VENUS_VULTURE_IDLE = registerSound("venus_vulture_idle");
     public static final RegistryObject<SoundEvent> VENUS_VULTURE_DIE = registerSound("venus_vulture_die");
 
-
     public static final RegistryObject<SoundEvent> MERCURY_RAPTOR_HURT = registerSound("mercury_raptor_hurt");
     public static final RegistryObject<SoundEvent> MERCURY_RAPTOR_DIE = registerSound("mercury_raptor_die");
     public static final RegistryObject<SoundEvent> MERCURY_RAPTOR_IDLE = registerSound("mercury_raptor_idle");
@@ -79,7 +77,6 @@ public class NorthstarSounds {
     public static final RegistryObject<SoundEvent> MERCURY_TORTOISE_HURT = registerSound("mercury_tortoise_hurt");
     public static final RegistryObject<SoundEvent> MERCURY_TORTOISE_DIE = registerSound("mercury_tortoise_die");
     public static final RegistryObject<SoundEvent> MERCURY_TORTOISE_IDLE = registerSound("mercury_tortoise_idle");
-
 
     public static final RegistryObject<SoundEvent> LASER_AMBIENT = registerSound("laser_ambient");
     public static final RegistryObject<SoundEvent> LASER_BURN = registerSound("laser_burn");

@@ -83,12 +83,10 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
 
     MARTIAN_STEEL_INGOT = create("martian_steel_ingot",
             b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(NorthstarItems.TITANIUM_INGOT)
-                    .require(NorthstarTags.NorthstarItemTags.RAW_IRON.tag)
+                    .require(NorthstarTags.NorthstarItemTags.C_INGOTS_TITANIUM.tag)
+                    .require(NorthstarItems.RAW_MARTIAN_IRON_ORE)
                     .require(NorthstarItems.VOLCANIC_ASH)
                     .output(NorthstarItems.MARTIAN_STEEL, 2)),
-
-    // sodium hydroxide from fungus plants
 
     SODIUM_FROM_BLOOM_FUNGUS = create("sodium_from_bloom_fungus",
             b -> b.requiresHeat(HeatCondition.HEATED)

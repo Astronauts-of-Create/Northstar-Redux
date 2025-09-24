@@ -69,26 +69,23 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarItems.MARTIAN_STRAWBERRY)
                     .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
 
-    // Pre electrolysis (Exactly the same recipe as before but):
-    // - requires an extra 0.5 zinc ingots per titanium ingot,
-    // - replace brine with sodium catalyst (Sodium catalyst was designed for this to begin with) (1 salt -> 0.5 salt; 1b water -> 0.5b lava)
-
-    TITANIUM1 = create("titanium_pre_electrolysys",
+    // Pre electrolysis, uses sodium catalysis but has a bad ratio
+    TITANIUM1 = create("titanium1",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(NorthstarItems.SODIUM_CATALYST)
+                    .require(AllItems.ZINC_INGOT)
+                    .require(NorthstarFluidTags.C_CARBON.tag, 500)
+                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500)),
+
+    // Post electrolysis, better ratios
+    TITANIUM2 = create("titanium2",
+            b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(AllItems.ZINC_INGOT)
-                    .require(NorthstarItems.SODIUM_CATALYST)
-                    .require(NorthstarFluidTags.C_CARBON.tag, 1000)
-                    .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
-
-    // Post electrolysis, better ratios
-    TITANIUM2 = create("titanium_from_chlorine",
-            b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarFluidTags.C_CHLORINE.tag, 250)
                     .require(NorthstarFluidTags.C_CARBON.tag, 500)
                     .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
