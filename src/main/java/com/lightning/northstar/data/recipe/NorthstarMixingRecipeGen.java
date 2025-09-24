@@ -7,6 +7,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
@@ -68,20 +69,23 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarItems.MARTIAN_STRAWBERRY)
                     .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
 
-    // Pre electrolysis, uses brines directly but has a bad ratio
-    TITANIUM1 = create("titanium_from_brine",
+    // Pre electrolysis, uses sodium catalysis but has a bad ratio
+    TITANIUM1 = create("titanium1",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
-                    .require(NorthstarFluidTags.C_BRINE.tag, 500)
+                    .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(NorthstarItems.SODIUM_CATALYST)
+                    .require(AllItems.ZINC_INGOT)
                     .require(NorthstarFluidTags.C_CARBON.tag, 500)
                     .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500)),
 
     // Post electrolysis, better ratios
-    TITANIUM2 = create("titanium_from_sodium",
+    TITANIUM2 = create("titanium2",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
+                    .require(AllItems.ZINC_INGOT)
                     .require(NorthstarFluidTags.C_CHLORINE.tag, 250)
                     .require(NorthstarFluidTags.C_CARBON.tag, 500)
                     .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),

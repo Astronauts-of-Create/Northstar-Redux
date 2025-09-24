@@ -36,11 +36,11 @@ public class NorthstarMechanicalCraftingGen extends MechanicalCraftingRecipeGen 
             .recipe(b -> b.key('A', NorthstarBlocks.AMETHYST_CRYSTAL)
                     .key('Q', AllItems.POLISHED_ROSE_QUARTZ)
                     .key('M', AllItems.PRECISION_MECHANISM)
-                    .key('B', NorthstarItemTags.C_SHEETS_BRASS.tag)
                     .key('S', AllBlocks.SHAFT)
-                    .patternLine("BSB")
+                    .key('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .patternLine("TST")
                     .patternLine("QQQ")
-                    .patternLine("BMB")
+                    .patternLine("TMT")
                     .patternLine(" A ")
                     .disallowMirrored()),
 
@@ -77,18 +77,18 @@ public class NorthstarMechanicalCraftingGen extends MechanicalCraftingRecipeGen 
 
     OXYGEN_CONCENTRATOR = create(NorthstarBlocks.OXYGEN_CONCENTRATOR::get)
             .returns(1)
-            .recipe(b -> b.key('B', NorthstarItemTags.C_SHEETS_BRASS.tag)
-                    .key('C', NorthstarItems.CIRCUIT)
+            .recipe(b -> b.key('C', NorthstarItems.CIRCUIT)
+                    .key('F', AllBlocks.FLUID_TANK)
                     .key('P', AllItems.PROPELLER)
                     .key('S', AllBlocks.SHAFT)
-                    .key('T', AllBlocks.FLUID_TANK)
+                    .key('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
                     .key('W', ItemTags.WOOL)
                     .key('#', NorthstarItems.OXYGEN_SEPARATOR)
                     .patternLine("W W")
                     .patternLine("WPW")
-                    .patternLine("B#B")
-                    .patternLine("CTC")
-                    .patternLine("BSB")),
+                    .patternLine("T#T")
+                    .patternLine("CFC")
+                    .patternLine("TST")),
 
     OXYGEN_SEALER = create(NorthstarBlocks.OXYGEN_SEALER::get)
             .returns(1)

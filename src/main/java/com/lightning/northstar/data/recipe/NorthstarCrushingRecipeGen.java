@@ -128,7 +128,13 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
     LUNAR_SAPPHIRE_CLUSTER = create(() -> NorthstarBlocks.LUNAR_SAPPHIRE_CLUSTER,
             b -> b.duration(150)
                     .output(NorthstarItems.LUNAR_SAPPHIRE_SHARD, 3)
-                    .output(0.5f, NorthstarItems.LUNAR_SAPPHIRE_SHARD));
+                    .output(0.5f, NorthstarItems.LUNAR_SAPPHIRE_SHARD)),
+
+    VENUS_GRAVEL = create(() -> NorthstarBlocks.VENUS_GRAVEL,
+            b -> b.duration(500)
+                    .output(NorthstarItems.RUTILE_CONCENTRATE)
+                    .output(0.5f, NorthstarItems.RUTILE_CONCENTRATE)
+                    .output(0.25f, NorthstarItems.RUTILE_CONCENTRATE));
 
     public NorthstarCrushingRecipeGen(PackOutput generator) {
         super(generator, Northstar.MOD_ID);

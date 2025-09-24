@@ -13,6 +13,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -42,6 +43,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
             .item("titanium_ingot", Item::new)
+            .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(NorthstarItemTags.C_INGOTS.tag)
             .tag(NorthstarItemTags.C_INGOTS_TITANIUM.tag)
             .register();
@@ -84,7 +86,6 @@ public class NorthstarItems {
     public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_HARDENED_PRECISION_MECHANISM
             = sequencedIngredient("incomplete_hardened_precision_mechanism");
 
-    //TODO: Remove this and just replace it with regular raw iron? Why should you need raw iron from mars anyway?
     public static final ItemEntry<Item> RAW_MARTIAN_IRON_ORE = REGISTRATE
             .item("raw_martian_iron_ore", Item::new)
             .register();
@@ -115,6 +116,7 @@ public class NorthstarItems {
     public static final ItemEntry<Item> MARTIAN_STEEL = REGISTRATE
             .item("martian_steel", Item::new)
             .lang("Martian Steel Ingot")
+            .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(NorthstarItemTags.C_INGOTS.tag)
             .tag(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL.tag)
             .register();
@@ -127,6 +129,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TUNGSTEN_INGOT = REGISTRATE
             .item("tungsten_ingot", Item::new)
+            .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(NorthstarItemTags.C_INGOTS.tag)
             .tag(NorthstarItemTags.C_INGOTS_TUNGSTEN.tag)
             .register();
