@@ -67,6 +67,7 @@ public class NorthstarItems {
     // TODO: "dusts/ash", "dusts/volcanic_ash"?
     public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
             .item("volcanic_ash_item", Item::new)
+            .lang("Volcanic Ash")
             .tag(NorthstarItemTags.C_DUSTS.tag)
             .model((c, p) -> p.generated(c::get, p.modLoc("item/volcanic_ash")))
             .register();
