@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "northstar:block/mercury_shelf_fungus_block"
+  }
+}

@@ -40,7 +40,6 @@ public class NorthstarDataGenHelper {
         return (c, p) -> p.generated(c::get, p.modLoc("block/" + c.getName() + String.join("", suffix)));
     }
 
-
     // temporary placeholders nothingness to bypass data generation errors, those will need to be done one day
     public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> manualModel() {
         return (c, p) -> {
