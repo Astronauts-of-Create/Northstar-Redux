@@ -25,6 +25,7 @@ import mezz.jei.api.registration.*;
 import mezz.jei.common.util.RegistryUtil;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -100,10 +102,11 @@ public class NorthstarJEI implements IModPlugin {
         northstarCategories.forEach(c -> c.registerRecipes(registration));
 
         RegistryAccess registryAccess = RegistryUtil.getRegistryAccess();
-        Set<ResourceLocation> supportedFluids = registryAccess.registryOrThrow(Registries.FLUID).keySet();
-        registration.addRecipes(FuelTypeCategory.RECIPE_TYPE, registryAccess.registryOrThrow(NorthstarRegistries.FUEL)
+        Registry<Fluid> fluids = registryAccess.registryOrThrow(Registries.FLUID);
+        registration.addRecipes(FuelTypeCategory.RECIPE_TYPE, registryAccess
+                .registryOrThrow(NorthstarRegistries.FUEL)
                 .stream()
-                .filter(fuel -> fuel.fluids().stream().anyMatch(supportedFluids::contains))
+                .filter(fuel -> fluids.stream().anyMatch(fuel::supports))
                 .toList());
     }
 

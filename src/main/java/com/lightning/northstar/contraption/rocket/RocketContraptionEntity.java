@@ -133,7 +133,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 if (contraption.fuelAmount() < contraption.fuelCost) {  //If we dont have enough fuel, disassemble
                     this.disassemble();
                 } else {
-                    contraption.burnFuel(level());
+                    contraption.burnFuel();
                     fuelBurned = true;
                 }
             }

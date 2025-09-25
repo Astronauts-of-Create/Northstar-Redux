@@ -5,7 +5,7 @@ import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlo
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.content.*;
-import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.contraption.ContraptionType;
@@ -16,6 +16,7 @@ import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -68,21 +69,22 @@ public class RocketContraption extends TranslatingContraption {
         return true;
     }
 
-    public void burnFuel(Level level) {
+    public void burnFuel() {
         IFluidHandler tanks = storage.getFluids();
 
-        float fuelToBurn = weightCost + fuelCost * (1 - computingPower);
+        float energyToBurn = weightCost + fuelCost * (1 - computingPower);
+
         for (int slot = 0; slot < tanks.getTanks(); slot++) {
             FluidStack stack = tanks.getFluidInTank(slot);
-            FuelType fuel = FuelType.getFuelType(level.registryAccess(), stack.getFluid());
-            if (fuel != null && stack.getAmount() >= fuel.rocketMultiplier()) {
-                float toBurn = Math.min(fuelToBurn / fuel.rocketMultiplier(), stack.getAmount());
+            FuelType fuel = FuelType.getFuelType(stack.getFluid());
+            if (fuel == null)
+                continue;
+            int burnable = Math.min(Mth.floor(energyToBurn / fuel.gjPerMb()), stack.getAmount());
 
-                stack.shrink((int) toBurn);
-                fuelToBurn -= toBurn;
-                if (fuelToBurn < 1)
-                    return;
-            }
+            stack.shrink(burnable);
+            energyToBurn -= burnable;
+            if (energyToBurn < 1)
+                return;
         }
     }
 
@@ -144,9 +146,9 @@ public class RocketContraption extends TranslatingContraption {
         if (world.getBlockEntity(pos) instanceof FluidTankBlockEntity tank && Float.isFinite(fuelAmount)) {
             FluidTank tankInventory = tank.getTankInventory();
             for (int i = 0; i < tankInventory.getTanks(); i++) {
-                FuelType fuel = FuelType.getFuelType(world.registryAccess(), tankInventory.getFluidInTank(i).getFluid());
+                FuelType fuel = FuelType.getFuelType(tankInventory.getFluidInTank(i).getFluid());
                 if (fuel != null) {
-                    fuelAmount += tankInventory.getFluidAmount() * fuel.rocketMultiplier();
+                    fuelAmount += tankInventory.getFluidAmount() * fuel.gjPerMb();
                 }
             }
 
@@ -205,7 +207,6 @@ public class RocketContraption extends TranslatingContraption {
     public int heatShielding() {
         return heatShielding;
     }
-
 
     @Override
     protected boolean isAnchoringBlockAt(BlockPos pos) {

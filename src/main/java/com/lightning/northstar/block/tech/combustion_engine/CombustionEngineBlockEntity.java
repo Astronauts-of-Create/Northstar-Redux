@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
-import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
@@ -83,7 +83,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
         FluidStack fluid = tank.getPrimaryHandler().getFluid();
         if (!fluid.getFluid().equals(lastFluid)) {
             lastFluid = fluid.getFluid();
-            fuelType = FuelType.getFuelType(level.registryAccess(), lastFluid);
+            fuelType = FuelType.getFuelType(lastFluid);
         }
 
         FuelType fuel = this.fuelType;

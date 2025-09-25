@@ -1,9 +1,0 @@
-{
-  "fluids": [
-    "northstar:biofuel",
-    "northstar:flowing_biofuel"
-  ],
-  "rocket_multiplier": 0.25,
-  "combustion_engine_use": 4.0,
-  "combustion_engine_rpm": 16.0
-}
