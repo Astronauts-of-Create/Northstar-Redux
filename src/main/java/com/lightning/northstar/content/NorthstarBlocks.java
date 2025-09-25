@@ -3813,7 +3813,8 @@ public class NorthstarBlocks {
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
-            .simpleItem()
+            .item()
+            .transform(customItemModel())
             .register();
 
     public static final BlockEntry<IceBoxBlock> ICE_BOX = REGISTRATE
