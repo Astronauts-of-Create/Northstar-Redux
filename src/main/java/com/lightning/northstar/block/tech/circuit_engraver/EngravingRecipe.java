@@ -8,6 +8,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
 import com.simibubi.create.foundation.utility.CreateLang;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class EngravingRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
@@ -55,7 +57,6 @@ public class EngravingRecipe extends ProcessingRecipe<RecipeWrapper> implements 
     public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
         return () -> AssemblyEngraving::new;
     }
-
 
     @Override
     protected int getMaxInputCount() {

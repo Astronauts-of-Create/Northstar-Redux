@@ -13,13 +13,12 @@ public class AnimatedIceBox extends AnimatedKinetics {
         PoseStack pose = graphics.pose();
 
         pose.pushPose();
-        pose.translate(xOffset, yOffset + 22, 200);
+        pose.translate(xOffset, yOffset, 200);
         pose.mulPose(Axis.XP.rotationDegrees(-15.5f));
         pose.mulPose(Axis.YP.rotationDegrees(22.5f));
-        int scale = 24;
 
         blockElement(NorthstarBlocks.ICE_BOX.getDefaultState())
-                .scale(scale)
+                .scale(24)
                 .render(graphics);
 
         pose.popPose();

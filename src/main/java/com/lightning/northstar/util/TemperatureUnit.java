@@ -1,5 +1,7 @@
 package com.lightning.northstar.util;
 
+import net.createmod.catnip.lang.LangNumberFormat;
+
 import java.util.function.DoubleUnaryOperator;
 
 public enum TemperatureUnit {
@@ -33,6 +35,14 @@ public enum TemperatureUnit {
 
     public double toCelsius(double celsius) {
         return toCelsius.applyAsDouble(celsius);
+    }
+
+    public String format(float temperature) {
+        return LangNumberFormat.format(fromCelsius(temperature)) + symbol;
+    }
+
+    public String format(double temperature) {
+        return LangNumberFormat.format(fromCelsius(temperature)) + symbol;
     }
 
 }
