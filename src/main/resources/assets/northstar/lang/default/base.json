@@ -105,6 +105,8 @@
   "northstar.gui.goggles.sealer.area_too_big": "Area too big or unsealed!",
   "northstar.gui.goggles.sealer.blocks_filled": "Blocks filled: ",
   "northstar.gui.goggles.sealer.cooldown": "Checking in ",
+  "northstar.gui.goggles.sealer.max_sealed": "Maximum sealed at current speed:",
+  "northstar.gui.goggles.sealer.max_sealed_contraption": "Maximum sealed: ",
   "northstar.gui.goggles.sealer.sealing": "Sealing ",
   "northstar.gui.goggles.temperature": "Temperature: ",
   "northstar.gui.goggles.temperature_regulator": "Temperature Regulator Info: ",

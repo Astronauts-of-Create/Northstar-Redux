@@ -142,6 +142,13 @@ public class ProgressiveBlockSealer {
             NorthstarLang.translate("gui.goggles.sealer.area_too_big")
                     .style(ChatFormatting.DARK_RED)
                     .forGoggles(tooltip);
+            NorthstarLang.translate("gui.goggles.sealer.max_sealed")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            CreateLang.number(maximumSealed)
+                    .style(ChatFormatting.AQUA)
+                    .text(ChatFormatting.GRAY, " blocks")
+                    .forGoggles(tooltip, 1);
         } else {
             NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
                     .style(ChatFormatting.GRAY)
