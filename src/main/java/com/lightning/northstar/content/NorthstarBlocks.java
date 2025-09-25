@@ -87,6 +87,10 @@ import static net.minecraft.world.level.block.Blocks.*;
 
 public class NorthstarBlocks {
 
+    static {
+        REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.BLOCKS);
+    }
+
     // region Martian Steel
 
     public static final BlockEntry<Block> MARTIAN_STEEL_BLOCK = REGISTRATE
