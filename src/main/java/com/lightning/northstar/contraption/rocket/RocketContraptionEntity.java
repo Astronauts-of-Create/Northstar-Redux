@@ -84,6 +84,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public ResourceKey<Level> home;
     public ResourceKey<Level> destination;
 
+    private int transportDelay;
+
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
         noCulling = true;
@@ -108,17 +110,23 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     protected void tickContraption() {
-        if (level() instanceof ServerLevel level) {
-            if (!level.dimension().equals(destination) && getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
-                changeDimension(level.getServer().getLevel(destination));
+        Level level = level();
+        if (!level.dimension().equals(destination)) {
+            if (getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
+                transportDelay = Math.min(40, transportDelay + 1);
+                if (transportDelay == 40 && level instanceof ServerLevel sl) {
+                    changeDimension(sl.getServer().getLevel(destination));
+                }
             }
+        } else {
+            transportDelay = Math.max(0, transportDelay - 1);
         }
 
         var contraption = getContraption();
 
         tickActors();
 
-        entitiesWithinContraption = level().getEntities(this, getBoundingBox().inflate(0, lift_vel * 2 + 2, 0));
+        entitiesWithinContraption = level.getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1));
 
         if (launchTime > 0 && activeLaunch) {
             launchTime--;
@@ -144,7 +152,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 this.owner = ((RocketContraption) this.contraption).owner;
             }
             if (this.ownerID != null) {
-                this.owner = level().getPlayerByUUID(ownerID);
+                this.owner = level.getPlayerByUUID(ownerID);
             }
         }
 
@@ -153,10 +161,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
 
 
-        if (this.level().isClientSide) {
+        if (level.isClientSide) {
             // this code feels really stupid but I don't care enough to clean it up
             if (Math.abs(final_lift_vel) > 0.5f) {
-                int volume = NorthstarPlanets.getPlanetAtmosphereCost(level().dimension()) / 400;
+                int volume = NorthstarPlanets.getPlanetAtmosphereCost(level.dimension()) / 400;
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound(Math.max(volume, 1)));
             }
         } else {
@@ -187,14 +195,14 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 final_lift_vel = lift_vel - 0.5f;
             }
             if (this.getY() > RocketHandler.DIMENSION_CHANGE_HEIGHT) { //Start landing
-                if (this.level().isClientSide) flyingSound.stopSound();
+                if (level.isClientSide) flyingSound.stopSound();
                 startLanding();
                 this.cooldown = 0;
                 this.final_lift_vel = 0;
             }
 
             if (soundTime % 40 == 0 && launchTime == 0 && blasting) {
-                this.level().playLocalSound(this.getX(), this.getY() - 20, this.getZ(), NorthstarSounds.ROCKET_BLAST.get(), SoundSource.BLOCKS, 5, 0, false);
+                level.playLocalSound(this.getX(), this.getY() - 20, this.getZ(), NorthstarSounds.ROCKET_BLAST.get(), SoundSource.BLOCKS, 5, 0, false);
                 i = 0;
                 soundTime = 0;
             } else {
@@ -207,7 +215,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
 
             if (slowing) {
-                this.level().playLocalSound(this.getX(), this.getY() - 8, this.getZ(), NorthstarSounds.ROCKET_LANDING.get(), SoundSource.BLOCKS, 4, 0, false);
+                level.playLocalSound(this.getX(), this.getY() - 8, this.getZ(), NorthstarSounds.ROCKET_LANDING.get(), SoundSource.BLOCKS, 4, 0, false);
                 i = 0;
                 soundTime = 0;
             }
@@ -229,27 +237,28 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (isLaunchingOrLanding() && //No point in checking for collisions if we're not moving
                 collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
-            if (!level().isClientSide) {
-                level().playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
+            if (!level.isClientSide) {
+                level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
                 if ((Math.abs(final_lift_vel) < 3 || hasExploded)) {
                     if (this.landingMode && !isUsingTicket) {//Give the player a return ticket
                         ItemStack returnTicket = createReturnTicket();
                         if (owner != null) {
                             Player player = owner;
-                            level().addFreshEntity(new ItemEntity(level(), player.getX(), player.getY(), player.getZ(), returnTicket));
+                            level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), returnTicket));
                         }
                     }
+                    move(0, -1, 0); // temporary fix for the rocket disassembling one block above the ground
                     disassemble();
                     final_lift_vel = 0; // don't move entities when disassembling
                     if (this.landingMode && isUsingTicket) {//Consume the ticket
-                        RocketHandler.deleteTicket(level(), this.blockPosition());
+                        RocketHandler.deleteTicket(level, this.blockPosition());
                     }
                     landingMode = false;
                 }
 
                 //If auto-landing is disabled, explode the rocket if it hits the ground
                 if (landingMode && !auto_land_mode && Math.abs(final_lift_vel) > 3 && !hasExploded) {
-                    level().explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
+                    level.explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
                     hasExploded = true;
                 }
             } else {
@@ -258,7 +267,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
         }
 
-        if (!isStalled() && tickCount > 2) {
+        if (!isStalled() && tickCount > 2 && transportDelay == 0) {
             move(0, final_lift_vel, 0);
 
             // TODO: non-seated entities still bug out visually
@@ -317,10 +326,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         for (Entity passenger : level().getEntities(this, getBoundingBox().inflate(2, 50, 2))) {
             Vec3 offset = passenger.position().subtract(position());
             int seat = contraption.getSeats().indexOf(contraption.getSeatOf(passenger.getUUID()));
-            if (passenger instanceof Player && seat == -1) {
-                // for some reason players end up out of the rocket on the server
-                offset = offset.add(0, final_lift_vel, 0);
-            }
             passengers.add(new PassengerData(passenger, offset, seat));
         }
 
@@ -328,6 +333,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (newRocket == null) {
             return null; // huh?
         }
+        newRocket.transportDelay = 40;
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
@@ -367,7 +373,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         Entity entity = Minecraft.getInstance().level.getEntity(packet.contraptionEntityId);
         if (!(entity instanceof RocketContraptionEntity rce)) return;
 
-        rce.setPos(packet.pos.x, packet.pos.y, packet.pos.z);
+        // abruptly changing the position is what causes the player to fall out of the rocket
+        //  this is disabled temporarily as a fix until the rocket system will be rewritten.
+        //rce.setPos(packet.pos.x, packet.pos.y, packet.pos.z);
         rce.lift_vel = packet.lift_vel;
         rce.launchTime = packet.launchTime;
         rce.launchingMode = packet.launched;
