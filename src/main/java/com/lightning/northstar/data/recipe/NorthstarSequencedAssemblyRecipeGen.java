@@ -34,7 +34,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_LUNAR_SAPPHIRE))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.MARTIAN_STEEL_SHEET))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_GOLD.tag))
-                    .addStep(EngravingRecipe::new, r -> r)),
+                    .addStep(EngravingRecipe::new, r -> r.duration(200))),
 
     CIRCUIT = create("circuit",
             b -> b.require(NorthstarItemTags.C_SHEETS_IRON.tag)
@@ -46,7 +46,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_AMETHYST))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_COPPER.tag))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_SHEETS_GOLD.tag))
-                    .addStep(EngravingRecipe::new, r -> r)),
+                    .addStep(EngravingRecipe::new, r -> r.duration(100))),
 
     DORMANT_MARTIAN_SAPLING = create("dormant_martian_sapling",
             b -> b.require(NorthstarItems.DORMANT_MARTIAN_SAPLING)
@@ -88,9 +88,9 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .loops(8)
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_DIAMOND))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.HARDENED_PRECISION_MECHANISM))
-                    .addStep(EngravingRecipe::new, r -> r)
+                    .addStep(EngravingRecipe::new, r -> r.duration(50))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.CIRCUIT))
-                    .addStep(EngravingRecipe::new, r -> r)),
+                    .addStep(EngravingRecipe::new, r -> r.duration(50))),
 
     TITANIUM = create("titanium",
             b -> b.require(AllItems.STURDY_SHEET)

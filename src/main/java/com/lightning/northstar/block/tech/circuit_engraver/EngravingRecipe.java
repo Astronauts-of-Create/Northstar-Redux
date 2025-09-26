@@ -7,7 +7,6 @@ import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemb
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
-import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -32,16 +31,13 @@ public class EngravingRecipe extends ProcessingRecipe<RecipeWrapper> implements 
 
     @Override
     public boolean matches(RecipeWrapper inv, Level worldIn) {
-        if (inv.isEmpty())
-            return false;
-        return ingredients.get(0)
-                .test(inv.getItem(0));
+        return ingredients.get(0).test(inv.getItem(0));
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public Component getDescriptionForAssembly() {
-        return CreateLang.translateDirect("recipe.assembly.engraving");
+        return Component.translatable("northstar.recipe.assembly.engraving");
     }
 
     @Override
@@ -66,6 +62,11 @@ public class EngravingRecipe extends ProcessingRecipe<RecipeWrapper> implements 
     @Override
     protected int getMaxOutputCount() {
         return 1;
+    }
+
+    @Override
+    protected boolean canSpecifyDuration() {
+        return true;
     }
 
 }

@@ -25,18 +25,18 @@ public class CircuitEngraverRenderer extends ShaftRenderer<CircuitEngraverBlockE
             return;
         super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-        float time = AnimationTickHolder.getRenderTime(be.getLevel());
-        float angle = ((time * be.getRenderedHeadRotationSpeed(partialTicks) / 10) % 360) / 180 * Mth.PI;
+        float time = AnimationTickHolder.getRenderTime(be.getLevel()) / 20;
+        float angle = be.isRunning() ? ((time * be.getSpeed()) % 360) / 180 * Mth.PI : 0;
 
         SuperByteBuffer head = CachedBuffers.partial(NorthstarPartialModels.CIRCUIT_ENGRAVER_HEAD, be.getBlockState());
-        kineticRotationTransform(head, be, Axis.Y, angle * 0.5f, light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+        kineticRotationTransform(head, be, Axis.Y, angle, light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
 
-        if (be.engravingBehaviour.running) {
+        if (be.isRunning()) {
             ms.pushPose();
             ms.translate(0, -0.16f, 0);
 
             SuperByteBuffer laser = CachedBuffers.partial(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER, be.getBlockState());
-            kineticRotationTransform(laser, be, Axis.Y, angle / 1.5f, light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+            kineticRotationTransform(laser, be, Axis.Y, angle * 2, light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
 
             ms.popPose();
         }

@@ -11,7 +11,8 @@ public class NorthstarEngravingRecipeGen extends EngravingRecipeGen {
             $ = null,
 
     ENRICHED_GLOWSTONE_ORE = create(() -> NorthstarItems.RAW_GLOWSTONE_ORE,
-            b -> b.output(NorthstarItems.ENRICHED_GLOWSTONE_ORE));
+            b -> b.duration(100)
+                    .output(NorthstarItems.ENRICHED_GLOWSTONE_ORE));
 
     public NorthstarEngravingRecipeGen(PackOutput generator) {
         super(generator, Northstar.MOD_ID);
