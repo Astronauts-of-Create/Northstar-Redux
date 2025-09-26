@@ -27,7 +27,7 @@ public class CombustionEngineRenderer extends KineticBlockEntityRenderer<Combust
             return;
 
         Direction facing = be.getBlockState().getValue(SolarPanelBlock.HORIZONTAL_FACING);
-        float time = AnimationTickHolder.getRenderTime(be.getLevel()) * be.getSpeed() * 0.005f;
+        float time = AnimationTickHolder.getRenderTime(be.getLevel()) * Math.signum(be.getSpeed()) * 2f;
 
         SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), facing.getOpposite());
         standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));

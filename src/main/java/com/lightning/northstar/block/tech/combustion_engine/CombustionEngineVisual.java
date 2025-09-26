@@ -12,6 +12,7 @@ import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.math.AngleHelper;
+import net.minecraft.core.Direction;
 import org.joml.Quaternionf;
 
 import java.util.function.Consumer;
@@ -26,7 +27,7 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
     private final OrientedInstance piston6;
 
     public CombustionEngineVisual(VisualizationContext context, CombustionEngineBlockEntity entity, float partialTick) {
-        super(context, entity, partialTick, Models.partial(AllPartialModels.SHAFT));
+        super(context, entity, partialTick, Direction.SOUTH, Models.partial(AllPartialModels.SHAFT_HALF));
 
         Quaternionf rotation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(CombustionEngineBlock.HORIZONTAL_FACING)));
 
@@ -60,7 +61,7 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
 
     @Override
     public void beginFrame(Context ctx) {
-        float time = AnimationTickHolder.getRenderTime(level) * blockEntity.getSpeed() * 0.005f;
+        float time = AnimationTickHolder.getRenderTime(level) * Math.signum(blockEntity.getSpeed()) * 2f;
 
         piston1.position(getVisualPosition()).translatePosition(0, getPistonOffset(time), 0).setChanged();
         piston2.position(getVisualPosition()).translatePosition(0, getPistonOffset(time + 2), 0).setChanged();
