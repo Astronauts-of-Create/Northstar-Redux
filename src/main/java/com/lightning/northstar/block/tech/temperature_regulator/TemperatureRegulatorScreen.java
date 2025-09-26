@@ -71,16 +71,18 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
         ScrollInput temperature = addScrollInput(new ScrollInput(x + 129, y + 11, 46, 18), 0, "Temperature")
                 .addHint(Component.translatable("northstar.gui.temperature_regulator.step")
                         .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY))
-                .withRange(NorthstarTemperature.MINIMUM_TEMPERATURE, NorthstarTemperature.MAXIMUM_TEMPERATURE + 1)
-                .setState((int) regulator.temperature)
+                .withRange((int) unit.fromCelsius(NorthstarTemperature.MINIMUM_TEMPERATURE), (int) unit.fromCelsius(NorthstarTemperature.MAXIMUM_TEMPERATURE + 1))
+                .setState((int) unit.fromCelsius(regulator.temperature))
                 .withStepFunction(s -> s.shift ? 100 : s.control ? 20 : 1)
-                .format(i -> Component.literal(LangNumberFormat.format(unit.fromCelsius(i)) + unit.symbol));
+                .format(i -> Component.literal(LangNumberFormat.format(i) + unit.symbol));
         temperature.onChanged();
 
         IconButton confirm = new IconButton(x + 179, y + 11, AllIcons.I_CONFIRM);
         confirm.setToolTip(Component.translatable("northstar.generic.confirm"));
         confirm.withCallback(() -> {
-            NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(entityId, pos, temperature.getState(), limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
+            NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(entityId, pos,
+                    (int) unit.toCelsius(temperature.getState()),
+                    limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
             onClose();
         });
         addRenderableWidget(confirm);
