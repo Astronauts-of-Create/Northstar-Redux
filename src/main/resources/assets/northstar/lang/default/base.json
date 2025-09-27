@@ -74,6 +74,7 @@
   "item.northstar.star_map.tooltip.summary": "Contains coordinates and arc of a given _Celestial Body_",
   "item.northstar.star_map_ceres": "Star Map of Ceres",
   "item.northstar.star_map_earth": "Star Map of Earth",
+  "item.northstar.star_map_earth_moon": "Star Map of the Moon",
   "item.northstar.star_map_eris": "Star Map of Eris",
   "item.northstar.star_map_jupiter": "Star Map of Jupiter",
   "item.northstar.star_map_mars": "Star Map of Mars",
