@@ -74,8 +74,8 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
     SPACE_TITANIUM_ORE = create("space_titanium_ore",
             b -> b.duration(500)
                     .require(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-                    .output(NorthstarItems.RAW_TITANIUM)
-                    .output(0.75f, NorthstarItems.RAW_TITANIUM)
+                    .output(NorthstarItems.RAW_TITANIUM_ORE)
+                    .output(0.75f, NorthstarItems.RAW_TITANIUM_ORE)
                     .output(0.75f, AllItems.EXP_NUGGET)),
 
     SPACE_TUNGSTEN_ORE = create("space_tungsten_ore",
