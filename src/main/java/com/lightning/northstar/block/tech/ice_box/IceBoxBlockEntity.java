@@ -237,12 +237,8 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         int renderedFluids = 0;
         float totalUnits = 0;
 
-        SmartFluidTankBehaviour behaviour = inputTank;
-        if (behaviour == null)
-            return 0;
-        for (TankSegment tankSegment : behaviour.getTanks()) {
-            if (tankSegment.getRenderedFluid()
-                    .isEmpty())
+        for (TankSegment tankSegment : inputTank.getTanks()) {
+            if (tankSegment.getRenderedFluid().isEmpty())
                 continue;
             float units = tankSegment.getTotalUnits(partialTicks);
             if (units < 1)
@@ -250,7 +246,16 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
             totalUnits += units;
             renderedFluids++;
         }
-
+        // lazy copy and paste but works, is fast and is fast
+        for (TankSegment tankSegment : outputTank.getTanks()) {
+            if (tankSegment.getRenderedFluid().isEmpty())
+                continue;
+            float units = tankSegment.getTotalUnits(partialTicks);
+            if (units < 1)
+                continue;
+            totalUnits += units;
+            renderedFluids++;
+        }
 
         if (renderedFluids == 0)
             return 0;

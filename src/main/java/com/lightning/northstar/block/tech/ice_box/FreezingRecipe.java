@@ -53,8 +53,8 @@ public class FreezingRecipe extends ProcessingRecipe<Container> {
     }
 
     private static boolean apply(IceBoxBlockEntity icebox, Recipe<?> recipe, boolean test) {
-        IItemHandler availableItems = icebox.itemCapability.orElse(null);
-        IFluidHandler availableFluids = icebox.fluidCapability.orElse(null);
+        IItemHandler availableItems = icebox.inputInventory;
+        IFluidHandler availableFluids = icebox.inputTank.getCapability().orElse(null);
 
         List<ItemStack> recipeOutputItems = new ArrayList<>();
         List<FluidStack> recipeOutputFluids = new ArrayList<>();
