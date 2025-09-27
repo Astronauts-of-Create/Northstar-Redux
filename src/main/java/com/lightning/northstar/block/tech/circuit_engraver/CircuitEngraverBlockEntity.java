@@ -21,6 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
@@ -56,6 +57,11 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
         behaviours.add(new BeltProcessingBehaviour(this)
                 .whenItemEnters(this::onItemReceived)
                 .whileItemHeld(this::onItemHeld));
+    }
+
+    @Override
+    protected AABB createRenderBoundingBox() {
+        return new AABB(worldPosition).expandTowards(0, -1.5, 0);
     }
 
     public BeltProcessingBehaviour.ProcessingResult onItemReceived(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler) {

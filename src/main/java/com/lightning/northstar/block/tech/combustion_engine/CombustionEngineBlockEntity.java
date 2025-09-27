@@ -4,6 +4,7 @@ import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentrator
 import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
@@ -177,6 +178,16 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                         .add(mb)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
+
+        if (fuelType != null) {
+            NorthstarLang.translate("gui.goggles.fuel_use")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            CreateLang.number(fuelType.combustionEngineEfficiency())
+                    .style(ChatFormatting.AQUA)
+                    .add(NorthstarLang.MB_PER_TICK)
+                    .forGoggles(tooltip, 1);
+        }
 
         return true;
     }

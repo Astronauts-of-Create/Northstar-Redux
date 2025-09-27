@@ -100,6 +100,7 @@
   "northstar.gui.combustion_engine.rpm": "RPM: ",
   "northstar.gui.combustion_engine.title": "Combustion Engine Stats",
   "northstar.gui.current_config_size": "Current Config value: ",
+  "northstar.gui.goggles.fuel_use": "Fuel use: ",
   "northstar.gui.goggles.ice_box_contents": "Ice Box Contents:",
   "northstar.gui.goggles.sealer.area_too_big": "Area too big or unsealed!",
   "northstar.gui.goggles.sealer.blocks_filled": "Blocks filled: ",
