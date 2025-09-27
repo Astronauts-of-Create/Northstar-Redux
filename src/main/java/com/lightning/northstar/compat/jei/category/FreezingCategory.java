@@ -2,6 +2,8 @@ package com.lightning.northstar.compat.jei.category;
 
 import com.lightning.northstar.block.tech.ice_box.FreezingRecipe;
 import com.lightning.northstar.compat.jei.animations.AnimatedIceBox;
+import com.lightning.northstar.config.NorthstarConfigs;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -9,13 +11,12 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.createmod.catnip.data.Pair;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -50,13 +51,13 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
                 stacks.add(copy);
             }
 
-            builder.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
+            builder.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 20 - (i / 3) * 19)
                     .setBackground(getRenderedSlot(), -1, -1)
                     .addItemStacks(stacks);
             i++;
         }
         for (FluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
-            addFluidSlot(builder, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19, fluidIngredient);
+            addFluidSlot(builder, 17 + xOffset + (i % 3) * 19, 20 - (i / 3) * 19, fluidIngredient);
             i++;
         }
 
@@ -65,10 +66,9 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
 
         for (ProcessingOutput result : recipe.getRollableResults()) {
             int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
-            int yPosition = -19 * (i / 2) + 51;
+            int yPosition = -19 * (i / 2) + 20;
 
-            builder
-                    .addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
+            builder.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
                     .setBackground(getRenderedSlot(result), -1, -1)
                     .addItemStack(result.getStack())
                     .addRichTooltipCallback(CreateRecipeCategory.addStochasticTooltip(result));
@@ -77,29 +77,37 @@ public class FreezingCategory extends CreateRecipeCategory<FreezingRecipe> {
 
         for (FluidStack fluidResult : recipe.getFluidResults()) {
             int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
-            int yPosition = -19 * (i / 2) + 51;
+            int yPosition = -19 * (i / 2) + 20;
             addFluidSlot(builder, xPosition, yPosition, fluidResult);
             i++;
         }
+
+        builder.addSlot(RecipeIngredientRole.CATALYST, 153, 48)
+                .addItemStack(NorthstarBlocks.TEMPERATURE_REGULATOR.asStack());
     }
 
     @Override
     public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        AllGuiTextures.JEI_SHADOW.render(graphics, 61, 41);
-        AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 54);
+        AllGuiTextures.JEI_SHADOW.render(graphics, 81, 38);
+        iceBox.draw(graphics, 92, 41);
 
-        iceBox.draw(graphics, getBackground().getWidth() / 2 - 17, 22);
+        Component text;
+        if (recipe.getMaxTemperature() == Integer.MAX_VALUE) {
+            text = Component.translatable("northstar.recipe.freezing.hotter_than", formatTemperature(recipe.getMinTemperature()));
+        } else if (recipe.getMinTemperature() == Integer.MIN_VALUE) {
+            text = Component.translatable("northstar.recipe.freezing.colder_than", formatTemperature(recipe.getMaxTemperature()));
+        } else {
+            text = Component.translatable("northstar.recipe.freezing.within",
+                    formatTemperature(recipe.getMinTemperature()),
+                    formatTemperature(recipe.getMaxTemperature()));
+        }
 
-        int vRows = (1 + recipe.getFluidResults().size() + recipe.getRollableResults().size()) / 2;
+        AllGuiTextures.JEI_NO_HEAT_BAR.render(graphics, 4, 47);
+        graphics.drawString(Minecraft.getInstance().font, text, 9, 53, 0xFFFFFF);
+    }
 
-        String text = -recipe.getProcessingDuration() + " C°";
-        Minecraft minecraft = Minecraft.getInstance();
-        Font fontRenderer = minecraft.font;
-        int stringCenter = fontRenderer.width(text) / 2;
-        graphics.drawString(fontRenderer, text, (getBackground().getWidth() / 2) + 2 - stringCenter, 62, 0xFFFFFF);
-
-        if (vRows <= 2)
-            AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, -19 * (vRows - 1) + 32);
+    private static String formatTemperature(int temperature) {
+        return NorthstarConfigs.client().temperatureUnit.get().format(temperature);
     }
 
 }

@@ -2,7 +2,6 @@ package com.lightning.northstar.block.simple;
 
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;

@@ -11,26 +11,21 @@ import com.lightning.northstar.compat.jei.category.FuelTypeCategory;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.simibubi.create.compat.jei.*;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import com.simibubi.create.foundation.utility.CreateLang;
-import com.simibubi.create.infrastructure.config.AllConfigs;
-import com.simibubi.create.infrastructure.config.CRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import mezz.jei.common.util.RegistryUtil;
-import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -96,10 +91,11 @@ public class NorthstarJEI implements IModPlugin {
         northstarCategories.forEach(c -> c.registerRecipes(registration));
 
         RegistryAccess registryAccess = RegistryUtil.getRegistryAccess();
-        Set<ResourceLocation> supportedFluids = registryAccess.registryOrThrow(Registries.FLUID).keySet();
-        registration.addRecipes(FuelTypeCategory.RECIPE_TYPE, registryAccess.registryOrThrow(NorthstarRegistries.FUEL)
+        Registry<Fluid> fluids = registryAccess.registryOrThrow(Registries.FLUID);
+        registration.addRecipes(FuelTypeCategory.RECIPE_TYPE, registryAccess
+                .registryOrThrow(NorthstarRegistries.FUEL)
                 .stream()
-                .filter(fuel -> fuel.fluids().stream().anyMatch(supportedFluids::contains))
+                .filter(fuel -> fluids.stream().anyMatch(fuel::supports))
                 .toList());
     }
 

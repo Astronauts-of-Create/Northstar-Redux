@@ -18,8 +18,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 
-import java.util.function.Supplier;
-
 public class TitaniumTetrachlorideBlock extends LiquidBlock {
 
     public TitaniumTetrachlorideBlock(FlowingFluid fluid, Properties properties) {

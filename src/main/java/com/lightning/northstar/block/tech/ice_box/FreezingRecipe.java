@@ -1,71 +1,66 @@
 package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.createmod.catnip.data.Iterate;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
-public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class FreezingRecipe extends ProcessingRecipe<RecipeInput, FreezingRecipe.Params> {
 
-    //im gonna cry I just want this to work
-    public static boolean match(IceBoxBlockEntity iceBox, Recipe<?> recipe) {
-        FilteringBehaviour filter = iceBox.getFilter();
-        if (filter == null)
+    public static boolean match(IceBoxBlockEntity icebox, Recipe<?> recipe) {
+        if (!(recipe instanceof FreezingRecipe r)) {
             return false;
-
-        boolean filterTest = filter.test(recipe.getResultItem(iceBox.getLevel().registryAccess()));
-        if (recipe instanceof FreezingRecipe FreezingRecipe) {
-            if (FreezingRecipe.getRollableResults()
-                    .isEmpty()
-                    && !FreezingRecipe.getFluidResults()
-                    .isEmpty())
-                filterTest = filter.test(FreezingRecipe.getFluidResults()
-                        .get(0));
         }
 
-        if (!filterTest)
+        boolean matchItem = r.results.isEmpty() || icebox.filtering.test(r.results.get(0).getStack());
+        boolean matchFluid = r.fluidResults.isEmpty() || icebox.filtering.test(r.fluidResults.get(0));
+        if (!matchItem && !matchFluid) {
             return false;
+        }
 
-        return apply(iceBox, recipe, true);
+        return apply(icebox, recipe, true);
     }
 
-    public static boolean apply(IceBoxBlockEntity iceBox, Recipe<?> recipe) {
-        return apply(iceBox, recipe, false);
+    public static boolean apply(IceBoxBlockEntity icebox, Recipe<?> recipe) {
+        return apply(icebox, recipe, false);
     }
 
     private static boolean apply(IceBoxBlockEntity icebox, Recipe<?> recipe, boolean test) {
-        boolean isFreezingRecipe = recipe instanceof FreezingRecipe;
-        IItemHandler availableItems = icebox.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, icebox.getBlockPos(), icebox.getBlockState(), icebox, null);
-        IFluidHandler availableFluids = icebox.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, icebox.getBlockPos(), icebox.getBlockState(), icebox, null);
-
-        if (availableItems == null || availableFluids == null)
-            return false;
+        IItemHandler availableItems = icebox.inputInventory;
+        IFluidHandler availableFluids = icebox.inputTank.getCapability();
 
         List<ItemStack> recipeOutputItems = new ArrayList<>();
         List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
         List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
-        List<FluidIngredient> fluidIngredients =
-                isFreezingRecipe ? ((FreezingRecipe) recipe).getFluidIngredients() : Collections.emptyList();
+        List<FluidIngredient> fluidIngredients = recipe instanceof ProcessingRecipe<?, ?> r ? r.getFluidIngredients() : List.of();
 
         for (boolean simulate : Iterate.trueAndFalse) {
             if (!simulate && test)
@@ -77,8 +72,7 @@ public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
             Ingredients:
             for (Ingredient ingredient : ingredients) {
                 for (int slot = 0; slot < availableItems.getSlots(); slot++) {
-                    if (simulate && availableItems.getStackInSlot(slot)
-                            .getCount() <= extractedItemsFromSlot[slot])
+                    if (simulate && availableItems.getStackInSlot(slot).getCount() <= extractedItemsFromSlot[slot])
                         continue;
                     ItemStack extracted = availableItems.extractItem(slot, 1, true);
                     if (!ingredient.test(extracted))
@@ -120,25 +114,17 @@ public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
                 return false;
             }
 
-            if (fluidsAffected) {
-                icebox.getBehaviour(SmartFluidTankBehaviour.INPUT)
-                        .forEach(TankSegment::onFluidStackChanged);
-                icebox.getBehaviour(SmartFluidTankBehaviour.OUTPUT)
-                        .forEach(TankSegment::onFluidStackChanged);
+            if (fluidsAffected && !simulate) {
+                icebox.getBehaviour(SmartFluidTankBehaviour.INPUT).forEach(TankSegment::onFluidStackChanged);
+                icebox.getBehaviour(SmartFluidTankBehaviour.OUTPUT).forEach(TankSegment::onFluidStackChanged);
             }
 
             if (simulate) {
-                if (recipe instanceof FreezingRecipe FreezingRecipe) {
-                    recipeOutputItems.addAll(FreezingRecipe.rollResults());
-                    recipeOutputFluids.addAll(FreezingRecipe.getFluidResults());
-                    recipeOutputItems.addAll(FreezingRecipe.getRemainingItems(icebox.getInputInventory()));
-                } /*else {
-                    recipeOutputItems.add(recipe.getResultItem(icebox.getLevel().registryAccess()));
-
-                    if (recipe instanceof CraftingRecipe craftingRecipe) {
-                        recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
-                    }
-                }*/
+                if (recipe instanceof FreezingRecipe r) {
+                    recipeOutputItems.addAll(r.rollResults());
+                    recipeOutputFluids.addAll(r.getFluidResults());
+                    recipeOutputItems.addAll(r.getRemainingItems(icebox.getInputInventory()));
+                }
             }
 
             if (!icebox.acceptOutputs(recipeOutputItems, recipeOutputFluids, simulate))
@@ -148,12 +134,67 @@ public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
         return true;
     }
 
-    protected FreezingRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {
-        super(type, params);
+    @MethodsReturnNonnullByDefault
+    @ParametersAreNonnullByDefault
+    public static class Serializer implements RecipeSerializer<FreezingRecipe> {
+        private static final MapCodec<FreezingRecipe> CODEC = ProcessingRecipe.codec(FreezingRecipe::new, Params.CODEC);
+        private static final StreamCodec<RegistryFriendlyByteBuf, FreezingRecipe> STREAMED_CODEC = ProcessingRecipe
+                .streamCodec(FreezingRecipe::new, Params.STREAM_CODEC);
+
+        @Override
+        public MapCodec<FreezingRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, FreezingRecipe> streamCodec() {
+            return STREAMED_CODEC;
+        }
     }
 
-    public FreezingRecipe(ProcessingRecipeParams params) {
-        this(NorthstarRecipeTypes.FREEZING, params);
+    public static class Params extends ProcessingRecipeParams {
+        public static MapCodec<Params> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                codec(Params::new).forGetter(Function.identity()),
+                Codec.INT.optionalFieldOf("minTemperature", Integer.MIN_VALUE).forGetter(p -> p.minTemperature),
+                Codec.INT.optionalFieldOf("maxTemperature", Integer.MAX_VALUE).forGetter(p -> p.maxTemperature)
+        ).apply(instance, (params, minTemperature, maxTemperature) -> {
+            params.minTemperature = minTemperature;
+            params.maxTemperature = maxTemperature;
+            return params;
+        }));
+        public static StreamCodec<RegistryFriendlyByteBuf, Params> STREAM_CODEC = streamCodec(Params::new);
+
+        protected int minTemperature = Integer.MIN_VALUE;
+        protected int maxTemperature = Integer.MAX_VALUE;
+
+        @Override
+        protected void encode(RegistryFriendlyByteBuf buffer) {
+            super.encode(buffer);
+            buffer.writeVarInt(minTemperature);
+            buffer.writeVarInt(maxTemperature);
+        }
+
+        @Override
+        protected void decode(RegistryFriendlyByteBuf buffer) {
+            super.decode(buffer);
+            minTemperature = buffer.readVarInt();
+            maxTemperature = buffer.readVarInt();
+        }
+    }
+
+    protected int minTemperature;
+    protected int maxTemperature;
+
+    public FreezingRecipe(Params params) {
+        super(NorthstarRecipeTypes.FREEZING, params);
+        if (params instanceof Params p) {
+            this.minTemperature = p.minTemperature;
+            this.maxTemperature = p.maxTemperature;
+        }
+    }
+
+    public boolean isTemperatureWithinRange(float temperature) {
+        return temperature >= minTemperature && temperature <= maxTemperature;
     }
 
     @Override
@@ -177,17 +218,20 @@ public class FreezingRecipe extends StandardProcessingRecipe<RecipeInput> {
     }
 
     @Override
-    protected boolean canRequireHeat() {
-        return true;
-    }
-
-    @Override
     protected boolean canSpecifyDuration() {
         return true;
     }
 
+    public int getMinTemperature() {
+        return minTemperature;
+    }
+
+    public int getMaxTemperature() {
+        return maxTemperature;
+    }
+
     @Override
-    public boolean matches(RecipeInput input, Level world) {
+    public boolean matches(RecipeInput inv, @Nonnull Level worldIn) {
         return false;
     }
 

@@ -12,7 +12,6 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 
 public class RemainingOxygenOverlay implements LayeredDraw.Layer {
 

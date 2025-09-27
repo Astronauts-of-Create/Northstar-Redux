@@ -3,7 +3,6 @@ package com.lightning.northstar.block.tech.ice_box;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
@@ -15,14 +14,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -51,16 +48,8 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-        super.createBlockStateDefinition(p_206840_1_.add(FACING));
-    }
-
-    @Override
-    public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-        if (!context.getLevel().isClientSide)
-            withBlockEntityDo(context.getLevel(), context.getClickedPos(),
-                    bte -> bte.onWrenched(context.getClickedFace()));
-        return InteractionResult.SUCCESS;
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(FACING));
     }
 
     @Override
@@ -96,23 +85,21 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
                 success = true;
             }
             if (success)
-                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-                        1f + Create.RANDOM.nextFloat());
+                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + level.random.nextFloat());
             return ItemInteractionResult.SUCCESS;
         });
     }
 
     @Override
-    public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
-        super.updateEntityAfterFallOn(worldIn, entityIn);
-        if (!NorthstarBlocks.ICE_BOX.has(worldIn.getBlockState(entityIn.blockPosition())))
+    public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
+        super.updateEntityAfterFallOn(level, entity);
+        if (!NorthstarBlocks.ICE_BOX.has(level.getBlockState(entity.blockPosition())))
             return;
-        if (!(entityIn instanceof ItemEntity itemEntity))
+        if (!(entity instanceof ItemEntity itemEntity))
             return;
-        if (!entityIn.isAlive())
+        if (!entity.isAlive())
             return;
-        withBlockEntityDo(worldIn, entityIn.blockPosition(), be -> {
-
+        withBlockEntityDo(level, entity.blockPosition(), be -> {
             // Tossed items bypass the quarter-stack limit
             be.inputInventory.withMaxStackSize(64);
             ItemStack insertItem = ItemHandlerHelper.insertItem(be.inputInventory, itemEntity.getItem()
@@ -129,7 +116,7 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public VoxelShape getInteractionShape(BlockState p_199600_1_, BlockGetter p_199600_2_, BlockPos p_199600_3_) {
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return AllShapes.BASIN_RAYTRACE_SHAPE;
     }
 
@@ -139,14 +126,14 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext ctx) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
         if (ctx instanceof EntityCollisionContext && ((EntityCollisionContext) ctx).getEntity() instanceof ItemEntity)
             return AllShapes.BASIN_COLLISION_SHAPE;
-        return getShape(state, reader, pos, ctx);
+        return getShape(state, level, pos, ctx);
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         IBE.onRemove(state, level, pos, newState);
     }
 
@@ -156,8 +143,9 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
-        return getBlockEntityOptional(level, pos).map(IceBoxBlockEntity::getInputInventory)
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return getBlockEntityOptional(level, pos)
+                .map(IceBoxBlockEntity::getInputInventory)
                 .map(ItemHelper::calcRedstoneFromInventory)
                 .orElse(0);
     }

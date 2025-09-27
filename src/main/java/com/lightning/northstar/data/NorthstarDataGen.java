@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.content.NorthstarDamageTypes;
+import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.data.recipe.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.core.HolderLookup;
@@ -48,7 +48,8 @@ public class NorthstarDataGen {
                 // TODO: those don't match the existing ones, which one are the real ones?
                 //.add(Registries.CONFIGURED_FEATURE, NorthstarConfiguredFeatures::bootstrap)
                 .add(Registries.DAMAGE_TYPE, NorthstarDamageTypes::bootstrap)
-                .add(Registries.ENCHANTMENT, NorthstarEnchantments::bootstrap);
+                .add(Registries.ENCHANTMENT, NorthstarEnchantments::bootstrap)
+                .add(NorthstarRegistries.FUEL, NorthstarFuelTypeGen::bootstrap);
 
         generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID)));
 

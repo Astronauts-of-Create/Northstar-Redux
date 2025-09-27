@@ -7,7 +7,7 @@ import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemb
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
-import com.simibubi.create.foundation.utility.CreateLang;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+@MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class EngravingRecipe extends StandardProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
@@ -29,17 +30,14 @@ public class EngravingRecipe extends StandardProcessingRecipe<RecipeWrapper> imp
     }
 
     @Override
-    public boolean matches(RecipeWrapper input, Level level) {
-        if (input.isEmpty())
-            return false;
-        return ingredients.get(0)
-                .test(input.getItem(0));
+    public boolean matches(RecipeWrapper inv, Level worldIn) {
+        return ingredients.get(0).test(inv.getItem(0));
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public Component getDescriptionForAssembly() {
-        return CreateLang.translateDirect("recipe.assembly.engraving");
+        return Component.translatable("northstar.recipe.assembly.engraving");
     }
 
     @Override
@@ -56,7 +54,6 @@ public class EngravingRecipe extends StandardProcessingRecipe<RecipeWrapper> imp
         return () -> AssemblyEngraving::new;
     }
 
-
     @Override
     protected int getMaxInputCount() {
         return 1;
@@ -65,6 +62,11 @@ public class EngravingRecipe extends StandardProcessingRecipe<RecipeWrapper> imp
     @Override
     protected int getMaxOutputCount() {
         return 1;
+    }
+
+    @Override
+    protected boolean canSpecifyDuration() {
+        return true;
     }
 
 }

@@ -20,7 +20,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Consumer;
 
@@ -37,7 +36,7 @@ public class NorthstarItems {
                     b -> b.model((c, p) -> p.generated(c::get, p.modLoc("item/titanium_incomplete")))
                             .lang("Unforged Titanium Ingot"));
 
-    public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
+    public static final ItemEntry<Item> RAW_TITANIUM_ORE = REGISTRATE
             .item("raw_titanium_ore", Item::new)
             .model((c, p) -> p.generated(c::get, p.modLoc("item/raw_titanium")))
             .register();

@@ -85,6 +85,10 @@ import static net.minecraft.world.level.block.Blocks.*;
 
 public class NorthstarBlocks {
 
+    static {
+        REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.BLOCKS);
+    }
+
     // region Martian Steel
 
     public static final BlockEntry<Block> MARTIAN_STEEL_BLOCK = REGISTRATE
@@ -644,7 +648,9 @@ public class NorthstarBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XYZ))
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<MarsFarmlandBlock> MARS_FARMLAND = REGISTRATE
@@ -693,7 +699,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, RegistrateBlockLootTables.HAS_SHEARS)))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<MarsRootBlock> GLOWING_MARS_ROOTS = REGISTRATE
@@ -752,7 +760,9 @@ public class NorthstarBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(NorthstarDataGenHelper.cropLoot(NorthstarItems.MARS_TULIP_FLOWER, NorthstarItems.MARS_TULIP_SEEDS, 2))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<MarsPalmBlock> MARS_PALM = REGISTRATE
@@ -766,7 +776,9 @@ public class NorthstarBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(NorthstarDataGenHelper.cropLoot(NorthstarItems.MARS_PALM_FLOWER, NorthstarItems.MARS_PALM_SEEDS, 2))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<MarsSproutBlock> MARS_SPROUT = REGISTRATE
@@ -781,7 +793,9 @@ public class NorthstarBlocks {
                     .lightLevel(pState -> 7))
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(NorthstarDataGenHelper.cropLoot(NorthstarItems.MARS_SPROUT_FLOWER, NorthstarItems.MARS_SPROUT_SEEDS, 2))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<MartianTallFlowerBlock> MARS_SPROUT_BIG = REGISTRATE
@@ -989,7 +1003,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -1010,6 +1024,24 @@ public class NorthstarBlocks {
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<DropExperienceBlock> MARS_ZINC_ORE = REGISTRATE
+            .block("mars_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
+            .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
             .register();
 
@@ -1118,9 +1150,27 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<DropExperienceBlock> MARS_DEEP_ZINC_ORE = REGISTRATE
+            .block("mars_deep_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
+            .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
             .register();
 
@@ -1342,7 +1392,9 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<LeavesBlock> WILTER_LEAVES = REGISTRATE
@@ -1646,7 +1698,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, c.hasSilkTouch())))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     //moon deco stuff ayy
@@ -1787,7 +1841,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -1953,7 +2007,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -2128,7 +2182,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<ClusterBlock> SMALL_LUNAR_SAPPHIRE_BUD = REGISTRATE
@@ -2141,7 +2197,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<ClusterBlock> MEDIUM_LUNAR_SAPPHIRE_BUD = REGISTRATE
@@ -2154,7 +2212,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<ClusterBlock> LARGE_LUNAR_SAPPHIRE_BUD = REGISTRATE
@@ -2166,7 +2226,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<BuddingCrystalBlock> BUDDING_LUNAR_SAPPHIRE_BLOCK = REGISTRATE
@@ -2254,7 +2316,9 @@ public class NorthstarBlocks {
                     .noCollission()
                     .instabreak())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<VenusMushroomBlock> BLOOM_FUNGUS = REGISTRATE
@@ -2281,7 +2345,9 @@ public class NorthstarBlocks {
                     .noCollission()
                     .instabreak())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<HugeMushroomBlock> SPIKE_FUNGUS_BLOCK = REGISTRATE
@@ -2321,7 +2387,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model((c, p) -> p.blockWithInventoryModel(c::get))
+            .build()
             .register();
 
     public static final BlockEntry<HugeMushroomBlock> PLATE_FUNGUS_STEM_BLOCK = REGISTRATE
@@ -2407,7 +2475,9 @@ public class NorthstarBlocks {
             .tag(BlockTags.CLIMBABLE)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<VenusVinesBlock> GLOWING_VENUS_VINES = REGISTRATE
@@ -2424,7 +2494,7 @@ public class NorthstarBlocks {
             .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
             .item()
-            .model((c, p) -> p.generated(c::get, p.modLoc("block/glowing_venus_vine")))
+            .model((c, p) -> p.generated(c::get, p.modLoc("block/glowing_venus_vines")))
             .build()
             .register();
 
@@ -2438,7 +2508,9 @@ public class NorthstarBlocks {
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     //venus deco blocks
@@ -2578,7 +2650,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -2610,6 +2682,23 @@ public class NorthstarBlocks {
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<DropExperienceBlock> VENUS_ZINC_ORE = REGISTRATE
+            .block("venus_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
+            .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
             .register();
 
@@ -2730,7 +2819,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -2750,6 +2839,23 @@ public class NorthstarBlocks {
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<DropExperienceBlock> VENUS_DEEP_ZINC_ORE = REGISTRATE
+            .block("venus_deep_zinc_ore", p -> new DropExperienceBlock(UniformInt.of(2, 5), p))
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
+            .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
             .build()
             .register();
 
@@ -3026,7 +3132,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -3199,7 +3305,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
             .build()
@@ -3447,7 +3553,9 @@ public class NorthstarBlocks {
                     .strength(4f, 6f)
                     .requiresCorrectToolForDrops())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model((c, p) -> p.blockWithInventoryModel(c::get))
+            .build()
             .register();
 
     public static final BlockEntry<MercuryCactusBlock> MERCURY_CACTUS = REGISTRATE
@@ -3567,7 +3675,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.AMETHYST_CLUSTER))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .build()
             .register();
 
     public static final BlockEntry<ExtinguishedTorchBlock> EXTINGUISHED_TORCH = REGISTRATE
@@ -3653,8 +3763,8 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
-            .transform(customItemModel())
-            .simpleItem()
+            .model(NorthstarDataGenHelper.itemGeneratedItem())
+            .build()
             .register();
 
     public static final BlockEntry<AstronomyTableBlock> ASTRONOMY_TABLE = REGISTRATE
@@ -3815,7 +3925,8 @@ public class NorthstarBlocks {
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
-            .simpleItem()
+            .item()
+            .transform(customItemModel())
             .register();
 
     public static final BlockEntry<IceBoxBlock> ICE_BOX = REGISTRATE

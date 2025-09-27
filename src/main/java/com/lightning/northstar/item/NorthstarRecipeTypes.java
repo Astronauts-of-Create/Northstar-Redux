@@ -22,12 +22,11 @@ public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
 
     ENGRAVING(EngravingRecipe::new),
     ELECTROLYSIS(ElectrolysisRecipe::new),
-    FREEZING(FreezingRecipe::new);
+    FREEZING(FreezingRecipe.Serializer::new);
 
     private final ResourceLocation id;
     private final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> serializerObject;
     private final DeferredHolder<RecipeType<?>, RecipeType<?>> typeObject;
-
 
     NorthstarRecipeTypes(StandardProcessingRecipe.Factory<?> processingFactory) {
         this(() -> new StandardProcessingRecipe.Serializer<>(processingFactory));
@@ -35,6 +34,7 @@ public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
 
     NorthstarRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
         String name = Lang.asId(name());
+
         id = Northstar.asResource(name);
         serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
         typeObject = Registers.TYPE_REGISTER.register(name, () -> RecipeType.simple(id));
@@ -44,7 +44,6 @@ public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
         Registers.SERIALIZER_REGISTER.register(modEventBus);
         Registers.TYPE_REGISTER.register(modEventBus);
     }
-
 
     @Override
     public ResourceLocation getId() {

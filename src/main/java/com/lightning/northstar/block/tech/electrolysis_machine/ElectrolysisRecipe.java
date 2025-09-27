@@ -4,12 +4,17 @@ import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ElectrolysisRecipe extends StandardProcessingRecipe<RecipeWrapper> {
 
     public static boolean match(ElectrolysisMachineBlockEntity machine, Recipe<?> recipe) {

@@ -1,195 +1,198 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
-import com.lightning.northstar.block.tech.circuit_engraver.EngravingBehaviour.EngravingBehaviourSpecifics;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
+import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
-import net.createmod.catnip.math.VecHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 import java.util.Optional;
 
-public class CircuitEngraverBlockEntity extends KineticBlockEntity implements EngravingBehaviourSpecifics {
+import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.HOLD;
+import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.PASS;
 
-    public EngravingBehaviour engravingBehaviour;
-    private int sound;
+public class CircuitEngraverBlockEntity extends KineticBlockEntity {
+
+    private static final ItemStackHandler inv = new ItemStackHandler(1);
+    private static final RecipeWrapper recipeInventory = new RecipeWrapper(inv);
+
+    private boolean disabled;
+    private boolean running;
+    private EngravingRecipe currentRecipe;
+    private int processingTicks;
+    private int emptyTicks;
+
+    @OnlyIn(Dist.CLIENT)
+    private BasicTickableSoundInstance sound;
 
     public CircuitEngraverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (engravingBehaviour.running && sound++ % 80 == 0 && level != null) {
-            sound = 0;
-            level.playSound(null, getBlockPos(), NorthstarSounds.LASER_BURN.get(), SoundSource.BLOCKS, 0.5f, 0.5f);
-        }
-    }
-
-    @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
 
-        engravingBehaviour = new EngravingBehaviour(this);
-        behaviours.add(engravingBehaviour);
-
-        registerAwardables(behaviours, AllAdvancements.PRESS, AllAdvancements.COMPACTING,
-                AllAdvancements.TRACK_CRAFTING);
+        behaviours.add(new BeltProcessingBehaviour(this)
+                .whenItemEnters(this::onItemReceived)
+                .whileItemHeld(this::onItemHeld));
     }
 
     @Override
-    public boolean tryProcessInBasin(boolean simulate) {
-        return false;
+    protected AABB createRenderBoundingBox() {
+        return new AABB(worldPosition).expandTowards(0, -1.5, 0);
+    }
+
+    public BeltProcessingBehaviour.ProcessingResult onItemReceived(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler) {
+        if (getSpeed() == 0 || disabled)
+            return PASS;
+        Optional<RecipeHolder<EngravingRecipe>> recipe = getRecipe(transported.stack);
+        if (recipe.isEmpty())
+            return PASS;
+        running = true;
+        currentRecipe = recipe.get().value();
+        processingTicks = 0;
+        emptyTicks = 0;
+        sendData();
+        return HOLD;
+    }
+
+    public BeltProcessingBehaviour.ProcessingResult onItemHeld(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler) {
+        if (currentRecipe == null || disabled || getSpeed() == 0)
+            return PASS;
+        emptyTicks = 0;
+        if (currentRecipe != null && processingTicks < currentRecipe.getProcessingDuration())
+            return HOLD;
+
+        List<TransportedItemStack> outputs = RecipeApplier.applyRecipeOn(level, transported.stack.copyWithCount(1), currentRecipe)
+                .stream()
+                .map(stack -> {
+                    TransportedItemStack copy = transported.copy();
+                    boolean centered = BeltHelper.isItemUpright(stack);
+                    copy.stack = stack;
+                    copy.locked = true;
+                    copy.angle = centered ? 180 : level.random.nextInt(360);
+                    return copy;
+                })
+                .toList();
+
+        TransportedItemStack held = transported.copy();
+        held.stack.shrink(1);
+        if (outputs.isEmpty())
+            handler.handleProcessingOnItem(transported, TransportedResult.convertTo(held));
+        else
+            handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outputs, held));
+
+        processingTicks = 0;
+        if (held.stack.isEmpty()) {
+            currentRecipe = null;
+            running = false;
+            sendData();
+        }
+
+        return HOLD;
     }
 
     @Override
-    public boolean tryProcessOnBelt(TransportedItemStack input, List<ItemStack> outputList, boolean simulate) {
-        Optional<RecipeHolder<EngravingRecipe>> recipe = getRecipe(input.stack);
-        if (!recipe.isPresent())
-            return false;
-        if (simulate)
-            return true;
-        EngravingBehaviour.particleItems.add(input.stack);
-        List<ItemStack> outputs = RecipeApplier.applyRecipeOn(level, canProcessInBulk() ? input.stack : input.stack.copyWithCount(1), recipe.get());
+    public void tick() {
+        super.tick();
 
-        for (ItemStack created : outputs) {
-            if (!created.isEmpty()) {
-                break;
-            }
+        if (level.isClientSide)
+            return;
+
+        // Not sure if there is a better way to do that, otherwise the animation plays forever
+        if (running && emptyTicks++ >= 2) {
+            running = false;
+            sendData();
         }
 
-        outputList.addAll(outputs);
-        return true;
-    }
-
-    public float getRenderedHeadOffset(float partialTicks) {
-        int localTick;
-        float offset = 0;
-        if (engravingBehaviour.running) {
-            if (engravingBehaviour.runningTicks < 20) {
-                localTick = engravingBehaviour.runningTicks;
-                float num = (localTick + partialTicks) / 20f;
-                num = ((2 - Mth.cos((float) (num * Math.PI))) / 2);
-                offset = num - .5f;
-            } else if (engravingBehaviour.runningTicks <= 20) {
-                offset = 1;
-            } else {
-                localTick = 40 - engravingBehaviour.runningTicks;
-                float num = (localTick - partialTicks) / 20f;
-                num = ((2 - Mth.cos((float) (num * Math.PI))) / 2);
-                offset = num - .5f;
-            }
-        }
-        return offset + 7 / 16f;
-    }
-
-    public float getRenderedHeadRotationSpeed(float partialTicks) {
-        float speed = getSpeed();
-        if (engravingBehaviour.running) {
-            if (engravingBehaviour.runningTicks < 15) {
-                return speed;
-            }
-            if (engravingBehaviour.runningTicks <= 20) {
-                return speed * 2;
-            }
-            return speed;
-        }
-        return speed / 2;
+        if (currentRecipe != null)
+            processingTicks += Mth.clamp((int) Math.abs(getSpeed() / 64f), 1, 256);
     }
 
     @Override
-    public boolean tryProcessInWorld(ItemEntity itemEntity, boolean simulate) {
-        ItemStack item = itemEntity.getItem();
-        Optional<RecipeHolder<EngravingRecipe>> recipe = getRecipe(item);
-        if (!recipe.isPresent())
-            return false;
-        if (simulate)
-            return true;
+    @OnlyIn(Dist.CLIENT)
+    public void tickAudio() {
+        super.tickAudio();
 
-        ItemStack itemCreated = ItemStack.EMPTY;
-        EngravingBehaviour.particleItems.add(item);
-        if (canProcessInBulk() || item.getCount() == 1) {
-            RecipeApplier.applyRecipeOn(itemEntity, recipe.get().value());
-            itemCreated = itemEntity.getItem().copy();
-        } else {
-            for (ItemStack result : RecipeApplier.applyRecipeOn(level, item.copyWithCount(1),
-                    recipe.get())) {
-                if (itemCreated.isEmpty())
-                    itemCreated = result.copy();
-                ItemEntity created =
-                        new ItemEntity(level, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
-                created.setDefaultPickUpDelay();
-                created.setDeltaMovement(VecHelper.offsetRandomly(Vec3.ZERO, level.random, .05f));
-                level.addFreshEntity(created);
+        if (running) {
+            if (sound == null || sound.isStopped()) {
+                sound = new BasicTickableSoundInstance(NorthstarSounds.LASER_AMBIENT.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
+                sound.setLooping(true);
+                Minecraft.getInstance().getSoundManager().play(sound);
             }
-            item.shrink(1);
+        } else if (sound != null) {
+            sound.cancel();
+            sound = null;
         }
-        return true;
     }
 
-    private static final RecipeWrapper engraverInv = new RecipeWrapper(new ItemStackHandler(1));
+    public void updateRedstone() {
+        if (level.isClientSide())
+            return;
+        boolean powered = level.hasNeighborSignal(worldPosition);
+        if (powered == disabled)
+            return;
+        disabled = powered;
+        if (powered) {
+            running = false;
+            currentRecipe = null;
+            processingTicks = 0;
+        }
+        sendData();
+    }
 
     public Optional<RecipeHolder<EngravingRecipe>> getRecipe(ItemStack item) {
         Optional<RecipeHolder<EngravingRecipe>> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(level, item, NorthstarRecipeTypes.ENGRAVING.getType(), EngravingRecipe.class);
         if (assemblyRecipe.isPresent())
             return assemblyRecipe;
-        return NorthstarRecipeTypes.ENGRAVING.find(engraverInv, level);
+
+        inv.setStackInSlot(0, item);
+        return NorthstarRecipeTypes.ENGRAVING.find(recipeInventory, level);
     }
 
-
-    @Override
-    public boolean canProcessInBulk() {
-        return false;
-    }
-
-    @Override
-    public void onPressingCompleted() {
-    }
-
-    @Override
-    public int getParticleAmount() {
-        return 15;
-    }
-
-    @Override
-    public float getKineticSpeed() {
-        return getSpeed();
-    }
-
-    @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
-
-        compound.putBoolean("Running", engravingBehaviour.running);
-        compound.putInt("Ticks", engravingBehaviour.runningTicks);
+    public boolean isRunning() {
+        return running;
     }
 
     @Override
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(compound, registries, clientPacket);
+        running = compound.getBoolean("Running");
+        processingTicks = compound.getInt("ProcessingTicks");
+        disabled = compound.getBoolean("Disabled");
+    }
 
-        engravingBehaviour.running = compound.getBoolean("Running");
-        engravingBehaviour.runningTicks = compound.getInt("Ticks");
+    @Override
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
+        compound.putBoolean("Running", running);
+        compound.putInt("ProcessingTicks", processingTicks);
+        compound.putBoolean("Disabled", disabled);
     }
 
 }

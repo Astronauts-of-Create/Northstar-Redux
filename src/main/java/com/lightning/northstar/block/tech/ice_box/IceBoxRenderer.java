@@ -32,20 +32,20 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
     }
 
     @Override
-    protected void renderSafe(IceBoxBlockEntity iceBox, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        super.renderSafe(iceBox, partialTicks, ms, buffer, light, overlay);
+    protected void renderSafe(IceBoxBlockEntity icebox, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        super.renderSafe(icebox, partialTicks, ms, buffer, light, overlay);
 
-        float fluidLevel = renderFluids(iceBox, partialTicks, ms, buffer, light, overlay);
+        float fluidLevel = renderFluids(icebox, partialTicks, ms, buffer, light, overlay);
         float level = Mth.clamp(fluidLevel - .3f, .125f, .6f);
         ms.pushPose();
 
-        BlockPos pos = iceBox.getBlockPos();
+        BlockPos pos = icebox.getBlockPos();
         ms.translate(.5, .2f, .5);
 
         RandomSource r = RandomSource.create(pos.hashCode());
         Vec3 baseVector = new Vec3(.125, level, 0);
 
-        IItemHandlerModifiable inv = iceBox.itemCapability;
+        IItemHandlerModifiable inv = icebox.itemCapability;
         int itemCount = 0;
         for (int slot = 0; slot < inv.getSlots(); slot++)
             if (!inv.getStackInSlot(slot)
@@ -66,7 +66,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
             if (fluidLevel > 0) {
                 ms.translate(0,
                         (Mth.sin(
-                                AnimationTickHolder.getRenderTime(iceBox.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
+                                AnimationTickHolder.getRenderTime(icebox.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
                                 * 1 / 32f,
                         0);
             }
@@ -92,7 +92,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
         }
         ms.popPose();
 
-        BlockState blockState = iceBox.getBlockState();
+        BlockState blockState = icebox.getBlockState();
         if (!(blockState.getBlock() instanceof IceBoxBlock))
             return;
         Direction direction = blockState.getValue(IceBoxBlock.FACING);
@@ -103,12 +103,12 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
                 .add(directionVec.scale(.55)
                         .subtract(0, 1 / 2f, 0));
 
-        boolean outToBasin = iceBox.getLevel()
-                .getBlockState(iceBox.getBlockPos()
+        boolean outToBasin = icebox.getLevel()
+                .getBlockState(icebox.getBlockPos()
                         .relative(direction))
                 .getBlock() instanceof IceBoxBlock;
 
-        for (IntAttached<ItemStack> intAttached : iceBox.visualizedOutputItems) {
+        for (IntAttached<ItemStack> intAttached : icebox.visualizedOutputItems) {
             float progress = 1 - (intAttached.getFirst() - partialTicks) / IceBoxBlockEntity.OUTPUT_ANIMATION_TIME;
 
             if (!outToBasin && progress > .35f)
@@ -126,11 +126,11 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
         }
     }
 
-    protected float renderFluids(IceBoxBlockEntity iceBox, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        SmartFluidTankBehaviour inputFluids = iceBox.getBehaviour(SmartFluidTankBehaviour.INPUT);
-        SmartFluidTankBehaviour outputFluids = iceBox.getBehaviour(SmartFluidTankBehaviour.OUTPUT);
+    protected float renderFluids(IceBoxBlockEntity icebox, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+        SmartFluidTankBehaviour inputFluids = icebox.getBehaviour(SmartFluidTankBehaviour.INPUT);
+        SmartFluidTankBehaviour outputFluids = icebox.getBehaviour(SmartFluidTankBehaviour.OUTPUT);
         SmartFluidTankBehaviour[] tanks = { inputFluids, outputFluids };
-        float totalUnits = iceBox.getTotalFluidUnits(partialTicks);
+        float totalUnits = icebox.getTotalFluidUnits(partialTicks);
         if (totalUnits < 1)
             return 0;
 

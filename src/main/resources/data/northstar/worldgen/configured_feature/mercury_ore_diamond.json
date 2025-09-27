@@ -7,7 +7,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mercury_stone_replaceables"
+          "tag": "northstar:mercury_stone_replaceable"
         },
         "state": {
           "Name": "northstar:mercury_diamond_ore"
@@ -16,7 +16,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mercury_deep_stone_replaceables"
+          "tag": "northstar:mercury_deep_stone_replaceable"
         },
         "state": {
           "Name": "northstar:mercury_deep_diamond_ore"
