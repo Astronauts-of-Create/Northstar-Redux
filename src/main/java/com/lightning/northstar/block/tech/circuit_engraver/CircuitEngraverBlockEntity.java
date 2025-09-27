@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.circuit_engraver;
 
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
@@ -11,6 +12,8 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
@@ -18,6 +21,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -35,9 +40,10 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
     private boolean running;
     private EngravingRecipe currentRecipe;
     private int processingTicks;
-
     private int emptyTicks;
-    private int audioTick;
+
+    @OnlyIn(Dist.CLIENT)
+    private BasicTickableSoundInstance sound;
 
     public CircuitEngraverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -120,12 +126,19 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void tickAudio() {
         super.tickAudio();
 
-        if (running && audioTick++ >= 80) {
-            audioTick = 0;
-            level.playSound(null, getBlockPos(), NorthstarSounds.LASER_BURN.get(), SoundSource.BLOCKS, 0.5f, 0.5f);
+        if (running) {
+            if (sound == null || sound.isStopped()) {
+                sound = new BasicTickableSoundInstance(NorthstarSounds.LASER_AMBIENT.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
+                sound.setLooping(true);
+                Minecraft.getInstance().getSoundManager().play(sound);
+            }
+        } else if (sound != null) {
+            sound.cancel();
+            sound = null;
         }
     }
 
