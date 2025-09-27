@@ -41,8 +41,8 @@ repositories {
     maven("https://maven.blamejared.com/") // JEI
     maven("https://maven.pkg.github.com/copycats-plus/copycats") {
         credentials {
-            username = project.property("github.packages.username") as? String
-            password = project.property("github.packages.password") as? String
+            username = project.findProperty("github.packages.username") as? String ?: ""
+            password = project.findProperty("github.packages.password") as? String ?: ""
         }
     }
     maven("https://cursemaven.com") {
@@ -80,12 +80,6 @@ dependencies {
     modCompileOnly(libs.flywheel.forge.api)
     modRuntimeOnly(libs.flywheel.forge)
 
-    val tfmgCoord = "maven.modrinth:create-tfmg:1.0.2c-1.20.1"
-    // Make the class visible at compile time for Mixins
-    compileOnly(tfmgCoord)
-
-    // Still load it at runtime
-    modRuntimeOnly(tfmgCoord)
 
     modImplementation(libs.geckolib.forge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib

@@ -5,6 +5,6 @@
     "tfmg:ethanol"
   ],
   "rocket_multiplier": 0.5,
-  "combustion_engine_use": 6.0,
+  "combustion_engine_use": 6,
   "combustion_engine_rpm": 12.0
 }

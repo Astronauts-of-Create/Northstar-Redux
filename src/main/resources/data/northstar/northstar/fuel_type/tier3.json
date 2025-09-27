@@ -4,6 +4,6 @@
     "northstar:flowing_liquid_hydrogen"
   ],
   "rocket_multiplier": 4.0,
-  "combustion_engine_use": 1.0,
+  "combustion_engine_use": 1,
   "combustion_engine_rpm": 64.0
 }

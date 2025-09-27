@@ -45,10 +45,3 @@ mandatory = true
 versionRange = "[4.7,5.0)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.northstar]]
-modId="tfmg"
-mandatory=false
-versionRange="[1.0.2c,)"
-ordering="NONE"
-side="BOTH"
