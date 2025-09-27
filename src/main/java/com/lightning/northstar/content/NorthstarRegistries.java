@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.contraption.FuelType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

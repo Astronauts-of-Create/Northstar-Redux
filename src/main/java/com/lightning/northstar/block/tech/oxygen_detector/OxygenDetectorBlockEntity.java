@@ -4,6 +4,7 @@ import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,11 +26,17 @@ public class OxygenDetectorBlockEntity extends SmartBlockEntity {
         super.tick();
 
         BlockState state = getBlockState();
-        BlockPos observed = worldPosition.relative(state.getValue(OxygenDetectorBlock.FACING));
+        Direction facing = state.getValue(OxygenDetectorBlock.FACING);
+        BlockPos observed = worldPosition.relative(facing);
 
         boolean oxygenated = NorthstarOxygen.hasOxygen(level, observed);
         if (oxygenated != state.getValue(OxygenDetectorBlock.POWERED)) {
-            level.setBlock(worldPosition, state.setValue(OxygenDetectorBlock.POWERED, oxygenated), Block.UPDATE_ALL);
+            level.setBlock(worldPosition, state.setValue(OxygenDetectorBlock.POWERED, oxygenated), Block.UPDATE_CLIENTS);
+
+            BlockPos powered = worldPosition.relative(facing.getOpposite());
+            Block block = state.getBlock();
+            level.neighborChanged(powered, block, worldPosition);
+            level.updateNeighborsAtExceptFromFacing(powered, block, facing);
         }
     }
 

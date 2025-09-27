@@ -59,11 +59,14 @@ public class NorthstarTags {
 
     public enum NorthstarFluidTags implements Tags.Tag<Fluid> {
 
+        COMPAT_CBC_MOLTEN_CAST_IRON,
+        COMPAT_CDG_BIODIESEL,
         C_BIOFUEL(COMMON, "biofuel"),
         C_BRINE(COMMON, "brine"),
         C_CARBON(COMMON, "carbon"),
         C_CHLORINE(COMMON, "chlorine"),
         C_CHOCOLATE_ICE_CREAM(COMMON, "chocolate_ice_cream"),
+        C_GASEOUS(COMMON, "gaseous"),
         C_HYDROCARBON(COMMON, "hydrocarbon"),
         C_HYDROGEN(COMMON, "hydrogen"),
         C_LIQUID_HYDROGEN(COMMON, "liquid_hydrogen"),
@@ -76,8 +79,6 @@ public class NorthstarTags {
         C_SULFURIC_ACID(COMMON, "sulfuric_acid"),
         C_TITANIUM_TETRACHLORIDE(COMMON, "titanium_tetrachloride"),
         C_VANILLA_ICE_CREAM(COMMON, "vanilla_ice_cream"),
-        COMPAT_CBC_MOLTEN_CAST_IRON,
-        COMPAT_CDG_BIODIESEL,
         IS_OXY;
 
         public final TagKey<Fluid> tag;

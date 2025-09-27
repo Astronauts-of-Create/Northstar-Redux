@@ -35,7 +35,7 @@ public class NorthstarFillingRecipeGen extends FillingRecipeGen {
     STRAWBERRY_ICE_CREAM = create("strawberry_ice_cream",
             b -> b.require(NorthstarFluidTags.C_STRAWBERRY_ICE_CREAM.tag, 200)
                     .require(NorthstarItems.ICE_CREAM_CONE)
-                    .output(NorthstarItems.VANILLA_ICE_CREAM)),
+                    .output(NorthstarItems.STRAWBERRY_ICE_CREAM)),
 
     SODIUM_CATALYST = create("sodium_catalyst",
             b -> b.require(FluidTags.LAVA, 500)

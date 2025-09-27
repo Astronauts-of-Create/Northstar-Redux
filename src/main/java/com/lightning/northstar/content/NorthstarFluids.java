@@ -38,16 +38,19 @@ public class NorthstarFluids {
 
     public static final FluidEntry<VirtualFluid> OXYGEN = REGISTRATE
             .virtualFluid("oxygen")
+            .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_OXYGEN.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> HYDROGEN = REGISTRATE
             .virtualFluid("hydrogen")
+            .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_HYDROGEN.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> CHLORINE = REGISTRATE
             .virtualFluid("chlorine")
+            .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_CHLORINE.tag)
             .register();
 
@@ -135,7 +138,6 @@ public class NorthstarFluids {
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .tag(NorthstarFluidTags.C_LIQUID_OXYGEN.tag)
-            .tag(NorthstarFluidTags.C_OXYGEN.tag)
             .source(ForgeFlowingFluid.Source::new)
             .bucket()
             .build()

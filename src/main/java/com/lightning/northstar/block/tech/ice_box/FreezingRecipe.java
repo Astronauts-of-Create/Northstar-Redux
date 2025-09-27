@@ -1,73 +1,66 @@
 package com.lightning.northstar.block.tech.ice_box;
 
+import com.google.gson.JsonObject;
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
-import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
-import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.Iterate;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class FreezingRecipe extends ProcessingRecipe<Container> {
 
-    //im gonna cry I just want this to work
-    public static boolean match(IceBoxBlockEntity iceBox, Recipe<?> recipe) {
-        FilteringBehaviour filter = iceBox.getFilter();
-        if (filter == null)
+    public static boolean match(IceBoxBlockEntity icebox, Recipe<?> recipe) {
+        if (!(recipe instanceof FreezingRecipe r)) {
             return false;
-
-        boolean filterTest = filter.test(recipe.getResultItem(iceBox.getLevel().registryAccess()));
-        if (recipe instanceof FreezingRecipe FreezingRecipe) {
-            if (FreezingRecipe.getRollableResults()
-                    .isEmpty()
-                    && !FreezingRecipe.getFluidResults()
-                    .isEmpty())
-                filterTest = filter.test(FreezingRecipe.getFluidResults()
-                        .get(0));
         }
 
-        if (!filterTest)
+        boolean matchItem = r.results.isEmpty() || icebox.filtering.test(r.results.get(0).getStack());
+        boolean matchFluid = r.fluidResults.isEmpty() || icebox.filtering.test(r.fluidResults.get(0));
+        if (!matchItem && !matchFluid) {
             return false;
+        }
 
-        return apply(iceBox, recipe, true);
+        return apply(icebox, recipe, true);
     }
 
-    public static boolean apply(IceBoxBlockEntity iceBox, Recipe<?> recipe) {
-        return apply(iceBox, recipe, false);
+    public static boolean apply(IceBoxBlockEntity icebox, Recipe<?> recipe) {
+        return apply(icebox, recipe, false);
     }
 
     private static boolean apply(IceBoxBlockEntity icebox, Recipe<?> recipe, boolean test) {
-        boolean isFreezingRecipe = recipe instanceof FreezingRecipe;
-        IItemHandler availableItems = icebox.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
-        IFluidHandler availableFluids = icebox.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
-
-        if (availableItems == null || availableFluids == null)
-            return false;
+        IItemHandler availableItems = icebox.inputInventory;
+        IFluidHandler availableFluids = icebox.inputTank.getCapability().orElse(null);
 
         List<ItemStack> recipeOutputItems = new ArrayList<>();
         List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
         List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
-        List<FluidIngredient> fluidIngredients =
-                isFreezingRecipe ? ((FreezingRecipe) recipe).getFluidIngredients() : Collections.emptyList();
+        List<FluidIngredient> fluidIngredients = recipe instanceof ProcessingRecipe<?> r ? r.getFluidIngredients() : List.of();
 
         for (boolean simulate : Iterate.trueAndFalse) {
             if (!simulate && test)
@@ -79,8 +72,7 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
             Ingredients:
             for (Ingredient ingredient : ingredients) {
                 for (int slot = 0; slot < availableItems.getSlots(); slot++) {
-                    if (simulate && availableItems.getStackInSlot(slot)
-                            .getCount() <= extractedItemsFromSlot[slot])
+                    if (simulate && availableItems.getStackInSlot(slot).getCount() <= extractedItemsFromSlot[slot])
                         continue;
                     ItemStack extracted = availableItems.extractItem(slot, 1, true);
                     if (!ingredient.test(extracted))
@@ -122,18 +114,16 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
                 return false;
             }
 
-            if (fluidsAffected) {
-                icebox.getBehaviour(SmartFluidTankBehaviour.INPUT)
-                        .forEach(TankSegment::onFluidStackChanged);
-                icebox.getBehaviour(SmartFluidTankBehaviour.OUTPUT)
-                        .forEach(TankSegment::onFluidStackChanged);
+            if (fluidsAffected && !simulate) {
+                icebox.getBehaviour(SmartFluidTankBehaviour.INPUT).forEach(TankSegment::onFluidStackChanged);
+                icebox.getBehaviour(SmartFluidTankBehaviour.OUTPUT).forEach(TankSegment::onFluidStackChanged);
             }
 
             if (simulate) {
-                if (recipe instanceof FreezingRecipe FreezingRecipe) {
-                    recipeOutputItems.addAll(FreezingRecipe.rollResults());
-                    recipeOutputFluids.addAll(FreezingRecipe.getFluidResults());
-                    recipeOutputItems.addAll(FreezingRecipe.getRemainingItems(icebox.getInputInventory()));
+                if (recipe instanceof FreezingRecipe r) {
+                    recipeOutputItems.addAll(r.rollResults());
+                    recipeOutputFluids.addAll(r.getFluidResults());
+                    recipeOutputItems.addAll(r.getRemainingItems(icebox.getInputInventory()));
                 } else {
                     recipeOutputItems.add(recipe.getResultItem(icebox.getLevel().registryAccess()));
 
@@ -150,12 +140,69 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
         return true;
     }
 
-    protected FreezingRecipe(IRecipeTypeInfo type, ProcessingRecipeParams params) {
-        super(type, params);
+    @MethodsReturnNonnullByDefault
+    @ParametersAreNonnullByDefault
+    public static class Serializer extends ProcessingRecipeSerializer<FreezingRecipe> {
+        public Serializer() {
+            super(FreezingRecipe::new);
+        }
+
+        @Override
+        protected FreezingRecipe readFromBuffer(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+            FreezingRecipe recipe = super.readFromBuffer(recipeId, buffer);
+            recipe.minTemperature = buffer.readVarInt();
+            recipe.maxTemperature = buffer.readVarInt();
+            return recipe;
+        }
+
+        @Override
+        protected void writeToBuffer(FriendlyByteBuf buffer, FreezingRecipe recipe) {
+            super.writeToBuffer(buffer, recipe);
+            buffer.writeVarInt(recipe.minTemperature);
+            buffer.writeVarInt(recipe.maxTemperature);
+
+        }
+
+        @Override
+        protected FreezingRecipe readFromJson(ResourceLocation recipeId, JsonObject json) {
+            FreezingRecipe recipe = super.readFromJson(recipeId, json);
+            recipe.minTemperature = GsonHelper.getAsInt(json, "minTemperature", Integer.MIN_VALUE);
+            recipe.maxTemperature = GsonHelper.getAsInt(json, "maxTemperature", Integer.MAX_VALUE);
+            return recipe;
+        }
+
+        @Override
+        protected void writeToJson(JsonObject json, FreezingRecipe recipe) {
+            super.writeToJson(json, recipe);
+            if (recipe.minTemperature != Integer.MIN_VALUE)
+                json.addProperty("minTemperature", recipe.minTemperature);
+            if (recipe.maxTemperature != Integer.MAX_VALUE)
+                json.addProperty("maxTemperature", recipe.maxTemperature);
+        }
     }
 
+    public static class Params extends ProcessingRecipeParams {
+        protected int minTemperature = Integer.MIN_VALUE;
+        protected int maxTemperature = Integer.MAX_VALUE;
+
+        public Params(ResourceLocation id) {
+            super(id);
+        }
+    }
+
+    protected int minTemperature;
+    protected int maxTemperature;
+
     public FreezingRecipe(ProcessingRecipeParams params) {
-        this(NorthstarRecipeTypes.FREEZING, params);
+        super(NorthstarRecipeTypes.FREEZING, params);
+        if (params instanceof Params p) {
+            this.minTemperature = p.minTemperature;
+            this.maxTemperature = p.maxTemperature;
+        }
+    }
+
+    public boolean isTemperatureWithinRange(float temperature) {
+        return temperature >= minTemperature && temperature <= maxTemperature;
     }
 
     @Override
@@ -179,18 +226,20 @@ public class FreezingRecipe extends ProcessingRecipe<SmartInventory> {
     }
 
     @Override
-    protected boolean canRequireHeat() {
-        return true;
-    }
-
-    @Override
     protected boolean canSpecifyDuration() {
         return true;
     }
 
+    public int getMinTemperature() {
+        return minTemperature;
+    }
+
+    public int getMaxTemperature() {
+        return maxTemperature;
+    }
+
     @Override
-    public boolean matches(SmartInventory pContainer, Level pLevel) {
-        // TODO Auto-generated method stub
+    public boolean matches(Container inv, @Nonnull Level worldIn) {
         return false;
     }
 

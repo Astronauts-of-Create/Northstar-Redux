@@ -67,7 +67,7 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
 
     @Override
     public void beginFrame() {
-        float time = AnimationTickHolder.getRenderTime() * blockEntity.getSpeed() * 0.005f;
+        float time = AnimationTickHolder.getRenderTime() * Math.signum(blockEntity.getSpeed()) * 2f;
 
         piston1.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time), 0);
         piston2.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time + 2), 0);

@@ -6,25 +6,24 @@ import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 
 public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEntity> implements DynamicInstance {
 
-    private final RotatingData crystalHead;
-    private final RotatingData crystalLaser;
+    private final RotatingData head;
+    private final RotatingData laser;
 
     public CircuitEngraverVisual(MaterialManager materialManager, CircuitEngraverBlockEntity entity) {
         super(materialManager, entity);
 
-        crystalHead = materialManager
+        head = materialManager
                 .defaultCutout()
                 .material(AllMaterialSpecs.ROTATING)
                 .getModel(NorthstarPartialModels.CIRCUIT_ENGRAVER_HEAD, getRenderedBlockState())
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
 
-        crystalLaser =  materialManager
+        laser =  materialManager
                 .defaultCutout()
                 .material(AllMaterialSpecs.ROTATING)
                 .getModel(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER)
@@ -34,28 +33,28 @@ public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEnt
 
     @Override
     public void beginFrame() {
-        boolean running = blockEntity.engravingBehaviour.running;
-        float speed = blockEntity.getRenderedHeadRotationSpeed(AnimationTickHolder.getPartialTicks());
+        boolean running = blockEntity.isRunning();
+        float speed = running ? blockEntity.getSpeed() : 0;
 
-        crystalHead.setPosition(getInstancePosition())
-                .setRotationalSpeed(speed * 0.5f);
+        head.setPosition(getInstancePosition())
+                .setRotationalSpeed(speed);
 
-        crystalLaser.setPosition(getInstancePosition())
+        laser.setPosition(getInstancePosition())
                 .nudge(0, running ? -0.16f : 1e8f, 0)
-                .setRotationalSpeed(speed / 1.5f);
+                .setRotationalSpeed(speed * 2);
     }
 
     @Override
     public void updateLight() {
         super.updateLight();
-        relight(pos, crystalHead, crystalLaser);
+        relight(pos, head, laser);
     }
 
     @Override
     public void remove() {
         super.remove();
-        crystalHead.delete();
-        crystalLaser.delete();
+        head.delete();
+        laser.delete();
     }
 
 }

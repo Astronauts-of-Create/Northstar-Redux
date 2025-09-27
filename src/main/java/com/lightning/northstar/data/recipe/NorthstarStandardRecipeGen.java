@@ -415,7 +415,31 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
     POLISHED_VENUS_STONE = create(NorthstarBlocks.POLISHED_VENUS_STONE)
             .viaCooking(() -> NorthstarBlocks.VENUS_STONE)
             .rewardXP(0.1f)
-            .inFurnace();
+            .inFurnace(),
+
+    MARTIAN_IRON_ORE = create(() -> Items.IRON_INGOT)
+            .withSuffix("_from_martian_ore")
+            .viaCooking(() -> NorthstarItems.RAW_MARTIAN_IRON_ORE)
+            .rewardXP(0.7f)
+            .inBlastFurnace(),
+
+    TITANIUM = create(NorthstarItems.TITANIUM_INGOT)
+            .withSuffix("_from_raw")
+            .viaCooking(() -> NorthstarItems.RAW_TITANIUM_ORE)
+            .rewardXP(0.8f)
+            .inBlastFurnace(),
+
+    TUNGSTEN = create(NorthstarItems.TUNGSTEN_INGOT)
+            .withSuffix("_from_raw")
+            .viaCooking(() -> NorthstarItems.RAW_TUNGSTEN_ORE)
+            .rewardXP(0.8f)
+            .inBlastFurnace(),
+
+    TUNGSTEN_CRUSHED = create(NorthstarItems.TUNGSTEN_INGOT)
+            .withSuffix("_from_crushed")
+            .viaCooking(() -> NorthstarItems.CRUSHED_RAW_TUNGSTEN)
+            .rewardXP(0.8f)
+            .inBlastFurnace();
 
     // endregion
 

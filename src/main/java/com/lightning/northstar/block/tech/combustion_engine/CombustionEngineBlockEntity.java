@@ -2,7 +2,10 @@ package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
-import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.client.BasicTickableSoundInstance;
+import com.lightning.northstar.content.NorthstarSounds;
+import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -15,10 +18,13 @@ import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOp
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -42,7 +48,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     protected FuelType fuelType;
 
     @OnlyIn(Dist.CLIENT)
-    protected EngineHumSound sound;
+    protected BasicTickableSoundInstance sound;
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -82,7 +88,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
         FluidStack fluid = tank.getPrimaryHandler().getFluid();
         if (!fluid.getFluid().equals(lastFluid)) {
             lastFluid = fluid.getFluid();
-            fuelType = FuelType.getFuelType(level.registryAccess(), lastFluid);
+            fuelType = FuelType.getFuelType(lastFluid);
         }
 
         FuelType fuel = this.fuelType;
@@ -121,9 +127,15 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public void tickAudio() {
         super.tickAudio();
 
-        if (sound == null || sound.isStopped()) {
-            sound = new EngineHumSound(this);
-            Minecraft.getInstance().getSoundManager().play(sound);
+        if (!Mth.equal(generatorSpeed, 0)) {
+            if (sound == null || sound.isStopped()) {
+                sound = new BasicTickableSoundInstance(NorthstarSounds.COMBUSTION_ENGINE.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
+                sound.setLooping(true);
+                Minecraft.getInstance().getSoundManager().play(sound);
+            }
+        } else if (sound != null) {
+            sound.cancel();
+            sound = null;
         }
     }
 
@@ -169,6 +181,16 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                         .add(mb)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
+
+        if (fuelType != null) {
+            NorthstarLang.translate("gui.goggles.fuel_use")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            Lang.number(fuelType.combustionEngineEfficiency())
+                    .style(ChatFormatting.AQUA)
+                    .add(NorthstarLang.MB_PER_TICK)
+                    .forGoggles(tooltip, 1);
+        }
 
         return true;
     }

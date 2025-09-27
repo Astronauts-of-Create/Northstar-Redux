@@ -71,16 +71,18 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
         ScrollInput temperature = addScrollInput(new ScrollInput(x + 129, y + 11, 46, 18), 0, "Temperature")
                 .addHint(Component.translatable("northstar.gui.temperature_regulator.step")
                         .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY))
-                .withRange(NorthstarTemperature.MINIMUM_TEMPERATURE, NorthstarTemperature.MAXIMUM_TEMPERATURE + 1)
-                .setState((int) regulator.temperature)
+                .withRange((int) unit.fromCelsius(NorthstarTemperature.MINIMUM_TEMPERATURE), (int) unit.fromCelsius(NorthstarTemperature.MAXIMUM_TEMPERATURE + 1))
+                .setState((int) unit.fromCelsius(regulator.temperature))
                 .withStepFunction(s -> s.shift ? 100 : s.control ? 20 : 1)
-                .format(i -> Component.literal(LangNumberFormat.format(unit.fromCelsius(i)) + unit.symbol));
+                .format(i -> Component.literal(LangNumberFormat.format(i) + unit.symbol));
         temperature.onChanged();
 
         IconButton confirm = new IconButton(x + 179, y + 11, AllIcons.I_CONFIRM);
         confirm.setToolTip(Component.translatable("northstar.generic.confirm"));
         confirm.withCallback(() -> {
-            NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(entityId, pos, temperature.getState(), limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
+            NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(entityId, pos,
+                    (int) unit.toCelsius(temperature.getState()),
+                    limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
             onClose();
         });
         addRenderableWidget(confirm);
@@ -112,10 +114,16 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
                     Component.translatable("northstar.gui.goggles.sealer.area_too_big").withStyle(ChatFormatting.RED) :
                     Component.translatable("northstar.gui.oxygen_sealer.sealed").withStyle(ChatFormatting.GREEN);
             MutableComponent line1 = Component.translatable("northstar.generic.status").append(status);
-            MutableComponent line2 = NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
-                    .add(Lang.number(regulator.sealer.getSealedBlockCount())
-                            .style(ChatFormatting.AQUA))
-                    .component();
+            MutableComponent line2 = regulator.sealer.hasLeak() ?
+                    NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
+                            .add(Lang.number(NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get())
+                                    .style(ChatFormatting.AQUA))
+                            .text(" blocks")
+                            .component() :
+                    NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
+                            .add(Lang.number(regulator.sealer.getSealedBlockCount())
+                                    .style(ChatFormatting.AQUA))
+                            .component();
 
             graphics.drawString(font, line1, guiLeft + 5, guiTop + 34, 0xFFFFFFFF);
             graphics.drawString(font, line2, guiLeft + 5, guiTop + 44, 0xFFFFFFFF);
