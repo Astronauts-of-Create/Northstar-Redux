@@ -2,13 +2,9 @@
   "fluids": [
     "northstar:hydrocarbon",
     "northstar:flowing_hydrocarbon",
-    "tfmg:kerosene",
-    "tfmg:crude_oil",
     "tfmg:gasoline",
-    "tfmg:heavy_oil",
     "tfmg:diesel",
-    "tfmg:naphtha",
-    "tfmg:creosote"
+    "tfmg:kerosene"
   ],
   "rocket_multiplier": 1.0,
   "combustion_engine_use": 4.0,

@@ -1,0 +1,9 @@
+{
+  "fluids": [
+    "tfmg:crude_oil",
+    "tfmg:heavy_oil"
+  ],
+  "rocket_multiplier": 0.1,
+  "combustion_engine_use": 10.0,
+  "combustion_engine_rpm": 8.0
+}
