@@ -5,7 +5,7 @@ plugins {
     id("dev.architectury.loom") version "1.10.433"
 }
 
-version = "0.4.1+1.20.1" // https://semver.org/
+version = "0.4.2+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -59,8 +59,8 @@ repositories {
     maven("https://maven.blamejared.com/") // JEI
     maven("https://maven.pkg.github.com/copycats-plus/copycats") {
         credentials {
-            username = project.findProperty("github.packages.username") as? String ?: ""
-            password = project.findProperty("github.packages.password") as? String ?: ""
+            username = project.property("github.packages.username") as? String
+            password = project.property("github.packages.password") as? String
         }
     }
     maven("https://cursemaven.com") {
@@ -97,7 +97,6 @@ dependencies {
     modImplementation(libs.registrate)
     modCompileOnly(libs.flywheel.forge.api)
     modRuntimeOnly(libs.flywheel.forge)
-
 
     modImplementation(libs.geckolib.forge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib

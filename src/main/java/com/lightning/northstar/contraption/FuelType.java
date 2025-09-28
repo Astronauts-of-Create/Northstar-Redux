@@ -3,11 +3,10 @@ package com.lightning.northstar.contraption;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -15,14 +14,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public record FuelType(
-        HolderSet<Fluid> fluids,
+        TagKey<Fluid> fluids,
         float gjPerMb,
         int combustionEngineEfficiency,
         float combustionEngineRpm) {
 
-    // TODO: change Set<ResourceLocation> to HolderSet<Fluid>, use tags for optional fluids and move fuel types to data gen
     public static final Codec<FuelType> CODEC = RecordCodecBuilder.create(i -> i.group(
-            RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluids").forGetter(FuelType::fluids),
+            TagKey.hashedCodec(Registries.FLUID).fieldOf("fluids").forGetter(FuelType::fluids),
             Codec.FLOAT.fieldOf("gj_per_mb").forGetter(FuelType::gjPerMb),
             Codec.INT.fieldOf("combustion_engine_use").forGetter(FuelType::combustionEngineEfficiency),
             Codec.FLOAT.fieldOf("combustion_engine_rpm").forGetter(FuelType::combustionEngineRpm)
