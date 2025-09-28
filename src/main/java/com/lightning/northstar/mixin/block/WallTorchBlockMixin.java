@@ -9,6 +9,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -43,7 +44,7 @@ public class WallTorchBlockMixin extends Block {
     @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
     public void northstar$updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                                       BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
-        if (level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
+        if (state.getBlock() == Blocks.WALL_TORCH && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             info.setReturnValue(northstar$copyStateExtinguished(state));
         }
     }

@@ -48,8 +48,10 @@ import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -3680,21 +3682,25 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<ExtinguishedTorchBlock> EXTINGUISHED_TORCH = REGISTRATE
             .block("extinguished_torch", ExtinguishedTorchBlock::new)
+            .initialProperties(() -> Blocks.TORCH)
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
                     .instabreak())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .item((b, p) -> new StandingAndWallBlockItem(NorthstarBlocks.EXTINGUISHED_TORCH.get(), NorthstarBlocks.EXTINGUISHED_TORCH_WALL.get(), p, Direction.DOWN))
+            .item((b, p) -> new StandingAndWallBlockItem(b, NorthstarBlocks.EXTINGUISHED_TORCH_WALL.get(), p, Direction.DOWN))
             .model(NorthstarDataGenHelper.itemGeneratedBlock())
             .build()
             .register();
 
     public static final BlockEntry<ExtinguishedTorchWallBlock> EXTINGUISHED_TORCH_WALL = REGISTRATE
             .block("extinguished_torch_wall", ExtinguishedTorchWallBlock::new)
+            .setData(ProviderType.LANG, NonNullBiConsumer.noop()) // lang is generated from the base block?
+            .initialProperties(() -> WALL_TORCH)
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
                     .instabreak())
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.dropOther(b, EXTINGUISHED_TORCH))
             .register();
 
     public static final BlockEntry<ExtinguishedLanternBlock> EXTINGUISHED_LANTERN = REGISTRATE

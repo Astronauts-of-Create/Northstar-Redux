@@ -145,6 +145,12 @@ public class NorthstarTagGen {
     private static void items(RegistrateTagsProvider<Item> provider) {
         Tags<Item, ItemLike> tags = new Tags<>(provider, Item::builtInRegistryHolder, ItemLike::asItem);
 
+        tags.tag(NorthstarItemTags.IGNITION_SOURCE)
+                .add(Items.FLINT_AND_STEEL)
+                .add(Items.FIRE_CHARGE)
+
+                .opt(ModCompat.MEK, "flamethrower");
+
         tags.tag(NorthstarItemTags.HEAT_RESISTANT)
                 .add(AllItems.NETHERITE_DIVING_HELMET)
                 .add(AllItems.NETHERITE_BACKTANK)
@@ -195,5 +201,6 @@ public class NorthstarTagGen {
         tags.tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
                 .opt(ModCompat.CDG, "biodiesel");
     }
+
 
 }
