@@ -19,6 +19,7 @@
     "WindmillBearingBlockEntityMixin",
     "block.CampfireBlockMixin",
     "block.CandleBlockMixin",
+    "block.CandleCakeBlockMixin",
     "block.FireBlockMixin",
     "block.FluidStateMixin",
     "block.IceBlockMixin",
