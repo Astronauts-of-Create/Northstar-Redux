@@ -5,8 +5,7 @@ ponder = "1.0.83"
 
 [libraries]
 create = "com.simibubi.create:create-1.20.1:6.0.6-205"
-copycats = "curse.maven:copycats-968398:6650089"
-embeddium = "maven.modrinth:embeddium:0.3.31+mc1.20.1"
+copycats = "com.copycatsplus:copycats:3.0.2+mc.1.20.1-forge-build.258"
 flywheel-forge-api = { module = "dev.engine-room.flywheel:flywheel-forge-api-1.20.1", version.ref = "flywheel" }
 flywheel-forge = { module = "dev.engine-room.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 forge = "net.minecraftforge:forge:1.20.1-47.4.0"
@@ -17,6 +16,5 @@ mclib = "com.eliotlash.mclib:mclib:20"
 minecraft = "com.mojang:minecraft:1.20.1"
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
-oculus = "maven.modrinth:oculus:1.20.1-1.8.0"
 ponder-forge = { module = "net.createmod.ponder:Ponder-Forge-1.20.1", version.ref = "ponder" }
 registrate = "com.tterrag.registrate:Registrate:MC1.20-1.3.3"

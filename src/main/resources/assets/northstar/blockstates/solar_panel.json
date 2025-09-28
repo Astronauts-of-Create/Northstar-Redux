@@ -1,22 +1,16 @@
 {
   "variants": {
-    "facing=down": {
-      "model": "northstar:block/solar_panel"
+    "facing=west": {
+      "model": "northstar:block/solar_panel/solar_panel_base_z"
     },
     "facing=east": {
-      "model": "northstar:block/solar_panel",
-      "y": 180
+      "model": "northstar:block/solar_panel/solar_panel_base_z"
     },
     "facing=north": {
-      "model": "northstar:block/solar_panel",
-      "y": 90
+      "model": "northstar:block/solar_panel/solar_panel_base_x"
     },
     "facing=south": {
-      "model": "northstar:block/solar_panel",
-      "y": 270
-    },
-    "facing=west": {
-      "model": "northstar:block/solar_panel"
+      "model": "northstar:block/solar_panel/solar_panel_base_x"
     }
   }
 }

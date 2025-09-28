@@ -7,7 +7,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -58,7 +57,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         int x = ((width - (imageWidth + (imageWidth / 2))) / 2);
         int y = (height - (imageHeight + (imageHeight / 2))) / 2;
         if (this.menu.contentHolder == null) {
-            System.out.println("Ruh roh");
+            Northstar.LOGGER.debug("Ruh roh");
         }
         if (this.menu.target != null)
             pPoseStack.drawString(font, Component.literal("Estimated Fuel Cost: " + this.menu.fuelCost + " gJ"), x + imageWidth - 110, y + imageWidth - 100, 0x313a54);
@@ -83,7 +82,7 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         if ((Math.abs(x + imageWidth - mouseX) < 9 && Math.abs(y + imageHeight - 79 + 9 - mouseY) < 9)) {
             List<Component> list = Lists.newArrayList();
             RenderSystem.colorMask(true, true, true, true);
-            list.add(CreateLang.translateDirect("northstar.gui.rocket_station.assemble").withStyle(ChatFormatting.WHITE));
+            list.add(Component.translatable("northstar.gui.rocket_station.assemble"));
 
             pPoseStack.renderComponentTooltip(font, list, mouseX, mouseY);
         }

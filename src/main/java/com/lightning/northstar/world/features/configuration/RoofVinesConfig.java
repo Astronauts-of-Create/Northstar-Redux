@@ -6,16 +6,14 @@ import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class RoofVinesConfig implements FeatureConfiguration {
-       public static final Codec<RoofVinesConfig> CODEC = RecordCodecBuilder.create((p_67849_) -> p_67849_.group(BlockStateProvider.CODEC.fieldOf("block_provider").forGetter((p_161248_) -> p_161248_.blockProvider), BlockStateProvider.CODEC.fieldOf("glow_provider").forGetter((p_161136_) -> p_161136_.glowProvider), IntProvider.codec(1, 128).fieldOf("size").forGetter((p_160802_) -> p_160802_.size)).apply(p_67849_, RoofVinesConfig::new));
+public record RoofVinesConfig(BlockStateProvider blockProvider,
+                              BlockStateProvider glowProvider,
+                              IntProvider size) implements FeatureConfiguration {
 
-       public final BlockStateProvider blockProvider;
-       public final BlockStateProvider glowProvider;
-       public final IntProvider size;
+    public static final Codec<RoofVinesConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
+            BlockStateProvider.CODEC.fieldOf("block_provider").forGetter(RoofVinesConfig::blockProvider),
+            BlockStateProvider.CODEC.fieldOf("glow_provider").forGetter(RoofVinesConfig::glowProvider),
+            IntProvider.codec(1, 128).fieldOf("size").forGetter(RoofVinesConfig::size)
+    ).apply(i, RoofVinesConfig::new));
 
-       public RoofVinesConfig(BlockStateProvider provider, BlockStateProvider glowprovider, IntProvider maxSize) {
-          this.size = maxSize;
-          this.blockProvider = provider;
-          this.glowProvider = provider;
-       }
 }

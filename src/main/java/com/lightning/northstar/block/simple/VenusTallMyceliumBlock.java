@@ -16,46 +16,36 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class VenusTallMyceliumBlock extends BushBlock {
+
     protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
-    protected static final VoxelShape CEILING_SHAPE = Block.box(2.0D, 3.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
 
-    public VenusTallMyceliumBlock(Properties pProperties) {
-        super(pProperties);
-        this.registerDefaultState(this.defaultBlockState().setValue(IS_ON_CEILING, false));
+    protected static final VoxelShape GROUND_SHAPE = box(2, 0, 2, 14, 13, 14);
+    protected static final VoxelShape CEILING_SHAPE = box(2, 3, 2, 14, 16, 14);
+
+    public VenusTallMyceliumBlock(Properties properties) {
+        super(properties);
+
+        registerDefaultState(defaultBlockState()
+                .setValue(IS_ON_CEILING, false));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(IS_ON_CEILING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(IS_ON_CEILING));
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (pState.getValue(IS_ON_CEILING)) {
-            return CEILING_SHAPE;
-        } else return SHAPE;
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return state.getValue(IS_ON_CEILING) ? CEILING_SHAPE : GROUND_SHAPE;
     }
 
     @Override
-    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        if (pState.getValue(IS_ON_CEILING)) {
-            BlockPos blockpos = pPos.above();
-            BlockState blockstate = pLevel.getBlockState(blockpos);
-            if (blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK)) {
-                return true;
-            } else {
-                return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.DOWN, this);
-            }
-        } else {
-            BlockPos blockpos = pPos.below();
-            BlockState blockstate = pLevel.getBlockState(blockpos);
-            if (blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK)) {
-                return true;
-            } else {
-                return blockstate.canSustainPlant(pLevel, blockpos, net.minecraft.core.Direction.UP, this);
-            }
-        }
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        BlockPos otherPos = state.getValue(IS_ON_CEILING) ? pos.above() : pos.below();
+        Direction direction = state.getValue(IS_ON_CEILING) ? Direction.DOWN : Direction.UP;
+
+        BlockState blockstate = level.getBlockState(otherPos);
+        return blockstate.is(BlockTags.MUSHROOM_GROW_BLOCK) || blockstate.canSustainPlant(level, otherPos, direction, this);
     }
 
     @Override
@@ -65,7 +55,6 @@ public class VenusTallMyceliumBlock extends BushBlock {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        System.out.println(pContext.getClickedFace());
         return this.defaultBlockState().setValue(IS_ON_CEILING, pContext.getClickedFace() == Direction.DOWN);
     }
 

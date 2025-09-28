@@ -1,7 +1,8 @@
 package com.lightning.northstar.block.simple;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -61,7 +62,7 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
         Direction dir;
 
 
-        if (pState.is(NorthstarTechBlocks.LASER.get()) || pState.is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get())) {
+        if (pState.is(NorthstarBlocks.LASER.get()) || pState.is(NorthstarBlocks.AMETHYST_CRYSTAL.get())) {
             dir = pState.getValue(DIRECTION);
         } else if (pState.is(Blocks.AIR)) {
             dir = pLaser.getValue(DIRECTION);
@@ -69,14 +70,14 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
             dir = Direction.DOWN;
         }
 
-        if (pState.getBlock() == NorthstarTechBlocks.LASER_LENSE.get()) {
+        if (pState.getBlock() == NorthstarBlocks.LASER_LENSE.get()) {
             blockpos$mutableblockpos = pPos.below().mutable();
         }
         while (pLevel.getBlockState(blockpos$mutableblockpos) == Blocks.AIR.defaultBlockState() ||
-                pLevel.getBlockState(blockpos$mutableblockpos).getBlock() == NorthstarTechBlocks.LASER.get() ||
-                pLevel.getBlockState(blockpos$mutableblockpos).getBlock() == NorthstarTechBlocks.AMETHYST_CRYSTAL.get()) {
+                pLevel.getBlockState(blockpos$mutableblockpos).getBlock() == NorthstarBlocks.LASER.get() ||
+                pLevel.getBlockState(blockpos$mutableblockpos).getBlock() == NorthstarBlocks.AMETHYST_CRYSTAL.get()) {
             boolean crystal_flag;
-            if (pLevel.getBlockState(blockpos$mutableblockpos).getBlock() == NorthstarTechBlocks.AMETHYST_CRYSTAL.get()) {
+            if (pLevel.getBlockState(blockpos$mutableblockpos).getBlock() == NorthstarBlocks.AMETHYST_CRYSTAL.get()) {
                 crystal_flag = true;
                 if (pLevel.getBlockState(blockpos$mutableblockpos).getValue(CrystalBlock.FACING) != dir.getOpposite())
                     dir = pLevel.getBlockState(blockpos$mutableblockpos).getValue(CrystalBlock.FACING);
@@ -87,7 +88,7 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
                     blockstate = blockstate.setValue(DIRECTION, dir);
 
                 blockpos$mutableblockpos.move(dir);
-                System.out.println("AMETHYST DETECTED!");
+                Northstar.LOGGER.debug("AMETHYST DETECTED!");
             } else {
                 crystal_flag = false;
             }
@@ -118,21 +119,21 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
 
 
     private static BlockState getLaserState(BlockState pBlockState, Level level, BlockPos pos) {
-        if (pBlockState.is(NorthstarTechBlocks.LASER.get())) {
+        if (pBlockState.is(NorthstarBlocks.LASER.get())) {
             return pBlockState;
-        } else if (pBlockState.is(NorthstarTechBlocks.LASER_LENSE.get())) {
-            return NorthstarTechBlocks.LASER.getDefaultState();
-        } else if (pBlockState.is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get())) {
+        } else if (pBlockState.is(NorthstarBlocks.LASER_LENSE.get())) {
+            return NorthstarBlocks.LASER.getDefaultState();
+        } else if (pBlockState.is(NorthstarBlocks.AMETHYST_CRYSTAL.get())) {
             int count = 0;
             BlockPos.MutableBlockPos blockpos = pos.mutable();
             for (Direction direction : Direction.values()) {
                 blockpos.setWithOffset(pos, direction);
-                if (level.getBlockState(blockpos).is(NorthstarTechBlocks.LASER.get())) {
+                if (level.getBlockState(blockpos).is(NorthstarBlocks.LASER.get())) {
                     count++;
                 }
             }
             if (count > 1) {
-                return NorthstarTechBlocks.LASER.getDefaultState().setValue(DIRECTION, pBlockState.getValue(CrystalBlock.FACING));
+                return NorthstarBlocks.LASER.getDefaultState().setValue(DIRECTION, pBlockState.getValue(CrystalBlock.FACING));
             } else {
                 return Blocks.AIR.defaultBlockState();
             }
@@ -151,12 +152,12 @@ public class LaserBlock extends Block implements SimpleWaterloggedBlock {
         Direction direction = pState.getValue(DIRECTION);
         BlockPos blockpos = pPos.relative(direction.getOpposite());
         if (direction != Direction.DOWN) {
-            System.out.println(pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get()));
+            Northstar.LOGGER.debug("{}", pLevel.getBlockState(blockpos).is(NorthstarBlocks.AMETHYST_CRYSTAL.get()));
             return true;
         }
-        return pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.LASER.get()) ||
-                pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.LASER_LENSE.get()) ||
-                pLevel.getBlockState(blockpos).is(NorthstarTechBlocks.AMETHYST_CRYSTAL.get());
+        return pLevel.getBlockState(blockpos).is(NorthstarBlocks.LASER.get()) ||
+                pLevel.getBlockState(blockpos).is(NorthstarBlocks.LASER_LENSE.get()) ||
+                pLevel.getBlockState(blockpos).is(NorthstarBlocks.AMETHYST_CRYSTAL.get());
     }
 
     @Override

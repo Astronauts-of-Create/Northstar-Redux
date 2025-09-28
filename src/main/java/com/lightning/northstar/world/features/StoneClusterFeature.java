@@ -30,17 +30,17 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
           BlockPos blockpos = pContext.origin();
           StoneClusterConfiguration config = pContext.config();
           RandomSource randomsource = pContext.random();
-//          if (!DripstoneUtils.isEmptyOrWater(worldgenlevel, blockpos)) {
-//             return false;
-//          } else
+    //   if (!DripstoneUtils.isEmptyOrWater(worldgenlevel, blockpos)) {
+    //  return false;
+    //   } else
 
-             int i = config.height.sample(randomsource);
-             float f = config.wetness.sample(randomsource);
-             float f1 = config.density.sample(randomsource);
-             int j = config.radius.sample(randomsource);
-             int k = config.radius.sample(randomsource);
-             float lavaness = config.lavaness.sample(randomsource);
-             float thirdthingness = config.thirdthingness.sample(randomsource);
+             int i = config.height().sample(randomsource);
+             float f = config.wetness().sample(randomsource);
+             float f1 = config.density().sample(randomsource);
+             int j = config.radius().sample(randomsource);
+             int k = config.radius().sample(randomsource);
+             float lavaness = config.lavaness().sample(randomsource);
+             float thirdthingness = config.thirdthingness().sample(randomsource);
 
              for(int l = -j; l <= j; ++l) {
                 for(int i1 = -k; i1 <= k; ++i1) {
@@ -55,7 +55,7 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
     }
 
      private void placeColumn(WorldGenLevel pLevel, RandomSource pRandom, BlockPos pPos, int pX, int pZ, float pWetness, float lavaness, float thirdthingness, double pChance, int pHeight, float pDensity, StoneClusterConfiguration config) {
-          Optional<Column> optional = Column.scan(pLevel, pPos, config.floorToCeilingSearchRange, block -> !block.isSolidRender(pLevel, pPos), blockdeny -> blockdeny.isSolidRender(pLevel, pPos));
+          Optional<Column> optional = Column.scan(pLevel, pPos, config.floorToCeilingSearchRange(), block -> !block.isSolidRender(pLevel, pPos), blockdeny -> blockdeny.isSolidRender(pLevel, pPos));
           if (optional.isPresent()) {
              OptionalInt optionalint = optional.get().getCeiling();
              OptionalInt optionalint1 = optional.get().getFloor();
@@ -84,7 +84,7 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
                     // && this.canPlacePool(pLevel, pPos.atY(optionalint1.getAsInt())
                    int i = optionalint1.getAsInt();
                    column = optional.get().withFloor(OptionalInt.of(i - 1));
-                   pLevel.setBlock(pPos.atY(i), config.fluid_provider.createLegacyBlock(), 2);
+                   pLevel.setBlock(pPos.atY(i), config.fluid_provider().createLegacyBlock(), 2);
                    this.markAboveForPostProcessing(pLevel, pPos.atY(i).below());
                 }
 
@@ -92,7 +92,7 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
                 boolean flag1 = pRandom.nextDouble() < pChance;
                 int j;
                 if (optionalint.isPresent() && flag1 && !this.isLava(pLevel, pPos.atY(optionalint.getAsInt()))) {
-                   int k = config.dripstoneBlockLayerThickness.sample(pRandom);
+                   int k = config.dripstoneBlockLayerThickness().sample(pRandom);
                    this.replaceBlocksWithStoneBlocks(pLevel, pPos.atY(optionalint.getAsInt()), k, Direction.UP);
                    int l;
                    if (optionalint2.isPresent()) {
@@ -111,10 +111,10 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
                 boolean flag2 = pRandom.nextDouble() < pChance;
                 int i3;
                 if (optionalint2.isPresent() && flag2 && !this.isLava(pLevel, pPos.atY(optionalint2.getAsInt()))) {
-                   int i1 = config.dripstoneBlockLayerThickness.sample(pRandom);
+                   int i1 = config.dripstoneBlockLayerThickness().sample(pRandom);
                    this.replaceBlocksWithStoneBlocks(pLevel, pPos.atY(optionalint2.getAsInt()), i1, Direction.DOWN);
                    if (optionalint.isPresent()) {
-                      i3 = Math.max(0, j + Mth.randomBetweenInclusive(pRandom, -config.maxStalagmiteStalactiteHeightDiff, config.maxStalagmiteStalactiteHeightDiff));
+                      i3 = Math.max(0, j + Mth.randomBetweenInclusive(pRandom, -config.maxStalagmiteStalactiteHeightDiff(), config.maxStalagmiteStalactiteHeightDiff()));
                    } else {
                       i3 = this.getStoneHeight(pRandom, pX, pZ, pDensity, pHeight, config);
                    }
@@ -159,22 +159,22 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
                  blockpos$mutableblockpos.move(pDirection);}
               }
 
-//           }
+    //    }
 
 
        private double getChanceOfStalagmiteOrStalactite(int pXRadius, int pZRadius, int pX, int pZ, StoneClusterConfiguration config) {
               int i = pXRadius - Math.abs(pX);
               int j = pZRadius - Math.abs(pZ);
               int k = Math.min(i, j);
-              return (double)Mth.clampedMap((float)k, 0.0F, (float)config.maxDistanceFromEdgeAffectingChanceOfDripstoneColumn, config.chanceOfDripstoneColumnAtMaxDistanceFromCenter, 1.0F);
+              return (double)Mth.clampedMap((float)k, 0.0F, (float) config.maxDistanceFromEdgeAffectingChanceOfDripstoneColumn(), config.chanceOfDripstoneColumnAtMaxDistanceFromCenter(), 1.0F);
            }
        private int getStoneHeight(RandomSource pRandom, int pX, int pZ, float pChance, int pHeight, StoneClusterConfiguration config) {
               if (pRandom.nextFloat() > pChance) {
                  return 0;
               } else {
                  int i = Math.abs(pX) + Math.abs(pZ);
-                 float f = (float)Mth.clampedMap((double)i, 0.0D, (double)config.maxDistanceFromCenterAffectingHeightBias, (double)pHeight / 2.0D, 0.0D);
-                 return (int)randomBetweenBiased(pRandom, 0.0F, (float)pHeight, f, (float)config.heightDeviation);
+                 float f = (float)Mth.clampedMap((double)i, 0.0D, (double) config.maxDistanceFromCenterAffectingHeightBias(), (double)pHeight / 2.0D, 0.0D);
+                 return (int)randomBetweenBiased(pRandom, 0.0F, (float)pHeight, f, (float) config.heightDeviation());
               }
            }
        private static float randomBetweenBiased(RandomSource pRandom, float pMin, float pMax, float pMean, float pDeviation) {
@@ -208,13 +208,13 @@ public class StoneClusterFeature extends Feature<StoneClusterConfiguration> {
 
        protected static void growPointyStone(LevelAccessor pLevel, BlockPos pPos, Direction pDirection, int pHeight, boolean pMergeTip, StoneClusterConfiguration config) {
                  BlockPos.MutableBlockPos blockpos$mutableblockpos = pPos.mutable();
-//                 buildBaseToTipColumn(pDirection, pPos, pHeight, pMergeTip, (p_190846_) -> {
-//                       p_190846_ = (BlockState) (AllPaletteStoneTypes.CRIMSITE.baseBlock);
+    //  buildBaseToTipColumn(pDirection, pPos, pHeight, pMergeTip, (p_190846_) -> {
+    //    p_190846_ = (BlockState) (AllPaletteStoneTypes.CRIMSITE.baseBlock);
                  for(int l = 0; l == pHeight; ++l) {
                     if(!pLevel.getBlockState(blockpos$mutableblockpos).isSolidRender(pLevel, blockpos$mutableblockpos))
-                    {pLevel.setBlock(blockpos$mutableblockpos, config.stone_provider.getState(RandomSource.create(), blockpos$mutableblockpos), 2);}
+                    {pLevel.setBlock(blockpos$mutableblockpos, config.stone_provider().getState(RandomSource.create(), blockpos$mutableblockpos), 2);}
                     blockpos$mutableblockpos.move(pDirection);}
-//                 }, config);
+    //  }, config);
            }
 
 

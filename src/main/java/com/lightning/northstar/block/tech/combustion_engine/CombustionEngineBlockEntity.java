@@ -1,7 +1,10 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
-import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.client.BasicTickableSoundInstance;
+import com.lightning.northstar.content.NorthstarSounds;
+import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
@@ -14,14 +17,21 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -34,9 +44,12 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     public SmartFluidTankBehaviour tank;
-    private float generatorSpeed;
-    private Fluid lastFluid;
-    private FuelType fuelType;
+    protected float generatorSpeed;
+    protected Fluid lastFluid;
+    protected FuelType fuelType;
+
+    @OnlyIn(Dist.CLIENT)
+    protected BasicTickableSoundInstance sound;
 
     public CombustionEngineBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -76,33 +89,56 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
         FluidStack fluid = tank.getPrimaryHandler().getFluid();
         if (!fluid.getFluid().equals(lastFluid)) {
             lastFluid = fluid.getFluid();
-            fuelType = FuelType.getFuelType(level.registryAccess(), lastFluid);
+            fuelType = FuelType.getFuelType(lastFluid);
         }
 
         FuelType fuel = this.fuelType;
         if (fuel == null) {
+            setGeneratorSpeed(0);
             return;
         }
 
         if (!NorthstarOxygen.hasOxygen(level, worldPosition)) {
-            if (generatorSpeed != 0) {
-                generatorSpeed = 0;
-                updateGeneratedRotation();
-            }
+            setGeneratorSpeed(0);
             return;
         }
 
         if (fluid.getAmount() < fuel.combustionEngineEfficiency()) {
-            if (generatorSpeed != 0) {
-                generatorSpeed = 0;
-                updateGeneratedRotation();
-            }
+            setGeneratorSpeed(0);
         } else if (generatorSpeed == 0) {
-            generatorSpeed = fuel.combustionEngineRpm();
-            updateGeneratedRotation();
+            setGeneratorSpeed(fuel.combustionEngineRpm());
         }
 
         tank.getPrimaryHandler().drain(fuel.combustionEngineEfficiency(), FluidAction.EXECUTE);
+    }
+
+    private void setGeneratorSpeed(float generatorSpeed) {
+        if (this.generatorSpeed != generatorSpeed) {
+            this.generatorSpeed = generatorSpeed;
+            updateGeneratedRotation();
+        }
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void tickAudio() {
+        super.tickAudio();
+
+        if (!Mth.equal(generatorSpeed, 0)) {
+            if (sound == null || sound.isStopped()) {
+                sound = new BasicTickableSoundInstance(NorthstarSounds.COMBUSTION_ENGINE.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
+                sound.setLooping(true);
+                Minecraft.getInstance().getSoundManager().play(sound);
+            }
+        } else if (sound != null) {
+            sound.cancel();
+            sound = null;
+        }
+    }
+
+    @Override
+    protected boolean isNoisy() {
+        return false; // we're still noisy but disable the base Create sounds
     }
 
     @Override
@@ -143,7 +179,29 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
 
+        if (fuelType != null) {
+            NorthstarLang.translate("gui.goggles.fuel_use")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            CreateLang.number(fuelType.combustionEngineEfficiency())
+                    .style(ChatFormatting.AQUA)
+                    .add(NorthstarLang.MB_PER_TICK)
+                    .forGoggles(tooltip, 1);
+        }
+
         return true;
+    }
+
+    @Override
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
+        generatorSpeed = compound.getFloat("GeneratorSpeed");
+    }
+
+    @Override
+    protected void write(CompoundTag compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
+        compound.putFloat("GeneratorSpeed", generatorSpeed);
     }
 
 }

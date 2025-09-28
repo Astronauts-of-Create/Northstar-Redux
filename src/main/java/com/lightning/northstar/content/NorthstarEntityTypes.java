@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.Northstar;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.entity.projectiles.LunargradeSpit;
 import com.lightning.northstar.entity.projectiles.VenusScorpionSpit;
@@ -9,129 +9,195 @@ import com.lightning.northstar.entity.variants.FrozenZombieEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
 import com.simibubi.create.content.contraptions.render.ContraptionVisual;
-import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.tterrag.registrate.util.entry.EntityEntry;
-import com.tterrag.registrate.util.nullness.NonNullConsumer;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.createmod.catnip.lang.Lang;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityType.EntityFactory;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.world.level.storage.loot.LootTable;
 
+import static com.lightning.northstar.Northstar.REGISTRATE;
+
+// TODO: mobs don't have loot tables?
 public class NorthstarEntityTypes {
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Northstar.MOD_ID);
+    // region Venus
 
-    //actual animals / entities
+    public static final EntityEntry<VenusMimicEntity> VENUS_MIMIC = REGISTRATE
+            .entity("venus_mimic", VenusMimicEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(1.0f, 1.0f)
+                    .fireImmune()
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
+    public static final EntityEntry<VenusScorpionEntity> VENUS_SCORPION = REGISTRATE
+            .entity("venus_scorpion", VenusScorpionEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.8f, 1.5f)
+                    .fireImmune()
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    // venus
-    public static final RegistryObject<EntityType<VenusMimicEntity>> VENUS_MIMIC = buildEntity(
-            VenusMimicEntity::new, VenusMimicEntity.class, 1F, 1F, "venus_mimic", MobCategory.MONSTER, true, 8);
+    public static final EntityEntry<VenusStoneBullEntity> VENUS_STONE_BULL = REGISTRATE
+            .entity("venus_stone_bull", VenusStoneBullEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(1.85f, 1.5f)
+                    .fireImmune()
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<VenusScorpionEntity>> VENUS_SCORPION = buildEntity(
-            VenusScorpionEntity::new, VenusScorpionEntity.class, 0.8F, 1.5F, "venus_scorpion", MobCategory.MONSTER, true, 8);
+    public static final EntityEntry<VenusVultureEntity> VENUS_VULTURE = REGISTRATE
+            .entity("venus_vulture", VenusVultureEntity::new, MobCategory.CREATURE)
+            .properties(p -> p.sized(0.8f, 0.9f)
+                    .fireImmune()
+                    .clientTrackingRange(16))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<VenusStoneBullEntity>> VENUS_STONE_BULL = buildEntity(
-            VenusStoneBullEntity::new, VenusStoneBullEntity.class, 1.85F, 1.5F, "venus_stone_bull", MobCategory.MONSTER, true, 8);
+    // endregion
+    // region Mars
 
-    public static final RegistryObject<EntityType<VenusVultureEntity>> VENUS_VULTURE = buildEntity(
-            VenusVultureEntity::new, VenusVultureEntity.class, 0.8f, 0.9f, "venus_vulture", MobCategory.CREATURE, true, 16);
+    public static final EntityEntry<MarsWormEntity> MARS_WORM = REGISTRATE
+            .entity("mars_worm", MarsWormEntity::new, MobCategory.MONSTER)
+            .lang("Mars Echo Worm")
+            .properties(p -> p.sized(1.5f, 0.75f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    //mars
-    public static final RegistryObject<EntityType<MarsWormEntity>> MARS_WORM = buildEntity(
-            MarsWormEntity::new, MarsWormEntity.class, 1.5f, 0.75f, "mars_worm", MobCategory.MONSTER, false, 8);
+    public static final EntityEntry<MarsToadEntity> MARS_TOAD = REGISTRATE
+            .entity("mars_toad", MarsToadEntity::new, MobCategory.MONSTER)
+            .lang("Mars Root Toad")
+            .properties(p -> p.sized(0.7f, 0.5f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<MarsToadEntity>> MARS_TOAD = buildEntity(
-            MarsToadEntity::new, MarsToadEntity.class, 0.7f, 0.5f, "mars_toad", MobCategory.MONSTER, false, 8);
+    public static final EntityEntry<MarsCobraEntity> MARS_COBRA = REGISTRATE
+            .entity("mars_cobra", MarsCobraEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(1f, 0.7f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<MarsCobraEntity>> MARS_COBRA = buildEntity(
-            MarsCobraEntity::new, MarsCobraEntity.class, 1f, 0.7f, "mars_cobra", MobCategory.MONSTER, false, 8);
+    public static final EntityEntry<MarsMothEntity> MARS_MOTH = REGISTRATE
+            .entity("mars_moth", MarsMothEntity::new, MobCategory.MONSTER)
+            .lang("Mars Devil Moth")
+            .properties(p -> p.sized(0.8f, 0.9f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<MarsMothEntity>> MARS_MOTH = buildEntity(
-            MarsMothEntity::new, MarsMothEntity.class, 0.8f, 0.9f, "mars_moth", MobCategory.MONSTER, false, 8);
+    // endregion
+    // region Moon
 
-    //moon
-    public static final RegistryObject<EntityType<MoonLunargradeEntity>> MOON_LUNARGRADE = buildEntity(
-            MoonLunargradeEntity::new, MoonLunargradeEntity.class, 0.9f, 0.7f, "moon_lunargrade", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MoonSnailEntity>> MOON_SNAIL = buildEntity(
-            MoonSnailEntity::new, MoonSnailEntity.class, 0.5f, 0.5f, "moon_snail", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MoonEelEntity>> MOON_EEL = buildEntity(
-            MoonEelEntity::new, MoonEelEntity.class, 0.5f, 0.3f, "moon_eel", MobCategory.MONSTER, false, 8);
+    public static final EntityEntry<MoonLunargradeEntity> MOON_LUNARGRADE = REGISTRATE
+            .entity("moon_lunargrade", MoonLunargradeEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.9f, 0.7f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
+    public static final EntityEntry<MoonSnailEntity> MOON_SNAIL = REGISTRATE
+            .entity("moon_snail", MoonSnailEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.5f, 0.5f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<FrozenZombieEntity>> FROZEN_ZOMBIE = buildEntity(
-            FrozenZombieEntity::new, FrozenZombieEntity.class, 0.6F, 1.95F, "frozen_zombie", MobCategory.MONSTER, false, 8);
+    public static final EntityEntry<MoonEelEntity> MOON_EEL = REGISTRATE
+            .entity("moon_eel", MoonEelEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.5f, 0.3f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    //mercury
-    public static final RegistryObject<EntityType<MercuryRaptorEntity>> MERCURY_RAPTOR = buildEntity(
-            MercuryRaptorEntity::new, MercuryRaptorEntity.class, 0.7f, 1.4f, "mercury_raptor", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MercuryRoachEntity>> MERCURY_ROACH = buildEntity(
-            MercuryRoachEntity::new, MercuryRoachEntity.class, 0.6f, 0.5f, "mercury_roach", MobCategory.MONSTER, false, 8);
-    public static final RegistryObject<EntityType<MercuryTortoiseEntity>> MERCURY_TORTOISE = buildEntity(
-            MercuryTortoiseEntity::new, MercuryTortoiseEntity.class, 1f, 0.9f, "mercury_tortoise", MobCategory.MONSTER, false, 8);
+    public static final EntityEntry<FrozenZombieEntity> FROZEN_ZOMBIE = REGISTRATE
+            .entity("frozen_zombie", FrozenZombieEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.6f, 1.95f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
+    // endregion
+    // region Mercury
 
-    // misc
+    public static final EntityEntry<MercuryRaptorEntity> MERCURY_RAPTOR = REGISTRATE
+            .entity("mercury_raptor", MercuryRaptorEntity::new, MobCategory.MONSTER)
+            .lang("Mercurian Raptor")
+            .properties(p -> p.sized(0.7f, 1.4f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
 
-    public static final RegistryObject<EntityType<LunargradeSpit>> LUNARGRADE_SPIT = buildEntity(
-            LunargradeSpit::new, LunargradeSpit.class, 0.25f, 0.25f, "lunargrade_spit", MobCategory.MISC, false, 8);
-    public static final RegistryObject<EntityType<VenusScorpionSpit>> VENUS_SCORPION_SPIT = buildEntity(
-            VenusScorpionSpit::new, VenusScorpionSpit.class, 0.25f, 0.25f, "venus_scorpion_spit", MobCategory.MISC, false, 8);
+    public static final EntityEntry<MercuryRoachEntity> MERCURY_ROACH = REGISTRATE
+            .entity("mercury_roach", MercuryRoachEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.6f, 0.5f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
+
+    public static final EntityEntry<MercuryTortoiseEntity> MERCURY_TORTOISE = REGISTRATE
+            .entity("mercury_tortoise", MercuryTortoiseEntity::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(1f, 0.9f)
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.CAN_SURVIVE_COLD.tag)
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .loot((p, e) -> p.add(e, LootTable.lootTable()))
+            .register();
+
+    // endregion
+
+    public static final EntityEntry<LunargradeSpit> LUNARGRADE_SPIT = REGISTRATE.
+            <LunargradeSpit>entity("lunargrade_spit", LunargradeSpit::new, MobCategory.MISC)
+            .properties(p -> p.sized(0.25f, 0.25f)
+                    .clientTrackingRange(8))
+            .register();
+
+    public static final EntityEntry<VenusScorpionSpit> VENUS_SCORPION_SPIT = REGISTRATE
+            .<VenusScorpionSpit>entity("venus_scorpion_spit", VenusScorpionSpit::new, MobCategory.MISC)
+            .properties(p -> p.sized(0.25f, 0.25f)
+                    .clientTrackingRange(8))
+            .register();
 
     // contraptions
 
-    public static final EntityEntry<RocketContraptionEntity> ROCKET_CONTRAPTION =
-            contraption("rocket_contraption", RocketContraptionEntity::new, () -> ContraptionEntityRenderer::new, 200, 40, false)
-                    .visual(() -> ContraptionVisual::new)
-                    .register();
+    public static final EntityEntry<RocketContraptionEntity> ROCKET_CONTRAPTION = REGISTRATE
+            .entity("rocket_contraption", RocketContraptionEntity::new, MobCategory.MISC)
+            .visual(() -> ContraptionVisual::new)
+            .lang("Rocket")
+            .properties(b -> b.setTrackingRange(200)
+                    .setUpdateInterval(40)
+                    .setShouldReceiveVelocityUpdates(false))
+            .properties(AbstractContraptionEntity::build)
+            .properties(EntityType.Builder::fireImmune)
+            .renderer(() -> ContraptionEntityRenderer::new)
+            .register();
 
-    public static <T extends Entity> RegistryObject<EntityType<T>> buildEntity(EntityType.EntityFactory<T> entity,
-                                                                               Class<T> entityClass, float width, float height, String name, MobCategory category, boolean fireImmune, int clientRange) {
-        if (fireImmune) {
-            return ENTITIES.register(name,
-                    () -> EntityType.Builder.of(entity, category).fireImmune().sized(width, height).clientTrackingRange(clientRange).build(name));
-        } else {
-            return ENTITIES.register(name,
-                    () -> EntityType.Builder.of(entity, category).sized(width, height).build(name));
-        }
-    }
-
-    private static <T extends Entity> CreateEntityBuilder<T, ?> contraption(String name, EntityFactory<T> factory,
-                                                                            NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer, int range,
-                                                                            int updateFrequency, boolean sendVelocity) {
-        return register(name, factory, renderer, MobCategory.MISC, range, updateFrequency, sendVelocity, true,
-                AbstractContraptionEntity::build);
-    }
-
-    private static <T extends Entity> CreateEntityBuilder<T, ?> register(String name, EntityFactory<T> factory,
-                                                                         NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
-                                                                         MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
-                                                                         NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
-        String id = Lang.asId(name);
-        return (CreateEntityBuilder<T, ?>) Northstar.REGISTRATE
-                .entity(id, factory, group)
-                .properties(b -> b.setTrackingRange(range)
-                        .setUpdateInterval(updateFrequency)
-                        .setShouldReceiveVelocityUpdates(sendVelocity))
-                .properties(propertyBuilder)
-                .properties(b -> {
-                    if (immuneToFire)
-                        b.fireImmune();
-                })
-                .renderer(renderer);
-    }
-
-    public static void register(IEventBus eventBus) {
-        ENTITIES.register(eventBus);
+    public static void register() {
     }
 
 }

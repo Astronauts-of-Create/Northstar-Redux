@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin;
 
-import com.lightning.northstar.contraptions.RocketHandler;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import net.minecraft.resources.ResourceKey;

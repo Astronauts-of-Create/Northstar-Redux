@@ -4,6 +4,8 @@ import net.minecraft.world.damagesource.DamageSource;
 
 public interface NorthstarDamageSources {
 
-    DamageSource northstar$suffocation();
+    default DamageSource northstar$suffocation() {
+        throw new RuntimeException("This should be implemented by a mixin!");
+    }
 
 }

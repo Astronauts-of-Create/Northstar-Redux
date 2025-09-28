@@ -1,7 +1,7 @@
 package com.lightning.northstar.compat.jei.animations;
 
 import com.lightning.northstar.content.NorthstarPartialModels;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
@@ -26,7 +26,7 @@ public class AnimatedEngraver extends AnimatedKinetics {
                 .rotateBlock(0, 0, getCurrentAngle())
                 .scale(scale)
                 .render(graphics);
-        blockElement(NorthstarTechBlocks.CIRCUIT_ENGRAVER.getDefaultState())
+        blockElement(NorthstarBlocks.CIRCUIT_ENGRAVER.getDefaultState())
                 .scale(scale)
                 .render(graphics);
         blockElement(NorthstarPartialModels.CIRCUIT_ENGRAVER_HEAD)

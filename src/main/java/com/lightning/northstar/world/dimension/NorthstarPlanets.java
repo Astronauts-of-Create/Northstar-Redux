@@ -238,8 +238,8 @@ public class NorthstarPlanets {
         double eris_radian = eris_orbit_speed * time;
         eris_x = (eris_origin_x + (Math.cos(eris_radian)* eris_orbit_radius_x));
         eris_y = (eris_origin_y + (Math.sin(eris_radian)* eris_orbit_radius_y));
-//      System.out.println(mars_x + "   Mars X");
-//      System.out.println(mars_y + "   Mars Y");
+        Northstar.LOGGER.debug("{}   Mars X", mars_x);
+        Northstar.LOGGER.debug("{}   Mars Y", mars_y);
     }
 
     public static double getPlanetX(String name) {
@@ -427,14 +427,6 @@ public class NorthstarPlanets {
 
 
         return 1;
-    }
-
-    public static String targetGetter(String thing) {
-        String newthing = "";
-        for(int i = 0;i < thing.length(); i++) {
-            if(i > 6 && i < thing.length() - 2) {newthing += thing.charAt(i);}
-        }
-        return newthing;
     }
 
     public static boolean isInOrbit(ResourceKey<Level> level) {

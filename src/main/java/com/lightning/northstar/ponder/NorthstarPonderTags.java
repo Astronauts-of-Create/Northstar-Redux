@@ -2,7 +2,7 @@ package com.lightning.northstar.ponder;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarTechBlocks;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -25,9 +25,9 @@ public class NorthstarPonderTags {
 
         HELPER.addToTag(SPACE_EXPLORATION)
                 // see comment in NorthstarPonderPlugin
-                //.add(NorthstarTechBlocks.IRON_COGWHEEL)
-                //.add(NorthstarTechBlocks.IRON_LARGE_COGWHEEL)
-                .add(NorthstarTechBlocks.ROCKET_CONTROLS);
+                //.add(NorthstarBlocks.IRON_COGWHEEL)
+                //.add(NorthstarBlocks.IRON_LARGE_COGWHEEL)
+                .add(NorthstarBlocks.ROCKET_CONTROLS);
     }
 
 }

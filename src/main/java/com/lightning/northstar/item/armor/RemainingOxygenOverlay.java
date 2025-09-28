@@ -7,13 +7,13 @@ import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class RemainingOxygenOverlay implements IGuiOverlay {
+
     public static final RemainingOxygenOverlay INSTANCE = new RemainingOxygenOverlay();
 
     @Override
@@ -21,38 +21,31 @@ public class RemainingOxygenOverlay implements IGuiOverlay {
         PoseStack pose = graphics.pose();
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
-            return;
-
         LocalPlayer player = mc.player;
-        if (player == null)
-            return;
-        if (player.isCreative())
+        if (mc.options.hideGui || 
+                player == null ||
+                player.isSpectator() || 
+                player.isCreative() ||
+                NorthstarOxygen.hasOxygen(player.level(), player.position()))
             return;
 
+        ItemStack tank = NorthstarOxygen.getOxy(player);
+        if (tank.isEmpty())
+            return;
+        int remainingTime = tank.getOrCreateTag().getInt("Oxygen");
 
         pose.pushPose();
+        pose.translate(screenWidth / 2f + 95, screenHeight - 40, 0);
 
-        ItemStack oxytank = NorthstarOxygen.getOxy(player);
+        int color = 0xFF_FFFFFF;
+        if (remainingTime <= 60 && remainingTime % 2 == 0)
+            color = Color.mixColors(0xFF_FF0000, color, Math.max(remainingTime / 60f, .25f));
 
-        if (oxytank.isEmpty()) {
-            return;
-        }
-
-        int timeLeft = oxytank.getOrCreateTag().getInt("Oxygen");
-
-        pose.translate(screenWidth / 2 + 90, screenHeight - 53 + (oxytank.getItem()
-                .isFireResistant() ? 9 : 0), 0);
-
-        Component text = Component.literal(net.minecraft.util.StringUtil.formatTickDuration(Math.max(0, timeLeft - 1) * 20));
-        GuiGameElement.of(oxytank)
+        GuiGameElement.of(tank)
                 .at(0, 0)
                 .render(graphics);
-        int color = 0xFF_FFFFFF;
-        if (timeLeft < 60 && timeLeft % 2 == 0) {
-            color = Color.mixColors(0xFF_FF0000, color, Math.max(timeLeft / 60f, .25f));
-        }
-        graphics.drawString(mc.font, text, 16, 5, color);
+        graphics.drawString(mc.font, StringUtil.formatTickDuration(Math.max(0, remainingTime - 1) * 20), 18, 5, color);
+
         pose.popPose();
     }
 

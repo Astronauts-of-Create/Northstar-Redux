@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.jet_engine;
 
-import com.lightning.northstar.contraptions.RocketContraption;
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraption;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.particle.*;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -39,7 +39,7 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
 
             if (rce.lift_vel > 0) {
                 Vec3 v = context.position;
-//                Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
+    // Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
                 if (rce.blasting) {
                     if (status == ParticleStatus.ALL && r.nextInt(8) == 0)
                         context.world.addAlwaysVisibleParticle(new RocketSmokeParticleData(), v.x, v.y, v.z, 0, 0, 0);
@@ -51,7 +51,7 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
 
             } else if (rce.landingMode && rce.lift_vel < 0 && context.contraption.entity.getY() < rce.getSlowdownHeightThreshold()) {
                 Vec3 v = context.position;
-//                Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
+    // Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
                 if (rce.slowing) {
                     if (status == ParticleStatus.ALL && r.nextInt(3) == 0)
                         context.world.addAlwaysVisibleParticle(new RocketSmokeLandingParticleData(), v.x, v.y - 2, v.z, 0, 0, 0);
@@ -61,7 +61,7 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
             }
         } else if (status == ParticleStatus.ALL) {//Stalling
             Vec3 v = context.position;
-//            Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
+    // Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
             if (r.nextInt(8) == 0) context.world.addParticle(new ColdAirParticleData(), v.x, v.y, v.z, 0, 0, 0);
         }
     }

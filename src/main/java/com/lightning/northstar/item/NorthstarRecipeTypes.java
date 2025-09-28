@@ -4,7 +4,6 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisRecipe;
 import com.lightning.northstar.block.tech.ice_box.FreezingRecipe;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
@@ -15,7 +14,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,7 +28,7 @@ public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
 
     ENGRAVING(EngravingRecipe::new),
     ELECTROLYSIS(ElectrolysisRecipe::new),
-    FREEZING(FreezingRecipe::new);
+    FREEZING(FreezingRecipe.Serializer::new);
 
     private final ResourceLocation id;
     private final RegistryObject<RecipeSerializer<?>> serializerObject;
@@ -38,37 +36,23 @@ public enum NorthstarRecipeTypes implements IRecipeTypeInfo {
     private final RegistryObject<RecipeType<?>> typeObject;
     private final Supplier<RecipeType<?>> type;
 
-    NorthstarRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, Supplier<RecipeType<?>> typeSupplier, boolean registerType) {
-        String name = Lang.asId(name());
-        id = Create.asResource(name);
-        serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
-        if (registerType) {
-            typeObject = Registers.TYPE_REGISTER.register(name, typeSupplier);
-            type = typeObject;
-        } else {
-            typeObject = null;
-            type = typeSupplier;
-        }
+    NorthstarRecipeTypes(ProcessingRecipeFactory<?> processingFactory) {
+        this(() -> new ProcessingRecipeSerializer<>(processingFactory));
     }
 
     NorthstarRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
         String name = Lang.asId(name());
+
         id = Northstar.asResource(name);
         serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
         typeObject = Registers.TYPE_REGISTER.register(name, () -> RecipeType.simple(id));
         type = typeObject;
     }
 
-    NorthstarRecipeTypes(ProcessingRecipeFactory<?> processingFactory) {
-        this(() -> new ProcessingRecipeSerializer<>(processingFactory));
-    }
-
     public static void register(IEventBus modEventBus) {
-        ShapedRecipe.setCraftingSize(9, 9);
         Registers.SERIALIZER_REGISTER.register(modEventBus);
         Registers.TYPE_REGISTER.register(modEventBus);
     }
-
 
     @Override
     public ResourceLocation getId() {

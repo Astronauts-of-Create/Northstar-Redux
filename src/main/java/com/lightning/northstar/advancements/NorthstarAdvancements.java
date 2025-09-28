@@ -3,13 +3,11 @@ package com.lightning.northstar.advancements;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.mojang.logging.LogUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import org.slf4j.Logger;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,15 +22,14 @@ import static com.lightning.northstar.advancements.NorthstarAdvancement.TaskType
 public class NorthstarAdvancements implements DataProvider {
 
     public static final List<NorthstarAdvancement> ENTRIES = new ArrayList<>();
-    public static final NorthstarAdvancement START = null,
+    public static final NorthstarAdvancement
+            $ = null,
 
     ROOT = create("root", b -> b.icon(NorthstarBlocks.TELESCOPE.get().asItem())
             .title("Welcome to Northstar!")
             .description("Shoot for the stars!")
             .awardedForFree()
             .special(SILENT)),
-
-    // Andesite - Central Branch
 
     ONE_SMALL_STEP = create("one_small_step", b -> b.icon(NorthstarBlocks.MOON_SAND.get().asItem())
             .title("One Small Step")
@@ -42,29 +39,25 @@ public class NorthstarAdvancements implements DataProvider {
     ONE_GIANT_LEAP = create("one_giant_leap", b -> b.icon(NorthstarBlocks.MARS_SAND.get().asItem())
             .title("One Giant Leap")
             .description("Set foot on Mars")
-            .after(ONE_SMALL_STEP)),
-
-
-    END = null;
+            .after(ONE_SMALL_STEP));
 
     private static NorthstarAdvancement create(String id, UnaryOperator<NorthstarAdvancement.Builder> b) {
         return new NorthstarAdvancement(id, b);
     }
 
-    // Datagen
+    // region DataGen
 
-    private static final Logger LOGGER = LogUtils.getLogger();
-    private final DataGenerator generator;
+    private final PackOutput output;
 
-    public NorthstarAdvancements(DataGenerator generatorIn) {
-        this.generator = generatorIn;
+    public NorthstarAdvancements(PackOutput output) {
+        this.output = output;
     }
 
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
         List<CompletableFuture<?>> futures = new ArrayList<>();
 
-        Path path = this.generator.getPackOutput().getOutputFolder();
+        Path path = output.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
         Consumer<Advancement> consumer = (p_204017_3_) -> {
             if (!set.add(p_204017_3_.getId()))
@@ -100,6 +93,8 @@ public class NorthstarAdvancements implements DataProvider {
             advancement.appendToLang(object);
         return object;
     }
+
+    // endregion
 
     public static void register() {
     }

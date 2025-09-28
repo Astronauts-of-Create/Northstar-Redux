@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import net.minecraft.core.BlockPos;
@@ -183,9 +184,8 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             double d0 = vec31.length();
             vec31 = vec31.normalize();
             double d1 = vec3.dot(vec31);
-//             System.out.println(d1);
-//             System.out.println("comparer: " + String.valueOf(1.0D - 0.35D / (d0 / 8)));
-            return d1 > 1.0D - 0.35D / (d0 / 8) ? pPlayer.hasLineOfSight(this) : false;
+            Northstar.LOGGER.debug("{}, comparer: {}", d1, (1.0D - 0.35D / (d0 / 8)));
+            return d1 > 1.0D - 0.35D / (d0 / 8) && pPlayer.hasLineOfSight(this);
         }
     }
 
@@ -258,7 +258,6 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
         public void start() {
             this.aggroTime = this.adjustedTickDelay(5);
             this.cobra.lookedAt++;
-            ;
         }
 
         @Override
@@ -275,7 +274,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
                     return false;
                 } else {
                     stareTimer = Mth.clamp(stareTimer + 1, 0, 120);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                     if (stareTimer >= 32) {
                         this.cobra.lookAt(this.pendingTarget, 10.0F, 10.0F);
                         return true;
@@ -296,7 +295,7 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             if (this.pendingTarget != null) {
                 if (!this.cobra.isLookingAtMe(this.pendingTarget)) {
                     stareTimer = Mth.clamp(stareTimer, 0, stareTimer - 1);
-                    System.out.println(stareTimer);
+                    Northstar.LOGGER.debug("{}", stareTimer);
                 }
                 if (--this.aggroTime <= 0) {
                     this.target = this.pendingTarget;

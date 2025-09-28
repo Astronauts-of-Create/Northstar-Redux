@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.entity.goals.ChargeAtTargetGoal;
@@ -144,9 +145,7 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
         }
 
         if (!this.level().isClientSide && this.getTarget() != null) {
-//            System.out.println(this.getTarget());
-//            System.out.println("charging: " + charging);
-//            System.out.println("chargeTimer: " + chargeTimer);
+            Northstar.LOGGER.debug("target: {}, charging: {}, chargeTime: {}", getTarget(), charging, chargeTimer);
         }
     }
 

@@ -62,7 +62,7 @@ public class MarsRoots extends Feature<MarsRootsConfig> {
           };
        }
 
-       protected static enum VeinType {
+       protected enum VeinType {
           COPPER(NorthstarBlocks.ARGYRE_LOG.get().defaultBlockState(), Blocks.GLOWSTONE.defaultBlockState(), NorthstarBlocks.ARGYRE_LOG.get().defaultBlockState(), 0, 50),
           IRON(Blocks.DEEPSLATE_IRON_ORE.defaultBlockState(), Blocks.GLOWSTONE.defaultBlockState(), Blocks.TUFF.defaultBlockState(), -60, -8);
 
@@ -72,7 +72,7 @@ public class MarsRoots extends Feature<MarsRootsConfig> {
           protected final int minY;
           protected final int maxY;
 
-          private VeinType(BlockState p_209684_, BlockState p_209685_, BlockState p_209686_, int p_209687_, int p_209688_) {
+          VeinType(BlockState p_209684_, BlockState p_209685_, BlockState p_209686_, int p_209687_, int p_209688_) {
              this.ore = p_209684_;
              this.rawOreBlock = p_209685_;
              this.filler = p_209686_;

@@ -13,16 +13,15 @@ Make sure that no existing issue matches the bug or feature and that it isn't pl
 - Keep commit messages short but descriptive and avoid commiting unrelated changes together.
 - When making a PR, avoid making changes unrelated to the main goal of what you're trying to change.
 - Do not make large changes without discussing them first. If in doubt please open an issue or join our [Discord](https://discord.gg/nn96VTzeqj).
+- Do not add mods as dependencies unless absolutely required. For testing in the development environment, mods should go in the `run/mods-obf/` folder
 - Always test your changes. Make sure that the code compiles and that the change works as expected.
 
 ## Known issues:
 - Not all entities might be affected by custom gravity (e.g. falling blocks).
 
 ## Planned:
-- 1.21.1
 - Fabric (waiting for Create-Fabric to be updated to 6.0)
 - Data-driven planets (datapack defined solar system) (next major update)
-- Oxygen/temperature system redesign, performance optimizations & leak detector
 - [Orrery](https://en.wikipedia.org/wiki/Orrery#/media/File:Orrery_small.jpg) that uses kinetic force to show a live view of the planets. With a menu to change the base planet (in case of multiple systems) and the time mode between real time (synced with world), accelerated time or frozen at a specific time.
 - Space stations
 - Distant Horizons integration for takeoffs and space stations

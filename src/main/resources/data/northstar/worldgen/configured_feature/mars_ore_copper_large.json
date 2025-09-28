@@ -1,13 +1,13 @@
 {
   "type": "minecraft:ore",
   "config": {
-    "size": 16,
+    "size": 20,
     "discard_chance_on_air_exposure": 0,
     "targets": [
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mars_stone_replaceables"
+          "tag": "northstar:mars_stone_replaceable"
         },
         "state": {
           "Name": "northstar:mars_copper_ore"
@@ -16,7 +16,7 @@
       {
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "northstar:mars_deep_stone_replaceables"
+          "tag": "northstar:mars_deep_stone_replaceable"
         },
         "state": {
           "Name": "northstar:mars_deep_copper_ore"

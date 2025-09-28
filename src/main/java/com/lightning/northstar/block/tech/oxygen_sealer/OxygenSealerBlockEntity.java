@@ -2,9 +2,9 @@ package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.particle.OxyFlowParticleData;
 import com.lightning.northstar.util.NorthstarLang;
+import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
@@ -17,10 +17,13 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,15 +32,15 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
-public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation {
+public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, SealingProvider {
 
-    private final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
-    private SmartFluidTankBehaviour oxygenTank;
-    private int sealCooldown;
-    private float drain;
-    private boolean active;
+    protected final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
+    protected SmartFluidTankBehaviour oxygenTank;
+    protected int sealCooldown;
+    protected float drain;
+    protected boolean active;
 
-    private int audioTick;
+    protected int audioTick;
 
     public OxygenSealerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -59,14 +62,14 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     public void initialize() {
         super.initialize();
 
-        NorthstarOxygen.getDimension(level).getSealers().add(this);
+        level.northstar$oxygen().registerSealer(this);
     }
 
     @Override
-    public void destroy() {
-        super.destroy();
+    public void invalidate() {
+        super.invalidate();
 
-        NorthstarOxygen.getDimension(level).getSealers().remove(this);
+        level.northstar$oxygen().unregisterSealer(this);
     }
 
     @Override
@@ -87,8 +90,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         }
 
         FluidStack fluid = oxygenTank.getPrimaryHandler().getFluid();
-        boolean isOxygen = NorthstarFluidTags.IS_OXY.matches(fluid) || NorthstarFluidTags.FORGE_OXYGEN.matches(fluid);
-        if (!isOxygen || fluid.isEmpty() || isOverStressed() || speed == 0f) {
+        if (!NorthstarOxygen.isOxygen(fluid.getFluid()) || fluid.isEmpty() || isOverStressed() || speed == 0f) {
             active = false;
             return;
         }
@@ -99,7 +101,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         active = drain < 1;
 
         if (active) {
-            drain += sealer.getSealedBlocks().size() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF();
+            drain += sealer.getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF();
 
             if (level.isClientSide) {
                 if (audioTick++ % 13 == 0) {
@@ -113,6 +115,20 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         }
     }
 
+    @Override
+    public boolean isSealed(Vec3 pos) {
+        return isSealed(Mth.floor(pos.x), Mth.floor(pos.y), Mth.floor(pos.z));
+    }
+
+    @Override
+    public boolean isSealed(Vec3i pos) {
+        return isSealed(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    private boolean isSealed(int x, int y, int z) {
+        return active && sealer.getSealedBlocks().contains(BlockPos.asLong(x, y, z));
+    }
+
     public int getMaximumSealedBlocks() {
         return (int) (NorthstarConfigs.server().oxygenSealerBlocksPerRpm.get() * Math.abs(speed));
     }
@@ -123,18 +139,24 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
             tooltip.add(Component.empty());
         }
 
-        NorthstarLang.translate("gui.goggles.oxygen_sealer")
+        NorthstarLang.translate("gui.oxygen_sealer")
                 .forGoggles(tooltip);
 
         sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks());
         if (!sealer.hasLeak()) {
-            NorthstarLang.translate("gui.goggles.oxygen_sealer.oxygen_usage")
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
-            CreateLang.number(sealer.getSealedBlocks().size() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF())
-                    .style(ChatFormatting.AQUA)
-                    .add(NorthstarLang.MB_PER_TICK)
-                    .forGoggles(tooltip, 1);
+            if (active) {
+                NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
+                        .style(ChatFormatting.GRAY)
+                        .forGoggles(tooltip);
+                CreateLang.number(sealer.getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF())
+                        .style(ChatFormatting.AQUA)
+                        .add(NorthstarLang.MB_PER_TICK)
+                        .forGoggles(tooltip, 1);
+            } else {
+                NorthstarLang.translate("gui.oxygen_sealer.no_oxygen")
+                        .style(ChatFormatting.RED)
+                        .forGoggles(tooltip);
+            }
         }
 
         if (isPlayerSneaking)

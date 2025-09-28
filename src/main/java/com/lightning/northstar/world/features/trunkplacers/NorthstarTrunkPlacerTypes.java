@@ -25,4 +25,5 @@ public class NorthstarTrunkPlacerTypes {
     public static void register(IEventBus eventBus) {
         TRUNK_PLACER_TYPES.register(eventBus);
     }
+
 }

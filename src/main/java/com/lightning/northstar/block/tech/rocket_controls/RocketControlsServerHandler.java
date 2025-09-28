@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.lightning.northstar.contraptions.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.data.WorldAttached;
 import net.minecraft.core.BlockPos;

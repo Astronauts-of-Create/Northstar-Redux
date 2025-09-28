@@ -1,0 +1,24 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"texture_size": [48, 48],
+	"textures": {
+		"0": "northstar:block/solar_panel",
+		"particle": "northstar:block/solar_panel"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 0],
+			"to": [15, 14, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7, 8]},
+			"faces": {
+				"north": {"uv": [6, 10.66667, 10.66667, 15.33333], "texture": "#0"},
+				"east": {"uv": [10.66667, 4.66667, 16, 9.33333], "texture": "#0"},
+				"south": {"uv": [6, 10.66667, 10.66667, 15.33333], "texture": "#0"},
+				"west": {"uv": [10.66667, 4.66667, 16, 9.33333], "texture": "#0"},
+				"up": {"uv": [6, 5.33333, 10.66667, 10.66666], "texture": "#0"},
+				"down": {"uv": [10.66667, 0, 16, 4.66667], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}

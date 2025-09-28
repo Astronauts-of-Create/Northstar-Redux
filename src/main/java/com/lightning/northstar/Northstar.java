@@ -4,8 +4,8 @@ import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
-import com.lightning.northstar.contraptions.RocketHandler;
-import com.lightning.northstar.data.FuelType;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
+import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
@@ -28,10 +28,14 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -63,6 +67,7 @@ public class Northstar {
         IEventBus modEventBus = modContext.getModEventBus();
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
+        REGISTRATE.registerEventListeners(modEventBus);
         GeckoLib.initialize();
 
         NorthstarTags.register();
@@ -72,7 +77,7 @@ public class Northstar {
         NorthstarBlockEntityTypes.register();
         NorthstarPotions.register(modEventBus);
         NorthstarEnchantments.register();
-        NorthstarTechBlocks.register();
+        NorthstarBlocks.register();
         NorthstarFeatures.register(modEventBus);
         NorthstarRecipeTypes.register(modEventBus);
         NorthstarParticles.register(modEventBus);
@@ -80,7 +85,7 @@ public class Northstar {
         NorthstarMenuTypes.register();
         NorthstarPlanets.register();
         NorthstarDimensions.register();
-        NorthstarEntityTypes.register(modEventBus);
+        NorthstarEntityTypes.register();
         NorthstarFluids.register();
 
         NorthstarTrunkPlacerTypes.register(modEventBus);
@@ -88,77 +93,86 @@ public class Northstar {
 
         RocketHandler.register();
 
-        REGISTRATE.registerEventListeners(modEventBus);
-        modEventBus.addListener(this::onRegisterRegistries);
-        modEventBus.addListener(this::onRegister);
-
         NorthstarConfigs.register(modContext::registerConfig);
-        modEventBus.addListener(this::onLoadConfig);
-        modEventBus.addListener(this::onReloadConfig);
-
-        modEventBus.addListener(this::init);
-        modEventBus.addListener(this::registerSpawnPlacements);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus, forgeEventBus));
     }
 
-    private void onRegister(RegisterEvent event) {
-        NorthstarContraptionTypes.register();
+
+    @EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD)
+    public static class ModEventListeners {
+        @SubscribeEvent
+        public static void init(FMLCommonSetupEvent event) {
+            NorthstarPackets.registerPackets();
+
+            event.enqueueWork(() -> {
+                NorthstarAdvancements.register();
+                NorthstarTriggers.register();
+            });
+        }
+
+        @SubscribeEvent
+        public static void onRegister(RegisterEvent event) {
+            NorthstarContraptionTypes.register();
+        }
+
+        @SubscribeEvent
+        public static void onNewRegistry(DataPackRegistryEvent.NewRegistry event) {
+            event.dataPackRegistry(NorthstarRegistries.FUEL, FuelType.CODEC, FuelType.CODEC);
+        }
+
+        @SubscribeEvent
+        public static void onLoadConfig(ModConfigEvent.Loading event) {
+            NorthstarConfigs.onLoad(event.getConfig());
+        }
+
+        @SubscribeEvent
+        public static void onReloadConfig(ModConfigEvent.Reloading event) {
+            NorthstarConfigs.onReload(event.getConfig());
+        }
+
+        @SubscribeEvent
+        public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
+            event.register(NorthstarEntityTypes.MARS_WORM.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MarsWormEntity::wormSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MARS_TOAD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MarsToadEntity::toadSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MARS_COBRA.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MarsCobraEntity::cobraSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MARS_MOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MarsMothEntity::mothSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+            event.register(NorthstarEntityTypes.VENUS_MIMIC.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    VenusMimicEntity::mimicSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.VENUS_SCORPION.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    VenusScorpionEntity::scorpionSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.VENUS_STONE_BULL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    VenusStoneBullEntity::stoneBullSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.VENUS_VULTURE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    VenusVultureEntity::vultureSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+            event.register(NorthstarEntityTypes.MOON_SNAIL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MoonSnailEntity::snailSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MOON_LUNARGRADE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MoonLunargradeEntity::lunargradeSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MOON_EEL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MoonEelEntity::eelSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
+            event.register(NorthstarEntityTypes.MERCURY_RAPTOR.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MercuryRaptorEntity::raptorSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MERCURY_ROACH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MercuryRoachEntity::roachSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+            event.register(NorthstarEntityTypes.MERCURY_TORTOISE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    MercuryTortoiseEntity::tortoiseSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+        }
     }
 
-    private void onRegisterRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(NorthstarRegistries.FUEL, FuelType.CODEC, FuelType.CODEC);
-    }
-
-    private void init(FMLCommonSetupEvent event) {
-        NorthstarPackets.registerPackets();
-
-        event.enqueueWork(() -> {
-            NorthstarAdvancements.register();
-            NorthstarTriggers.register();
-        });
-    }
-
-    private void onLoadConfig(ModConfigEvent.Loading event) {
-        NorthstarConfigs.onLoad(event.getConfig());
-    }
-
-    private void onReloadConfig(ModConfigEvent.Reloading event) {
-        NorthstarConfigs.onReload(event.getConfig());
-    }
-
-    private void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-        event.register(NorthstarEntityTypes.MARS_WORM.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MarsWormEntity::wormSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MARS_TOAD.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MarsToadEntity::toadSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MARS_COBRA.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MarsCobraEntity::cobraSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MARS_MOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MarsMothEntity::mothSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-
-        event.register(NorthstarEntityTypes.VENUS_MIMIC.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                VenusMimicEntity::mimicSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.VENUS_SCORPION.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                VenusScorpionEntity::scorpionSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.VENUS_STONE_BULL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                VenusStoneBullEntity::stoneBullSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.VENUS_VULTURE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                VenusVultureEntity::vultureSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-
-        event.register(NorthstarEntityTypes.MOON_SNAIL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MoonSnailEntity::snailSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MOON_LUNARGRADE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MoonLunargradeEntity::lunargradeSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MOON_EEL.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MoonEelEntity::eelSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-
-        event.register(NorthstarEntityTypes.MERCURY_RAPTOR.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MercuryRaptorEntity::raptorSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MERCURY_ROACH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MercuryRoachEntity::roachSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
-        event.register(NorthstarEntityTypes.MERCURY_TORTOISE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                MercuryTortoiseEntity::tortoiseSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+    @EventBusSubscriber(modid = MOD_ID, bus = Bus.FORGE)
+    public static class ForgeEventListeners {
+        @SubscribeEvent
+        public static void onRegistrySync(TagsUpdatedEvent event) {
+            FuelType.recacheFuels(event.getRegistryAccess());
+        }
     }
 
     public static ResourceLocation asResource(String path) {

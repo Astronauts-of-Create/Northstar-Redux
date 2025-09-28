@@ -3,10 +3,11 @@ package com.lightning.northstar.block.tech.combustion_engine;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
-import net.createmod.catnip.data.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -17,11 +18,24 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE<CombustionEngineBlockEntity> {
 
-    protected static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(3.0D, 0.0D, 0.0D, 13.0D, 13.0D, 16.0D);
-    protected static final VoxelShape SHAPE_EAST_WEST = Block.box(0.0D, 0.0D, 3.0D, 16.0D, 13.0D, 13.0D);
+    protected static final VoxelShape SHAPE_AXIS_X = Block.box(0, 0, 2, 16, 13, 14);
+    protected static final VoxelShape SHAPE_AXIS_Z = Block.box(2, 0, 0, 14, 13, 16);
 
     public CombustionEngineBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return state.getValue(HORIZONTAL_FACING).getAxis() == Axis.X ? SHAPE_AXIS_X : SHAPE_AXIS_Z;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction direction = context.getHorizontalDirection();
+        Player player = context.getPlayer();
+        return this.defaultBlockState()
+                .setValue(HORIZONTAL_FACING, player != null && player.isCrouching() ? direction : direction.getOpposite());
     }
 
     @Override
@@ -40,20 +54,8 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(HORIZONTAL_FACING)) {
-            case EAST, WEST -> SHAPE_EAST_WEST;
-            default -> SHAPE_NORTH_SOUTH;
-        };
-    }
-
-    @Override
     public BlockEntityType<? extends CombustionEngineBlockEntity> getBlockEntityType() {
         return NorthstarBlockEntityTypes.COMBUSTION_ENGINE.get();
-    }
-
-    public static Couple<Integer> getSpeedRange() {
-        return Couple.create(16, 32);
     }
 
 }

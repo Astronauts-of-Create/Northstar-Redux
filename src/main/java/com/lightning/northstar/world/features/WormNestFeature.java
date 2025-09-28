@@ -1,5 +1,6 @@
 package com.lightning.northstar.world.features;
 
+import com.lightning.northstar.Northstar;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +34,7 @@ public class WormNestFeature extends Feature<StructureFeatureConfig>  {
         int i = randomsource.nextInt(config.structures.size());
         int nestcount = randomsource.nextIntBetweenInclusive(2,7);
         for(int e = 0; e < nestcount;e++) {
-//            System.out.println("e: " + e + "   nestcount: " + nestcount);
+            Northstar.LOGGER.debug("e: {}   nestcount: {}", e, nestcount);
             i = randomsource.nextInt(config.structures.size());
             BlockPos newblockpos = scan(Direction.UP, blockpos.offset(randomsource.nextIntBetweenInclusive(-20, 20),0,randomsource.nextIntBetweenInclusive(-20, 20)), worldgenlevel, 60);
             StructureTemplateManager structuretemplatemanager = worldgenlevel.getLevel().getServer().getStructureManager();
@@ -49,7 +50,7 @@ public class WormNestFeature extends Feature<StructureFeatureConfig>  {
             if(pContext.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockpos2).getY() > blockpos1.getY() + 5) {
                 structuretemplate.placeInWorld(worldgenlevel, blockpos2.offset(0,(-structuretemplate.getSize().getY() / 3) + 1,0), blockpos2.offset(0,(-structuretemplate.getSize().getY() / 3) + 1,0), structureplacesettings, randomsource, 4);
             }
-//            System.out.println(structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4));
+            Northstar.LOGGER.debug("{}", structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4));
         }
 
 
@@ -67,7 +68,7 @@ public class WormNestFeature extends Feature<StructureFeatureConfig>  {
         if(pContext.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockpos2).getY() > blockpos1.getY() + 5) {
             structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4);
         }
-//        System.out.println(structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4));
+        Northstar.LOGGER.debug("{}", structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, structureplacesettings, randomsource, 4));
         return true;
 
     }

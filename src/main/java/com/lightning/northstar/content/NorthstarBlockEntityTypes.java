@@ -30,6 +30,7 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlockEnt
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsRenderer;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
+import com.lightning.northstar.block.tech.solar_panel.SolarPanelRenderer;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorRenderer;
@@ -38,7 +39,6 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlockEntity;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorRenderer;
 import com.simibubi.create.content.kinetics.base.OrientedRotatingVisual;
-import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntity;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
@@ -68,106 +68,106 @@ public class NorthstarBlockEntityTypes {
     public static final BlockEntityEntry<TemperatureRegulatorBlockEntity> TEMPERATURE_REGULATOR_BLOCK_ENTITY = REGISTRATE
             .blockEntity("temperature_regulator", TemperatureRegulatorBlockEntity::new)
             .visual(() -> TemperatureRegulatorVisual::new, false)
-            .validBlocks(NorthstarTechBlocks.TEMPERATURE_REGULATOR)
+            .validBlocks(NorthstarBlocks.TEMPERATURE_REGULATOR)
             .renderer(() -> TemperatureRegulatorRenderer::new)
             .register();
 
     public static final BlockEntityEntry<OxygenSealerBlockEntity> OXYGEN_SEALER = REGISTRATE
             .blockEntity("oxygen_sealer", OxygenSealerBlockEntity::new)
             .visual(() -> OxygenSealerVisual::new)
-            .validBlocks(NorthstarTechBlocks.OXYGEN_SEALER)
+            .validBlocks(NorthstarBlocks.OXYGEN_SEALER)
             .renderer(() -> OxygenSealerRenderer::new)
             .register();
 
     public static final BlockEntityEntry<SolarPanelBlockEntity> SOLAR_PANEL = REGISTRATE
             .blockEntity("solar_panel", SolarPanelBlockEntity::new)
             .visual(() -> ShaftVisual::new)
-            .validBlocks(NorthstarTechBlocks.SOLAR_PANEL)
-            .renderer(() -> ShaftRenderer::new)
+            .validBlocks(NorthstarBlocks.SOLAR_PANEL)
+            .renderer(() -> SolarPanelRenderer::new)
             .register();
 
     public static final BlockEntityEntry<CombustionEngineBlockEntity> COMBUSTION_ENGINE = REGISTRATE
             .blockEntity("combustion_engine", CombustionEngineBlockEntity::new)
             .visual(() -> CombustionEngineVisual::new)
-            .validBlocks(NorthstarTechBlocks.COMBUSTION_ENGINE)
+            .validBlocks(NorthstarBlocks.COMBUSTION_ENGINE)
             .renderer(() -> CombustionEngineRenderer::new)
             .register();
 
     public static final BlockEntityEntry<LaserLenseBlockEntity> LASER_LENSE = REGISTRATE
             .blockEntity("laser_lense", LaserLenseBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.LASER_LENSE)
+            .validBlocks(NorthstarBlocks.LASER_LENSE)
             .register();
 
     public static final BlockEntityEntry<AstronomyTableBlockEntity> ASTRONOMY_TABLE = REGISTRATE
             .blockEntity("astronomy_table", AstronomyTableBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.ASTRONOMY_TABLE)
+            .validBlocks(NorthstarBlocks.ASTRONOMY_TABLE)
             .register();
 
     public static final BlockEntityEntry<CircuitEngraverBlockEntity> CIRCUIT_ENGRAVER = REGISTRATE
             .blockEntity("circuit_engraver", CircuitEngraverBlockEntity::new)
             .visual(() -> CircuitEngraverVisual::new)
-            .validBlocks(NorthstarTechBlocks.CIRCUIT_ENGRAVER)
+            .validBlocks(NorthstarBlocks.CIRCUIT_ENGRAVER)
             .renderer(() -> CircuitEngraverRenderer::new)
             .register();
 
     public static final BlockEntityEntry<OxygenConcentratorBlockEntity> OXYGEN_CONCENTRATOR = REGISTRATE
             .blockEntity("oxygen_concentrator", OxygenConcentratorBlockEntity::new)
             .visual(() -> OxygenConcentratorVisual::new)
-            .validBlocks(NorthstarTechBlocks.OXYGEN_CONCENTRATOR)
+            .validBlocks(NorthstarBlocks.OXYGEN_CONCENTRATOR)
             .renderer(() -> OxygenConcentratorRenderer::new)
             .register();
 
     public static final BlockEntityEntry<OxygenFillerBlockEntity> OXYGEN_FILLER = REGISTRATE
             .blockEntity("oxygen_filler", OxygenFillerBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.OXYGEN_FILLER)
+            .validBlocks(NorthstarBlocks.OXYGEN_FILLER)
             .renderer(() -> OxygenFillerRenderer::new)
             .register();
 
     public static final BlockEntityEntry<ElectrolysisMachineBlockEntity> ELECTROLYSIS_MACHINE = REGISTRATE
             .blockEntity("electrolysis_machine", ElectrolysisMachineBlockEntity::new)
             .visual(() -> (context, blockEntity, partialTick) -> new OrientedRotatingVisual<>(context, blockEntity, partialTick, Direction.SOUTH, Direction.DOWN, Models.partial(AllPartialModels.SHAFT_HALF)))
-            .validBlocks(NorthstarTechBlocks.ELECTROLYSIS_MACHINE)
+            .validBlocks(NorthstarBlocks.ELECTROLYSIS_MACHINE)
             .renderer(() -> ElectrolysisMachineRenderer::new)
             .register();
 
     public static final BlockEntityEntry<OxygenDetectorBlockEntity> OXYGEN_DETECTOR = REGISTRATE
             .blockEntity("oxygen_detector", OxygenDetectorBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.OXYGEN_DETECTOR)
+            .validBlocks(NorthstarBlocks.OXYGEN_DETECTOR)
             .register();
 
     public static final BlockEntityEntry<TargetingComputerRackBlockEntity> COMPUTER_RACK = REGISTRATE
             .blockEntity("computer_rack", TargetingComputerRackBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.COMPUTER_RACK)
+            .validBlocks(NorthstarBlocks.COMPUTER_RACK)
             .renderer(() -> TargetingComputerRackRenderer::new)
             .register();
 
     public static final BlockEntityEntry<RocketControlsBlockEntity> ROCKET_CONTROLS = REGISTRATE
             .blockEntity("rocket_controls", RocketControlsBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.ROCKET_CONTROLS)
+            .validBlocks(NorthstarBlocks.ROCKET_CONTROLS)
             .renderer(() -> RocketControlsRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<SlidingDoorBlockEntity> SPACE_DOORS =
-            REGISTRATE.blockEntity("space_sliding_door", SlidingDoorBlockEntity::new)
-                    .renderer(() -> SlidingDoorRenderer::new)
-                    .validBlocks(NorthstarTechBlocks.TITANIUM_SPACE_DOOR)
-                    .register();
+    public static final BlockEntityEntry<SlidingDoorBlockEntity> SPACE_DOORS = REGISTRATE
+            .blockEntity("space_sliding_door", SlidingDoorBlockEntity::new)
+            .renderer(() -> SlidingDoorRenderer::new)
+            .validBlocks(NorthstarBlocks.TITANIUM_SPACE_DOOR)
+            .register();
 
     public static final BlockEntityEntry<IceBoxBlockEntity> ICE_BOX = REGISTRATE
             .blockEntity("ice_box", IceBoxBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.ICE_BOX)
+            .validBlocks(NorthstarBlocks.ICE_BOX)
             .renderer(() -> IceBoxRenderer::new)
             .register();
 
     public static final BlockEntityEntry<RocketStationBlockEntity> ROCKET_STATION = REGISTRATE
             .blockEntity("rocket_station", RocketStationBlockEntity::new)
-            .validBlocks(NorthstarTechBlocks.ROCKET_STATION)
+            .validBlocks(NorthstarBlocks.ROCKET_STATION)
             .register();
 
     public static final BlockEntityEntry<BracketedKineticBlockEntity> BRACKETED_KINETIC = REGISTRATE
             .blockEntity("simple_kinetic", BracketedKineticBlockEntity::new)
             .visual(() -> new SpaceCogVisual(NorthstarPartialModels.IRON_COGWHEEL, NorthstarPartialModels.IRON_LARGE_COGWHEEL)::create, false)
-            .validBlocks(NorthstarTechBlocks.IRON_COGWHEEL, NorthstarTechBlocks.IRON_LARGE_COGWHEEL)
+            .validBlocks(NorthstarBlocks.IRON_COGWHEEL, NorthstarBlocks.IRON_LARGE_COGWHEEL)
             .renderer(() -> BracketedKineticBlockEntityRenderer::new)
             .register();
 
