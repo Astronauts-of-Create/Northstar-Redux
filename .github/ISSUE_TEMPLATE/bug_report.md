@@ -24,4 +24,4 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Mod versions:**
-The exact version of Northstar and Create. For example Northstar 0.2.0+1.20.1, Create 1.20.1-6.0.6;
+The exact version of Northstar and Create. For example Northstar x.y.z+1.20.1, Create 1.20.1-x.y.z;

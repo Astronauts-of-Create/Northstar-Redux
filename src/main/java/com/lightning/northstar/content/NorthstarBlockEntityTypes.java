@@ -1,7 +1,5 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.entity.LaserLenseBlockEntity;
-import com.lightning.northstar.block.entity.OxygenBubbleGeneratorBlockEntity;
 import com.lightning.northstar.block.entity.VenusExhaustBlockEntity;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlockEntity;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlockEntity;
@@ -52,10 +50,10 @@ public class NorthstarBlockEntityTypes {
             .validBlocks(NorthstarBlocks.TELESCOPE)
             .register();
 
-    public static final BlockEntityEntry<OxygenBubbleGeneratorBlockEntity> OXYGEN_BUBBLE_GENERATOR = REGISTRATE
+    /*public static final BlockEntityEntry<OxygenBubbleGeneratorBlockEntity> OXYGEN_BUBBLE_GENERATOR = REGISTRATE
             .blockEntity("oxygen_bubble_generator", OxygenBubbleGeneratorBlockEntity::new)
             .validBlocks(NorthstarBlocks.OXYGEN_BUBBLE_GENERATOR)
-            .register();
+            .register();*/
 
     public static final BlockEntityEntry<VenusExhaustBlockEntity> VENUS_EXHAUST = REGISTRATE
             .blockEntity("venus_exhaust", VenusExhaustBlockEntity::new)
@@ -90,10 +88,10 @@ public class NorthstarBlockEntityTypes {
             .renderer(() -> CombustionEngineRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<LaserLenseBlockEntity> LASER_LENSE = REGISTRATE
+    /*public static final BlockEntityEntry<LaserLenseBlockEntity> LASER_LENSE = REGISTRATE
             .blockEntity("laser_lense", LaserLenseBlockEntity::new)
             .validBlocks(NorthstarBlocks.LASER_LENSE)
-            .register();
+            .register();*/
 
     public static final BlockEntityEntry<AstronomyTableBlockEntity> ASTRONOMY_TABLE = REGISTRATE
             .blockEntity("astronomy_table", AstronomyTableBlockEntity::new)

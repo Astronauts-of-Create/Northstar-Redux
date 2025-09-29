@@ -1,5 +1,7 @@
 package com.lightning.northstar.data;
 
+import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
@@ -9,7 +11,13 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -17,7 +25,10 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
@@ -145,6 +156,12 @@ public class NorthstarTagGen {
     private static void items(RegistrateTagsProvider<Item> provider) {
         Tags<Item, ItemLike> tags = new Tags<>(provider, Item::builtInRegistryHolder, ItemLike::asItem);
 
+        tags.tag(NorthstarItemTags.IGNITION_SOURCE)
+                .add(Items.FLINT_AND_STEEL)
+                .add(Items.FIRE_CHARGE)
+
+                .opt(ModCompat.MEK, "flamethrower");
+
         tags.tag(NorthstarItemTags.HEAT_RESISTANT)
                 .add(AllItems.NETHERITE_DIVING_HELMET)
                 .add(AllItems.NETHERITE_BACKTANK)
@@ -194,6 +211,20 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
                 .opt(ModCompat.CDG, "biodiesel");
+    }
+
+    public static class Damage extends TagsProvider<DamageType> {
+        public Damage(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.DAMAGE_TYPE, lookupProvider, Northstar.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            tag(DamageTypeTags.BYPASSES_ARMOR)
+                    .add(NorthstarDamageTypes.SUFFOCATION);
+            tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
+                    .add(NorthstarDamageTypes.SUFFOCATION);
+        }
     }
 
 }

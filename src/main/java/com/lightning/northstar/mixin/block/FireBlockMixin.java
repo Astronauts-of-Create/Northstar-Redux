@@ -18,8 +18,7 @@ public class FireBlockMixin {
     @Inject(method = "canSurvive", at = @At("HEAD"), cancellable = true)
     public void northstar$canSurvive(BlockState state, LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
         if (level instanceof Level l &&
-                (NorthstarTemperature.getTemperatureAt(l, pos) < -100 ||
-                !NorthstarOxygen.hasOxygen(l, pos))) {
+                (NorthstarTemperature.getTemperatureAt(l, pos) < -100 || !NorthstarOxygen.hasOxygen(l, pos))) {
             info.setReturnValue(false);
         }
     }

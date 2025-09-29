@@ -14,6 +14,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -31,6 +32,7 @@ public class NorthstarDataGen {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         NorthstarTagGen.register();
         Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> provideDefaultLang("base", provider::add));
@@ -41,9 +43,12 @@ public class NorthstarDataGen {
                 .add(Registries.DAMAGE_TYPE, NorthstarDamageTypes::bootstrap)
                 .add(NorthstarRegistries.FUEL, NorthstarFuelTypeGen::bootstrap);
 
-        generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID)));
+        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID));
+        generator.addProvider(event.includeServer(), provider);
+        lookupProvider = provider.getRegistryProvider();
 
         generator.addProvider(event.includeServer(), new NorthstarAdvancements(output));
+        generator.addProvider(event.includeServer(), new NorthstarTagGen.Damage(output, lookupProvider, existingFileHelper));
 
         // Recipes:
         generator.addProvider(event.includeServer(), new NorthstarCompactingRecipeGen(output));
