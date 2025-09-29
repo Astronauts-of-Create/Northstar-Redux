@@ -257,6 +257,8 @@ public class NorthstarTags {
         C_SHEETS_TUNGSTEN(COMMON, "plates/tungsten"),
         C_STRIPPED_LOGS(COMMON, "stripped_logs"),
         HEAT_RESISTANT,
+        /** Items that can be used to light up extinguished torches/lanterns */
+        IGNITION_SOURCE,
         INSULATING,
         OXYGEN_SEALING,
         OXYGEN_SOURCES,

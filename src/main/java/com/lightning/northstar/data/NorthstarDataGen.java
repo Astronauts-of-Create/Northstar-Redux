@@ -18,6 +18,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Map;
@@ -43,6 +44,7 @@ public class NorthstarDataGen {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         RegistrySetBuilder builder = new RegistrySetBuilder()
                 // TODO: those don't match the existing ones, which one are the real ones?
@@ -51,9 +53,12 @@ public class NorthstarDataGen {
                 .add(Registries.ENCHANTMENT, NorthstarEnchantments::bootstrap)
                 .add(NorthstarRegistries.FUEL, NorthstarFuelTypeGen::bootstrap);
 
-        generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID)));
+        DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID));
+        generator.addProvider(event.includeServer(), provider);
+        lookupProvider = provider.getRegistryProvider();
 
         generator.addProvider(event.includeServer(), new NorthstarAdvancements(output, lookupProvider));
+        generator.addProvider(event.includeServer(), new NorthstarTagGen.Damage(output, lookupProvider, existingFileHelper));
 
         // Recipes:
         generator.addProvider(event.includeServer(), new NorthstarCompactingRecipeGen(output, lookupProvider));

@@ -9,6 +9,8 @@ import net.minecraft.world.level.dimension.DimensionType;
 
 public class NorthstarDimensions {
 
+    public static final ResourceLocation SPACE_EFFECTS = Northstar.asResource("space");
+
     // earth orbit
     public static final ResourceKey<Level> EARTH_ORBIT_DIM_KEY = ResourceKey.create(Registries.DIMENSION, Northstar.asResource("earth_orbit"));
     public static final ResourceKey<DimensionType> EARTH_ORBIT_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("earth_orbit"));
