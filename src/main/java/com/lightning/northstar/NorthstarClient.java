@@ -3,6 +3,7 @@ package com.lightning.northstar;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHandler;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
+import com.lightning.northstar.client.renderer.effect.SpaceEffects;
 import com.lightning.northstar.client.renderer.effect.VenusEffects;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
@@ -38,6 +39,7 @@ public class NorthstarClient {
 
     @SubscribeEvent
     public static void onRegisterDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
+        event.register(NorthstarDimensions.SPACE_EFFECTS, new SpaceEffects());
         event.register(NorthstarDimensions.MARS_EFFECTS, new MarsEffects());
         event.register(NorthstarDimensions.VENUS_EFFECTS, new VenusEffects());
     }

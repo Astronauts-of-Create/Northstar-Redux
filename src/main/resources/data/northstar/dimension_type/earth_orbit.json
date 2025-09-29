@@ -2,6 +2,7 @@
   "ambient_light": 0,
   "bed_works": true,
   "coordinate_scale": 1,
+  "effects": "northstar:space",
   "has_ceiling": false,
   "has_raids": false,
   "has_skylight": true,
