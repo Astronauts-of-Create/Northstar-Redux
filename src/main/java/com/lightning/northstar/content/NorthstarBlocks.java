@@ -4038,7 +4038,7 @@ public class NorthstarBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<OxygenBubbleGeneratorBlock> OXYGEN_BUBBLE_GENERATOR = REGISTRATE
+    /*public static final BlockEntry<OxygenBubbleGeneratorBlock> OXYGEN_BUBBLE_GENERATOR = REGISTRATE
             .block("oxygen_bubble_generator", OxygenBubbleGeneratorBlock::new)
             .lang("Oxygen Bubble Generator (WIP)")
             .initialProperties(SharedProperties::netheriteMetal)
@@ -4073,7 +4073,7 @@ public class NorthstarBlocks {
             .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Laser (WIP)")
             .simpleItem()
-            .register();
+            .register();*/
 
     // endregion
 
