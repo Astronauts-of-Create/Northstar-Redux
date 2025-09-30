@@ -85,6 +85,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public ResourceKey<Level> destination;
 
     private int transportDelay;
+    private final static int TRANSPORT_DELAY_TICKS = 40;
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -113,13 +114,14 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         Level level = level();
         if (!level.dimension().equals(destination)) {
             if (getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
-                transportDelay = Math.min(40, transportDelay + 1);
-                if (transportDelay == 40 && level instanceof ServerLevel sl) {
+                transportDelay = Math.min(TRANSPORT_DELAY_TICKS, transportDelay + 1);
+                if (transportDelay == TRANSPORT_DELAY_TICKS && level instanceof ServerLevel sl) {
                     changeDimension(sl.getServer().getLevel(destination));
                 }
             }
         } else {
             transportDelay = Math.max(0, transportDelay - 1);
+            //TODO: If a player gets out of their seat (usually while landing), create sometimes chooses a place to put them that's outside of the rocket
         }
 
         var contraption = getContraption();
@@ -269,7 +271,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (!isStalled() && tickCount > 2 && transportDelay == 0) {
             move(0, final_lift_vel, 0);
-
             // TODO: non-seated entities still bug out visually
             for (Entity entity : entitiesWithinContraption) {
                 if (contraption.getSeatOf(entity.getUUID()) == null)
@@ -333,7 +334,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (newRocket == null) {
             return null; // huh?
         }
-        newRocket.transportDelay = 40;
+        newRocket.transportDelay = TRANSPORT_DELAY_TICKS;
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
@@ -343,7 +344,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
 
             if (data.seat != -1)
-                addSittingPassenger(newPassenger, data.seat);
+                newRocket.addSittingPassenger(newPassenger, data.seat);
         }
 
         if (controllingPlayer != null)
