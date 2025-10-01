@@ -32,6 +32,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -54,9 +56,14 @@ import java.util.function.Function;
 
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
 
-    /** In ticks */
+    /**
+     * In ticks
+     */
     public final static int LAUNCH_COUNTDOWN_TIME = 10 * 20;
-    /** maximum velocity, in blocks per tick */
+    private final static int TRANSPORT_DELAY_TIME = 40;
+    /**
+     * maximum velocity, in blocks per tick
+     */
     private static final float MAX_SPEED = 5;
 
     private List<Entity> entitiesWithinContraption = List.of();
@@ -74,7 +81,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     int soundTime = 0;
     int cooldown = 0;
     int cooldownLength = 100;
-    /** In ticks */
+    /**
+     * In ticks
+     */
     private int launchTime = 0;
     private boolean activeLaunch = false;
     public Player owner;
@@ -85,7 +94,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public ResourceKey<Level> destination;
 
     private int transportDelay;
-    private final static int TRANSPORT_DELAY_MS = 40;
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -114,14 +122,13 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         Level level = level();
         if (!level.dimension().equals(destination)) {
             if (getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
-                transportDelay = Math.min(TRANSPORT_DELAY_MS, transportDelay + 1);
-                if (transportDelay == TRANSPORT_DELAY_MS && level instanceof ServerLevel sl) {
+                transportDelay = Math.min(TRANSPORT_DELAY_TIME, transportDelay + 1);
+                if (transportDelay == TRANSPORT_DELAY_TIME && level instanceof ServerLevel sl) {
                     changeDimension(sl.getServer().getLevel(destination));
                 }
             }
         } else {
             transportDelay = Math.max(0, transportDelay - 1);
-            //TODO: If a player gets out of their seat (usually while landing), create sometimes chooses a place to put them that's outside of the rocket
         }
 
         var contraption = getContraption();
@@ -280,6 +287,17 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         slowing = false;
     }
 
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity entityLiving) {
+        Vec3 position = entityLiving.position();
+//     Vec3 position =  super.getDismountLocationForPassenger(entityLiving); //This is part of the problem.
+        position = position.add(0, final_lift_vel, 0);
+
+        //TODO: When sitting down and getting up in rapid succession, the player can still clip outside the ship
+        return position;
+    }
+
     private void writeSyncPacket() {
         RocketContraptionSyncPacket packet = new RocketContraptionSyncPacket(getId(), position(), lift_vel, launchTime,
                 launchingMode, landingMode, blasting, slowing, activeLaunch);
@@ -334,7 +352,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (newRocket == null) {
             return null; // huh?
         }
-        newRocket.transportDelay = TRANSPORT_DELAY_MS;
+        newRocket.transportDelay = TRANSPORT_DELAY_TIME;
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
