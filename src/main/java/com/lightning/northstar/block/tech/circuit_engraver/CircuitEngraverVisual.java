@@ -9,6 +9,7 @@ import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
@@ -30,6 +31,7 @@ public class CircuitEngraverVisual extends SingleAxisRotatingVisual<CircuitEngra
                 .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER))
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
+        laser.light(LightTexture.FULL_BRIGHT);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class CircuitEngraverVisual extends SingleAxisRotatingVisual<CircuitEngra
     @Override
     public void updateLight(float partialTick) {
         super.updateLight(partialTick);
-        relight(head, laser);
+        relight(head);
     }
 
     @Override
