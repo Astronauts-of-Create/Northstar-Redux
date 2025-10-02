@@ -31,7 +31,7 @@ import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegul
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovingInteractionBehaviour;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.data.NorthstarConfiguredFeatures;
+import com.lightning.northstar.data.worldgen.NorthstarConfiguredFeatures;
 import com.lightning.northstar.util.NorthstarDataGenHelper;
 import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
 import com.lightning.northstar.world.features.grower.CoilerTreeGrower;

@@ -6,6 +6,9 @@ import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.data.recipe.*;
+import com.lightning.northstar.data.worldgen.NorthstarBiomeProvider;
+import com.lightning.northstar.data.worldgen.NorthstarConfiguredFeatures;
+import com.lightning.northstar.data.worldgen.NorthstarPlacedFeatures;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.core.HolderLookup;
@@ -38,10 +41,12 @@ public class NorthstarDataGen {
         Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> provideDefaultLang("base", provider::add));
 
         RegistrySetBuilder builder = new RegistrySetBuilder()
-                // TODO: those don't match the existing ones, which one are the real ones?
-                //.add(Registries.CONFIGURED_FEATURE, NorthstarConfiguredFeatures::bootstrap)
+                .add(Registries.CONFIGURED_FEATURE, NorthstarConfiguredFeatures::bootstrap)
+                .add(Registries.BIOME, NorthstarBiomeProvider::bootstrap)
+                .add(Registries.PLACED_FEATURE, NorthstarPlacedFeatures::bootstrap)
                 .add(Registries.DAMAGE_TYPE, NorthstarDamageTypes::bootstrap)
                 .add(NorthstarRegistries.FUEL, NorthstarFuelTypeGen::bootstrap);
+
 
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID));
         generator.addProvider(event.includeServer(), provider);

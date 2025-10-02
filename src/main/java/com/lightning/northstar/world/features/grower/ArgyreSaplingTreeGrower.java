@@ -1,6 +1,6 @@
 package com.lightning.northstar.world.features.grower;
 
-import com.lightning.northstar.data.NorthstarConfiguredFeatures;
+import com.lightning.northstar.data.worldgen.NorthstarConfiguredFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;

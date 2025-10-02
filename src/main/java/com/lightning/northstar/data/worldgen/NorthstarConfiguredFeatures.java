@@ -1,4 +1,4 @@
-package com.lightning.northstar.data;
+package com.lightning.northstar.data.worldgen;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
@@ -34,6 +34,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 
 import java.util.Optional;
 
+
 public class NorthstarConfiguredFeatures {
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> COILER = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("coiler"));
@@ -54,9 +55,97 @@ public class NorthstarConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_branch"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> GLOWSTONE_UPSIDE_DOWN_BRANCH = ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("glowstone_upside_down_branch"));
 
+    //Ores (I am trying to streamline this so adding new ores to all planets is as simple as possible)
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_COPPER =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_copper_ore"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_COPPER_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_copper_ore_large"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_DIAMOND =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_diamond"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_GLOWSTONE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_glowstone"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_GOLD =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_gold"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_IRON =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_iron"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_IRON_SMALL =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_iron_small"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_IRON_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_iron_large"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_LAPIS =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_lapis"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_REDSTONE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_redstone"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_TITANIUM =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_titanium"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_ZINC =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_zinc"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MOON_ORE_ZINC_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("moon_ore_zinc_large"));
+//
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_COPPER =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_copper_ore"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_COPPER_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_copper_ore_large"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_IRON =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_iron"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_IRON_SMALL =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_iron_small"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_LAPIS =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_lapis"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_REDSTONE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_redstone"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_TITANIUM =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_titanium"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_ZINC =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_zinc"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_ZINC_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_ore_zinc_large"));
+//
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_COPPER =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_copper_ore"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_COPPER_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_copper_ore_large"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_IRON =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_iron"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_IRON_SMALL =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_iron_small"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_LAPIS =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_lapis"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_REDSTONE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_redstone"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_TITANIUM =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_titanium"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_ZINC =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_zinc"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> MERCURY_ORE_ZINC_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mercury_ore_zinc_large"));
+//
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_COPPER =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_copper_ore"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_COPPER_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_copper_ore_large"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_IRON =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_iron"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_IRON_SMALL =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_iron_small"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_LAPIS =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_lapis"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_REDSTONE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_redstone"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_TITANIUM =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_titanium"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_ZINC =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_zinc"));
+//    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_ORE_ZINC_LARGE =
+//            ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("venus_ore_zinc_large"));
+
+
     @SuppressWarnings("unchecked")
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
         HolderGetter<Block> block = context.lookup(Registries.BLOCK);
+
+       PlanetOres.bootstrapConfiguredFeatures(context);
 
         context.register(COILER, new ConfiguredFeature<>(Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
