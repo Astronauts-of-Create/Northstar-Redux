@@ -3951,6 +3951,7 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketStationBlockMovingInteraction()))
@@ -3980,6 +3981,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
@@ -4006,6 +4008,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/computer_rack/block")))

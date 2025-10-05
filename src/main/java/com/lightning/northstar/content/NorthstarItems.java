@@ -433,7 +433,6 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TARGETING_COMPUTER = REGISTRATE
             .item("targeting_computer", Item::new)
-            .properties(p -> p.stacksTo(1))
             .register();
 
     public static final ItemEntry<SequencedAssemblyItem> UNFINISHED_TARGETING_COMPUTER =
