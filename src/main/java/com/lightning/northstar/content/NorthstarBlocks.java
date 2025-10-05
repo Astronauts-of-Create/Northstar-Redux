@@ -3887,7 +3887,8 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
-            .transform(customItemModel())
+            .model((c, p) -> p.blockItem(c::get))
+            .build()
             .register();
 
     public static final BlockEntry<OxygenSealerBlock> OXYGEN_SEALER = REGISTRATE
