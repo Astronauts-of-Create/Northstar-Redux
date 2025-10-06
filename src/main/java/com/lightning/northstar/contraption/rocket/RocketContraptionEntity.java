@@ -8,6 +8,7 @@ import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
+import com.lightning.northstar.contraption.rocket.packet.SoftReleasePacket;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,7 +42,6 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -52,6 +52,7 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
@@ -280,21 +281,47 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
             for (Entity entity : entitiesWithinContraption) {
-                if (contraption.getSeatOf(entity.getUUID()) == null)
-                    entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+                if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
+                    SoftReleaseInfo softReleaseInfo = softReleaseMap.get(entity.getUUID());
+                    if (softReleaseInfo != null) { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
+                        entity.setPos(
+                                position().x + softReleaseInfo.offset.x,
+                                position().y + softReleaseInfo.offset.y,
+                                position().z + softReleaseInfo.offset.z);
+                        softReleaseInfo.ticks.getAndAdd(1);
+                        if (softReleaseInfo.ticks.get() >= 10) softReleaseMap.remove(entity.getUUID());
+                        //Northstar.LOGGER.info("Soft release " + tickCount + "; client=" + level.isClientSide);
+                    } else entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+                }
             }
         }
         slowing = false;
     }
 
+    public HashMap<UUID, SoftReleaseInfo> softReleaseMap = new HashMap<>();
+
+    public record SoftReleaseInfo(Vec3 offset, AtomicInteger ticks) {
+    }
+
+    @Override
+    protected void removePassenger(Entity passenger) {
+        BlockPos seatPos = contraption.getSeatOf(passenger.getUUID());
+        if (seatPos != null) {//Add a soft-release entry, to lock the player in for a few ticks (This happens on the server side)
+//            System.out.println("Setting soft release; client=" + level().isClientSide);
+            Vec3 offset = VecHelper.getCenterOf(seatPos);//.add(0, passenger.getBoundingBox().getYsize(), 0);
+            softReleaseMap.put(passenger.getUUID(), new SoftReleaseInfo(offset, new AtomicInteger(0)));
+            //The server and client must share the same record for this to work
+            NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new SoftReleasePacket(passenger.getUUID(), getId(), offset));
+        }
+
+        super.removePassenger(passenger);
+    }
+
 
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity entityLiving) {
-        Vec3 position = entityLiving.position();
-//     Vec3 position =  super.getDismountLocationForPassenger(entityLiving); //This is part of the problem.
-        position = position.add(0, final_lift_vel, 0);
-
-        //TODO: When sitting down and getting up in rapid succession, the player can still clip outside the ship
+//        Northstar.LOGGER.info("offsetting dismount " + tickCount);
+        Vec3 position = super.getDismountLocationForPassenger(entityLiving).add(0, final_lift_vel, 0);
         return position;
     }
 
