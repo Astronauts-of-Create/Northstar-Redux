@@ -23,14 +23,14 @@ public class VenusBiomes {
             .build();
 
 
-    BiomeSpecialEffects effects1 = new BiomeSpecialEffects.Builder()
+    static BiomeSpecialEffects effects1 = new BiomeSpecialEffects.Builder()
             .skyColor(14543991)
             .fogColor(14538752)
             .waterColor(4159204)
             .waterFogColor(329011)
             .build();
 
-    private BiomeGenerationSettings.Builder generatorSettings(BootstapContext<Biome> context) {
+    static private BiomeGenerationSettings.Builder generatorSettings(BootstapContext<Biome> context) {
         HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carvers = context.lookup(Registries.CONFIGURED_CARVER);
         BiomeGenerationSettings.Builder gen = new BiomeGenerationSettings.Builder(placedFeatures, carvers);

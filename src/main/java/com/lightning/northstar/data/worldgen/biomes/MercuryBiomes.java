@@ -17,12 +17,12 @@ public class MercuryBiomes {
 
     private static MobSpawnSettings spawns = new MobSpawnSettings.Builder()
             .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(NorthstarEntityTypes.MERCURY_RAPTOR.get(), 30, 1, 3))
-            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(NorthstarEntityTypes.MERCURY_ROACH.get(), 30, 1, 3))
-            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(NorthstarEntityTypes.MERCURY_TORTOISE.get(), 30, 2, 5))
+            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(NorthstarEntityTypes.MERCURY_TORTOISE.get(), 30, 1, 3))
+            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(NorthstarEntityTypes.MERCURY_ROACH.get(), 30, 2, 5))
             .build();
 
 
-    BiomeSpecialEffects effects1 = new BiomeSpecialEffects.Builder()
+    static  BiomeSpecialEffects effects1 = new BiomeSpecialEffects.Builder()
             .skyColor(0)
             .fogColor(0)
             .waterColor(4159204)
@@ -30,7 +30,7 @@ public class MercuryBiomes {
             .build();
 
 
-    private BiomeGenerationSettings.Builder generatorSettings(BootstapContext<Biome> context) {
+    static  private BiomeGenerationSettings.Builder generatorSettings(BootstapContext<Biome> context) {
         HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carvers = context.lookup(Registries.CONFIGURED_CARVER);
         BiomeGenerationSettings.Builder gen = new BiomeGenerationSettings.Builder(placedFeatures, carvers);

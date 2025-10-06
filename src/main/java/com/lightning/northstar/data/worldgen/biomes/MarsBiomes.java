@@ -23,14 +23,14 @@ public class MarsBiomes {
             .build();
 
 
-    BiomeSpecialEffects effects1 = new BiomeSpecialEffects.Builder()
+    static  BiomeSpecialEffects effects1 = new BiomeSpecialEffects.Builder()
             .skyColor(14331548)
             .fogColor(15264214)
             .waterColor(4159204)
             .waterFogColor(329011)
             .build();
 
-    BiomeSpecialEffects effects2 = new BiomeSpecialEffects.Builder()
+    static  BiomeSpecialEffects effects2 = new BiomeSpecialEffects.Builder()
             .skyColor(14331548)
             .fogColor(15264214)
             .waterColor(4159204)
@@ -50,7 +50,7 @@ public class MarsBiomes {
     }*/
 
 
-    private BiomeGenerationSettings.Builder generatorSettings(BootstapContext<Biome> context) {
+    static  private BiomeGenerationSettings.Builder generatorSettings(BootstapContext<Biome> context) {
         HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carvers = context.lookup(Registries.CONFIGURED_CARVER);
         BiomeGenerationSettings.Builder gen = new BiomeGenerationSettings.Builder(placedFeatures, carvers);
