@@ -92,6 +92,7 @@
   "northstar.contraption.controls.landing_warning": "Hold Space to slow down!",
   "northstar.contraption.controls.rocket_tut": "Press Space to begin launch sequence!",
   "northstar.contraption.controls.sit_down": "All entities must be seated before controlling rocket!",
+  "northstar.contraption.cannot_mount_another_entity_while_in_rocket": "Cannot mount another entity while inside a rocket!",
   "northstar.generic.confirm": "Confirm",
   "northstar.generic.status": "Status: ",
   "northstar.generic.unit.millibuckets_per_tick": "mB/t",
