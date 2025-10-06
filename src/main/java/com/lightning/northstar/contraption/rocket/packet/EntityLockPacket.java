@@ -11,12 +11,14 @@ import net.minecraftforge.network.NetworkEvent.Context;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SoftReleasePacket extends SimplePacketBase {
+public class EntityLockPacket extends SimplePacketBase {
     public int contraptionEntityId;
-    public SoftReleaseInfo info;
+    public LockInfo info;
     public UUID playerID;
 
-    public record SoftReleaseInfo(Vec3 offset, AtomicInteger ticks) {
+    public record LockInfo(Vec3 offset, AtomicInteger ticks) {
+        public static final int FOREVER = Integer.MIN_VALUE;
+
         public Vec3 offset() {
             return this.offset;
         }
@@ -26,19 +28,19 @@ public class SoftReleasePacket extends SimplePacketBase {
         }
     }
 
-    public SoftReleasePacket(UUID playerId, int contraptionId, SoftReleaseInfo info) {
+    public EntityLockPacket(UUID playerId, int contraptionId, LockInfo info) {
         this.info = info;
         this.playerID = playerId;
         this.contraptionEntityId = contraptionId;
     }
 
-    public SoftReleasePacket(FriendlyByteBuf buffer) {
+    public EntityLockPacket(FriendlyByteBuf buffer) {
         this.playerID = buffer.readUUID();
         this.contraptionEntityId = buffer.readInt();
 
         Vec3 offset = new Vec3(buffer.readVector3f());
         AtomicInteger ticks = new AtomicInteger(buffer.readInt());
-        info = new SoftReleaseInfo(offset, ticks);
+        info = new LockInfo(offset, ticks);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class SoftReleasePacket extends SimplePacketBase {
     public boolean handle(Context context) {
         Entity entity = Minecraft.getInstance().level.getEntity(contraptionEntityId);
         if (entity instanceof RocketContraptionEntity rce) {
-            rce.softReleaseMap.put(playerID, info);
+            rce.entityLockMap.put(playerID, info);
         }
 
         return true;

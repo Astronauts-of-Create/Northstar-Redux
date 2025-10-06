@@ -6,10 +6,10 @@ import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
 import com.lightning.northstar.contraption.ActorConfigPacket;
+import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.contraption.rocket.packet.SoftReleasePacket;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,7 +42,7 @@ public enum NorthstarPackets {
     ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket::new, PLAY_TO_CLIENT),
     ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket::new, PLAY_TO_CLIENT),
     ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket::new, PLAY_TO_CLIENT),
-    SOFT_RELEASE(SoftReleasePacket.class, SoftReleasePacket::new, PLAY_TO_CLIENT);
+    SOFT_RELEASE(EntityLockPacket.class, EntityLockPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
     public static final int NETWORK_VERSION = 4;

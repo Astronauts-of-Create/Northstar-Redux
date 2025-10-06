@@ -5,20 +5,18 @@ import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarSounds;
+import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.contraption.rocket.packet.SoftReleasePacket;
 import com.lightning.northstar.util.mixinInterfaces.EntityMixin_I;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
-import com.simibubi.create.content.contraptions.sync.ContraptionSeatMappingPacket;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
@@ -37,7 +35,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -214,7 +211,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 final_lift_vel = lift_vel - 0.5f;
             }
             if (this.getY() > RocketHandler.DIMENSION_CHANGE_HEIGHT) { //Start landing
-                if (level.isClientSide) flyingSound.stopSound();
+                if (level.isClientSide && flyingSound != null) flyingSound.stopSound();
                 startLanding();
                 this.cooldown = 0;
                 this.final_lift_vel = 0;
@@ -290,9 +287,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
             for (Entity entity : entitiesWithinContraption) {
-                EntityMixin_I entity1 = (EntityMixin_I) entity;
-                entity1.setRidingRocket(this);
-
+                ((EntityMixin_I) entity).setRidingRocket(this);
 
                 if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
                     if (entity.getVehicle() != null) {
@@ -300,52 +295,60 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                         entity.stopRiding();
                     }
 
-                    SoftReleasePacket.SoftReleaseInfo softReleaseInfo = softReleaseMap.get(entity.getUUID());
-                    if (softReleaseInfo != null) { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
+                    EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
+                    if (lockInfo == null) {
+                        entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+//                        if (!(entity instanceof LivingEntity)) { //Nonliving entities need to stay put or they risk knocking the player out of the ship!
+//                            if (!level().isClientSide) lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
+//                        }
+                    } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
                         entity.setPos(
-                                position().x + softReleaseInfo.offset().x,
-                                position().y + softReleaseInfo.offset().y,
-                                position().z + softReleaseInfo.offset().z);
-                        softReleaseInfo.ticks().getAndAdd(-1);
-                        if (softReleaseInfo.ticks().get() < 0) softReleaseMap.remove(entity.getUUID());
-                        //Northstar.LOGGER.info("Soft release " + tickCount + "; client=" + level.isClientSide);
-                    } else entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+                                position().x + lockInfo.offset().x,
+                                position().y + lockInfo.offset().y,
+                                position().z + lockInfo.offset().z);
+                        if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
+                            lockInfo.ticks().getAndAdd(-1);
+                            if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
+                        }
+                    }
+
                 }
             }
         }
         slowing = false;
     }
 
-    public HashMap<UUID, SoftReleasePacket.SoftReleaseInfo> softReleaseMap = new HashMap<>();
+    public HashMap<UUID, EntityLockPacket.LockInfo> entityLockMap = new HashMap<>();
 
     /**
      * Add a soft-release entry, to lock the player in for a few ticks (This should happen on the server side)
      *
      * @param passenger
      */
-    public void addSoftReleaseEntry(Entity passenger) {
-        SoftReleasePacket.SoftReleaseInfo entry = null;
+    public void lockEntity(Entity passenger, int ticks) {
+        EntityLockPacket.LockInfo entry = null;
 
         BlockPos seatPos = contraption.getSeatOf(passenger.getUUID());
         if (seatPos != null) {
-            Northstar.LOGGER.info("SEAT soft release; client=" + level().isClientSide);
+            Northstar.LOGGER.info("Locking " + passenger + " to seat for " + ticks + " ticks");
             Vec3 offset = VecHelper.getCenterOf(seatPos);//.add(0, passenger.getBoundingBox().getYsize(), 0);
-            entry = new SoftReleasePacket.SoftReleaseInfo(offset, new AtomicInteger(10));
+            entry = new EntityLockPacket.LockInfo(offset, new AtomicInteger(ticks));
         } else {//If the player dismounts from the rocket without a seat or dismounts from a boat for instance
-            Northstar.LOGGER.info("OTHER soft release; client=" + level().isClientSide);
+            Northstar.LOGGER.info("Locking " + passenger + " to position for " + ticks + " ticks");
             Vec3 offset = passenger.position().subtract(position()).add(0, final_lift_vel, 0);
-            entry = new SoftReleasePacket.SoftReleaseInfo(offset, new AtomicInteger(10));
+            entry = new EntityLockPacket.LockInfo(offset, new AtomicInteger(ticks));
         }
 
+
         if (entry != null) {
-            softReleaseMap.put(passenger.getUUID(), entry);
-            NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new SoftReleasePacket(passenger.getUUID(), getId(), entry));
+            entityLockMap.put(passenger.getUUID(), entry);
+            NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new EntityLockPacket(passenger.getUUID(), getId(), entry));
         }
     }
 
     @Override
     public void removePassenger(Entity passenger) {
-        if (!level().isClientSide) addSoftReleaseEntry(passenger);
+        if (!level().isClientSide) lockEntity(passenger, 10);
         super.removePassenger(passenger);
     }
 
@@ -412,10 +415,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
-            if (newPassenger == null)
-                continue; // shouldn't happen unless this method is misused by another mod
+            if (newPassenger == null) continue; // shouldn't happen unless this method is misused by another mod
 
             newPassenger.setPos(newRocket.position().add(data.offset));
+            ((EntityMixin_I) newPassenger).setRidingRocket(newRocket);
 
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
