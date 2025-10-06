@@ -17,6 +17,8 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
+import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
+import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
@@ -298,9 +300,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                     EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
                     if (lockInfo == null) {
                         entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
-//                        if (!(entity instanceof LivingEntity)) { //Nonliving entities need to stay put or they risk knocking the player out of the ship!
-//                            if (!level().isClientSide) lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
-//                        }
+
+                        //Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
+                        if (!level().isClientSide
+                                && !(entity instanceof LivingEntity)
+                                && !(entity instanceof SuperGlueEntity)
+                                && !(entity instanceof ItemEntity)) {
+                            lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
+                            entity.startRiding(this, true);
+                        }
                     } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
                         entity.setPos(
                                 position().x + lockInfo.offset().x,
@@ -344,6 +352,35 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             entityLockMap.put(passenger.getUUID(), entry);
             NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new EntityLockPacket(passenger.getUUID(), getId(), entry));
         }
+    }
+
+    @Override
+    public void positionRider(Entity passenger, MoveFunction callback) {
+        if (!hasPassenger(passenger))
+            return;
+
+        Vec3 transformedVector = getPassengerPosition(passenger, 1);
+        if (transformedVector == null) {
+            //Added
+            EntityLockPacket.LockInfo lockInfo = entityLockMap.get(passenger.getUUID());
+            if (lockInfo != null) {
+                callback.accept(passenger,
+                        position().x + lockInfo.offset().x,
+                        position().y + lockInfo.offset().y,
+                        position().z + lockInfo.offset().z);
+                if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
+                    lockInfo.ticks().getAndAdd(-1);
+                    if (lockInfo.ticks().get() < 0) entityLockMap.remove(passenger.getUUID());
+                }
+            }//--------------
+            return;
+        }
+
+        float offset = -1 / 8f;
+        if (passenger instanceof AbstractContraptionEntity)
+            offset = 0.0f;
+        callback.accept(passenger, transformedVector.x,
+                transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) + offset, transformedVector.z);
     }
 
     @Override
