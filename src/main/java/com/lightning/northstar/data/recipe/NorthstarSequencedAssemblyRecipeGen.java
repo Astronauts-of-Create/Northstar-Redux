@@ -26,6 +26,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
     GeneratedRecipe
             $ = null,
 
+
     ADVANCED_CIRCUIT = create("advanced_circuit",
             b -> b.require(NorthstarItems.CIRCUIT)
                     .transitionTo(NorthstarItems.UNFINISHED_ADVANCED_CIRCUIT)
