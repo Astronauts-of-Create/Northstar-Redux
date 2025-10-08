@@ -1,13 +1,8 @@
 package com.lightning.northstar.mixin;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.util.mixinInterfaces.EntityMixin_I;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -16,7 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
@@ -40,15 +34,17 @@ public abstract class EntityMixin implements EntityMixin_I {
         ridingRocket = rocket;
     }
 
-    @Inject(method = "startRiding*", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z",
+            at = @At("HEAD"), cancellable = true)
     private void northstar$StartRiding(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> cir) {
         //We must use a mixin to be more proactive in stopping the player from riding when they should not
         if ((Object) this instanceof LivingEntity self) {
             EntityMixin_I mix = (EntityMixin_I) self;
             if (mix.getRidingRocket() != null && vehicle != mix.getRidingRocket()) {
                 Northstar.LOGGER.warn("Passenger trying to mount non-rocket while already in a rocket.");
-                Minecraft.getInstance().player.displayClientMessage(
-                        Component.translatable("northstar.contraption.cannot_mount_another_entity_while_in_rocket"), true);
+                //TODO: Send a client message telling the user they cannot mount another entity while in rocket
+//                Minecraft.getInstance().player.displayClientMessage(
+//                        Component.translatable("northstar.contraption.cannot_mount_another_entity_while_in_rocket"), true);
                 cir.cancel();
             }
         }
