@@ -3,7 +3,7 @@
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 1
+      "count": 25
     },
     {
       "type": "minecraft:in_square"
@@ -16,7 +16,7 @@
           "above_bottom": -80
         },
         "max_inclusive": {
-          "above_bottom": 60
+          "above_bottom": 90
         }
       }
     },
