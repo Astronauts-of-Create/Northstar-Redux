@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -102,10 +103,33 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
         noCulling = true;
-
         lift_vel = 0.5f;
         launchingMode = true;
         landingMode = false;
+    }
+
+    private void fixEntityMounting(boolean inflatedAABB) {
+        for (Entity entity :
+                inflatedAABB ?
+                        entitiesWithinContraption :
+                        level().getEntities(this, getBoundingBox())
+        ) {
+            Northstar.LOGGER.info("Fixing entity mounting...");
+            ((EntityMixin_I) entity).setRidingRocket(this);
+            if (entity.getVehicle() != this) {
+                if (entity.getVehicle() != null) {
+                    Northstar.LOGGER.warn("Unmounting entity because they are in a vehicle that is not this rocket");
+                    entity.stopRiding();
+                }
+                if (!level().isClientSide//Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
+                        && !(entity instanceof LivingEntity)
+                        && !(entity instanceof SuperGlueEntity)
+                        && !(entity instanceof ItemEntity)) {
+                    lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
+                    entity.startRiding(this, true);
+                }
+            }
+        }
     }
 
     public static RocketContraptionEntity create(Level world, Contraption contraption) {
@@ -118,7 +142,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public void disassemble() {
         super.disassemble();
 
-        for (Entity entity : entitiesWithinContraption) {
+        for (Entity entity : getEntitiesWithinContraption()) {
             EntityMixin_I entity1 = (EntityMixin_I) entity;
             entity1.setRidingRocket(null);
         }
@@ -153,6 +177,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (launchingMode && launchTime == 0 && activeLaunch) {//Start blasting off
             if (!blasting) {//Only do this once
                 blasting = true;
+                fixEntityMounting(false);
             }
             if (!fuelBurned) { //We only burn the fuel once
                 Northstar.LOGGER.debug("BURNING FUEL");
@@ -197,6 +222,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (contraption.owner != null && !printed) {
             displayInfo();
+            fixEntityMounting(false);
             printed = true;
         }
 
@@ -253,73 +279,58 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         tickActors();
 
-        if (isLaunchingOrLanding() && //No point in checking for collisions if we're not moving
-                collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
-            if (!level.isClientSide) {
-                level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
-                if ((Math.abs(final_lift_vel) < 3 || hasExploded)) {
-                    if (this.landingMode && !isUsingTicket) {//Give the player a return ticket
-                        ItemStack returnTicket = createReturnTicket();
-                        if (owner != null) {
-                            Player player = owner;
-                            level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), returnTicket));
+        if (isLaunchingOrLanding()) {
+            if (collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
+                if (!level.isClientSide) {
+                    level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
+                    if ((Math.abs(final_lift_vel) < 3 || hasExploded)) {
+                        if (this.landingMode && !isUsingTicket) {//Give the player a return ticket
+                            ItemStack returnTicket = createReturnTicket();
+                            if (owner != null) {
+                                Player player = owner;
+                                level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), returnTicket));
+                            }
                         }
+                        move(0, -1, 0); // temporary fix for the rocket disassembling one block above the ground
+                        disassemble();
+                        final_lift_vel = 0; // don't move entities when disassembling
+                        if (this.landingMode && isUsingTicket) {//Consume the ticket
+                            RocketHandler.deleteTicket(level, this.blockPosition());
+                        }
+                        landingMode = false;
                     }
-                    move(0, -1, 0); // temporary fix for the rocket disassembling one block above the ground
-                    disassemble();
-                    final_lift_vel = 0; // don't move entities when disassembling
-                    if (this.landingMode && isUsingTicket) {//Consume the ticket
-                        RocketHandler.deleteTicket(level, this.blockPosition());
-                    }
-                    landingMode = false;
-                }
 
-                //If auto-landing is disabled, explode the rocket if it hits the ground
-                if (landingMode && !auto_land_mode && Math.abs(final_lift_vel) > 3 && !hasExploded) {
-                    level.explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
-                    hasExploded = true;
+                    //If auto-landing is disabled, explode the rocket if it hits the ground
+                    if (landingMode && !auto_land_mode && Math.abs(final_lift_vel) > 3 && !hasExploded) {
+                        level.explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
+                        hasExploded = true;
+                    }
+                } else {
+                    if (flyingSound != null)
+                        flyingSound.stopSound();
                 }
-            } else {
-                if (flyingSound != null)
-                    flyingSound.stopSound();
             }
-        }
+            if (!isStalled() && tickCount > 2 && transportDelay == 0) {
+                move(0, final_lift_vel, 0);
+                // TODO: non-seated entities still bug out visually
+                for (Entity entity : getEntitiesWithinContraption()) {
+                    ((EntityMixin_I) entity).setRidingRocket(this);
 
-        if (!isStalled() && tickCount > 2 && transportDelay == 0) {
-            move(0, final_lift_vel, 0);
-            // TODO: non-seated entities still bug out visually
-            for (Entity entity : entitiesWithinContraption) {
-                ((EntityMixin_I) entity).setRidingRocket(this);
-
-                if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
-                    if (entity.getVehicle() != null) {
-                        Northstar.LOGGER.warn("Unmounting entity because they are in a vehicle that is not this rocket");
-                        entity.stopRiding();
-                    }
-
-                    EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
-                    if (lockInfo == null) {
-                        entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
-
-                        //Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
-                        if (!level().isClientSide
-                                && !(entity instanceof LivingEntity)
-                                && !(entity instanceof SuperGlueEntity)
-                                && !(entity instanceof ItemEntity)) {
-                            lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
-                            entity.startRiding(this, true);
-                        }
-                    } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
-                        entity.setPos(
-                                position().x + lockInfo.offset().x,
-                                position().y + lockInfo.offset().y,
-                                position().z + lockInfo.offset().z);
-                        if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
-                            lockInfo.ticks().getAndAdd(-1);
-                            if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
+                    if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
+                        EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
+                        if (lockInfo == null) {
+                            entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+                        } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
+                            entity.setPos(
+                                    position().x + lockInfo.offset().x,
+                                    position().y + lockInfo.offset().y,
+                                    position().z + lockInfo.offset().z);
+                            if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
+                                lockInfo.ticks().getAndAdd(-1);
+                                if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
+                            }
                         }
                     }
-
                 }
             }
         }
@@ -334,7 +345,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
      * @param passenger
      */
     public void lockEntity(Entity passenger, int ticks) {
-        EntityLockPacket.LockInfo entry = null;
+        EntityLockPacket.LockInfo entry = entityLockMap.get(passenger.getUUID());
+        if (entry != null) { //If there is already an entry, don't let the tick duration be less than what it already is
+            ticks = Math.max(entry.ticks().get(), ticks);
+        }
 
         BlockPos seatPos = contraption.getSeatOf(passenger.getUUID());
         if (seatPos != null) {
@@ -433,6 +447,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     public @Nullable Entity changeDimension(ServerLevel destination, ITeleporter teleporter) {
+        Northstar.LOGGER.info("Changing ship " + this + " to dimension " + destination.toString());
         record PassengerData(Entity entity, Vec3 offset, int seat) {
         }
         List<PassengerData> passengers = new ArrayList<>();
@@ -464,6 +479,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (controllingPlayer != null)
             NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new RocketControlPacket(controllingPlayer, getId(), getContraption().localControlsPos));
 
+        fixEntityMounting(true);
         return newRocket;
     }
 

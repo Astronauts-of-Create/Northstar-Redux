@@ -17,7 +17,7 @@ public class EntityLockPacket extends SimplePacketBase {
     public UUID playerID;
 
     public record LockInfo(Vec3 offset, AtomicInteger ticks) {
-        public static final int FOREVER = Integer.MIN_VALUE;
+        public static final int FOREVER = Integer.MAX_VALUE;
 
         public Vec3 offset() {
             return this.offset;
