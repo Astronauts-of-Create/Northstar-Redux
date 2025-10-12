@@ -74,6 +74,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -1292,13 +1293,21 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.TUFF)
                     .strength(0.4f, 2f))
-            .transform(pickaxeOnly())
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(BlockTags.MINEABLE_WITH_SHOVEL)
             .tag(NorthstarBlockTags.BASE_STONE_MARS.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.dropOther(b, NorthstarItems.VOLCANIC_ASH))
+            .loot((lt, block) -> lt.add(block,
+                    LootTable.lootTable()
+                            .withPool(LootPool.lootPool()
+                                    .setRolls(ConstantValue.exactly(1))
+                                    .add(LootItem.lootTableItem(NorthstarItems.VOLCANIC_ASH.get())
+                                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 5.0F)))//same as copper
+                                            .apply(ApplyExplosionDecay.explosionDecay()))))
+            )
             .simpleItem()
             .register();
 
