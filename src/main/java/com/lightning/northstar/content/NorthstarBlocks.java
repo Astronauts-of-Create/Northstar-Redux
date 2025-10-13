@@ -456,6 +456,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .recipe(NorthstarDataGenHelper.sheetmetalRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -501,6 +502,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .recipe(NorthstarDataGenHelper.platingRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
             .simpleItem()
             .register();
 
