@@ -1,6 +1,7 @@
 import java.time.Instant
 
 plugins {
+    `maven-publish`
     id("architectury-plugin") version "3.4.161"
     id("dev.architectury.loom") version "1.10.433"
 }
@@ -138,4 +139,20 @@ tasks.processResources {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+
+            repositories {
+                maven {
+                    name = "SkyPlex"
+                    credentials(PasswordCredentials::class.java)
+                    url = uri("https://repo.mc-skyplex.net/releases/")
+                }
+            }
+        }
+    }
 }
