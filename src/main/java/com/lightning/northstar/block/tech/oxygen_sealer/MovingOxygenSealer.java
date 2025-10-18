@@ -1,9 +1,10 @@
 package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.config.NorthstarConfigs;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
+import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -19,7 +20,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 public class MovingOxygenSealer implements SealingProvider {
 
     public final Contraption contraption;
-    public final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
+    public final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer(SealingMode.OXYGEN);
     public float pendingDrain;
     public boolean active;
 

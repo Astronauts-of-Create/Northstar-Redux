@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.block;
 
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

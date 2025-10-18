@@ -65,6 +65,8 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
             sealer.beginSeal(level, worldPosition, null);
         }
 
+        sealer.renderLeakPath(level);
+
         active = Math.abs(speed) > 0 && !overStressed && !sealer.hasLeak();
         if (active && level.isClientSide) {
             addParticles(isCurrentlyWarm(), speed / 64f);
@@ -135,7 +137,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
                 .text(ChatFormatting.GRAY, unit.symbol)
                 .forGoggles(tooltip, 1);
 
-        regulator.sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks());
+        regulator.sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks(), isPlayerSneaking);
         if (isPlayerSneaking)
             regulator.sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
 

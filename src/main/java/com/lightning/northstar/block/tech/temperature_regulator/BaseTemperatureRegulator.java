@@ -2,6 +2,8 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.util.MutableAABB;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
+import com.lightning.northstar.world.sealer.SealingMode;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -9,10 +11,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.BlockGetter;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class BaseTemperatureRegulator {
 
     protected final MutableAABB bounds = new MutableAABB();
-    protected final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer() {
+    protected final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer(SealingMode.TEMPERATURE) {
         @Override
         protected boolean isAirOccluded(BlockGetter level, BlockPos from, BlockPos to, Direction direction) {
             if (!bounds.contains(to))

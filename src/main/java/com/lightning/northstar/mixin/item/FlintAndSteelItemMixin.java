@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.item;
 
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.context.UseOnContext;

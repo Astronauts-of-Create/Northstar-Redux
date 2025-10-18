@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin;
 
 import com.lightning.northstar.accessor.NorthstarLevel;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,6 @@
 package com.lightning.northstar.item.armor;
 
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.theme.Color;
@@ -29,7 +29,7 @@ public class RemainingOxygenOverlay implements IGuiOverlay {
                 NorthstarOxygen.hasOxygen(player.level(), player.position()))
             return;
 
-        ItemStack tank = NorthstarOxygen.getOxy(player);
+        ItemStack tank = NorthstarOxygen.getOxygenTank(player);
         if (tank.isEmpty())
             return;
         int remainingTime = tank.getOrCreateTag().getInt("Oxygen");

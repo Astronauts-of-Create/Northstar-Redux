@@ -1,4 +1,4 @@
-package com.lightning.northstar.world;
+package com.lightning.northstar.world.oxygen;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlockEntity;
@@ -7,6 +7,7 @@ import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
+import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,10 @@ public class NorthstarOxygen {
     public NorthstarOxygen(Level level) {
         this.level = level;
         this.providers = new HashSet<>();
+    }
+
+    public boolean hasOxygen() {
+        return NorthstarPlanets.getPlanetOxy(level.dimension());
     }
 
     public boolean hasOxygen(Vec3 pos) {
@@ -89,10 +94,10 @@ public class NorthstarOxygen {
         return level.northstar$oxygen();
     }
 
-    public static ItemStack getOxy(LivingEntity entity) {
-        for (ItemStack items : entity.getArmorSlots()) {
-            if (items.is(NorthstarTags.NorthstarItemTags.OXYGEN_SOURCES.tag)) {
-                return items;
+    public static ItemStack getOxygenTank(LivingEntity entity) {
+        for (ItemStack item : entity.getArmorSlots()) {
+            if (item.is(NorthstarTags.NorthstarItemTags.OXYGEN_SOURCES.tag)) {
+                return item;
             }
         }
         return ItemStack.EMPTY;

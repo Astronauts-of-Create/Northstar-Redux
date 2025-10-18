@@ -2,7 +2,7 @@ package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Blocks;

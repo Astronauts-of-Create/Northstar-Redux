@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.content.NorthstarTags;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

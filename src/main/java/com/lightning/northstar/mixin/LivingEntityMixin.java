@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin;
 
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.NorthstarTemperature;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

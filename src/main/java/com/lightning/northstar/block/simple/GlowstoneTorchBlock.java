@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.particle.NorthstarParticles;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;

@@ -5,7 +5,7 @@ import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;

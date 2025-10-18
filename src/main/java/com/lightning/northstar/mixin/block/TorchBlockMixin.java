@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

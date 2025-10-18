@@ -6,7 +6,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;

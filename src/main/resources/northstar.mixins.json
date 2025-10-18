@@ -4,6 +4,7 @@
   "package": "com.lightning.northstar.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlockMixin",
     "BucketItemMixin",
     "DamageSourcesMixin",
     "DataGenMainMixin",
@@ -34,12 +35,17 @@
     "item.FireChargeItemMixin",
     "item.FlintAndSteelItemMixin",
     "level.ServerLevelMixin",
-    "level.VenusServerLevelMixin"
+    "level.VenusServerLevelMixin",
+    "oxygen.AbstractFurnaceBlockMixin",
+    "oxygen.BaseFireBlockMixin",
+    "oxygen.CampfireBlockMixin",
+    "oxygen.LeavesBlockMixin"
   ],
   "client": [
     "LivingEntityRendererMixin",
     "PlayerFrostEffectMixin",
     "client.GuiGraphicsMixin",
+    "create.GoggleOverlayMixin",
     "dimensionstuff.FogRendererMixin",
     "dimensionstuff.LevelRendererMixin"
   ],
