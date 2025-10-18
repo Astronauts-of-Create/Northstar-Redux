@@ -35,6 +35,8 @@ public class NorthstarContentRemapper {
         remap("iron_space_door", NorthstarBlocks.TITANIUM_SPACE_DOOR);
         // 0.3.0: Rename the oxygen_generator to oxygen_sealer
         remap("oxygen_generator", NorthstarBlocks.OXYGEN_SEALER);
+        // 0.5.0
+        remap("vent_block", NorthstarBlocks.VENT);
     }
 
     public static void remap(String oldValue, RegistryEntry<?> newValue) {

@@ -3583,8 +3583,8 @@ public class NorthstarBlocks {
 
     // endregion
 
-    public static final BlockEntry<GrateBlock> VENT_BLOCK = REGISTRATE
-            .block("vent_block", GrateBlock::new)
+    public static final BlockEntry<VentBlock> VENT = REGISTRATE
+            .block("vent", VentBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -3597,6 +3597,21 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
+            .register();
+
+    public static final BlockEntry<InsulatedVentBlock> INSULATED_VENT = REGISTRATE
+            .block("insulated_vent", InsulatedVentBlock::new)
+            .initialProperties(SharedProperties::netheriteMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .strength(4f, 8f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()
+                    .isSuffocating(NorthstarBlocks::never)
+                    .isViewBlocking(NorthstarBlocks::never))
+            .transform(pickaxeOnly())
+            .blockstate(InsulatedVentBlock::generateBlockStateModel)
+            .loot((c, b) -> c.dropOther(b, VENT))
             .register();
 
     public static final BlockEntry<Block> GLOWSTONE_LAMP = REGISTRATE

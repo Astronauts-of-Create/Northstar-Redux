@@ -1,0 +1,9 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "block/cube_all",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"all": "northstar:block/vent_block"
+	}
+}

@@ -5,6 +5,7 @@
   "item.northstar.star_map.tooltip.condition1": "When put in the Rocket Station",
   "item.northstar.star_map.tooltip.behaviour1": "Controls the Rocket's _Destination_",
 
+
   "block.northstar.astronomy_table.tooltip.summary": "Used to combine 3 _Astronomical Readings_ into a _Star Map_",
 
   "block.northstar.auto_lander.tooltip.summary": "Automatically lands your _Rocket_ safely.",
@@ -47,5 +48,10 @@
 
   "block.northstar.temperature_regulator.tooltip.summary": "Can be used to manipulate _Temperature_",
   "block.northstar.temperature_regulator.tooltip.condition1": "When R-Clicked",
-  "block.northstar.temperature_regulator.tooltip.behaviour1": "Opens the _configuration interface_."
+  "block.northstar.temperature_regulator.tooltip.behaviour1": "Opens the _configuration interface_.",
+
+  "block.northstar.vent.tooltip.condition1": "When R-Clicked with wool",
+  "block.northstar.vent.tooltip.behaviour1": "Turns into an _insulated vent_. Insulated vents prevent _temperature_ from passing but still let air through.",
+  "block.northstar.vent.tooltip.condition2": "When R-Clicked with a wrench",
+  "block.northstar.vent.tooltip.behaviour2": "Removes the wool."
 }
