@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.particle.OxyFlowParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
@@ -109,7 +109,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
                 }
 
                 if (level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
-                    level.addParticle(new OxyFlowParticleData(getBlockPos().offset(0, 1, 0)), worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, 0, 0, 0);
+                    level.addParticle(NorthstarParticles.OXY_FLOW.get(), worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, 0, 0, 0);
 
             }
         }

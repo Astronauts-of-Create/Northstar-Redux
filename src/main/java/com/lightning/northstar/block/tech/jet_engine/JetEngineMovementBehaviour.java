@@ -14,11 +14,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class JetEngineMovementBehaviour implements MovementBehaviour {
 
-    /*@Override
-    public boolean renderAsNormalBlockEntity() {
-        return false;
-    }*/
-
     @Override
     public ItemStack canBeDisabledVia(MovementContext context) {
         return null;
@@ -42,11 +37,11 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
     // Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
                 if (rce.blasting) {
                     if (status == ParticleStatus.ALL && r.nextInt(8) == 0)
-                        context.world.addAlwaysVisibleParticle(new RocketSmokeParticleData(), v.x, v.y, v.z, 0, 0, 0);
+                        context.world.addAlwaysVisibleParticle(NorthstarParticles.ROCKET_SMOKE.get(), v.x, v.y, v.z, 0, 0, 0);
                     else if (r.nextInt(5) == 0)
-                        context.world.addAlwaysVisibleParticle(new RocketFlameParticleData(), v.x, v.y, v.z, 0, 0, 0);
+                        context.world.addAlwaysVisibleParticle(NorthstarParticles.ROCKET_FLAME.get(), v.x, v.y, v.z, 0, 0, 0);
                 } else if (status == ParticleStatus.ALL) {//Stalling
-                    if (r.nextInt(8) == 0) context.world.addParticle(new ColdAirParticleData(), v.x, v.y, v.z, 0, 0, 0);
+                    if (r.nextInt(8) == 0) context.world.addParticle(NorthstarParticles.COLD_AIR.get(), v.x, v.y, v.z, 0, 0, 0);
                 }
 
             } else if (rce.landingMode && rce.lift_vel < 0 && context.contraption.entity.getY() < rce.getSlowdownHeightThreshold()) {
@@ -54,15 +49,15 @@ public class JetEngineMovementBehaviour implements MovementBehaviour {
     // Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
                 if (rce.slowing) {
                     if (status == ParticleStatus.ALL && r.nextInt(3) == 0)
-                        context.world.addAlwaysVisibleParticle(new RocketSmokeLandingParticleData(), v.x, v.y - 2, v.z, 0, 0, 0);
+                        context.world.addAlwaysVisibleParticle(NorthstarParticles.ROCKET_SMOKE_LANDING.get(), v.x, v.y - 2, v.z, 0, 0, 0);
                     else if (r.nextFloat() < 0.6)
-                        context.world.addAlwaysVisibleParticle(new RocketFlameLandingParticleData(), v.x, v.y - 2, v.z, 0, 0, 0);
+                        context.world.addAlwaysVisibleParticle(NorthstarParticles.ROCKET_FLAME_LANDING.get(), v.x, v.y - 2, v.z, 0, 0, 0);
                 }
             }
         } else if (status == ParticleStatus.ALL) {//Stalling
             Vec3 v = context.position;
     // Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f).multiply(1, 0, 1));
-            if (r.nextInt(8) == 0) context.world.addParticle(new ColdAirParticleData(), v.x, v.y, v.z, 0, 0, 0);
+            if (r.nextInt(8) == 0) context.world.addParticle(NorthstarParticles.COLD_AIR.get(), v.x, v.y, v.z, 0, 0, 0);
         }
     }
 

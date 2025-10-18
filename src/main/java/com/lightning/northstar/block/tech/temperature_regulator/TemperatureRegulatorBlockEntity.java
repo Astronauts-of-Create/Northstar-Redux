@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.config.NorthstarConfigs;
-import com.lightning.northstar.particle.SnowflakeParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
@@ -105,7 +105,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         }
 
         for (int i = 0, j = random.nextInt(isWarm ? 5 : 4); i < j; i++) {
-            ParticleOptions particle = isWarm ? ParticleTypes.FLAME : new SnowflakeParticleData();
+            ParticleOptions particle = isWarm ? ParticleTypes.FLAME : NorthstarParticles.SNOWFLAKE.get();
             double posX = worldPosition.getX() + random.nextDouble();
             double posY = worldPosition.getY() + 0.7 + random.nextDouble();
             double posZ = worldPosition.getZ() + random.nextDouble();
