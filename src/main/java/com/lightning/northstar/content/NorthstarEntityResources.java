@@ -36,9 +36,18 @@ public class NorthstarEntityResources {
     public static final ResourceLocation COBRA_TEXTURE = Northstar.asResource("textures/entity/mars_cobra");
     public static final ResourceLocation COBRA_ANIMATIONS = Northstar.asResource("animations/mars_cobra");
 
+    // aegaeon crawler
+    public static final ResourceLocation AEGAEON_CRAWLER_MODEL = Northstar.asResource("aegaeon_crawler");
+    public static final ResourceLocation AEGAEON_CRAWLER_TEXTURE = Northstar.asResource("textures/entity/aegaeon_crawler");
+    public static final ResourceLocation AEGAEON_CRAWLER_ANIMATIONS = Northstar.asResource("animations/aegaeon_crawler");
+
+
     public static final ResourceLocation MOTH_MODEL = Northstar.asResource("mars_moth");
     public static final ResourceLocation MOTH_TEXTURE = Northstar.asResource("textures/entity/mars_moth");
     public static final ResourceLocation MOTH_ANIMATIONS = Northstar.asResource("animations/mars_moth");
+
+
+
 
     // venusian creatures
 

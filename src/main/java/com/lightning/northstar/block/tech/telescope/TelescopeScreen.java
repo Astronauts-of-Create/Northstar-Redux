@@ -167,6 +167,13 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
         graphics.blit(SATURN, (saturn_x * 20) + (int) scrollX * 20, (saturn_y * 20) + (int) scrollY * 20, 0, 0, 255, 255);
         pose.popPose();
 
+        int aegaeon_x = (int) NorthstarPlanets.aegaeon_x;
+        int aegaeon_y = (int) NorthstarPlanets.aegaeon_y;
+        pose.pushPose();
+        pose.scale(0.05F, 0.05F, 0.05F);
+        graphics.blit(PLUTO, (aegaeon_x * 20) + (int) scrollX * 20, (aegaeon_y * 20) + (int) scrollY * 20, 0, 0, 255, 255);
+        pose.popPose();
+
         int uranus_x = (int) NorthstarPlanets.uranus_x;
         int uranus_y = (int) NorthstarPlanets.uranus_y;
         pose.pushPose();
@@ -387,6 +394,18 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             list.add((Component.literal("Y:  " + (int) NorthstarPlanets.saturn_y).withStyle(ChatFormatting.WHITE)));
 
             graphics.renderComponentTooltip(font, list, mouseX, mouseY);
+        } else if (Math.abs((NorthstarPlanets.aegaeon_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.aegaeon_y) + scrollY + 8 - mouseY) < 8) {
+            List<Component> list = Lists.newArrayList();
+            RenderSystem.colorMask(true, true, true, true);
+            list.add((Component.translatable("planets.aegaeon.name").withStyle(ChatFormatting.AQUA)));
+            list.add((Component.translatable("planets.aegaeon.type").withStyle(ChatFormatting.GRAY)));
+            list.add((Component.translatable("planets.aegaeon.grav").withStyle(ChatFormatting.GRAY)));
+            list.add((Component.translatable("planets.aegaeon.temp").withStyle(ChatFormatting.GRAY)));
+            list.add((Component.translatable("planets.aegaeon.atmosphere").withStyle(ChatFormatting.GRAY)));
+            list.add((Component.literal("X:  " + (int) NorthstarPlanets.aegaeon_x).withStyle(ChatFormatting.WHITE)));
+            list.add((Component.literal("Y:  " + (int) NorthstarPlanets.aegaeon_y).withStyle(ChatFormatting.WHITE)));
+
+            graphics.renderComponentTooltip(font, list, mouseX, mouseY);
         } else if (Math.abs((NorthstarPlanets.uranus_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.uranus_y) + scrollY + 8 - mouseY) < 8) {
             List<Component> list = Lists.newArrayList();
             RenderSystem.colorMask(true, true, true, true);
@@ -482,6 +501,9 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             if (Math.abs((NorthstarPlanets.saturn_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.saturn_y) + scrollY + 8 - mouseY) < 8) {
                 selectedPlanet = "saturn";
             }
+            if (Math.abs((NorthstarPlanets.aegaeon_x) + scrollX + 8 - mouseX) < 8 && Math.abs((NorthstarPlanets.aegaeon_y) + scrollY + 8 - mouseY) < 8) {
+                selectedPlanet = "aegaeon";
+            }
             if (Math.abs(NorthstarPlanets.uranus_x + scrollX + 7 - mouseX) < 8 && Math.abs(NorthstarPlanets.uranus_y + scrollY + 7 - mouseY) < 8) {
                 selectedPlanet = "uranus";
             }
@@ -516,6 +538,7 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
             case "ceres" -> CERES;
             case "jupiter" -> JUPITER;
             case "saturn" -> SATURN;
+            case "aegaeon" -> PLUTO;
             case "uranus" -> URANUS;
             case "neptune" -> NEPTUNE;
             case "pluto" -> PLUTO;

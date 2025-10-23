@@ -203,6 +203,7 @@ public class NorthstarTemperature {
         if (level == NorthstarDimensions.MOON_DIM_KEY) return 0;
         if (level == NorthstarDimensions.MARS_DIM_KEY) return 0.05;
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) return 0;
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return 0;}
         if (level == NorthstarDimensions.VENUS_DIM_KEY) return 5;
         if (level == Level.OVERWORLD) return 0.4;
         return 1;
@@ -213,6 +214,7 @@ public class NorthstarTemperature {
         if (level == NorthstarDimensions.MOON_DIM_KEY) return 0;
         if (level == NorthstarDimensions.MARS_DIM_KEY) return 50;
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) return 0;
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) return 0;
         if (level == NorthstarDimensions.VENUS_DIM_KEY) return 1000;
         if (level == Level.OVERWORLD) return 100;
         return 1;

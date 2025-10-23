@@ -18,6 +18,7 @@ public class ThrowableProjectileGravityMixin {
     private static final double MARS_GRAV = 0.37;
     private static final double MOON_GRAV = 0.16;
     private static final double VENUS_GRAV = 0.88;
+    private static final double AEGAEON_GRAV = 0.02;
     private static final double MERCURY_GRAV = 0.38;
     private static final double ORBIT_GRAV = 0.06;
     double PLANET_GRAV = 1;
@@ -32,7 +33,9 @@ public class ThrowableProjectileGravityMixin {
             if (entity.level().dimension() == NorthstarDimensions.MOON_DIM_KEY)
             {PLANET_GRAV = MOON_GRAV;}else 
             if (entity.level().dimension() == NorthstarDimensions.VENUS_DIM_KEY)
-            {PLANET_GRAV = VENUS_GRAV;}else 
+            {PLANET_GRAV = VENUS_GRAV;}else
+            if (entity.level().dimension() == NorthstarDimensions.AEGAEON_DIM_KEY)
+            {PLANET_GRAV = AEGAEON_GRAV;}else
             if (entity.level().dimension() == NorthstarDimensions.MERCURY_DIM_KEY)
             {PLANET_GRAV = MERCURY_GRAV;}else 
             if (entity.level().dimension() == NorthstarDimensions.EARTH_ORBIT_DIM_KEY)

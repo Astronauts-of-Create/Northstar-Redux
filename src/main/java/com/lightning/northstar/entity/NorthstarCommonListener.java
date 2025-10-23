@@ -31,6 +31,9 @@ public class NorthstarCommonListener {
         event.put(NorthstarEntityTypes.MARS_MOTH.get(),
                 Monster.createMobAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.ATTACK_DAMAGE, 1).add(Attributes.MOVEMENT_SPEED, 0.25f).build());
 
+        event.put(NorthstarEntityTypes.AEGAEON_CRAWLER.get(),
+                Monster.createMobAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 3).add(Attributes.MOVEMENT_SPEED, 0.3f).build());
+
         event.put(NorthstarEntityTypes.MOON_LUNARGRADE.get(),
                 Monster.createMobAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.ATTACK_DAMAGE, 3).add(Attributes.MOVEMENT_SPEED, 0.25f).build());
         event.put(NorthstarEntityTypes.MOON_SNAIL.get(),
