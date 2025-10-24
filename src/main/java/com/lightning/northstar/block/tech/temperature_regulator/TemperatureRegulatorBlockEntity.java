@@ -3,13 +3,12 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -120,21 +119,16 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
-            tooltip.add(Component.empty());
-        }
-
         NorthstarLang.translate("gui.goggles.temperature_regulator")
                 .forGoggles(tooltip);
 
-        NorthstarLang.translate("gui.goggles.temperature")
+        if (StressImpact.isEnabled())
+            addStressImpactStats(tooltip, calculateStressApplied());
+
+        NorthstarLang.translate("gui.goggles.generic.temperature")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
-
-        TemperatureUnit unit = NorthstarConfigs.client().temperatureUnit.get();
-        CreateLang.number(unit.fromCelsius(regulator.temperature))
-                .style(ChatFormatting.AQUA)
-                .text(ChatFormatting.GRAY, unit.symbol)
+        NorthstarLang.temperature(regulator.temperature)
                 .forGoggles(tooltip, 1);
 
         regulator.sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks(), isPlayerSneaking);

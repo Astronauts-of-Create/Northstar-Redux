@@ -257,7 +257,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.number(getExtraSealedVolume())
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " blocks")
                     .forGoggles(tooltip, 1);
         }

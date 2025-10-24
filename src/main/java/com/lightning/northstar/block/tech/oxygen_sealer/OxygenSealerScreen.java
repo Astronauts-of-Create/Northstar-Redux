@@ -74,22 +74,22 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
         MutableComponent line2 = sealer.sealer.hasLeak() ?
                 NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
                         .add(CreateLang.number(NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get())
-                                .style(ChatFormatting.AQUA))
+                                .style(ChatFormatting.BLUE))
                         .text(" blocks")
                         .component() :
                 NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
                         .add(CreateLang.number(sealer.sealer.getSealedBlockCount())
-                                .style(ChatFormatting.AQUA))
+                                .style(ChatFormatting.BLUE))
                         .component();
         MutableComponent line3 = NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
                 .add(CreateLang.number(usagePerTick)
-                        .style(ChatFormatting.AQUA)
+                        .style(ChatFormatting.GOLD)
                         .add(NorthstarLang.MB_PER_TICK))
                 .component();
         MutableComponent line4 = NorthstarLang.translate("gui.oxygen_sealer.available_oxygen")
                 .add(CreateLang.number(totalOxygen)
                         .add(NorthstarLang.MB)
-                        .style(ChatFormatting.AQUA))
+                        .style(ChatFormatting.GOLD))
                 .component();
         MutableComponent line5 = NorthstarLang.translate("gui.oxygen_sealer.remaining_time")
                 .add(CreateLang.text(remainingTime)

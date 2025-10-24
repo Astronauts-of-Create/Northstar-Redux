@@ -11,6 +11,7 @@ import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
@@ -30,7 +31,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -156,36 +156,32 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
-            tooltip.add(Component.empty());
-        }
-
         NorthstarLang.translate("gui.oxygen_sealer")
                 .forGoggles(tooltip);
 
+        if (StressImpact.isEnabled())
+            addStressImpactStats(tooltip, calculateStressApplied());
+
         sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks(), isPlayerSneaking);
         if (!sealer.hasLeak()) {
-            if (active) {
-                NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
-                        .style(ChatFormatting.GRAY)
-                        .forGoggles(tooltip);
-                CreateLang.number(drain)
-                        .style(ChatFormatting.AQUA)
-                        .add(NorthstarLang.MB_PER_TICK)
-                        .forGoggles(tooltip, 1);
-            } else {
-                NorthstarLang.translate("gui.oxygen_sealer.no_oxygen")
-                        .style(ChatFormatting.RED)
-                        .forGoggles(tooltip);
-            }
+            NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            CreateLang.number(drain)
+                    .style(ChatFormatting.GOLD)
+                    .add(NorthstarLang.MB_PER_TICK)
+                    .forGoggles(tooltip, 1);
+        }
+        NorthstarLang.addTankTooltip(tooltip, tank.getPrimaryHandler());
+
+        if (!active && !sealer.hasLeak()) {
+            NorthstarLang.translate("gui.oxygen_sealer.no_oxygen")
+                    .style(ChatFormatting.RED)
+                    .forGoggles(tooltip);
         }
 
         if (isPlayerSneaking)
             sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
-
-        tooltip.add(Component.empty());
-
-        containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(ForgeCapabilities.FLUID_HANDLER));
 
         return true;
     }

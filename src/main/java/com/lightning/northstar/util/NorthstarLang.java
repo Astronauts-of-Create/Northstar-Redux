@@ -1,9 +1,11 @@
 package com.lightning.northstar.util;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
+import net.createmod.catnip.lang.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,6 +23,17 @@ public class NorthstarLang {
 
     public static LangBuilder translate(String langKey, Object... args) {
         return builder().translate(langKey, args);
+    }
+
+    public static LangBuilder number(double d) {
+        return builder().text(LangNumberFormat.format(d));
+    }
+
+    public static LangBuilder temperature(double temperature) {
+        TemperatureUnit unit = NorthstarConfigs.client().temperatureUnit.get();
+        return number(unit.fromCelsius(temperature))
+                .text(ChatFormatting.GRAY, unit.symbol)
+                .style(ChatFormatting.DARK_GREEN);
     }
 
     public static void addTankTooltip(List<Component> tooltip, SmartFluidTank tank) {

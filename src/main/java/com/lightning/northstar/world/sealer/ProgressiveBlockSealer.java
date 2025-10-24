@@ -238,7 +238,7 @@ public class ProgressiveBlockSealer {
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.number(maximumSealed + extraVolume)
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " blocks")
                     .forGoggles(tooltip, 1);
         } else {
@@ -246,7 +246,7 @@ public class ProgressiveBlockSealer {
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.number(sealedBlocks.size())
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " / ")
                     .add(CreateLang.number(maximumSealed + extraVolume)
                             .style(ChatFormatting.DARK_GRAY))
@@ -255,12 +255,12 @@ public class ProgressiveBlockSealer {
 
         if (isPlayerSneaking && extraVolume != 0) {
             CreateLang.number(maximumSealed)
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.BLUE)
                     .add(NorthstarLang.translate("gui.goggles.sealer.capacity_speed")
                             .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 2);
             CreateLang.number(extraVolume)
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.BLUE)
                     .add(NorthstarLang.translate("gui.goggles.sealer.capacity_extra")
                             .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 2);

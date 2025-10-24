@@ -184,7 +184,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.number(fuelType.combustionEngineEfficiency())
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.GOLD)
                     .add(NorthstarLang.MB_PER_TICK)
                     .forGoggles(tooltip, 1);
         }

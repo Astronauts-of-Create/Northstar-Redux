@@ -45,7 +45,7 @@ public class GoggleOverlayMixin {
 
                 CreateLang.number(consumption)
                         .add(NorthstarLang.MB_PER_TICK)
-                        .style(ChatFormatting.AQUA)
+                        .style(ChatFormatting.GOLD)
                         .forGoggles(tooltip, 1);
             }
         }
