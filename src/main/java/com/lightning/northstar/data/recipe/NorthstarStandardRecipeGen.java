@@ -10,10 +10,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -396,6 +398,12 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .viaCooking(() -> NorthstarItems.RAW_ICE_CREAM_CONE)
             .rewardXP(0.4f)
             .inSmoker(),
+
+    RAW_GALENA = create(() -> ForgeRegistries.ITEMS.getValue(new ResourceLocation("tfmg", "lead_ingot")))
+            .viaCooking(() -> NorthstarItems.RAW_GALENA)
+            .rewardXP(0.4f)
+            .inSmoker(),
+
 
     POLISHED_MARS_STONE = create(NorthstarBlocks.POLISHED_MARS_STONE)
             .viaCooking(() -> NorthstarBlocks.MARS_STONE)

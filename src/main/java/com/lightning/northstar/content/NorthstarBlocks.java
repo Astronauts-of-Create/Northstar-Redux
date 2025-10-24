@@ -55,6 +55,7 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -78,6 +79,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -1670,6 +1672,29 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
+    public static final BlockEntry<Block> HECTORITE = REGISTRATE
+            .block("hectorite", Block::new)
+            .initialProperties(() -> CLAY)
+            .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
+                    .sound(SoundType.CANDLE)
+                    .strength(0.5f, 2f))
+
+            .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
+            .tag(BlockTags.MINEABLE_WITH_SHOVEL)
+            .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.applyExplosionDecay(b, LootTable.lootTable()
+                    .withPool(LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0F))
+                            .add(LootItem.lootTableItem(NorthstarItems.HECTORITE_BALL))
+                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F))))
+                    .withPool(LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0F))
+                            .add(LootItem.lootTableItem(() -> ForgeRegistries.ITEMS.getValue(new ResourceLocation("tfmg", "crushed_raw_lithium"))))
+                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 3.0F)))))))
+            .simpleItem()
+            .register();
+
     public static final BlockEntry<Block> MOON_DEEP_STONE = REGISTRATE
             .block("moon_deep_stone", Block::new)
             .initialProperties(() -> STONE)
@@ -1885,6 +1910,149 @@ public class NorthstarBlocks {
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
             .build()
             .register();
+
+    public static final BlockEntry<Block> MOON_LEAD_ORE = REGISTRATE
+            .block("moon_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> MOON_DEEP_LEAD_ORE = REGISTRATE
+            .block("moon_deep_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> MARS_LEAD_ORE = REGISTRATE
+            .block("mars_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> MARS_DEEP_LEAD_ORE = REGISTRATE
+            .block("mars_deep_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> MERCURY_LEAD_ORE = REGISTRATE
+            .block("mercury_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> MERCURY_DEEP_LEAD_ORE = REGISTRATE
+            .block("mercury_deep_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> VENUS_LEAD_ORE = REGISTRATE
+            .block("venus_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(5f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+    public static final BlockEntry<Block> VENUS_DEEP_LEAD_ORE = REGISTRATE
+            .block("venus_deep_galena_ore", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(6f, 12f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.C_ORES_LEAD.tag)
+            .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GALENA.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+            .build()
+            .register();
+
+
+
 
     public static final BlockEntry<Block> MOON_GOLD_ORE = REGISTRATE
             .block("moon_gold_ore", Block::new)

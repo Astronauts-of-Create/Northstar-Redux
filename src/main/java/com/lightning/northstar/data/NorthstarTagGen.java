@@ -211,6 +211,13 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
                 .opt(ModCompat.CDG, "biodiesel");
+
+        tags.tag(NorthstarFluidTags.COMPAT_TFMG_KEROSENE)
+                .opt(ModCompat.TFMG, "kerosene");
+        tags.tag(NorthstarFluidTags.COMPAT_TFMG_DIESEL)
+                .opt(ModCompat.TFMG, "diesel");
+        tags.tag(NorthstarFluidTags.COMPAT_TFMG_NAPHTHA)
+                .opt(ModCompat.TFMG, "naphtha");
     }
 
     public static class Damage extends TagsProvider<DamageType> {

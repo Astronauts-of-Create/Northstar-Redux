@@ -4,6 +4,7 @@ public enum ModCompat implements Tags.Mod {
 
     CBC("createbigcannons"),
     CDG("createdieselgenerators"),
+    TFMG ("tfmg"),
     MEK("mekanism");
 
     public final String name;

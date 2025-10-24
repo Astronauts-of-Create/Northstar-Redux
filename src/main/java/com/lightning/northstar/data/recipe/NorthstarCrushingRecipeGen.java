@@ -64,6 +64,20 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
                     .output(0.25f, AllItems.CRUSHED_GOLD)
                     .output(0.75f, AllItems.EXP_NUGGET)),
 
+    SPACE_LEAD_ORE = create("space_galena_ore",
+            b -> b.duration(350)
+                    .require(NorthstarItemTags.SPACE_ORE_LEAD.tag)
+                    .output(AllItems.CRUSHED_LEAD, 1)
+                    .output(0.25f, AllItems.CRUSHED_LEAD)
+                    .output(0.75f, AllItems.EXP_NUGGET)),
+
+    SPACE_RAW_GALENA = create("space_raw_galena",
+            b -> b.duration(350)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .output(AllItems.CRUSHED_LEAD, 1)
+                    .output(0.25f, AllItems.CRUSHED_LEAD)
+                    .output(0.75f, AllItems.EXP_NUGGET)),
+
     SPACE_IRON_ORE = create("space_iron_ore",
             b -> b.duration(350)
                     .require(NorthstarItemTags.SPACE_ORE_IRON.tag)

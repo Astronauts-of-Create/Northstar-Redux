@@ -61,6 +61,9 @@ public class NorthstarTags {
 
         COMPAT_CBC_MOLTEN_CAST_IRON,
         COMPAT_CDG_BIODIESEL,
+        COMPAT_TFMG_KEROSENE,
+        COMPAT_TFMG_DIESEL,
+        COMPAT_TFMG_NAPHTHA,
         C_BIOFUEL(COMMON, "biofuel"),
         C_BRINE(COMMON, "brine"),
         C_CARBON(COMMON, "carbon"),
@@ -145,6 +148,7 @@ public class NorthstarTags {
         @Deprecated
         BLOCKS_AIR,
         C_ORES_COPPER(COMMON, "ores/copper"),
+        C_ORES_LEAD(COMMON, "ores/lead"),
         C_ORES_DIAMOND(COMMON, "ores/diamond"),
         C_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
         C_ORES_GOLD(COMMON, "ores/gold"),
@@ -264,6 +268,7 @@ public class NorthstarTags {
         OXYGEN_SOURCES,
         // Space ores, used for crushing recipes
         SPACE_ORE_COPPER("space_ore/copper"),
+        SPACE_ORE_LEAD("space_ore/lead"),
         SPACE_ORE_DIAMOND("space_ore/diamond"),
         SPACE_ORE_GLOWSTONE("space_ore/glowstone"),
         SPACE_ORE_GOLD("space_ore/gold"),

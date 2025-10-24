@@ -20,6 +20,22 @@ public class NorthstarFuelTypeGen {
                 0.25f,
                 4, 16));
 
+        context.register(key("tfmg_kerosene"), new FuelType(
+                NorthstarFluidTags.COMPAT_TFMG_KEROSENE.tag,
+                1f,
+                2, 16));
+
+        context.register(key("tfmg_diesel"), new FuelType(
+                NorthstarFluidTags.COMPAT_TFMG_DIESEL.tag,
+                2f,
+                5, 32));
+
+        context.register(key("tfmg_naphtha"), new FuelType(
+                NorthstarFluidTags.COMPAT_TFMG_NAPHTHA.tag,
+                1.5f,
+                4, 16));
+
+
         context.register(key("hydrocarbon"), new FuelType(
                 NorthstarFluidTags.C_HYDROCARBON.tag,
                 1,

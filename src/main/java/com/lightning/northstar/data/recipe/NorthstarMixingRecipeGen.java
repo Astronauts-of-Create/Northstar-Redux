@@ -13,11 +13,13 @@ import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class NorthstarMixingRecipeGen extends MixingRecipeGen {
 
@@ -28,6 +30,13 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
             b -> b.require(FluidTags.WATER, 500)
                     .require(NorthstarItemTags.C_DUSTS_SALT.tag)
                     .output(NorthstarFluids.BRINE.get(), 550)),
+
+    GALENA = create("galena_to_lead_ingot_and_sulfuric_acid",
+            b -> b.requiresHeat(HeatCondition.HEATED)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .output(NorthstarFluids.SULFURIC_ACID.get(), 550)
+                    .output(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tfmg", "lead_ingot")))),
+
 
     CHOCOLATE_ICE_CREAM = create("chocolate_ice_cream",
             b -> b.require(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag, 200)
