@@ -3,7 +3,7 @@ import java.time.Instant
 plugins {
     `maven-publish`
     id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.10.433"
+    id("dev.architectury.loom") version "1.11.440"
 }
 
 version = "0.5.0+1.20.1" // https://semver.org/
@@ -45,6 +45,11 @@ loom {
             "--existing", file("src/main/resources").absolutePath
         )
     }
+}
+
+project.property("renderdoc")?.let { path ->
+    tasks.runClientRenderDoc { renderDocExecutable = file("$path/bin/renderdoccmd") }
+    tasks.startRenderDocUI { renderDocExecutable = file("$path/bin/qrenderdoc") }
 }
 
 repositories {
@@ -134,7 +139,6 @@ tasks.processResources {
     filesMatching(listOf("META-INF/mods.toml")) {
         expand(buildProps)
     }
-    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {
