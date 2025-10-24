@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.crops.*;
+import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
 import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlock;
@@ -12,6 +12,7 @@ import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachi
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
+import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
@@ -84,7 +85,8 @@ import java.util.stream.IntStream;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
-import static com.simibubi.create.foundation.data.TagGen.*;
+import static com.simibubi.create.foundation.data.TagGen.axeOnly;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static net.minecraft.world.level.block.Blocks.*;
 
 public class NorthstarBlocks {
@@ -3938,6 +3940,21 @@ public class NorthstarBlocks {
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
             .item()
             .transform(customItemModel())
+            .register();
+
+    public static final BlockEntry<LargeFanBlock> LARGE_FAN = REGISTRATE
+            .block("large_fan", LargeFanBlock::new)
+            .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .noOcclusion()
+                    .isViewBlocking(NorthstarBlocks::never)
+                    .strength(8, 8))
+            .transform(pickaxeOnly())
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
+            .item()
+            .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/large_fan/block_single")))
+            .build()
             .register();
 
     public static final BlockEntry<IceBoxBlock> ICE_BOX = REGISTRATE

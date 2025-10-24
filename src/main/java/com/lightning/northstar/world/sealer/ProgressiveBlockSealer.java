@@ -60,7 +60,7 @@ public class ProgressiveBlockSealer {
     public boolean beginSeal(Level level, BlockPos origin, @Nullable Direction originDirection) {
         if (originDirection != null) {
             tempPos1.setWithOffset(origin, originDirection);
-            if (isFaceOccluded(level, tempPos1, originDirection.getOpposite(), false)) {
+            if (isFaceOccluded(level, tempPos1, originDirection.getOpposite(), false, mode)) {
                 sealedBounds.zero();
                 sealedBlocks.clear();
                 hasLeak = false;
@@ -188,10 +188,14 @@ public class ProgressiveBlockSealer {
     }
 
     protected boolean isAirOccluded(BlockGetter level, BlockPos from, BlockPos to, Direction direction) {
-        return isFaceOccluded(level, from, direction, true) || isFaceOccluded(level, to, direction.getOpposite(), false);
+        return isAirOccluded(level, from, to, direction, mode);
     }
 
-    protected boolean isFaceOccluded(BlockGetter level, BlockPos pos, Direction direction, boolean source) {
+    public static boolean isAirOccluded(BlockGetter level, BlockPos from, BlockPos to, Direction direction, SealingMode mode) {
+        return isFaceOccluded(level, from, direction, true, mode) || isFaceOccluded(level, to, direction.getOpposite(), false, mode);
+    }
+
+    public static boolean isFaceOccluded(BlockGetter level, BlockPos pos, Direction direction, boolean source, SealingMode mode) {
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof SealableBlock sealable)
             return sealable.northstar$isFaceSealed(level, pos, state, direction, source, mode);

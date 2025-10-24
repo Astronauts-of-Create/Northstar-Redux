@@ -17,7 +17,6 @@ import net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -32,11 +31,15 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public class NorthstarDataGenHelper {
 
-    public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> itemGeneratedItem() {
+    public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> itemGeneratedItem() {
         return (c, p) -> p.generated(c::get, p.modLoc("item/" + c.getName()));
     }
 
-    public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> itemGeneratedBlock(String... suffix) {
+    public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> itemGeneratedBlock() {
+        return (c, p) -> p.generated(c::get, p.modLoc("block/" + c.getName()));
+    }
+
+    public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> itemGeneratedBlock(String... suffix) {
         return (c, p) -> p.generated(c::get, p.modLoc("block/" + c.getName() + String.join("", suffix)));
     }
 

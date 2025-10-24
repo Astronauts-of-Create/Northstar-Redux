@@ -15,6 +15,8 @@ import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachi
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachineRenderer;
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlockEntity;
 import com.lightning.northstar.block.tech.ice_box.IceBoxRenderer;
+import com.lightning.northstar.block.tech.large_fan.LargeFanBlockEntity;
+import com.lightning.northstar.block.tech.large_fan.LargeFanRenderer;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorRenderer;
 import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorVisual;
@@ -63,18 +65,24 @@ public class NorthstarBlockEntityTypes {
             .validBlocks(NorthstarBlocks.VENUS_PLUME)
             .register();
 
-    public static final BlockEntityEntry<TemperatureRegulatorBlockEntity> TEMPERATURE_REGULATOR_BLOCK_ENTITY = REGISTRATE
+    public static final BlockEntityEntry<OxygenSealerBlockEntity> OXYGEN_SEALER = REGISTRATE
+            .blockEntity("oxygen_sealer", OxygenSealerBlockEntity::new)
+            .visual(() -> OxygenSealerVisual::new)
+            .validBlocks(NorthstarBlocks.OXYGEN_SEALER)
+            .renderer(() -> OxygenSealerRenderer::new)
+            .register();
+
+    public static final BlockEntityEntry<TemperatureRegulatorBlockEntity> TEMPERATURE_REGULATOR = REGISTRATE
             .blockEntity("temperature_regulator", TemperatureRegulatorBlockEntity::new)
             .visual(() -> TemperatureRegulatorVisual::new, false)
             .validBlocks(NorthstarBlocks.TEMPERATURE_REGULATOR)
             .renderer(() -> TemperatureRegulatorRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<OxygenSealerBlockEntity> OXYGEN_SEALER = REGISTRATE
-            .blockEntity("oxygen_sealer", OxygenSealerBlockEntity::new)
-            .visual(() -> OxygenSealerVisual::new)
-            .validBlocks(NorthstarBlocks.OXYGEN_SEALER)
-            .renderer(() -> OxygenSealerRenderer::new)
+    public static final BlockEntityEntry<LargeFanBlockEntity> LARGE_FAN = REGISTRATE
+            .blockEntity("large_fan", LargeFanBlockEntity::new)
+            .validBlocks(NorthstarBlocks.LARGE_FAN)
+            .renderer(() -> LargeFanRenderer::new)
             .register();
 
     public static final BlockEntityEntry<SolarPanelBlockEntity> SOLAR_PANEL = REGISTRATE

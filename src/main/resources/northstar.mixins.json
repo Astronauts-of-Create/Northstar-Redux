@@ -26,6 +26,7 @@
     "block.TorchItemMixin",
     "block.WallTorchBlockMixin",
     "create.ContraptionColliderMixin",
+    "create.KineticBlockEntityMixin",
     "create.SequencedAssemblyRecipeBuilderMixin",
     "gravitystuff.AbstractArrowGravityMixin",
     "gravitystuff.AbstractMinecartGravityMixin",
