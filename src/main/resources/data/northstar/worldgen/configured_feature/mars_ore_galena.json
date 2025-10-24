@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 6,
+    "discard_chance_on_air_exposure": 0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "northstar:mars_stone_replaceable"
+        },
+        "state": {
+          "Name": "northstar:mars_galena_ore"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "northstar:mars_deep_stone_replaceable"
+        },
+        "state": {
+          "Name": "northstar:mars_deep_galena_ore"
+        }
+      }
+    ]
+  }
+}
