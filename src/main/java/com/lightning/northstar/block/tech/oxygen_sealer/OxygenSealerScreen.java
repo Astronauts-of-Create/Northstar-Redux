@@ -56,7 +56,7 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
             }
         }
 
-        float usagePerTick = sealer.sealer.getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF();
+        float usagePerTick = sealer.drain;
         int remainingTicks = usagePerTick <= Mth.EPSILON ? Integer.MAX_VALUE : Mth.floor(totalOxygen / usagePerTick);
         int remainingSeconds = remainingTicks / 20;
 

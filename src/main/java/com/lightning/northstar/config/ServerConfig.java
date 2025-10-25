@@ -15,8 +15,9 @@ public class ServerConfig extends ConfigBase {
 
     public final ConfigInt oxygenSealerBlocksPerRpm = i(16, 1, "blocksPerRpm");
     public final ConfigInt oxygenSealerMaxContraptionSealed = i(2_500, 0, "maxContraptionSealed");
-    // 0.001 mB per block per tick is 1 mB per tick for 100 blocks or 20 mB per second for 1000 blocks
-    public final ConfigFloat oxygenSealerOxygenPerBlockPerTick = f(0.001f, 0, "oxygenPerBlockPerTick");
+    public final ConfigFloat oxygenSealerPassiveDrain = f(0.0001f, 0, "passiveDrain", "Passive oxygen drain in mB per block per tick");
+    public final ConfigFloat oxygenSealerBlockActiveDrain = f(0.01f, 0, "blockActiveDrain", "Active drain scaling in mB per block per tick. Applies to block with dynamic consumption like fire, torches, leaves, etc...");
+    public final ConfigFloat oxygenSealerEntityActiveDrain = f(0.05f, 0, "entityActiveDrain", "Active drain for entity in mB per entity per tick.");
 
     public final ConfigGroup temperature = group(2, "temperature");
 

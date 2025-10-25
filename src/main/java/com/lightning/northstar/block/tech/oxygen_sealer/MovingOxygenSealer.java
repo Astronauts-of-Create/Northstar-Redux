@@ -2,8 +2,7 @@ package com.lightning.northstar.block.tech.oxygen_sealer;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import com.lightning.northstar.world.SealingProvider;
-import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
+import com.lightning.northstar.world.oxygen.OxygenTrackingSealer;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageWrapper;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -17,11 +16,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public class MovingOxygenSealer implements SealingProvider {
+public class MovingOxygenSealer implements NorthstarOxygen.Provider {
 
     public final Contraption contraption;
-    public final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer(SealingMode.OXYGEN);
+    public final OxygenTrackingSealer sealer = new OxygenTrackingSealer(SealingMode.OXYGEN);
     public float pendingDrain;
+    public float activeDrain;
+    public float drain;
     public boolean active;
 
     MovingOxygenSealer(Contraption contraption) {
@@ -35,22 +36,27 @@ public class MovingOxygenSealer implements SealingProvider {
             sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, Direction.UP);
         }
 
-        active = false;
-
         if (sealer.hasLeak()) {
+            active = false;
             return;
         }
 
         MountedFluidStorageWrapper fluids = context.contraption.getStorage().getFluids();
         Fluid oxygen = findOxygenIn(fluids);
-        if (oxygen == null)
+        if (oxygen == null) {
+            active = false;
             return;
-        pendingDrain -= fluids.drain(new FluidStack(oxygen, (int) pendingDrain), context.world.isClientSide ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
-        if (pendingDrain >= 1)
-            return; // don't process anything
+        }
 
-        pendingDrain += NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF() * sealer.getSealedBlockCount();
-        active = true;
+        pendingDrain -= fluids.drain(new FluidStack(oxygen, (int) pendingDrain), context.world.isClientSide ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE).getAmount();
+        active = pendingDrain < 1;
+
+        if (!active)
+            return;
+
+        drain = sealer.getPassiveDrain() + sealer.getActiveDrain() + sealer.calculateDynamicConsumption(context.contraption.getContraptionWorld()) + activeDrain;
+        pendingDrain += drain;
+        activeDrain = 0;
     }
 
     @Override
@@ -64,6 +70,11 @@ public class MovingOxygenSealer implements SealingProvider {
     @Override
     public boolean isSealed(Vec3i pos) {
         return isSealed(Vec3.atLowerCornerOf(pos));
+    }
+
+    @Override
+    public void drainOxygen(float oxygen) {
+        activeDrain += oxygen;
     }
 
     private static Fluid findOxygenIn(MountedFluidStorageWrapper fluids) {

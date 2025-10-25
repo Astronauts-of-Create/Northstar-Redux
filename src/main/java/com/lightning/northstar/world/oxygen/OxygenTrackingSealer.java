@@ -22,9 +22,9 @@ public class OxygenTrackingSealer extends ProgressiveBlockSealer {
 
     protected final List<Pair<BlockPos, OxygenConsumer>> sealingConsumers = new ArrayList<>();
     protected final List<Pair<BlockPos, OxygenConsumer>> consumers = new ArrayList<>();
-    protected float baseConsumption;
-    protected float sealingDynamicConsumption;
-    protected float dynamicConsumption;
+    protected float baseActiveDrain;
+    protected float sealingActiveDrain;
+    protected float activeDrain;
 
     public OxygenTrackingSealer(SealingMode mode) {
         super(mode);
@@ -32,7 +32,7 @@ public class OxygenTrackingSealer extends ProgressiveBlockSealer {
 
     @Override
     public boolean beginSeal(Level level, BlockPos origin, @Nullable Direction originDirection) {
-        baseConsumption = NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF();
+        baseActiveDrain = NorthstarConfigs.server().oxygenSealerBlockActiveDrain.getF();
         return super.beginSeal(level, origin, originDirection);
     }
 
@@ -44,8 +44,8 @@ public class OxygenTrackingSealer extends ProgressiveBlockSealer {
         consumers.addAll(sealingConsumers);
         sealingConsumers.clear();
 
-        dynamicConsumption = sealingDynamicConsumption;
-        sealingDynamicConsumption = 0;
+        activeDrain = sealingActiveDrain;
+        sealingActiveDrain = 0;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class OxygenTrackingSealer extends ProgressiveBlockSealer {
             if (consumer.northstar$isOxygenConsumptionDynamic(level, pos)) {
                 sealingConsumers.add(Pair.of(new BlockPos(pos), consumer));
             } else {
-                sealingDynamicConsumption += consumer.northstar$getOxygenConsumption(level, pos, baseConsumption);
+                sealingActiveDrain += consumer.northstar$getOxygenConsumption(level, pos, baseActiveDrain);
             }
         }
     }
@@ -67,13 +67,17 @@ public class OxygenTrackingSealer extends ProgressiveBlockSealer {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, j = consumers.size(); i < j; i++) {
             Pair<BlockPos, OxygenConsumer> consumer = consumers.get(i);
-            sum += consumer.right().northstar$getOxygenConsumption(level, consumer.left(), baseConsumption);
+            sum += consumer.right().northstar$getOxygenConsumption(level, consumer.left(), baseActiveDrain);
         }
         return sum;
     }
 
-    public float getDynamicConsumption() {
-        return dynamicConsumption;
+    public float getPassiveDrain() {
+        return getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerPassiveDrain.getF();
+    }
+
+    public float getActiveDrain() {
+        return activeDrain;
     }
 
 }

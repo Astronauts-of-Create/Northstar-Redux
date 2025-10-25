@@ -22,21 +22,21 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
-@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class NorthstarOxygen {
 
     /** Maximum oxygen for spacesuits, in mB; use is 1 mB/s, defaults to 30 minutes so 1.5 minecraft days */
     public static final int MAXIMUM_OXYGEN = 1800;
 
     private final Level level;
-    private final Set<SealingProvider> providers;
+    private final Set<Provider> providers;
 
     public NorthstarOxygen(Level level) {
         this.level = level;
@@ -47,35 +47,42 @@ public class NorthstarOxygen {
         return NorthstarPlanets.getPlanetOxy(level.dimension());
     }
 
-    public boolean hasOxygen(Vec3 pos) {
-        if (NorthstarPlanets.getPlanetOxy(level.dimension()))
-            return true;
-        for (SealingProvider sealer : providers) {
+    public Provider getSealer(Vec3 pos) {
+        for (Provider sealer : providers) {
             if (sealer.isSealed(pos)) {
-                return true;
+                return sealer;
             }
         }
-        return false;
+        return null;
+    }
+
+    public Provider getSealer(Vec3i pos) {
+        for (Provider sealer : providers) {
+            if (sealer.isSealed(pos)) {
+                return sealer;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasOxygen(Vec3 pos) {
+        return NorthstarPlanets.getPlanetOxy(level.dimension()) || getSealer(pos) != null;
     }
 
     public boolean hasOxygen(Vec3i pos) {
-        if (NorthstarPlanets.getPlanetOxy(level.dimension()))
-            return true;
-
-        for (SealingProvider sealer : providers) {
-            if (sealer.isSealed(pos)) {
-                return true;
-            }
-        }
-        return false;
+        return NorthstarPlanets.getPlanetOxy(level.dimension()) || getSealer(pos) != null;
     }
 
-    public void registerSealer(SealingProvider provider) {
+    public void registerSealer(Provider provider) {
         providers.add(provider);
     }
 
-    public void unregisterSealer(SealingProvider provider) {
+    public void unregisterSealer(Provider provider) {
         providers.remove(provider);
+    }
+
+    public interface Provider extends SealingProvider {
+        void drainOxygen(float oxygen);
     }
 
     public static boolean isOxygen(Fluid fluid) {
@@ -103,20 +110,32 @@ public class NorthstarOxygen {
         return ItemStack.EMPTY;
     }
 
-    @ApiStatus.Internal
-    public static void tickEntity(LivingEntity entity) {
+    @SubscribeEvent
+    public static void onBreathe(LivingBreatheEvent event) {
+        LivingEntity entity = event.getEntity();
         Level world = entity.level();
-
-        // use the entity id to avoid ticking it all once to make different entities take damage at different times and minimize lag spikes
-        if (world.getGameTime() % 20 != entity.getId() % 20)
-            return;
 
         if (entity instanceof Player player && (player.isCreative() || player.isSpectator()))
             return;
-        if (NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.matches(entity))
+
+        if (NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.matches(entity)) {
+            event.setCanBreathe(true);
+            event.setCanRefillAir(true);
             return;
-        if (hasOxygen(entity.level(), entity.getEyePosition()))
+        }
+
+        NorthstarOxygen oxygen = world.northstar$oxygen();
+        boolean atmosphereBreathable = oxygen.hasOxygen();
+        if (atmosphereBreathable && event.canBreathe())
             return;
+
+        Provider sealer = oxygen.getSealer(entity.getEyePosition());
+        if (sealer != null) {
+            event.setCanBreathe(true);
+            event.setCanRefillAir(true);
+            sealer.drainOxygen(NorthstarConfigs.server().oxygenSealerEntityActiveDrain.getF());
+            return;
+        }
 
         boolean isFullyCovered = true;
         ItemStack oxygenSource = ItemStack.EMPTY;
@@ -130,12 +149,15 @@ public class NorthstarOxygen {
             }
         }
 
-        if (!isFullyCovered || oxygenSource.isEmpty() || !depleteOxygen(oxygenSource)) {
+        if (isFullyCovered && !oxygenSource.isEmpty() && depleteOxygen(oxygenSource, world.getGameTime() % 20 == 0)) {
+            event.setCanBreathe(true);
+            event.setCanRefillAir(true);
+        } else if (!atmosphereBreathable && world.getGameTime() % 10 != entity.getId() % 10) {
             entity.hurt(world.damageSources().northstar$suffocation(), 1);
         }
     }
 
-    public static boolean depleteOxygen(ItemStack stack) {
+    public static boolean depleteOxygen(ItemStack stack, boolean deplete) {
         CompoundTag tag = stack.getTag();
         if (tag == null || !tag.contains("Oxygen", CompoundTag.TAG_INT))
             return false;
@@ -144,7 +166,8 @@ public class NorthstarOxygen {
         if (oxygen <= 0)
             return false;
 
-        tag.putInt("Oxygen", Math.min(oxygen - 1, MAXIMUM_OXYGEN));
+        if (deplete)
+            tag.putInt("Oxygen", Math.min(oxygen - 1, MAXIMUM_OXYGEN));
         return true;
     }
 

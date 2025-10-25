@@ -22,7 +22,6 @@ public abstract class LivingEntityMixin extends Entity {
     private void northstar$tick(CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
 
-        NorthstarOxygen.tickEntity(self);
         NorthstarTemperature.tickEntity(self);
     }
 

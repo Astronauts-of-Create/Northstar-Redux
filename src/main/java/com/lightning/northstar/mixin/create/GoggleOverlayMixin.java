@@ -37,7 +37,7 @@ public class GoggleOverlayMixin {
 
         OxygenConsumer consumer = block instanceof OxygenConsumer cons ? cons : OxygenConsumer.REGISTRY.get(block);
         if (consumer != null && !level.northstar$oxygen().hasOxygen() && level.northstar$oxygen().hasOxygen(pos)) {
-            float consumption = consumer.northstar$getOxygenConsumption(level, pos, NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF());
+            float consumption = consumer.northstar$getOxygenConsumption(level, pos, NorthstarConfigs.server().oxygenSealerBlockActiveDrain.getF());
             if (consumption != 0 && Float.isFinite(consumption)) {
                 NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
                         .style(ChatFormatting.GRAY)

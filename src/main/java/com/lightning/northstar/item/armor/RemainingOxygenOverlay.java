@@ -22,11 +22,11 @@ public class RemainingOxygenOverlay implements IGuiOverlay {
 
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (mc.options.hideGui || 
+        if (mc.options.hideGui ||
                 player == null ||
-                player.isSpectator() || 
+                player.isSpectator() ||
                 player.isCreative() ||
-                NorthstarOxygen.hasOxygen(player.level(), player.position()))
+                (NorthstarOxygen.hasOxygen(player.level(), player.position())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
             return;
 
         ItemStack tank = NorthstarOxygen.getOxygenTank(player);

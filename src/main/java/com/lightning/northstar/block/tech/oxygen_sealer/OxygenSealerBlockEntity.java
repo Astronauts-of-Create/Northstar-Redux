@@ -4,7 +4,6 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.oxygen.OxygenTrackingSealer;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
@@ -41,13 +40,14 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, SealingProvider {
+public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, NorthstarOxygen.Provider {
 
     protected final OxygenTrackingSealer sealer = new OxygenTrackingSealer(SealingMode.OXYGEN);
     protected SmartFluidTankBehaviour tank;
     protected int sealCooldown;
     protected float drain;
     protected float pendingDrain;
+    protected float activeDrain;
     protected boolean active;
 
     protected int audioTick;
@@ -59,13 +59,6 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         behaviours.add(tank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 1, 1000, true));
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (isFluidHandlerCap(cap) && (side == null || side == getBlockState().getValue(OxygenSealerBlock.HORIZONTAL_FACING).getOpposite()))
-            return tank.getCapability().cast();
-        return super.getCapability(cap, side);
     }
 
     @Override
@@ -114,10 +107,9 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         if (!active)
             return;
 
-        drain = sealer.getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF() +
-                sealer.getDynamicConsumption() +
-                sealer.calculateDynamicConsumption(level);
+        drain = sealer.getPassiveDrain() + sealer.getActiveDrain() + sealer.calculateDynamicConsumption(level) + activeDrain;
         pendingDrain += drain;
+        activeDrain = 0;
     }
 
     @Override
@@ -148,6 +140,11 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
 
     private boolean isSealed(int x, int y, int z) {
         return active && sealer.getSealedBlocks().contains(BlockPos.asLong(x, y, z));
+    }
+
+    @Override
+    public void drainOxygen(float oxygen) {
+        activeDrain += oxygen;
     }
 
     public int getMaximumSealedBlocks() {
@@ -184,6 +181,13 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
             sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
 
         return true;
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+        if (isFluidHandlerCap(cap) && (side == null || side == getBlockState().getValue(OxygenSealerBlock.HORIZONTAL_FACING).getOpposite()))
+            return tank.getCapability().cast();
+        return super.getCapability(cap, side);
     }
 
     public boolean isActive() {
