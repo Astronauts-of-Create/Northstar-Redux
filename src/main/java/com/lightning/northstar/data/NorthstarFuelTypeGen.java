@@ -10,35 +10,41 @@ import net.minecraft.resources.ResourceKey;
 public class NorthstarFuelTypeGen {
 
     public static void bootstrap(BootstapContext<FuelType> context) {
-        context.register(key("biofuel"), new FuelType(
-                NorthstarFluidTags.C_BIOFUEL.tag,
-                0.25f,
-                4, 16));
+        context.register(key("biofuel"), FuelType.builder()
+                .tag(NorthstarFluidTags.C_BIOFUEL)
+                .gjPerMb(0.25f)
+                .combustionEngine(4, 16)
+                .build());
 
-        context.register(key("cdg_biodiesel"), new FuelType(
-                NorthstarFluidTags.COMPAT_CDG_BIODIESEL.tag,
-                0.25f,
-                4, 16));
+        context.register(key("hydrocarbon"), FuelType.builder()
+                .tag(NorthstarFluidTags.C_HYDROCARBON)
+                .gjPerMb(1)
+                .combustionEngine(4, 16)
+                .build());
 
-        context.register(key("hydrocarbon"), new FuelType(
-                NorthstarFluidTags.C_HYDROCARBON.tag,
-                1,
-                4, 16));
+        context.register(key("hydrogen"), FuelType.builder()
+                .tag(NorthstarFluidTags.C_HYDROGEN)
+                .gjPerMb(1.5f)
+                .combustionEngine(4, 32)
+                .build());
 
-        context.register(key("hydrogen"), new FuelType(
-                NorthstarFluidTags.C_HYDROGEN.tag,
-                1.5f,
-                4, 32));
+        context.register(key("liquid_hydrogen"), FuelType.builder()
+                .tag(NorthstarFluidTags.C_LIQUID_HYDROGEN)
+                .gjPerMb(4)
+                .combustionEngine(1, 64)
+                .build());
 
-        context.register(key("liquid_hydrogen"), new FuelType(
-                NorthstarFluidTags.C_LIQUID_HYDROGEN.tag,
-                4,
-                1, 64));
+        context.register(key("methane"), FuelType.builder()
+                .tag(NorthstarFluidTags.C_METHANE)
+                .gjPerMb(2)
+                .combustionEngine(2, 32)
+                .build());
 
-        context.register(key("methane"), new FuelType(
-                NorthstarFluidTags.C_METHANE.tag,
-                2,
-                2, 32));
+        context.register(key("cdg_biodiesel"), FuelType.builder()
+                .tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
+                .gjPerMb(0.25f)
+                .combustionEngine(4, 16)
+                .build());
     }
 
     private static ResourceKey<FuelType> key(String name) {

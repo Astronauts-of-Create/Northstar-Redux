@@ -21,6 +21,10 @@ public class NorthstarLang {
         return new LangBuilder(Northstar.MOD_ID);
     }
 
+    public static LangBuilder text(String text) {
+        return builder().text(text);
+    }
+
     public static LangBuilder translate(String langKey, Object... args) {
         return builder().translate(langKey, args);
     }

@@ -77,7 +77,7 @@ public class RocketContraption extends TranslatingContraption {
         for (int slot = 0; slot < tanks.getTanks(); slot++) {
             FluidStack stack = tanks.getFluidInTank(slot);
             FuelType fuel = FuelType.getFuelType(stack.getFluid());
-            if (fuel == null)
+            if (fuel == null || Mth.equal(fuel.gjPerMb(), 0))
                 continue;
             int burnable = Math.min(Mth.floor(energyToBurn / fuel.gjPerMb()), stack.getAmount());
 
