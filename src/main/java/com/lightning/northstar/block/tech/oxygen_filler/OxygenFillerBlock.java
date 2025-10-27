@@ -30,7 +30,7 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<OxygenFillerBlockEntity> {
 
-    private static final Map<Direction, VoxelShape> SHAPES;
+    public static final Map<Direction, VoxelShape> SHAPES;
 
     static {
         VoxelShape base = Shapes.or(
