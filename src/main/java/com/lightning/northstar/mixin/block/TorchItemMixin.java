@@ -18,7 +18,7 @@ public class TorchItemMixin {
 
     @Inject(method = "getPlacementState", at = @At("RETURN"), cancellable = true)
     public void getPlacementState(BlockPlaceContext context, CallbackInfoReturnable<BlockState> info) {
-        if (NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickLocation()))
+        if (NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos()))
             return;
 
         BlockState state = info.getReturnValue();
