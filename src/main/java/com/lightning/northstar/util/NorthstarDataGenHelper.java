@@ -214,12 +214,12 @@ public class NorthstarDataGenHelper {
     }
 
     public static NonNullBiConsumer<DataGenContext<Block, GrateBlock>, RegistrateRecipeProvider> grateRecipe(Tags.Tag<Item> material) {
-        return (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 5)
+        return (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
                 .unlockedBy("has_item", RegistrateRecipeProvider.has(material.tag()))
                 .define('#', material.tag())
+                .pattern("###")
                 .pattern("# #")
-                .pattern(" # ")
-                .pattern("# #")
+                .pattern("###")
                 .save(p);
     }
 
