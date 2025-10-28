@@ -111,7 +111,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             return;
         }
 
-        if (generatorSpeed > 0)
+        if (generatorSpeed > 0 && !isOverStressed())
             usageBuffer += fuel.combustionEngineUse();
         int drainable = Math.min(fluid.getAmount(), (int) usageBuffer);
         tank.getPrimaryHandler().drain(drainable, IFluidHandler.FluidAction.EXECUTE);
@@ -136,7 +136,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public void tickAudio() {
         super.tickAudio();
 
-        if (!Mth.equal(generatorSpeed, 0)) {
+        if (!Mth.equal(generatorSpeed, 0) && !isOverStressed()) {
             if (sound == null || sound.isStopped()) {
                 sound = new BasicTickableSoundInstance(NorthstarSounds.COMBUSTION_ENGINE.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
                 sound.setLooping(true);
