@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
@@ -211,6 +212,9 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
                 .opt(ModCompat.CDG, "biodiesel");
+
+        tags.tag(NorthstarFluidTags.IS_OXY)
+                .opt(TFMGFluids.AIR.get());
     }
 
     public static class Damage extends TagsProvider<DamageType> {

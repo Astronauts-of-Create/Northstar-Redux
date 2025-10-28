@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
@@ -44,6 +45,26 @@ public class NorthstarFuelTypeGen {
                 .tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
                 .gjPerMb(0.25f)
                 .combustionEngine(4, 16)
+                .build());
+
+        context.register(key("tfmg_diesel"), FuelType.builder()
+                .fluid(TFMGFluids.DIESEL.getSource())
+                .combustionEngine(1, 16)
+                .build());
+
+        context.register(key("tfmg_gasoline"), FuelType.builder()
+                .fluid(TFMGFluids.GASOLINE.getSource())
+                .combustionEngine(1, 16)
+                .build());
+
+        context.register(key("tfmg_naphtha"), FuelType.builder()
+                .fluid(TFMGFluids.NAPHTHA.getSource())
+                .gjPerMb(0.75f)
+                .build());
+
+        context.register(key("tfmg_kerosene"), FuelType.builder()
+                .fluid(TFMGFluids.KEROSENE.getSource())
+                .gjPerMb(1.00f)
                 .build());
     }
 
