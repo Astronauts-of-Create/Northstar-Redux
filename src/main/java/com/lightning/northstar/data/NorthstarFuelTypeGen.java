@@ -14,31 +14,31 @@ public class NorthstarFuelTypeGen {
         context.register(key("biofuel"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_BIOFUEL)
                 .gjPerMb(0.25f)
-                .combustionEngine(4, 16)
+                .combustionEngine(0.5f, 16)
                 .build());
 
         context.register(key("hydrocarbon"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_HYDROCARBON)
                 .gjPerMb(1)
-                .combustionEngine(4, 16)
+                .combustionEngine(1, 16)
                 .build());
 
         context.register(key("hydrogen"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_HYDROGEN)
-                .gjPerMb(1.5f)
-                .combustionEngine(4, 32)
+                .gjPerMb(0.5f)
+                .combustionEngine(1, 32)
                 .build());
 
         context.register(key("liquid_hydrogen"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_LIQUID_HYDROGEN)
-                .gjPerMb(4)
-                .combustionEngine(1, 64)
+                .gjPerMb(0.75f)
+                .combustionEngine(1, 48)
                 .build());
 
         context.register(key("methane"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_METHANE)
                 .gjPerMb(2)
-                .combustionEngine(2, 32)
+                .combustionEngine(1, 32)
                 .build());
 
         context.register(key("cdg_biodiesel"), FuelType.builder()
