@@ -1,7 +1,9 @@
 package com.lightning.northstar.mixin.block;
 
+import com.lightning.northstar.block.simple.ExtinguishedTorchBlock;
 import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.mixin.accessor.FlowingFluidAccessor;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.sealer.SealReactiveBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -9,13 +11,18 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,7 +36,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Mixin(WallTorchBlock.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class WallTorchBlockMixin extends Block implements SealReactiveBlock {
+public class WallTorchBlockMixin extends Block implements LiquidBlockContainer, SealReactiveBlock {
 
     @Shadow
     @Final
@@ -69,6 +76,24 @@ public class WallTorchBlockMixin extends Block implements SealReactiveBlock {
                 .get()
                 .defaultBlockState()
                 .setValue(ExtinguishedTorchWallBlock.FACING, state.getValue(FACING));
+    }
+
+    @Override
+    public boolean canPlaceLiquid(BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (fluidState.getType() != Fluids.WATER) {
+            if (fluidState.getType() instanceof FlowingFluidAccessor flowing)
+                flowing.beforeDestroyingBlock(level, pos, state);
+            level.setBlock(pos, fluidState.createLegacyBlock(), 3);
+            return true;
+        }
+
+        level.setBlock(pos, northstar$copyStateExtinguished(state).setValue(ExtinguishedTorchBlock.WATERLOGGED, true), Block.UPDATE_ALL);
+        return true;
     }
 
 }
