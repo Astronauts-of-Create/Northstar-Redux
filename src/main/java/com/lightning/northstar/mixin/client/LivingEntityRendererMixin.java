@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin;
+package com.lightning.northstar.mixin.client;
 
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -31,7 +31,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
             gravityMultiplier *= 1.2f;
         }
 
-        return instance.speed(partialTick) * gravityMultiplier;
+        return instance.speed(partialTick) / gravityMultiplier;
     }
 
 }

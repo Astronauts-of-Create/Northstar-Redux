@@ -48,9 +48,9 @@
     "oxygen.LeavesBlockMixin"
   ],
   "client": [
-    "LivingEntityRendererMixin",
     "PlayerFrostEffectMixin",
     "client.GuiGraphicsMixin",
+    "client.LivingEntityRendererMixin",
     "create.GoggleOverlayMixin",
     "dimensionstuff.FogRendererMixin",
     "dimensionstuff.LevelRendererMixin"
