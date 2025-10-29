@@ -1,6 +1,9 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.lightning.northstar.world.sealer.SealReactiveBlock;
+import com.lightning.northstar.world.sealer.SealingMode;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -14,8 +17,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @Mixin(CampfireBlock.class)
-public abstract class CampfireBlockMixin extends BaseEntityBlock {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public abstract class CampfireBlockMixin extends BaseEntityBlock implements SealReactiveBlock {
 
     public CampfireBlockMixin(Properties properties) {
         super(properties);
@@ -37,6 +44,13 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock {
                                       BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> cir) {
         if (level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             cir.setReturnValue(defaultBlockState().setValue(CampfireBlock.LIT, false));
+        }
+    }
+
+    @Override
+    public void northstar$onSealUpdated(Level level, BlockPos pos, BlockState state, SealingMode mode) {
+        if (mode == SealingMode.OXYGEN && !NorthstarOxygen.hasOxygen(level, pos)) {
+            level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
         }
     }
 

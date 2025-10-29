@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

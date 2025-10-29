@@ -3638,8 +3638,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<MethaneIceBlock> METHANE_ICE = REGISTRATE
-            .block("methane_ice", MethaneIceBlock::new)
+    public static final BlockEntry<CustomIceBlock> METHANE_ICE = REGISTRATE
+            .block("methane_ice", p -> new CustomIceBlock(p, NorthstarFluids.METHANE.getSource()))
             .initialProperties(() -> ICE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GREEN)
                     .sound(SoundType.GLASS)

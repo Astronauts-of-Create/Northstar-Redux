@@ -4,7 +4,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
@@ -52,6 +52,13 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+
+        level.northstar$temperature().enqueueUpdates(regulator.sealer.getSealedBlocks());
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -59,6 +66,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         if (sealer.isSealInProgress()) {
             if (sealer.updateSeal(level, getMaximumSealedBlocks())) {
                 sealCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
+                level.northstar$temperature().enqueueUpdates(sealer.getUpdatedBlocks());
             }
         } else if (sealCooldown-- <= 0) {
             sealer.beginSeal(level, worldPosition, null);
@@ -70,6 +78,11 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         if (active && level.isClientSide) {
             addParticles(isCurrentlyWarm(), speed / 64f);
         }
+    }
+
+    public void onTemperatureChanged() {
+        if (level != null)
+            level.northstar$temperature().enqueueUpdates(regulator.sealer.getSealedBlocks());
     }
 
     public int getMaximumSealedBlocks() {
@@ -146,8 +159,13 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
+        float previousTemperature = regulator.temperature;
+
         super.read(compound, clientPacket);
         regulator.read(compound, worldPosition);
+
+        if (!Mth.equal(previousTemperature, regulator.temperature))
+            onTemperatureChanged(); // in case of /data merge, update blocks, if it was just loaded in there is no effect
     }
 
     public ProgressiveBlockSealer getSealer() {

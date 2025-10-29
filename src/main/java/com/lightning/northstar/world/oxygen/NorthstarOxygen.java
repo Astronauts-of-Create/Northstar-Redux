@@ -9,10 +9,14 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
+import com.lightning.northstar.world.sealer.SealingMode;
 import com.mojang.blaze3d.vertex.PoseStack;
+import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +30,7 @@ import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
@@ -37,10 +42,12 @@ public class NorthstarOxygen {
 
     private final Level level;
     private final Set<Provider> providers;
+    private final ProgressiveBlockUpdater updater;
 
     public NorthstarOxygen(Level level) {
         this.level = level;
         this.providers = new HashSet<>();
+        this.updater = new ProgressiveBlockUpdater(SealingMode.OXYGEN);
     }
 
     public boolean hasOxygen() {
@@ -79,6 +86,15 @@ public class NorthstarOxygen {
 
     public void unregisterSealer(Provider provider) {
         providers.remove(provider);
+    }
+
+    public void enqueueUpdates(LongCollection positions) {
+        updater.queueUpdates(positions);
+    }
+
+    @ApiStatus.Internal
+    public void processUpdates(ServerLevel level) {
+        updater.processUpdates(level);
     }
 
     public interface Provider extends SealingProvider {

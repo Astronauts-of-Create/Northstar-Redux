@@ -76,12 +76,20 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+
+        level.northstar$oxygen().enqueueUpdates(sealer.getSealedBlocks());
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
         if (sealer.isSealInProgress()) {
             if (sealer.updateSeal(level, getMaximumSealedBlocks())) {
                 sealCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
+                level.northstar$oxygen().enqueueUpdates(sealer.getUpdatedBlocks());
             }
         } else if (sealCooldown-- <= 0) {
             sealer.beginSeal(level, worldPosition, Direction.UP);

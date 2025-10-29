@@ -3,7 +3,7 @@ package com.lightning.northstar.mixin.compat.tfmg;
 import com.drmangotea.tfmg.content.machinery.misc.air_intake.AirIntakeBlockEntity;
 import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.tterrag.registrate.util.entry.FluidEntry;

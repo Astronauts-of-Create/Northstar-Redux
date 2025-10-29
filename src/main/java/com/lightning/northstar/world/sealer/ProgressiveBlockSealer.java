@@ -45,9 +45,9 @@ public class ProgressiveBlockSealer {
     private final LongArrayList leakPath = new LongArrayList();
     private final LongSet sealedBlocks = new LongOpenHashSet();
     private final MutableAABB sealedBounds = new MutableAABB();
+    private final LongList updatedBlocks = new LongArrayList();
     private boolean hasLeak;
     private int extraVolume;
-
 
     private SealerDebugVisualizer visualizer = SealerDebugVisualizer.NOOP;
 
@@ -79,6 +79,7 @@ public class ProgressiveBlockSealer {
         visited.clear();
         queue.clear();
         bounds.neg();
+        updatedBlocks.clear();
 
         visited.put(tempPos1.asLong(), START_MARKER);
         queue.enqueue(tempPos1.asLong());
@@ -122,11 +123,15 @@ public class ProgressiveBlockSealer {
                 long packed = tempPos2.asLong();
                 if (visited.containsKey(packed))
                     continue;
-                if (isAirOccluded(level, tempPos1, tempPos2, direction))
+                if (isAirOccluded(level, tempPos1, tempPos2, direction)) {
                     continue;
+                }
 
                 visited.put(packed, parent);
                 onBlockAdded(level, tempPos2);
+
+                if (!sealedBlocks.contains(packed))
+                    updatedBlocks.add(packed);
 
                 BlockState state = level.getBlockState(tempPos2);
                 if (state.getBlock() instanceof SealerExtensionSource source) {
@@ -147,7 +152,9 @@ public class ProgressiveBlockSealer {
             }
         }
 
-        if (!queue.isEmpty() && visited.size() < maximumSealed) {
+        profiler.incrementCounter("blocks", checked);
+
+        if (!queue.isEmpty() && (visited.size() + queue.size()) < maximumSealed) {
             profiler.pop();
             return false;
         }
@@ -159,18 +166,30 @@ public class ProgressiveBlockSealer {
     }
 
     protected void onSealComplete(int maximumSealed, long lastChecked) {
-        hasLeak = visited.size() > maximumSealed;
+        hasLeak = !queue.isEmpty() || visited.size() > maximumSealed;
         leakPath.clear();
-        sealedBlocks.clear();
         if (hasLeak) {
             while (lastChecked != START_MARKER) {
                 leakPath.add(lastChecked);
                 lastChecked = visited.get(lastChecked);
             }
 
+            updatedBlocks.clear();
+            updatedBlocks.addAll(sealedBlocks);
+
+            sealedBlocks.clear();
             sealedBounds.neg();
         } else {
             leakPath.trim();
+
+            LongIterator iterator = sealedBlocks.longIterator();
+            while (iterator.hasNext()) {
+                long value = iterator.nextLong();
+                if (!visited.containsKey(value))
+                    updatedBlocks.add(value);
+            }
+
+            sealedBlocks.clear();
             sealedBlocks.addAll(visited.keySet());
             sealedBounds.set(bounds);
         }
@@ -293,6 +312,10 @@ public class ProgressiveBlockSealer {
 
     public LongSet getSealedBlocks() {
         return sealedBlocks;
+    }
+
+    public LongList getUpdatedBlocks() {
+        return updatedBlocks;
     }
 
     public boolean hasLeak() {

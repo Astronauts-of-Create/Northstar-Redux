@@ -2,7 +2,8 @@ package com.lightning.northstar.mixin;
 
 import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,6 +35,11 @@ public class LevelMixin implements NorthstarLevel {
     @Override
     public NorthstarOxygen northstar$oxygen() {
         return northstar$oxygen;
+    }
+
+    @Override
+    public void northstar$queueBlockUpdates(LongCollection positions) {
+        // do nothing here, only happens on server levels
     }
 
 }

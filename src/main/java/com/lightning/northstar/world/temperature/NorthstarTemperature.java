@@ -1,4 +1,4 @@
-package com.lightning.northstar.world;
+package com.lightning.northstar.world.temperature;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
@@ -6,19 +6,29 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
+import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
+import com.lightning.northstar.world.sealer.SealingMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
+import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
@@ -40,10 +50,12 @@ public class NorthstarTemperature {
 
     private final Level level;
     private final Set<Provider> providers;
+    private final ProgressiveBlockUpdater updater;
 
     public NorthstarTemperature(Level level) {
         this.level = level;
         this.providers = new HashSet<>();
+        this.updater = new ProgressiveBlockUpdater(SealingMode.TEMPERATURE);
     }
 
     public float getTemperatureAt(Vec3 pos) {
@@ -80,6 +92,15 @@ public class NorthstarTemperature {
 
     public void unregisterSealer(Provider provider) {
         providers.remove(provider);
+    }
+
+    public void enqueueUpdates(LongCollection positions) {
+        updater.queueUpdates(positions);
+    }
+
+    @ApiStatus.Internal
+    public void processUpdates(ServerLevel level) {
+        updater.processUpdates(level);
     }
 
     public interface Provider extends SealingProvider {
@@ -216,6 +237,15 @@ public class NorthstarTemperature {
         if (level == NorthstarDimensions.VENUS_DIM_KEY) return 1000;
         if (level == Level.OVERWORLD) return 100;
         return 1;
+    }
+
+    public static void evaporate(Level level, BlockPos pos) {
+        RandomSource random = level.random;
+        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F);
+        for (int i = 0; i < 8; i++) {
+            level.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + random.nextFloat(), pos.getY() + random.nextFloat(), pos.getZ() + random.nextFloat(), 0.0D, 0.0D, 0.0D);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)

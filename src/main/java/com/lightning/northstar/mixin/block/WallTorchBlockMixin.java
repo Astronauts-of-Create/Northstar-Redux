@@ -3,6 +3,9 @@ package com.lightning.northstar.mixin.block;
 import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.lightning.northstar.world.sealer.SealReactiveBlock;
+import com.lightning.northstar.world.sealer.SealingMode;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,8 +24,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @Mixin(WallTorchBlock.class)
-public class WallTorchBlockMixin extends Block {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class WallTorchBlockMixin extends Block implements SealReactiveBlock {
 
     @Shadow
     @Final
@@ -46,6 +53,13 @@ public class WallTorchBlockMixin extends Block {
                                       BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
         if (state.getBlock() == Blocks.WALL_TORCH && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             info.setReturnValue(northstar$copyStateExtinguished(state));
+        }
+    }
+
+    @Override
+    public void northstar$onSealUpdated(Level level, BlockPos pos, BlockState state, SealingMode mode) {
+        if (mode == SealingMode.OXYGEN && state.getBlock() == Blocks.WALL_TORCH && !NorthstarOxygen.hasOxygen(level, pos)) {
+            level.setBlock(pos, northstar$copyStateExtinguished(state), Block.UPDATE_ALL);
         }
     }
 

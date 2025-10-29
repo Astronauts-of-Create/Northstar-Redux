@@ -1,6 +1,9 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.lightning.northstar.world.sealer.SealReactiveBlock;
+import com.lightning.northstar.world.sealer.SealingMode;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -17,8 +20,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @Mixin(CandleCakeBlock.class)
-public abstract class CandleCakeBlockMixin extends AbstractCandleBlock {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public abstract class CandleCakeBlockMixin extends AbstractCandleBlock implements SealReactiveBlock {
 
     protected CandleCakeBlockMixin(Properties properties) {
         super(properties);
@@ -37,6 +44,13 @@ public abstract class CandleCakeBlockMixin extends AbstractCandleBlock {
         if (returned.hasProperty(LIT) && returned.getValue(LIT) && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 0);
             info.setReturnValue(returned.setValue(LIT, false));
+        }
+    }
+
+    @Override
+    public void northstar$onSealUpdated(Level level, BlockPos pos, BlockState state, SealingMode mode) {
+        if (mode == SealingMode.OXYGEN && !NorthstarOxygen.hasOxygen(level, pos)) {
+            level.setBlockAndUpdate(pos, state.setValue(LIT, false));
         }
     }
 
