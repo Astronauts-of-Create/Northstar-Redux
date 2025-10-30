@@ -51,8 +51,8 @@ loom {
 }
 
 project.findProperty("renderdoc")?.let { path ->
-    tasks.withType<RenderDocRunTask> { renderDocExecutable = file("$path/bin/renderdoccmd") }
-    tasks.withType<RenderDocRunUITask> { renderDocExecutable = file("$path/bin/qrenderdoc") }
+    tasks.withType<RenderDocRunTask>().configureEach { renderDocExecutable = file("$path/bin/renderdoccmd") }
+    tasks.withType<RenderDocRunUITask>().configureEach { renderDocExecutable = file("$path/bin/qrenderdoc") }
 }
 
 repositories {
