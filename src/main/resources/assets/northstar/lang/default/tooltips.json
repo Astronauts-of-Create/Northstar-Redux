@@ -35,6 +35,8 @@
   "block.northstar.oxygen_filler.tooltip.behaviour1": "Inserts held item into slot.",
 
   "block.northstar.oxygen_sealer.tooltip.summary": "When provided with _Oxygen_ from behind and _Kinetic Energy_ from below, oxygenates the _surrounding environment_.",
+  "block.northstar.oxygen_sealer.tooltip.condition1": "When Wrenched on the side",
+  "block.northstar.oxygen_sealer.tooltip.behaviour1": "Toggles the cap making it a full block.",
 
   "block.northstar.rocket_controls.tooltip.summary": "Used to control an assembled _Rocket_.",
 
