@@ -207,6 +207,7 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_BIOFUEL.tag)
             .source(ForgeFlowingFluid.Source::new)
             .bucket()
+            .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
             .build()
             .register();
 

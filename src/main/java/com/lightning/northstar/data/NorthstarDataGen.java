@@ -55,6 +55,7 @@ public class NorthstarDataGen {
 
         // Recipes:
         generator.addProvider(event.includeServer(), new NorthstarCompactingRecipeGen(output));
+        generator.addProvider(event.includeServer(), new NorthstarCreateAdditionLiquidBurningRecipeGen(output));
         generator.addProvider(event.includeServer(), new NorthstarCrushingRecipeGen(output));
         generator.addProvider(event.includeServer(), new NorthstarElectrolysisRecipeGen(output));
         generator.addProvider(event.includeServer(), new NorthstarEngravingRecipeGen(output));

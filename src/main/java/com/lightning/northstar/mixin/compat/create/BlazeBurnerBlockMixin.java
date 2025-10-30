@@ -6,10 +6,13 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@Mixin(BlazeBurnerBlock.class)
+@Pseudo
+@Mixin(value = BlazeBurnerBlock.class,
+        targets = "com.mrh0.createaddition.blocks.liquid_blaze_burner.LiquidBlazeBurnerBlock")
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class BlazeBurnerBlockMixin implements OxygenConsumer {
