@@ -39,6 +39,7 @@ import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
 import com.lightning.northstar.world.features.grower.WilterTreeGrower;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.stress.BlockStressValues;
@@ -3953,6 +3954,7 @@ public class NorthstarBlocks {
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
+            .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
             .item()
             .transform(customItemModel())
             .register();
@@ -3980,6 +3982,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .onRegister(MovementBehaviour.movementBehaviour(new BasinMovementBehaviour()))
+            .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
             .simpleItem()
             .register();
 
