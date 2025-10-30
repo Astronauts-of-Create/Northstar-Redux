@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.RenderDocRunTask
+import net.fabricmc.loom.task.RenderDocRunUITask
 import java.time.Instant
 
 plugins {
@@ -33,6 +35,7 @@ loom {
     forge {
         mixinConfig("northstar.mixins.json")
     }
+    runs["client"].property("mixin.debug.export", "true")
     runs["server"].runDir = "run-server/"
     runs.create("data") {
         data()
@@ -47,9 +50,9 @@ loom {
     }
 }
 
-project.property("renderdoc")?.let { path ->
-    tasks.runClientRenderDoc { renderDocExecutable = file("$path/bin/renderdoccmd") }
-    tasks.startRenderDocUI { renderDocExecutable = file("$path/bin/qrenderdoc") }
+project.findProperty("renderdoc")?.let { path ->
+    tasks.withType<RenderDocRunTask> { renderDocExecutable = file("$path/bin/renderdoccmd") }
+    tasks.withType<RenderDocRunUITask> { renderDocExecutable = file("$path/bin/qrenderdoc") }
 }
 
 repositories {
