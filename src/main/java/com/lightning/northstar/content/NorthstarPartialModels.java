@@ -11,7 +11,7 @@ public class NorthstarPartialModels {
             MARTIAN_STEEL_SPACE_SUIT_HELMET = armor("martian_steel_space_suit_helmet"),
             CIRCUIT_ENGRAVER_HEAD = block("circuit_engraver/head"),
             CIRCUIT_ENGRAVER_LASER = block("circuit_engraver/laser"),
-            ATMOSPHERIC_CONCENTRATOR_FAN = block("oxygen_concentrator/fan"),
+            ATMOSPHERIC_CONCENTRATOR_FAN = block("atmospheric_concentrator/fan"),
             WARM_SPINNER = block("temperature_regulator/warm_spinny"),
             COLD_SPINNER = block("temperature_regulator/cold_spinny"),
             OXYGEN_SEALER_FAN = block("oxygen_sealer/fan"),

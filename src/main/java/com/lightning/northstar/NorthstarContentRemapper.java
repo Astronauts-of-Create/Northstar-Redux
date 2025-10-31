@@ -37,6 +37,7 @@ public class NorthstarContentRemapper {
         remap("oxygen_generator", NorthstarBlocks.OXYGEN_SEALER);
         // 0.5.0
         remap("vent_block", NorthstarBlocks.VENT);
+        remap("oxygen_concentrator", NorthstarBlocks.ATMOSPHERIC_CONCENTRATOR);
     }
 
     public static void remap(String oldValue, RegistryEntry<?> newValue) {

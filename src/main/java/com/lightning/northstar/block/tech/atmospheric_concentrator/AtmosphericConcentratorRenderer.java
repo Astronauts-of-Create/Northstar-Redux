@@ -1,4 +1,4 @@
-package com.lightning.northstar.block.tech.oxygen_concentrator;
+package com.lightning.northstar.block.tech.atmospheric_concentrator;
 
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,14 +12,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
-public class OxygenConcentratorRenderer extends KineticBlockEntityRenderer<OxygenConcentratorBlockEntity> {
+public class AtmosphericConcentratorRenderer extends KineticBlockEntityRenderer<AtmosphericConcentratorBlockEntity> {
 
-    public OxygenConcentratorRenderer(BlockEntityRendererProvider.Context context) {
+    public AtmosphericConcentratorRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    protected void renderSafe(OxygenConcentratorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+    protected void renderSafe(AtmosphericConcentratorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
         if (VisualizationManager.supportsVisualization(be.getLevel()))
             return;
 

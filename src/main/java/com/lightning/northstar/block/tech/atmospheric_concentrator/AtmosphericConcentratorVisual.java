@@ -1,4 +1,4 @@
-package com.lightning.northstar.block.tech.oxygen_concentrator;
+package com.lightning.northstar.block.tech.atmospheric_concentrator;
 
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.AllPartialModels;
@@ -13,12 +13,12 @@ import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
 
-public class OxygenConcentratorVisual extends KineticBlockEntityVisual<OxygenConcentratorBlockEntity> implements SimpleDynamicVisual {
+public class AtmosphericConcentratorVisual extends KineticBlockEntityVisual<AtmosphericConcentratorBlockEntity> implements SimpleDynamicVisual {
 
     private final RotatingInstance shaft;
     private final RotatingInstance propeller;
 
-    public OxygenConcentratorVisual(VisualizationContext context, OxygenConcentratorBlockEntity entity, float partialTick) {
+    public AtmosphericConcentratorVisual(VisualizationContext context, AtmosphericConcentratorBlockEntity entity, float partialTick) {
         super(context, entity, partialTick);
 
         shaft = instancerProvider()

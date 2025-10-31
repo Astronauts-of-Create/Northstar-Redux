@@ -13,7 +13,7 @@ import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
@@ -3884,9 +3884,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<OxygenConcentratorBlock> OXYGEN_CONCENTRATOR = REGISTRATE
-            .block("oxygen_concentrator", OxygenConcentratorBlock::new)
-            .lang("Atmospheric Concentrator")
+    public static final BlockEntry<AtmosphericConcentratorBlock> ATMOSPHERIC_CONCENTRATOR = REGISTRATE
+            .block("atmospheric_concentrator", AtmosphericConcentratorBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .noOcclusion()

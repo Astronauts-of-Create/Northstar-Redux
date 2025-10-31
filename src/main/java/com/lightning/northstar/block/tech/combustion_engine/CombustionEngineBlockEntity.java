@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
@@ -160,7 +160,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && (side == null || side == getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING)))
+        if (cap == ForgeCapabilities.FLUID_HANDLER && (side == null || side == getBlockState().getValue(AtmosphericConcentratorBlock.HORIZONTAL_FACING)))
             return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }

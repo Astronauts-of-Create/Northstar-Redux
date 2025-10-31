@@ -17,9 +17,9 @@ import com.lightning.northstar.block.tech.ice_box.IceBoxBlockEntity;
 import com.lightning.northstar.block.tech.ice_box.IceBoxRenderer;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlockEntity;
 import com.lightning.northstar.block.tech.large_fan.LargeFanRenderer;
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlockEntity;
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorRenderer;
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorVisual;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlockEntity;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorRenderer;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorVisual;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerRenderer;
@@ -116,11 +116,11 @@ public class NorthstarBlockEntityTypes {
             .renderer(() -> CircuitEngraverRenderer::new)
             .register();
 
-    public static final BlockEntityEntry<OxygenConcentratorBlockEntity> OXYGEN_CONCENTRATOR = REGISTRATE
-            .blockEntity("oxygen_concentrator", OxygenConcentratorBlockEntity::new)
-            .visual(() -> OxygenConcentratorVisual::new)
-            .validBlocks(NorthstarBlocks.OXYGEN_CONCENTRATOR)
-            .renderer(() -> OxygenConcentratorRenderer::new)
+    public static final BlockEntityEntry<AtmosphericConcentratorBlockEntity> ATMOSPHERIC_CONCENTRATOR = REGISTRATE
+            .blockEntity("atmospheric_concentrator", AtmosphericConcentratorBlockEntity::new)
+            .visual(() -> AtmosphericConcentratorVisual::new)
+            .validBlocks(NorthstarBlocks.ATMOSPHERIC_CONCENTRATOR)
+            .renderer(() -> AtmosphericConcentratorRenderer::new)
             .register();
 
     public static final BlockEntityEntry<OxygenFillerBlockEntity> OXYGEN_FILLER = REGISTRATE
