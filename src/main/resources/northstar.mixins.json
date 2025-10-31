@@ -13,7 +13,6 @@
     "MobMixin",
     "OxygenAndTempEntityMixin",
     "PlayerMixin",
-    "ServerLevelMixin",
     "WindmillBearingBlockEntityMixin",
     "block.CampfireBlockMixin",
     "block.CandleBlockMixin",
@@ -34,6 +33,8 @@
     "gravitystuff.ThrowableProjectileGravityMixin",
     "item.FireChargeItemMixin",
     "item.FlintAndSteelItemMixin",
+    "level.ServerLevelMixin",
+    "level.VenusServerLevelMixin",
     "EntityMixin"
   ],
   "client": [

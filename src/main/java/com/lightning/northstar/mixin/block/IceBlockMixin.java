@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.block;
 
-import com.lightning.northstar.particle.ColdAirParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.NorthstarTemperature;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
@@ -67,7 +67,7 @@ public class IceBlockMixin {
                 double d0 = (double) x + (dir.getStepX() / 2) + random.nextDouble();
                 double d1 = (double) y + 0.7D;
                 double d2 = (double) z + (dir.getStepZ() / 2) + random.nextDouble();
-                level.addParticle(new ColdAirParticleData(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                level.addParticle(NorthstarParticles.COLD_AIR.get(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
             }
         }
 

@@ -27,7 +27,7 @@ public class OxygenConcentratorVisual extends KineticBlockEntityVisual<OxygenCon
                 .setPosition(getVisualPosition());
 
         propeller = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.OXYGEN_CONCENTATOR_FAN))
+                .instancer(AllInstanceTypes.ROTATING, Models.partial(NorthstarPartialModels.ATMOSPHERIC_CONCENTRATOR_FAN))
                 .createInstance()
                 .setPosition(getVisualPosition());
     }

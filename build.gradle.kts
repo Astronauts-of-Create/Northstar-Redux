@@ -1,17 +1,22 @@
+import net.fabricmc.loom.task.RenderDocRunTask
+import net.fabricmc.loom.task.RenderDocRunUITask
 import java.time.Instant
 
 plugins {
+    `maven-publish`
     id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.10.433"
+    id("dev.architectury.loom") version "1.11.440"
 }
 
-version = "0.4.2+1.20.1" // https://semver.org/
+version = "0.5.0+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 architectury {
@@ -30,6 +35,7 @@ loom {
     forge {
         mixinConfig("northstar.mixins.json")
     }
+    runs["client"].property("mixin.debug.export", "true")
     runs["server"].runDir = "run-server/"
     runs.create("data") {
         data()
@@ -42,6 +48,11 @@ loom {
             "--existing", file("src/main/resources").absolutePath
         )
     }
+}
+
+project.findProperty("renderdoc")?.let { path ->
+    tasks.withType<RenderDocRunTask>().configureEach { renderDocExecutable = file("$path/bin/renderdoccmd") }
+    tasks.withType<RenderDocRunUITask>().configureEach { renderDocExecutable = file("$path/bin/qrenderdoc") }
 }
 
 repositories {
@@ -131,9 +142,24 @@ tasks.processResources {
     filesMatching(listOf("META-INF/mods.toml")) {
         expand(buildProps)
     }
-    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+
+            repositories {
+                maven {
+                    name = "SkyPlex"
+                    credentials(PasswordCredentials::class.java)
+                    url = uri("https://repo.mc-skyplex.net/releases/")
+                }
+            }
+        }
+    }
 }

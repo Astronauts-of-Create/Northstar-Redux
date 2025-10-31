@@ -456,6 +456,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .recipe(NorthstarDataGenHelper.sheetmetalRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -501,6 +502,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .recipe(NorthstarDataGenHelper.platingRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -3887,7 +3889,8 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
-            .transform(customItemModel())
+            .model((c, p) -> p.blockItem(c::get))
+            .build()
             .register();
 
     public static final BlockEntry<OxygenSealerBlock> OXYGEN_SEALER = REGISTRATE
@@ -3950,6 +3953,7 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketStationBlockMovingInteraction()))
@@ -3979,6 +3983,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
@@ -4005,6 +4010,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/computer_rack/block")))

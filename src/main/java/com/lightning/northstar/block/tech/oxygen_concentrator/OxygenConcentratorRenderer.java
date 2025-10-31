@@ -26,7 +26,7 @@ public class OxygenConcentratorRenderer extends KineticBlockEntityRenderer<Oxyge
         SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
         standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-        SuperByteBuffer fan = CachedBuffers.partial(NorthstarPartialModels.OXYGEN_CONCENTATOR_FAN, be.getBlockState());
+        SuperByteBuffer fan = CachedBuffers.partial(NorthstarPartialModels.ATMOSPHERIC_CONCENTRATOR_FAN, be.getBlockState());
         standardKineticRotationTransform(fan, be, light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
     }
 

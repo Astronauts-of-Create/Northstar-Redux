@@ -7,6 +7,7 @@ import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -36,7 +37,7 @@ public class CircuitEngraverRenderer extends ShaftRenderer<CircuitEngraverBlockE
             ms.translate(0, -0.16f, 0);
 
             SuperByteBuffer laser = CachedBuffers.partial(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER, be.getBlockState());
-            kineticRotationTransform(laser, be, Axis.Y, angle * 2, light).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+            kineticRotationTransform(laser, be, Axis.Y, angle * 2, LightTexture.FULL_BRIGHT).renderInto(ms, buffer.getBuffer(RenderType.cutout()));
 
             ms.popPose();
         }

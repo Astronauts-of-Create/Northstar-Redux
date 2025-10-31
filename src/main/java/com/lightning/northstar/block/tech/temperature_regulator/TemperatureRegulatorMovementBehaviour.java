@@ -54,7 +54,7 @@ public class TemperatureRegulatorMovementBehaviour implements MovementBehaviour 
             regulator.regulator.sealer.getVisualizer().render(matrices.getModelViewProjection(), buffer);
         }
 
-        PartialModel model = warm ? NorthstarPartialModels.WARM_SPINNY : NorthstarPartialModels.COLD_SPINNY;
+        PartialModel model = warm ? NorthstarPartialModels.WARM_SPINNER : NorthstarPartialModels.COLD_SPINNER;
 
         SpinningBlockRenderer.renderInContraption(context, renderWorld, matrices, buffer, model, rpm);
     }

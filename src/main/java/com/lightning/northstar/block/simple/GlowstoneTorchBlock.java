@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.simple;
 
-import com.lightning.northstar.particle.GlowstoneParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.NorthstarOxygen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -80,7 +80,7 @@ public class GlowstoneTorchBlock extends Block implements SimpleWaterloggedBlock
         double d1 = (double) pPos.getY() + 0.7D;
         double d2 = (double) pPos.getZ() + 0.5D;
         if (pRandom.nextInt(4) == 0)
-            pLevel.addParticle(new GlowstoneParticleData(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            pLevel.addParticle(NorthstarParticles.GLOWSTONE.get(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
     }
 
 }

@@ -26,7 +26,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
 
     AMETHYST_CRYSTAL = create(NorthstarBlocks.AMETHYST_CRYSTAL)
             .unlockedBy(() -> NorthstarItems.POLISHED_AMETHYST)
-            .viaShaped(b -> b.define('I', Items.IRON_AXE)
+            .viaShaped(b -> b.define('I', Items.IRON_INGOT)
                     .define('R', Items.REDSTONE)
                     .define('A', NorthstarItems.POLISHED_AMETHYST)
                     .pattern(" A ")

@@ -35,7 +35,10 @@ public class NorthstarDataGen {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         NorthstarTagGen.register();
-        Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> provideDefaultLang("base", provider::add));
+        Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
+            provideDefaultLang("base", provider::add);
+            provideDefaultLang("tooltips", provider::add);
+        });
 
         RegistrySetBuilder builder = new RegistrySetBuilder()
                 // TODO: those don't match the existing ones, which one are the real ones?

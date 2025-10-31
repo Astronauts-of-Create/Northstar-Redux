@@ -2,7 +2,7 @@ package com.lightning.northstar.block.simple;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.lightning.northstar.particle.GlowstoneParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -102,7 +102,7 @@ public class GlowstoneTorchWallBlock extends Block implements SimpleWaterloggedB
         double d2 = (double) pPos.getZ() + 0.5D;
         Direction direction1 = direction.getOpposite();
         if (pRandom.nextInt(4) == 0)
-            pLevel.addParticle(new GlowstoneParticleData(), d0 + 0.27D * (double) direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+            pLevel.addParticle(NorthstarParticles.GLOWSTONE.get(), d0 + 0.27D * (double) direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
     }
 
     @Override
