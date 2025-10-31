@@ -158,6 +158,7 @@ public class NorthstarTags {
         C_ORES_TITANIUM(COMMON, "ores/titanium"),
         C_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
         C_ORES_ZINC(COMMON, "ores/zinc"),
+        C_STONES(COMMON, "stone"),
         HEAVY_BLOCKS,
         MARS_BLOCKS,
         MARS_DEEP_STONE_REPLACEABLE,
@@ -258,6 +259,7 @@ public class NorthstarTags {
         C_SHEETS_MARTIAN_STEEL(COMMON, "plates/martian_steel"),
         C_SHEETS_TITANIUM(COMMON, "plates/titanium"),
         C_SHEETS_TUNGSTEN(COMMON, "plates/tungsten"),
+        C_STONES(COMMON, "stones"),
         C_STRIPPED_LOGS(COMMON, "stripped_logs"),
         HEAT_RESISTANT,
         /** Items that can be used to light up extinguished torches/lanterns */

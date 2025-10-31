@@ -849,8 +849,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MARS_DEEP_STONE = REGISTRATE
@@ -866,9 +869,12 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Deep Mars Stone")
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     //mars deco blocks
@@ -1669,8 +1675,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MOON_SURFACE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_STONE = REGISTRATE
@@ -1685,9 +1694,12 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .lang("Deep Moon Stone")
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<FrostBlock> FROST = REGISTRATE
@@ -2265,8 +2277,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .tag(NorthstarBlockTags.VENUS_STONE.tag)
             .tag(NorthstarBlockTags.VENUS_STONE_REPLACEABLE.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_STONE = REGISTRATE
@@ -2281,8 +2296,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_STONE_VENUS.tag)
             .tag(NorthstarBlockTags.VENUS_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.VENUS_STONE.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<GravelBlock> VENUS_GRAVEL = REGISTRATE
@@ -2983,8 +3001,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_STONE_MERCURY.tag)
             .tag(NorthstarBlockTags.MERCURY_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_STONE = REGISTRATE
@@ -2998,9 +3019,12 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_STONE_MERCURY.tag)
             .tag(NorthstarBlockTags.MERCURY_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Deep Mercury Stone")
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     //mercury deco blocks
