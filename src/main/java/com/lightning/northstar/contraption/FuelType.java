@@ -2,6 +2,7 @@ package com.lightning.northstar.contraption;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarRegistries;
+import com.lightning.northstar.data.Mod;
 import com.lightning.northstar.data.Tags;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -56,7 +57,7 @@ public record FuelType(
             return tag(tag.location());
         }
 
-        public Builder tag(Tags.Mod mod, String tag) {
+        public Builder tag(Mod mod, String tag) {
             return tag(mod.loc(tag));
         }
 
@@ -69,7 +70,7 @@ public record FuelType(
             return fluid(CatnipServices.REGISTRIES.getKeyOrThrow(fluid));
         }
 
-        public Builder fluid(Tags.Mod mod, String tag) {
+        public Builder fluid(Mod mod, String tag) {
             return fluid(mod.loc(tag));
         }
 
