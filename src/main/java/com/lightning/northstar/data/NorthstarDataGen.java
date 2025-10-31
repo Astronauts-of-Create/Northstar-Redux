@@ -6,6 +6,7 @@ import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.data.recipe.*;
+import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.core.HolderLookup;
@@ -44,7 +45,8 @@ public class NorthstarDataGen {
                 // TODO: those don't match the existing ones, which one are the real ones?
                 //.add(Registries.CONFIGURED_FEATURE, NorthstarConfiguredFeatures::bootstrap)
                 .add(Registries.DAMAGE_TYPE, NorthstarDamageTypes::bootstrap)
-                .add(NorthstarRegistries.FUEL, NorthstarFuelTypeGen::bootstrap);
+                .add(NorthstarRegistries.FUEL, NorthstarFuelTypeGen::bootstrap)
+                .add(CreateRegistries.POTATO_PROJECTILE_TYPE, NorthstarPotatoCannonProjectiles::boostrap);
 
         DatapackBuiltinEntriesProvider provider = new DatapackBuiltinEntriesProvider(output, lookupProvider, builder, Set.of(Northstar.MOD_ID));
         generator.addProvider(event.includeServer(), provider);

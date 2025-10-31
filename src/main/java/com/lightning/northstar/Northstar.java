@@ -89,6 +89,7 @@ public class Northstar {
         NorthstarEntityTypes.register();
         NorthstarFluids.register();
         DefaultOxygenConsumers.register();
+        NorthstarPotatoProjectileEntityHitActions.register(modEventBus);
 
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();
