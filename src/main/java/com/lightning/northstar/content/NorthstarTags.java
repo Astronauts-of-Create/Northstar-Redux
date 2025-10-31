@@ -59,6 +59,7 @@ public class NorthstarTags {
 
     public enum NorthstarFluidTags implements Tags.Tag<Fluid> {
 
+        BREATHABLE,
         COMPAT_CBC_MOLTEN_CAST_IRON,
         COMPAT_CDG_BIODIESEL,
         C_BIOFUEL(COMMON, "biofuel"),
@@ -79,6 +80,8 @@ public class NorthstarTags {
         C_SULFURIC_ACID(COMMON, "sulfuric_acid"),
         C_TITANIUM_TETRACHLORIDE(COMMON, "titanium_tetrachloride"),
         C_VANILLA_ICE_CREAM(COMMON, "vanilla_ice_cream"),
+        /** @deprecated poor naming, use {@link #BREATHABLE} instead. */
+        @Deprecated(since = "0.5.0", forRemoval = true)
         IS_OXY;
 
         public final TagKey<Fluid> tag;

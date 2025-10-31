@@ -102,7 +102,7 @@ public class NorthstarOxygen {
     }
 
     public static boolean isOxygen(Fluid fluid) {
-        return NorthstarFluidTags.C_OXYGEN.matches(fluid) || NorthstarFluidTags.IS_OXY.matches(fluid);
+        return NorthstarFluidTags.C_OXYGEN.matches(fluid) || NorthstarFluidTags.BREATHABLE.matches(fluid);
     }
 
     public static boolean hasOxygen(Level level, Vec3 pos) {
