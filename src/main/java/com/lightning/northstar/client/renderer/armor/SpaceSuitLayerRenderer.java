@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -33,8 +34,8 @@ public class SpaceSuitLayerRenderer<T extends LivingEntity, M extends EntityMode
 
     @Override
     public void render(PoseStack ms, MultiBufferSource buffer, int light, T entity,
-                       float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw,
-                       float pHeadPitch) {
+                       float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks,
+                       float netHeadYaw, float headPitch) {
         if (entity.getPose() == Pose.SLEEPING)
             return;
 
@@ -59,6 +60,11 @@ public class SpaceSuitLayerRenderer<T extends LivingEntity, M extends EntityMode
         SuperByteBuffer helmet = CachedBuffers.partial(model, air);
 
         ms.pushPose();
+
+        if (entityModel.young) {
+            ms.scale(0.75f, 0.75f, 0.75f);
+            ms.translate(0, 1, 0);
+        }
 
         ((HumanoidModel<?>) entityModel).head.translateAndRotate(ms);
         ms.translate(0.5, 1.45, -0.5);

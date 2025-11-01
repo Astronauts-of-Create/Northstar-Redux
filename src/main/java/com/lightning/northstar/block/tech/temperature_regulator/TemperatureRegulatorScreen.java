@@ -5,7 +5,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.TemperatureUnit;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
@@ -117,12 +117,12 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
             MutableComponent line2 = regulator.sealer.hasLeak() ?
                     NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
                             .add(CreateLang.number(NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get())
-                                    .style(ChatFormatting.AQUA))
+                                    .style(ChatFormatting.BLUE))
                             .text(" blocks")
                             .component() :
                     NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
                             .add(CreateLang.number(regulator.sealer.getSealedBlockCount())
-                                    .style(ChatFormatting.AQUA))
+                                    .style(ChatFormatting.BLUE))
                             .component();
 
             graphics.drawString(font, line1, guiLeft + 5, guiTop + 34, 0xFFFFFFFF);

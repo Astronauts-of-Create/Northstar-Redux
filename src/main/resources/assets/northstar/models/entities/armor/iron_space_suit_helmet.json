@@ -1,105 +1,33 @@
 {
-  "credit": "Made with Blockbench",
-  "texture_size": [
-    64,
-    64
-  ],
-  "textures": {
-    "0": "northstar:armor/iron_space_suit",
-    "particle": "northstar:armor/iron_space_suit"
-  },
-  "elements": [
-    {
-      "name": "bb_main",
-      "from": [
-        3.25,
-        22.5,
-        3.25
-      ],
-      "to": [
-        12.75,
-        32,
-        12.75
-      ],
-      "rotation": {
-        "angle": 0,
-        "axis": "y",
-        "origin": [
-          8,
-          0,
-          8
-        ]
-      },
-      "faces": {
-        "north": {
-          "uv": [
-            2,
-            2,
-            4,
-            4
-          ],
-          "texture": "#0"
-        },
-        "east": {
-          "uv": [
-            0,
-            2,
-            2,
-            4
-          ],
-          "texture": "#0"
-        },
-        "south": {
-          "uv": [
-            4,
-            0,
-            6,
-            2
-          ],
-          "texture": "#0"
-        },
-        "west": {
-          "uv": [
-            4,
-            2,
-            6,
-            4
-          ],
-          "texture": "#0"
-        },
-        "up": {
-          "uv": [
-            2,
-            2,
-            4,
-            0
-          ],
-          "texture": "#0"
-        },
-        "down": {
-          "uv": [
-            7.5,
-            0,
-            9.5,
-            2
-          ],
-          "texture": "#0"
-        }
-      }
-    }
-  ],
-  "groups": [
-    {
-      "name": "bb_main",
-      "origin": [
-        8,
-        0,
-        8
-      ],
-      "color": 0,
-      "children": [
-        0
-      ]
-    }
-  ]
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "northstar:armor/iron_space_suit",
+		"particle": "northstar:armor/iron_space_suit"
+	},
+	"elements": [
+		{
+			"name": "bb_main",
+			"from": [3.5, 22.75, 3.5],
+			"to": [12.5, 31.75, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [2, 2, 4, 4], "texture": "#0"},
+				"east": {"uv": [0, 2, 2, 4], "texture": "#0"},
+				"south": {"uv": [4, 0, 6, 2], "texture": "#0"},
+				"west": {"uv": [4, 2, 6, 4], "texture": "#0"},
+				"up": {"uv": [2, 2, 4, 0], "texture": "#0"},
+				"down": {"uv": [7.5, 0, 9.5, 2], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "bb_main",
+			"origin": [8, 0, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
 }

@@ -2,7 +2,7 @@ package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.block.entity.VenusExhaustBlockEntity;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
-import com.lightning.northstar.particle.SulfurPoofParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -34,14 +34,14 @@ public class VenusSporeSpreaderBlock extends BaseEntityBlock implements IBE<Venu
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        level.addAlwaysVisibleParticle(new SulfurPoofParticleData(), true, x + 0.5, y + 2, z + 0.5, 0.0D, 0.0D, 0.0D);
+        level.addAlwaysVisibleParticle(NorthstarParticles.SULFUR_POOF.get(), true, x + 0.5, y + 2, z + 0.5, 0.0D, 0.0D, 0.0D);
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
         for (int l = 0; l < 14 + level.random.nextInt(); ++l) {
             blockpos$mutableblockpos.set(x, y, z);
             BlockState blockstate = level.getBlockState(blockpos$mutableblockpos);
             if (!blockstate.isCollisionShapeFullBlock(level, blockpos$mutableblockpos)) {
-                level.addAlwaysVisibleParticle(new SulfurPoofParticleData(), true, (double) blockpos$mutableblockpos.getX() + level.random.nextDouble(), (double) blockpos$mutableblockpos.getY() + level.random.nextDouble(), (double) blockpos$mutableblockpos.getZ() + level.random.nextDouble(), 0.0D, 0.0D, 0.0D);
+                level.addAlwaysVisibleParticle(NorthstarParticles.SULFUR_POOF.get(), true, (double) blockpos$mutableblockpos.getX() + level.random.nextDouble(), (double) blockpos$mutableblockpos.getY() + level.random.nextDouble(), (double) blockpos$mutableblockpos.getZ() + level.random.nextDouble(), 0.0D, 0.0D, 0.0D);
             }
         }
     }

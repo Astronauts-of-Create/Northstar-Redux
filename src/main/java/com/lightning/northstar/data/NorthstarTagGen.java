@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
@@ -11,6 +12,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -28,11 +30,14 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class NorthstarTagGen {
 
     public static void register() {
@@ -44,6 +49,11 @@ public class NorthstarTagGen {
 
     private static void blocks(RegistrateTagsProvider<Block> provider) {
         Tags<Block, Block> tags = new Tags<>(provider, Block::builtInRegistryHolder, Function.identity());
+
+        for (NorthstarBlockTags tag : NorthstarBlockTags.values()) {
+            if (tag.alwaysDataGen)
+                tags.tag(tag);
+        }
 
         tags.tag(NorthstarBlockTags.AIR_PASSES_THROUGH)
                 .add(Blocks.OAK_DOOR, Blocks.OAK_TRAPDOOR, Blocks.JUNGLE_DOOR, Blocks.JUNGLE_TRAPDOOR,
@@ -156,6 +166,11 @@ public class NorthstarTagGen {
     private static void items(RegistrateTagsProvider<Item> provider) {
         Tags<Item, ItemLike> tags = new Tags<>(provider, Item::builtInRegistryHolder, ItemLike::asItem);
 
+        for (NorthstarItemTags tag : NorthstarItemTags.values()) {
+            if (tag.alwaysDataGen)
+                tags.tag(tag);
+        }
+
         tags.tag(NorthstarItemTags.IGNITION_SOURCE)
                 .add(Items.FLINT_AND_STEEL)
                 .add(Items.FIRE_CHARGE)
@@ -184,6 +199,11 @@ public class NorthstarTagGen {
     private static void entities(RegistrateTagsProvider<EntityType<?>> provider) {
         Tags<EntityType<?>, EntityType<?>> tags = new Tags<>(provider, EntityType::builtInRegistryHolder, Function.identity());
 
+        for (NorthstarEntityTags tag : NorthstarEntityTags.values()) {
+            if (tag.alwaysDataGen)
+                tags.tag(tag);
+        }
+
         tags.tag(NorthstarEntityTags.CAN_SURVIVE_COLD)
                 .add(EntityType.SKELETON)
                 .add(EntityType.SNOW_GOLEM)
@@ -205,6 +225,15 @@ public class NorthstarTagGen {
 
     private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
         Tags<Fluid, Fluid> tags = new Tags<>(provider, Fluid::builtInRegistryHolder, Function.identity());
+
+        for (NorthstarFluidTags tag : NorthstarFluidTags.values()) {
+            if (tag.alwaysDataGen)
+                tags.tag(tag);
+        }
+
+        tags.tag(NorthstarFluidTags.BREATHABLE)
+                .add(NorthstarFluidTags.IS_OXY)
+                .opt(TFMGFluids.AIR.get());
 
         tags.tag(NorthstarFluidTags.COMPAT_CBC_MOLTEN_CAST_IRON)
                 .opt(ModCompat.CBC, "molten_cast_iron");

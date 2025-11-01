@@ -2,7 +2,7 @@ package com.lightning.northstar.entity;
 
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
-import com.lightning.northstar.particle.SnailSlimeParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -82,7 +82,7 @@ public class MoonSnailEntity extends Monster implements GeoAnimatable {
     public void tick() {
         super.tick();
         if (this.onGround() && this.tickCount % 4 == 0) {
-            this.level().addParticle(new SnailSlimeParticleData(), this.getX(), this.getY() + 0.1, this.getZ(), 0.0D, 0.0D, 0.0D);
+            this.level().addParticle(NorthstarParticles.SNAIL_SLIME.get(), this.getX(), this.getY() + 0.1, this.getZ(), 0.0D, 0.0D, 0.0D);
         }
         if (slimeTimer > 0) {
             slimeTimer = Mth.clamp(slimeTimer, 0, slimeTimer - 1);

@@ -1,8 +1,10 @@
 package com.lightning.northstar.mixin.block;
 
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.accessor.NorthstarFluidState;
+import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,62 +12,63 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @Mixin(FluidState.class)
-public class FluidStateMixin {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class FluidStateMixin implements NorthstarFluidState {
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void northstar$tick(Level pLevel, BlockPos pPos, CallbackInfo info) {
-        // TODO: load buffer
-        //if (pLevel.isClientSide || NorthstarTemperature.loadBuffer <= 70)
-        //    return;
-        FluidState state = pLevel.getFluidState(pPos);
-        BlockState block = pLevel.getBlockState(pPos);
-        float temp = NorthstarTemperature.getTemperatureAt(pLevel, pPos);
-        if (temp > NorthstarTemperature.getBoilingPoint(state)) {
-            if (block.hasProperty(BlockStateProperties.WATERLOGGED) && !state.isEmpty()) {
-                pLevel.setBlockAndUpdate(pPos, block.setValue(BlockStateProperties.WATERLOGGED, false));
-                removeFluid(pLevel, pPos, state);
-            } else {
-                pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 3);
-                removeFluid(pLevel, pPos, state);
-            }
-        }
-        if (temp < NorthstarTemperature.getFreezingPoint(state) && state.is(Fluids.WATER)) {
-            if (block.hasProperty(BlockStateProperties.WATERLOGGED)) {
-                pLevel.setBlockAndUpdate(pPos, block.setValue(BlockStateProperties.WATERLOGGED, false));
-                removeFluid(pLevel, pPos, state);
-            } else {
-                pLevel.setBlockAndUpdate(pPos, Blocks.ICE.defaultBlockState());
-            }
-        }
-        if (NorthstarTemperature.isCombustible(state)) {
-            if (NorthstarTemperature.combustionTemp(state) <= temp) {
-                combust(pLevel, pPos, state);
-            }
-
-
-        }
+    public void northstar$tick(Level level, BlockPos pos, CallbackInfo info) {
+        // this can probably be removed or replaced by a check on placement
+        northstar$onSealUpdated(level, pos, SealingMode.TEMPERATURE);
     }
 
-    public void removeFluid(Level level, BlockPos pos, FluidState fluid) {
-        for (Direction dir : Direction.values()) {
-            BlockPos newpos = pos.mutable().move(dir);
-            if (level.getFluidState(newpos).is(fluid.getType()) && level.getBlockState(newpos).canBeReplaced(fluid.getType()) && !level.getBlockState(newpos).hasProperty(BlockStateProperties.WATERLOGGED)) {
-                level.setBlock(newpos, Blocks.AIR.defaultBlockState(), 3);
-            } else if (level.getBlockState(newpos).hasProperty(BlockStateProperties.WATERLOGGED) && fluid.is(Fluids.WATER)) {
-                level.setBlockAndUpdate(newpos, level.getBlockState(newpos).setValue(BlockStateProperties.WATERLOGGED, false));
+    @Override
+    public void northstar$onSealUpdated(Level level, BlockPos pos, SealingMode mode) {
+        if (mode != SealingMode.TEMPERATURE)
+            return;
+
+        FluidState self = (FluidState) (Object) this;
+
+        float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
+
+        if (temperature >= NorthstarTemperature.getBoilingPoint(self)) {
+            BlockState block = level.getBlockState(pos);
+            if (block.hasProperty(BlockStateProperties.WATERLOGGED) && !self.isEmpty()) {
+                level.setBlockAndUpdate(pos, block.setValue(BlockStateProperties.WATERLOGGED, false));
+            } else {
+                NorthstarTemperature.evaporate(level, pos);
             }
+            return;
+        }
+
+        if (temperature <= NorthstarTemperature.getFreezingPoint(self) && self.is(Fluids.WATER)) {
+            BlockState block = level.getBlockState(pos);
+            if (block.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                level.setBlockAndUpdate(pos, block.setValue(BlockStateProperties.WATERLOGGED, false));
+            } else {
+                level.setBlockAndUpdate(pos, Blocks.ICE.defaultBlockState());
+            }
+            return;
+        }
+
+        if (NorthstarTemperature.isCombustible(self) && temperature >= NorthstarTemperature.combustionTemp(self)) {
+            northstar$combust(level, pos);
         }
     }
 
     //EXPLOSION!!!!!! YEAH!!!!!!! I LOVE DEATH AND DESTRUCTION!!!!!!!!!!!!!!!!!!!
-    public void combust(Level level, BlockPos pos, FluidState fluid) {
+    @Unique
+    public void northstar$combust(Level level, BlockPos pos) {
         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         level.explode(null, pos.getX(), pos.getY(), pos.getZ(), 2.5F, true, Level.ExplosionInteraction.MOB);
-
     }
+
 }

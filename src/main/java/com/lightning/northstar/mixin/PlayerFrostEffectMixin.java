@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin;
 
 import com.lightning.northstar.item.NorthstarEnchantments;
-import com.lightning.northstar.particle.SnowflakeParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +32,7 @@ public abstract class PlayerFrostEffectMixin extends LivingEntity {
 
     public void frost(Entity pEntityHit) {
         if ((Object) this instanceof LocalPlayer) {
-            Minecraft.getInstance().particleEngine.createTrackingEmitter(pEntityHit, new SnowflakeParticleData());
+            Minecraft.getInstance().particleEngine.createTrackingEmitter(pEntityHit, NorthstarParticles.SNOWFLAKE.get());
         }
     }
 

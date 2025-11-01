@@ -4,6 +4,7 @@ mixinextras = "0.4.1"
 ponder = "1.0.56"
 
 [libraries]
+cdg = "maven.modrinth:create-diesel-generators:1.21.1-1.3.5"
 create = "com.simibubi.create:create-1.21.1:6.0.6-107"
 copycats = "com.copycatsplus:copycats:3.0.2+mc.1.21.1-neoforge-build.258"
 embeddium = "maven.modrinth:embeddium:1.0.15+mc1.21.1"
@@ -19,3 +20,4 @@ mixinextras-neoforge = { module = "io.github.llamalad7:mixinextras-neoforge", ve
 neoforge = "net.neoforged:neoforge:21.1.187"
 ponder-neoforge = { module = "net.createmod.ponder:Ponder-NeoForge-1.21.1", version.ref = "ponder" }
 registrate = "com.tterrag.registrate:Registrate:MC1.21-1.3.0+62"
+tfmg = "maven.modrinth:create-tfmg:1.1.0c"

@@ -1,9 +1,13 @@
 package com.lightning.northstar.particle;
 
 import com.lightning.northstar.Northstar;
-import com.simibubi.create.foundation.particle.ICustomParticleData;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -12,65 +16,65 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public enum NorthstarParticles {
+public class NorthstarParticles {
 
-    GLOWSTONE_PARTICLE(GlowstoneParticleData::new),
-    ROCKET_FLAME(RocketFlameParticleData::new),
-    ROCKET_FLAME_LANDING(RocketFlameLandingParticleData::new),
-    ROCKET_SMOKE(RocketSmokeParticleData::new),
-    ROCKET_SMOKE_LANDING(RocketSmokeLandingParticleData::new),
-    COLD_AIR(ColdAirParticleData::new),
-    OXY_FLOW(OxyFlowParticleData::new),
-    SNOWFLAKE(SnowflakeParticleData::new),
-    SNAIL_SLIME(SnailSlimeParticleData::new),
-    SULFUR_POOF(SulfurPoofParticleData::new),
-    DUST_CLOUD(DustCloudParticleData::new);
+    private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Northstar.MOD_ID);
+    private static final List<Consumer<RegisterParticleProvidersEvent>> FACTORIES = new ArrayList<>();
 
-    private final ParticleEntry<?> entry;
-
-    <D extends ParticleOptions> NorthstarParticles(Supplier<? extends ICustomParticleData<D>> typeFactory) {
-        entry = new ParticleEntry<>(name().toLowerCase(Locale.ROOT), typeFactory);
-    }
+    public static final RegistryObject<SimpleParticleType>
+            COLD_AIR = simpleSprite("cold_air", () -> ColdAirParticle::new),
+            DUST_CLOUD = simpleSprite("dust_cloud", () -> DustCloudParticle::new),
+            GLOWSTONE = simpleSprite("glowstone", () -> GlowstoneParticle::new),
+            LEAK = simpleSprite("leak", () -> LeakParticle::new),
+            OXY_FLOW = simpleSprite("oxy_flow", () -> OxyFlowParticle::new),
+            ROCKET_FLAME = simpleSprite("rocket_flame", () -> RocketFlameParticle::new),
+            ROCKET_FLAME_LANDING = simpleSprite("rocket_flame_landing", () -> RocketFlameLandingParticle::new),
+            ROCKET_SMOKE = simpleSprite("rocket_smoke", () -> RocketSmokeParticle::new),
+            ROCKET_SMOKE_LANDING = simpleSprite("rocket_smoke_landing", () -> RocketSmokeLandingParticle::new),
+            SNAIL_SLIME = simpleSprite("snail_slime", () -> SnailSlimeParticle::new),
+            SNOWFLAKE = simpleSprite("snowflake", () -> SnowflakeParticle::new),
+            SULFUR_POOF = simpleSprite("sulfur_poof", () -> SulfurPoofParticle::new);
 
     public static void register(IEventBus modEventBus) {
-        ParticleEntry.REGISTER.register(modEventBus);
+        REGISTER.register(modEventBus);
     }
 
     @OnlyIn(Dist.CLIENT)
     public static void registerFactories(RegisterParticleProvidersEvent event) {
-        for (NorthstarParticles particle : values())
-            particle.entry.registerFactory(event);
-    }
-
-    public ParticleType<?> get() {
-        return entry.object.get();
-    }
-
-    public String parameter() {
-        return entry.name;
-    }
-
-    private static class ParticleEntry<D extends ParticleOptions> {
-        private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(Registries.PARTICLE_TYPE, Northstar.MOD_ID);
-
-        private final String name;
-        private final Supplier<? extends ICustomParticleData<D>> typeFactory;
-        private final DeferredHolder<ParticleType<?>, ParticleType<D>> object;
-
-        public ParticleEntry(String name, Supplier<? extends ICustomParticleData<D>> typeFactory) {
-            this.name = name;
-            this.typeFactory = typeFactory;
-            object = REGISTER.register(name, () -> this.typeFactory.get().createType());
+        for (Consumer<RegisterParticleProvidersEvent> factory : FACTORIES) {
+            factory.accept(event);
         }
+        FACTORIES.clear();
+    }
 
-        @OnlyIn(Dist.CLIENT)
-        public void registerFactory(RegisterParticleProvidersEvent event) {
-            typeFactory.get().register(object.get(), event);
+    private static RegistryObject<SimpleParticleType> simpleSprite(String name, Supplier<SpriteParticleProvider<SimpleParticleType>> supplier) {
+        RegistryObject<SimpleParticleType> entry = REGISTER.register(name, () -> new SimpleParticleType(false));
+        FACTORIES.add(event -> {
+            SpriteParticleProvider<SimpleParticleType> factory = supplier.get();
+            event.registerSpriteSet(entry.get(), sprite -> (a, b, c, d, e, f, g, h) -> factory.createParticle(a, b, c, d, e, f, g, h, sprite));
+        });
+        return entry;
+    }
+
+    public static int getLight(int lightColor, float partialTick, int age, int lifetime) {
+        // TODO: cleanup, this seems to reuse PortalParticle#getLightColor
+        float f = Mth.clamp((age + partialTick) / lifetime, 0.0F, 1.0F);
+        int j = lightColor & 255;
+        int k = lightColor >> 16 & 255;
+        j += (int) (f * 15.0F * 16.0F);
+        if (j > 240) {
+            j = 240;
         }
+        return j | k << 16;
+    }
 
+    public interface SpriteParticleProvider<T extends ParticleOptions> {
+        Particle createParticle(T type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet spriteSet);
     }
 
 }

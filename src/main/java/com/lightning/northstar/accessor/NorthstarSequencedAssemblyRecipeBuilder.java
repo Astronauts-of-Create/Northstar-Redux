@@ -1,6 +1,6 @@
 package com.lightning.northstar.accessor;
 
-import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.Mod;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -12,7 +12,7 @@ public interface NorthstarSequencedAssemblyRecipeBuilder {
         throw new RuntimeException("This should be implemented by a mixin!");
     }
 
-    default SequencedAssemblyRecipeBuilder northstar$whenModLoaded(Tags.Mod mod) {
+    default SequencedAssemblyRecipeBuilder northstar$whenModLoaded(Mod mod) {
         return northstar$withCondition(new ModLoadedCondition(mod.getModId()));
     }
 

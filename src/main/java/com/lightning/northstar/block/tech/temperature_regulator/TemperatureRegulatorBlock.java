@@ -5,6 +5,7 @@ import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.tterrag.registrate.util.RegistrateDistExecutor;
 import net.createmod.catnip.gui.ScreenOpener;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -24,6 +25,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements IBE<TemperatureRegulatorBlockEntity> {
 
     protected static final VoxelShape SHAPE = box(0, 0, 0, 16, 13, 16);
@@ -78,7 +83,7 @@ public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements
 
     @Override
     public BlockEntityType<? extends TemperatureRegulatorBlockEntity> getBlockEntityType() {
-        return NorthstarBlockEntityTypes.TEMPERATURE_REGULATOR_BLOCK_ENTITY.get();
+        return NorthstarBlockEntityTypes.TEMPERATURE_REGULATOR.get();
     }
 
 }

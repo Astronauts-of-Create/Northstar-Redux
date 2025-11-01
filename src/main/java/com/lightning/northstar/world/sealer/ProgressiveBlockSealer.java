@@ -2,25 +2,36 @@ package com.lightning.northstar.world.sealer;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.MutableAABB;
 import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.foundation.utility.CreateLang;
 import it.unimi.dsi.fastutil.longs.*;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ProgressiveBlockSealer {
+
+    private static final long START_MARKER = Long.MIN_VALUE;
+
+    private final SealingMode mode;
 
     private final MutableBlockPos tempPos1 = new MutableBlockPos();
     private final MutableBlockPos tempPos2 = new MutableBlockPos();
@@ -28,19 +39,32 @@ public class ProgressiveBlockSealer {
     private final Long2LongMap visited = new Long2LongOpenHashMap();
     private final LongArrayFIFOQueue queue = new LongArrayFIFOQueue();
     private final MutableAABB bounds = new MutableAABB();
+    private int extraCheckedVolume;
+    private int extraCheckedPerTick;
 
+    private final LongArrayList leakPath = new LongArrayList();
     private final LongSet sealedBlocks = new LongOpenHashSet();
     private final MutableAABB sealedBounds = new MutableAABB();
+    private final LongList updatedBlocks = new LongArrayList();
     private boolean hasLeak;
+    private int extraVolume;
 
     private SealerDebugVisualizer visualizer = SealerDebugVisualizer.NOOP;
 
-    public boolean beginSeal(Level level, BlockPos origin, Direction originDirection) {
+    public ProgressiveBlockSealer(SealingMode mode) {
+        this.mode = mode;
+
+        visited.defaultReturnValue(START_MARKER);
+    }
+
+    public boolean beginSeal(Level level, BlockPos origin, @Nullable Direction originDirection) {
         if (originDirection != null) {
             tempPos1.setWithOffset(origin, originDirection);
-            if (isFaceOccluded(level, tempPos1, originDirection.getOpposite(), false)) {
+            if (isFaceOccluded(level, tempPos1, originDirection.getOpposite(), false, mode)) {
                 sealedBounds.zero();
                 sealedBlocks.clear();
+                hasLeak = false;
+                extraVolume = 0;
                 visualizer.complete();
                 return false;
             }
@@ -55,9 +79,13 @@ public class ProgressiveBlockSealer {
         visited.clear();
         queue.clear();
         bounds.neg();
+        updatedBlocks.clear();
 
-        visited.put(tempPos1.asLong(), 0);
+        visited.put(tempPos1.asLong(), START_MARKER);
         queue.enqueue(tempPos1.asLong());
+
+        extraCheckedPerTick = 0;
+        extraCheckedVolume = 0;
 
         bounds.union(origin);
         bounds.union(tempPos1);
@@ -65,7 +93,7 @@ public class ProgressiveBlockSealer {
     }
 
     public boolean updateSeal(Level level, int maximumSealed) {
-        return updateSeal(level, maximumSealed, NorthstarConfigs.server().sealerMaxBlocksPerTick.get());
+        return updateSeal(level, maximumSealed, NorthstarConfigs.server().sealerBaseCheckBlocksPerTick.get());
     }
 
     /**
@@ -76,68 +104,151 @@ public class ProgressiveBlockSealer {
             return true; // nothing to do
         }
 
+        maximumSealed += extraCheckedVolume;
+        maximumChecked = Math.min(maximumChecked + extraCheckedPerTick, NorthstarConfigs.server().sealerMaxCheckedBlocksPerTick.get());
+
         ProfilerFiller profiler = level.getProfiler();
         profiler.push("northstar:seal_blocks");
 
+        long lastChecked = 0;
+
         int checked = 0;
         while (!queue.isEmpty() && checked++ < maximumChecked && visited.size() <= maximumSealed) {
-            tempPos1.set(queue.dequeueLong());
+            long parent = queue.dequeueLong();
+            tempPos1.set(parent);
 
             for (Direction direction : Iterate.directions) {
                 tempPos2.setWithOffset(tempPos1, direction);
 
+                long packed = tempPos2.asLong();
+                if (visited.containsKey(packed))
+                    continue;
                 if (isAirOccluded(level, tempPos1, tempPos2, direction)) {
                     continue;
                 }
 
-                long packed = tempPos2.asLong();
-                if (visited.put(packed, 1) == 0) {
-                    bounds.union(tempPos2);
-                    queue.enqueue(packed);
+                visited.put(packed, parent);
+                onBlockAdded(level, tempPos2);
 
-                    visualizer.addConnection(tempPos1.asLong(), packed);
+                if (!sealedBlocks.contains(packed))
+                    updatedBlocks.add(packed);
+
+                BlockState state = level.getBlockState(tempPos2);
+                if (state.getBlock() instanceof SealerExtensionSource source) {
+                    int sourceVolume = source.getMaximumSealedBlocks(level, tempPos2);
+                    int sourceChecked = source.getMaximumCheckedPerTick(level, tempPos2);
+
+                    extraCheckedVolume += sourceVolume;
+                    extraCheckedPerTick += sourceChecked;
+                    maximumSealed += sourceVolume;
+                    maximumChecked = Math.min(maximumChecked + sourceChecked, NorthstarConfigs.server().sealerMaxCheckedBlocksPerTick.get());
                 }
+
+                bounds.union(tempPos2);
+                queue.enqueue(packed);
+                lastChecked = packed;
+
+                visualizer.addConnection(parent, packed);
             }
         }
 
-        if (!queue.isEmpty() && visited.size() < maximumSealed) {
+        profiler.incrementCounter("blocks", checked);
+
+        if (!queue.isEmpty() && (visited.size() + queue.size()) < maximumSealed) {
             profiler.pop();
             return false;
         }
 
-        hasLeak = visited.size() > maximumSealed;
-        sealedBlocks.clear();
+        onSealComplete(maximumSealed, lastChecked);
+
+        profiler.pop();
+        return true;
+    }
+
+    protected void onSealComplete(int maximumSealed, long lastChecked) {
+        hasLeak = !queue.isEmpty() || visited.size() > maximumSealed;
+        leakPath.clear();
         if (hasLeak) {
+            while (lastChecked != START_MARKER) {
+                leakPath.add(lastChecked);
+                lastChecked = visited.get(lastChecked);
+            }
+
+            updatedBlocks.clear();
+            updatedBlocks.addAll(sealedBlocks);
+
+            sealedBlocks.clear();
             sealedBounds.neg();
         } else {
+            leakPath.trim();
+
+            LongIterator iterator = sealedBlocks.longIterator();
+            while (iterator.hasNext()) {
+                long value = iterator.nextLong();
+                if (!visited.containsKey(value))
+                    updatedBlocks.add(value);
+            }
+
+            sealedBlocks.clear();
             sealedBlocks.addAll(visited.keySet());
             sealedBounds.set(bounds);
         }
+
+        extraVolume = extraCheckedVolume;
 
         visualizer.complete();
 
         queue.clear();
         visited.clear();
         bounds.neg();
+    }
 
-        profiler.pop();
-        return true;
+    protected void onBlockAdded(BlockGetter level, BlockPos pos) {
     }
 
     protected boolean isAirOccluded(BlockGetter level, BlockPos from, BlockPos to, Direction direction) {
-        return isFaceOccluded(level, from, direction, true) || isFaceOccluded(level, to, direction.getOpposite(), false);
+        return isAirOccluded(level, from, to, direction, mode);
     }
 
-    protected static boolean isFaceOccluded(BlockGetter level, BlockPos pos, Direction direction, boolean source) {
+    public static boolean isAirOccluded(BlockGetter level, BlockPos from, BlockPos to, Direction direction, SealingMode mode) {
+        return isFaceOccluded(level, from, direction, true, mode) || isFaceOccluded(level, to, direction.getOpposite(), false, mode);
+    }
+
+    public static boolean isFaceOccluded(BlockGetter level, BlockPos pos, Direction direction, boolean source, SealingMode mode) {
         BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof SealableBlock sealable)
-            return sealable.isFaceSealed(level, pos, direction, source);
+            return sealable.northstar$isFaceSealed(level, pos, state, direction, source, mode);
         if (source && NorthstarBlockTags.BLOCKS_AIR.matches(state))
             return true;
         return Block.isFaceFull(state.getShape(level, pos), direction) && !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
     }
 
-    public void addToGoggleTooltip(List<Component> tooltip, int maximumSealed) {
+    public void renderLeakPath(Level level) {
+        if (!hasLeak || leakPath.isEmpty() || !level.isClientSide)
+            return;
+
+        MutableBlockPos prev = tempPos1;
+        MutableBlockPos pos = tempPos2;
+        RandomSource random = level.random;
+
+        prev.set(leakPath.getLong(0));
+
+        for (int i = 1, j = leakPath.size(); i < j; i++) {
+            pos.set(leakPath.getLong(i));
+
+            level.addParticle(NorthstarParticles.LEAK.get(),
+                    pos.getX() + random.nextFloat() * 0.4 + 0.3,
+                    pos.getY() + random.nextFloat() * 0.4 + 0.3,
+                    pos.getZ() + random.nextFloat() * 0.4 + 0.3,
+                    prev.getX() - pos.getX(),
+                    prev.getY() - pos.getY(),
+                    prev.getZ() - pos.getZ());
+
+            prev.set(pos);
+        }
+    }
+
+    public void addToGoggleTooltip(List<Component> tooltip, int maximumSealed, boolean isPlayerSneaking) {
         if (hasLeak()) {
             NorthstarLang.translate("gui.goggles.sealer.area_too_big")
                     .style(ChatFormatting.DARK_RED)
@@ -145,8 +256,8 @@ public class ProgressiveBlockSealer {
             NorthstarLang.translate("gui.goggles.sealer.max_sealed")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            CreateLang.number(maximumSealed)
-                    .style(ChatFormatting.AQUA)
+            CreateLang.number(maximumSealed + extraVolume)
+                    .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " blocks")
                     .forGoggles(tooltip, 1);
         } else {
@@ -154,15 +265,27 @@ public class ProgressiveBlockSealer {
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.number(sealedBlocks.size())
-                    .style(ChatFormatting.AQUA)
+                    .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(maximumSealed)
+                    .add(CreateLang.number(maximumSealed + extraVolume)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
         }
+
+        if (isPlayerSneaking && extraVolume != 0) {
+            CreateLang.number(maximumSealed)
+                    .style(ChatFormatting.BLUE)
+                    .add(NorthstarLang.translate("gui.goggles.sealer.capacity_speed")
+                            .style(ChatFormatting.GRAY))
+                    .forGoggles(tooltip, 2);
+            CreateLang.number(extraVolume)
+                    .style(ChatFormatting.BLUE)
+                    .add(NorthstarLang.translate("gui.goggles.sealer.capacity_extra")
+                            .style(ChatFormatting.GRAY))
+                    .forGoggles(tooltip, 2);
+        }
     }
 
-    // This probably doesn't belong here, but I couldn't find a better place to put it
     public void addCooldownTooltip(List<Component> tooltip, int cooldown, int maximumSealed) {
         if (cooldown > 0) {
             NorthstarLang.translate("gui.goggles.sealer.cooldown")
@@ -172,7 +295,7 @@ public class ProgressiveBlockSealer {
         } else {
             NorthstarLang.translate("gui.goggles.sealer.sealing")
                     .style(ChatFormatting.GRAY)
-                    .add(CreateLang.number(100.0 * visited.size() / maximumSealed)
+                    .add(CreateLang.number(100.0 * visited.size() / (maximumSealed + extraCheckedVolume))
                             .text("%")
                             .style(ChatFormatting.AQUA))
                     .forGoggles(tooltip);
@@ -189,6 +312,10 @@ public class ProgressiveBlockSealer {
 
     public LongSet getSealedBlocks() {
         return sealedBlocks;
+    }
+
+    public LongList getUpdatedBlocks() {
+        return updatedBlocks;
     }
 
     public boolean hasLeak() {

@@ -1,17 +1,22 @@
+import net.fabricmc.loom.task.RenderDocRunTask
+import net.fabricmc.loom.task.RenderDocRunUITask
 import java.time.Instant
 
 plugins {
+    `maven-publish`
     id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.10.433"
+    id("dev.architectury.loom") version "1.11.440"
 }
 
-version = "0.4.2+1.21.1" // https://semver.org/
+version = "0.5.0+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 architectury {
@@ -29,6 +34,7 @@ loom {
     accessWidenerPath = rootProject.file("src/main/resources/northstar.accessWidener")
     neoForge {
     }
+    runs["client"].property("mixin.debug.export", "true")
     runs["server"].runDir = "run-server/"
     runs.create("data") {
         data()
@@ -41,6 +47,11 @@ loom {
             "--existing", file("src/main/resources").absolutePath
         )
     }
+}
+
+project.findProperty("renderdoc")?.let { path ->
+    tasks.withType<RenderDocRunTask>().configureEach { renderDocExecutable = file("$path/bin/renderdoccmd") }
+    tasks.withType<RenderDocRunUITask>().configureEach { renderDocExecutable = file("$path/bin/qrenderdoc") }
 }
 
 repositories {
@@ -105,8 +116,10 @@ dependencies {
     modImplementation(libs.geckolib.neoforge)
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
-    modImplementation(libs.jei.neoforge)
-    //modImplementation(libs.copycats)
+    modImplementation(libs.jei.forge)
+    modCompileOnly(libs.copycats)
+    modImplementation(libs.cdg)
+    modImplementation(libs.tfmg)
 
     // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.
     modRuntimeOnly(libs.jcpp)
@@ -135,10 +148,25 @@ tasks.processResources {
     filesMatching(listOf("META-INF/neoforge.mods.toml")) {
         expand(buildProps)
     }
-    outputs.upToDateWhen { false }
 }
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+
+            repositories {
+                maven {
+                    name = "SkyPlex"
+                    credentials(PasswordCredentials::class.java)
+                    url = uri("https://repo.mc-skyplex.net/releases/")
+                }
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlockEntity;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
+import com.lightning.northstar.compat.copycats.CopycatsPlusHelper;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
@@ -12,6 +13,7 @@ import com.simibubi.create.api.contraption.ContraptionType;
 import com.simibubi.create.content.contraptions.AssemblyException;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
+import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,7 +79,7 @@ public class RocketContraption extends TranslatingContraption {
         for (int slot = 0; slot < tanks.getTanks(); slot++) {
             FluidStack stack = tanks.getFluidInTank(slot);
             FuelType fuel = FuelType.getFuelType(stack.getFluid());
-            if (fuel == null)
+            if (fuel == null || Mth.equal(fuel.gjPerMb(), 0))
                 continue;
             int burnable = Math.min(Mth.floor(energyToBurn / fuel.gjPerMb()), stack.getAmount());
 
@@ -91,11 +93,11 @@ public class RocketContraption extends TranslatingContraption {
     @Override
     protected Pair<StructureBlockInfo, BlockEntity> capture(Level world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (NorthstarBlocks.ROCKET_STATION.has(blockState)) {
             rocket_station = true;
-            BlockEntity ent = world.getBlockEntity(pos);
-            if (ent instanceof RocketStationBlockEntity rsbe) {
+            if (blockEntity instanceof RocketStationBlockEntity rsbe) {
                 name = rsbe.name;
 
                 // this is a bit sketchy in game, it should delete the ticket after it's
@@ -119,8 +121,7 @@ public class RocketContraption extends TranslatingContraption {
             this.hasInterplanetaryNavigation = true;
         }
         if (NorthstarBlocks.COMPUTER_RACK.has(blockState)) {
-            BlockEntity ent = world.getBlockEntity(pos);
-            if (ent instanceof TargetingComputerRackBlockEntity crbe) {
+            if (blockEntity instanceof TargetingComputerRackBlockEntity crbe) {
                 for (int b = 0; b < crbe.container.getContainerSize(); b++) {
                     if (crbe.container.getItem(b).is(NorthstarItems.TARGETING_COMPUTER.get())) {
                         if (computingPower < 0.4)
@@ -143,7 +144,7 @@ public class RocketContraption extends TranslatingContraption {
             }
             assembledJets.add(toLocalPos(pos));
         }
-        if (world.getBlockEntity(pos) instanceof FluidTankBlockEntity tank && Float.isFinite(fuelAmount)) {
+        if (blockEntity instanceof FluidTankBlockEntity tank && Float.isFinite(fuelAmount)) {
             FluidTank tankInventory = tank.getTankInventory();
             for (int i = 0; i < tankInventory.getTanks(); i++) {
                 FuelType fuel = FuelType.getFuelType(tankInventory.getFluidInTank(i).getFluid());
@@ -159,22 +160,26 @@ public class RocketContraption extends TranslatingContraption {
         if (!blockState.is(Blocks.AIR) && !blockState.is(Blocks.CAVE_AIR)) {
             blockCount++;
         }
-        if (blockState.is(NorthstarTags.NorthstarBlockTags.HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR)) {
+
+        BlockState copycat = CopycatsPlusHelper.$.getCopycatMaterial(blockEntity);
+        if (copycat != null)
+            blockState = copycat;
+        if (blockEntity instanceof CopycatBlockEntity cc)
+            blockState = cc.getMaterial();
+
+        if (blockState.is(NorthstarTags.NorthstarBlockTags.HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR))
             weightCost += 5;
-        } else if (blockState.is(NorthstarTags.NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR)) {
+        else if (blockState.is(NorthstarTags.NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR))
             weightCost += 10;
-        } else if (!blockState.is(Blocks.AIR)) {
+        else if (!blockState.is(Blocks.AIR))
             weightCost += 1;
-        }
-        if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR)) {
+
+        if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
             heatShielding += 3;
-        }
-        if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR)) {
+        else if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
             heatShielding += 8;
-        }
-        if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR)) {
+        else if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
             heatShielding += 20;
-        }
         return super.capture(world, pos);
     }
 

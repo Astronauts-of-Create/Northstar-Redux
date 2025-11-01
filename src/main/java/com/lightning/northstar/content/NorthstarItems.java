@@ -64,6 +64,10 @@ public class NorthstarItems {
             .item("durable_fabric", Item::new)
             .register();
 
+    public static final ItemEntry<Item> FAN_BLADE = REGISTRATE
+            .item("fan_blade", Item::new)
+            .register();
+
     // TODO: "dusts/ash", "dusts/volcanic_ash"?
     public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
             .item("volcanic_ash_item", Item::new)
@@ -443,7 +447,6 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TARGETING_COMPUTER = REGISTRATE
             .item("targeting_computer", Item::new)
-            .properties(p -> p.stacksTo(1))
             .register();
 
     public static final ItemEntry<SequencedAssemblyItem> UNFINISHED_TARGETING_COMPUTER =

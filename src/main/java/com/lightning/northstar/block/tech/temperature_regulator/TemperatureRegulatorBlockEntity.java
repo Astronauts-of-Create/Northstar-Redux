@@ -1,15 +1,14 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.config.NorthstarConfigs;
-import com.lightning.northstar.particle.SnowflakeParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -54,6 +53,13 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+
+        level.northstar$temperature().enqueueUpdates(regulator.sealer.getSealedBlocks());
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -61,15 +67,23 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         if (sealer.isSealInProgress()) {
             if (sealer.updateSeal(level, getMaximumSealedBlocks())) {
                 sealCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
+                level.northstar$temperature().enqueueUpdates(sealer.getUpdatedBlocks());
             }
         } else if (sealCooldown-- <= 0) {
             sealer.beginSeal(level, worldPosition, null);
         }
 
+        sealer.renderLeakPath(level);
+
         active = Math.abs(speed) > 0 && !overStressed && !sealer.hasLeak();
         if (active && level.isClientSide) {
             addParticles(isCurrentlyWarm(), speed / 64f);
         }
+    }
+
+    public void onTemperatureChanged() {
+        if (level != null)
+            level.northstar$temperature().enqueueUpdates(regulator.sealer.getSealedBlocks());
     }
 
     public int getMaximumSealedBlocks() {
@@ -106,7 +120,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
         }
 
         for (int i = 0, j = random.nextInt(isWarm ? 5 : 4); i < j; i++) {
-            ParticleOptions particle = isWarm ? ParticleTypes.FLAME : new SnowflakeParticleData();
+            ParticleOptions particle = isWarm ? ParticleTypes.FLAME : NorthstarParticles.SNOWFLAKE.get();
             double posX = worldPosition.getX() + random.nextDouble();
             double posY = worldPosition.getY() + 0.7 + random.nextDouble();
             double posZ = worldPosition.getZ() + random.nextDouble();
@@ -119,24 +133,19 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
-            tooltip.add(Component.empty());
-        }
-
         NorthstarLang.translate("gui.goggles.temperature_regulator")
                 .forGoggles(tooltip);
 
-        NorthstarLang.translate("gui.goggles.temperature")
+        if (StressImpact.isEnabled())
+            addStressImpactStats(tooltip, calculateStressApplied());
+
+        NorthstarLang.translate("gui.goggles.generic.temperature")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
-
-        TemperatureUnit unit = NorthstarConfigs.client().temperatureUnit.get();
-        CreateLang.number(unit.fromCelsius(regulator.temperature))
-                .style(ChatFormatting.AQUA)
-                .text(ChatFormatting.GRAY, unit.symbol)
+        NorthstarLang.temperature(regulator.temperature)
                 .forGoggles(tooltip, 1);
 
-        regulator.sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks());
+        regulator.sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks(), isPlayerSneaking);
         if (isPlayerSneaking)
             regulator.sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
 
@@ -151,8 +160,13 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
     @Override
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        float previousTemperature = regulator.temperature;
+
         super.read(compound, registries, clientPacket);
         regulator.read(compound, worldPosition);
+
+        if (!Mth.equal(previousTemperature, regulator.temperature))
+            onTemperatureChanged(); // in case of /data merge, update blocks, if it was just loaded in there is no effect
     }
 
     public ProgressiveBlockSealer getSealer() {

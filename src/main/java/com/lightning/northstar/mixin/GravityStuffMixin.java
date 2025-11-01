@@ -3,6 +3,7 @@ package com.lightning.northstar.mixin;
 import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -72,7 +73,7 @@ public class GravityStuffMixin {
         }
         if (!entity.isNoGravity() && !entity.isInWater() && !entity.isInLava() && !entity.hasEffect(MobEffects.SLOW_FALLING)) {
             float dust_push = 0;
-            if (entity.level().getRainLevel(0) > 0 && entity.level().getRawBrightness(entity.blockPosition(), -1) == 16 && !entity.isSpectator() && (entity.level().dimension() == NorthstarDimensions.MARS_DIM_KEY)
+            if (entity.level().getRainLevel(0) > 0 && entity.level().getRawBrightness(entity.blockPosition(), -1) == 16 && !entity.isSpectator() && (entity.level().dimension() == NorthstarDimensions.MARS_DIM_KEY && !NorthstarOxygen.hasOxygen(entity.level(), entity.getEyePosition()))
                     && entity.level().isInWorldBounds(entity.blockPosition()) && !RocketHandler.isInRocket(entity)) {
                 dust_push = 0.005f;
             }

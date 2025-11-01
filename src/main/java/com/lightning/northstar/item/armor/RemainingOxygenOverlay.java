@@ -1,6 +1,6 @@
 package com.lightning.northstar.item.armor;
 
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.content.NorthstarDataComponents;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.createmod.catnip.gui.element.GuiGameElement;
@@ -27,10 +27,10 @@ public class RemainingOxygenOverlay implements LayeredDraw.Layer {
                 player == null ||
                 player.isSpectator() ||
                 player.isCreative() ||
-                NorthstarOxygen.hasOxygen(player.level(), player.position()))
+                (NorthstarOxygen.hasOxygen(player.level(), player.position())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
             return;
 
-        ItemStack tank = NorthstarOxygen.getOxy(player);
+        ItemStack tank = NorthstarOxygen.getOxygenTank(player);
         if (tank.isEmpty())
             return;
         int remainingTime = tank.has(NorthstarDataComponents.OXYGEN) ? tank.get(NorthstarDataComponents.OXYGEN) : 0;

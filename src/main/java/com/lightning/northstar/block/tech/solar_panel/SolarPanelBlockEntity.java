@@ -46,6 +46,8 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(compound, registries, clientPacket);
         generatedSpeed = compound.getFloat("GeneratorSpeed");
+        lastLight = -1;
+        ticksSinceChange = 0;
     }
 
     @Override

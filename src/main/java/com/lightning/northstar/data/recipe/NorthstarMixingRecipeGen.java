@@ -71,7 +71,7 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
     STRAWBERRY_ICE_CREAM = create("strawberry_ice_cream",
             b -> b.require(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag, 200)
                     .require(NorthstarItems.MARTIAN_STRAWBERRY)
-                    .output(NorthstarFluids.CHOCOLATE_ICE_CREAM.get(), 250)),
+                    .output(NorthstarFluids.STRAWBERRY_ICE_CREAM.get(), 250)),
 
     // Pre electrolysis, uses sodium catalysis but has a bad ratio
     TITANIUM1 = create("titanium1",

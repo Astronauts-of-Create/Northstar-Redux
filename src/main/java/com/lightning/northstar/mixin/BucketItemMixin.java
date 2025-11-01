@@ -1,7 +1,7 @@
 package com.lightning.northstar.mixin;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;

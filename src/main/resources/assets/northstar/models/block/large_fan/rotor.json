@@ -1,0 +1,9 @@
+{
+	"loader": "forge:obj",
+	"flip_v": true,
+	"model": "northstar:models/block/large_fan/rotor.obj",
+	"textures": {
+		"texture0": "northstar:block/rotor",
+		"particle": "northstar:block/rotor"
+	}
+}

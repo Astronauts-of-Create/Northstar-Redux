@@ -1,89 +1,61 @@
 package com.lightning.northstar.block.simple;
 
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.sealer.SealReactiveBlock;
+import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomIceBlock extends HalfTransparentBlock {
-    public Fluid fluid;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-    public CustomIceBlock(BlockBehaviour.Properties pProperties) {
-        super(pProperties);
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class CustomIceBlock extends HalfTransparentBlock implements SealReactiveBlock {
+
+    public final Fluid fluid;
+
+    public CustomIceBlock(BlockBehaviour.Properties properties, Fluid fluid) {
+        super(properties);
+        this.fluid = fluid;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pTe, ItemStack pStack) {
-        super.playerDestroy(pLevel, pPlayer, pPos, pState, pTe, pStack);
-        if (EnchantmentHelper.getItemEnchantmentLevel(pLevel.holderOrThrow(Enchantments.SILK_TOUCH), pStack) == 0) {
-            if (pLevel.dimensionType().ultraWarm()) {
-                pLevel.removeBlock(pPos, false);
-                return;
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
+
+        if (EnchantmentHelper.getItemEnchantmentLevel(pLevel.holderOrThrow(Enchantments.SILK_TOUCH), tool) == 0) {
+            BlockState blockState = level.getBlockState(pos.below());
+            if (blockState.blocksMotion() || blockState.liquid()) {
+                level.setBlockAndUpdate(pos, fluid.defaultFluidState().createLegacyBlock());
             }
-            if (NorthstarTemperature.getFreezingPoint(fluid.defaultFluidState()) > NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
-                BlockState below = pLevel.getBlockState(pPos.below());
-                if (below.blocksMotion() || below.liquid()) {
-                    pLevel.setBlockAndUpdate(pPos, fluid.getFluidType().getBlockForFluidState(pLevel, pPos, fluid.defaultFluidState()));
-                }
-            }
         }
     }
 
-    /**
-     * Performs a random tick on a block.
-     */
     @Override
-    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        if (NorthstarTemperature.getBoilingPoint(fluid.defaultFluidState()) > NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
-            this.evaporate(pState, pLevel, pPos);
-        }
-        if (NorthstarTemperature.getFreezingPoint(fluid.defaultFluidState()) > NorthstarTemperature.getTemperatureAt(pLevel, pPos)) {
-            this.melt(pState, pLevel, pPos);
-        }
-    }
+    public void northstar$onSealUpdated(Level level, BlockPos pos, BlockState state, SealingMode mode) {
+        if (mode != SealingMode.TEMPERATURE)
+            return;
 
-    protected void melt(BlockState pState, Level pLevel, BlockPos pPos) {
-        pLevel.setBlockAndUpdate(pPos, fluid.getFluidType().getBlockForFluidState(pLevel, pPos, fluid.defaultFluidState()));
-        pLevel.neighborChanged(pPos, fluid.getFluidType().getBlockForFluidState(pLevel, pPos, fluid.defaultFluidState()).getBlock(), pPos);
-    }
+        float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
+        FluidState fluidstate = fluid.defaultFluidState();
 
-    protected void evaporate(BlockState pState, Level pLevel, BlockPos pPos) {
-        pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
-        pLevel.neighborChanged(pPos, Blocks.AIR, pPos);
-        int i = pPos.getX();
-        int j = pPos.getY();
-        int k = pPos.getZ();
-        pLevel.playSound(null, pPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.8F);
-        for (int l = 0; l < 8; ++l) {
-            pLevel.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0D, 0.0D, 0.0D);
+        if (temperature >= NorthstarTemperature.getBoilingPoint(fluidstate)) {
+            NorthstarTemperature.evaporate(level, pos);
+        } else if (temperature >= NorthstarTemperature.getFreezingPoint(fluidstate)) {
+            level.setBlockAndUpdate(pos, fluidstate.createLegacyBlock());
         }
     }
 
-    /**
-     * @deprecated call via {@link
-     * net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#getPistonPushReaction} whenever possible.
-     * Implementing/overriding is fine.
-     */
-    @Override
-    @Deprecated
-    public PushReaction getPistonPushReaction(BlockState pState) {
-        return PushReaction.NORMAL;
-    }
 }
