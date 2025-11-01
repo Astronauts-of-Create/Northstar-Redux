@@ -45,7 +45,6 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -59,13 +58,33 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+
+/**
+ * TODO: Rocket launch / seating bugs
+ * 1. players sitting in rideable entities, no clip through the rocket?
+ *  - currently solved this by not allowing a player to sit in a rideable entity when in a rocket
+ *
+ * 2. players sitting down can no clip through the rocket when they dismount
+ *  - currently solved by soft-locking player in place for 10 ticks but could be improved (might not be foolproof)
+ *      - the issue was that when the player dismounts, their dismount location could be different from the rocket's position, when the rocket is moving fast, updating dismount location to account for this isn't enough.
+ *
+ * 3. when a boat/card is on the ship, if the player gets too close, they will noclip through the ship
+ *  - possible solutions
+ *      - break boat/minecart?
+ *      - disable collisions of said entities?
+ *      - understand why this happens in the first place, and fix it at that level instead of trying to patch it?
+ *
+ * 4. non-seated entities still bug out visually
+ *   - This is a client side issue where entities arent being rendered as if they are riding the rocket (the client likely interpolates the position of the entity from the server, but doesn't keep it synchronized with the rocket's position)
+ */
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
 
     /**
      * In ticks
      */
-    public final static int LAUNCH_COUNTDOWN_TIME = 10 * 20;
-    private final static int TRANSPORT_DELAY_TIME = 40;
+    public final static int LAUNCH_COUNTDOWN_TICKS = 10 * 20;
+    private final static int TRANSPORT_DELAY_TICKS = 40;
+    private final static int DISMOUNT_SOFT_LOCK_TICKS = 10;
     /**
      * maximum velocity, in blocks per tick
      */
@@ -154,8 +173,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         Level level = level();
         if (!level.dimension().equals(destination)) {
             if (getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
-                transportDelay = Math.min(TRANSPORT_DELAY_TIME, transportDelay + 1);
-                if (transportDelay == TRANSPORT_DELAY_TIME && level instanceof ServerLevel sl) {
+                transportDelay = Math.min(TRANSPORT_DELAY_TICKS, transportDelay + 1);
+                if (transportDelay == TRANSPORT_DELAY_TICKS && level instanceof ServerLevel sl) {
                     changeDimension(sl.getServer().getLevel(destination));
                 }
             }
@@ -396,7 +415,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     @Override
     public void removePassenger(Entity passenger) {
         //If we dismount
-        if (!level().isClientSide) lockEntity(passenger, 10);
+        if (!level().isClientSide) lockEntity(passenger, DISMOUNT_SOFT_LOCK_TICKS);
         super.removePassenger(passenger);
     }
 
@@ -458,7 +477,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (newRocket == null) {
             return null; // huh?
         }
-        newRocket.transportDelay = TRANSPORT_DELAY_TIME;
+        newRocket.transportDelay = TRANSPORT_DELAY_TICKS;
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
@@ -609,7 +628,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     }
 
     public void startLaunchSequence() {
-        launchTime = LAUNCH_COUNTDOWN_TIME;
+        launchTime = LAUNCH_COUNTDOWN_TICKS;
         activeLaunch = true;
     }
 
