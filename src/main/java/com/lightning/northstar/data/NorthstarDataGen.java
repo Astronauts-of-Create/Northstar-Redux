@@ -35,7 +35,10 @@ public class NorthstarDataGen {
         if (!event.getMods().contains(Northstar.MOD_ID))
             return;
         NorthstarTagGen.register();
-        Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> provideDefaultLang("base", provider::add));
+        Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
+            provideDefaultLang("base", provider::add);
+            provideDefaultLang("tooltips", provider::add);
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -46,12 +49,6 @@ public class NorthstarDataGen {
         PackOutput output = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-
-        NorthstarTagGen.register();
-        Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
-            provideDefaultLang("base", provider::add);
-            provideDefaultLang("tooltips", provider::add);
-        });
 
         RegistrySetBuilder builder = new RegistrySetBuilder()
                 // TODO: those don't match the existing ones, which one are the real ones?
@@ -70,7 +67,7 @@ public class NorthstarDataGen {
 
         // Recipes:
         generator.addProvider(event.includeServer(), new NorthstarCompactingRecipeGen(output, lookupProvider));
-        generator.addProvider(event.includeServer(), new NorthstarCreateAdditionLiquidBurningRecipeGen(output));
+        generator.addProvider(event.includeServer(), new NorthstarCreateAdditionLiquidBurningRecipeGen(output, lookupProvider));
         generator.addProvider(event.includeServer(), new NorthstarCrushingRecipeGen(output, lookupProvider));
         generator.addProvider(event.includeServer(), new NorthstarElectrolysisRecipeGen(output, lookupProvider));
         generator.addProvider(event.includeServer(), new NorthstarEngravingRecipeGen(output, lookupProvider));

@@ -1,5 +1,7 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.util.NorthstarLang;
@@ -13,7 +15,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -22,12 +24,11 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -47,10 +48,10 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         @Override
         public FluidStack getFluidInTank(int tank) {
             ItemStack item = getContainedItem();
-            if (tank == 0 || item == null || item.getTag() == null)
+            if (tank == 0 || item == null || !item.has(NorthstarDataComponents.OXYGEN))
                 return FluidStack.EMPTY;
-            int oxygen = item.getTag().getInt("Oxygen");
-            return oxygen == 0 ? FluidStack.EMPTY : new FluidStack(NorthstarFluids.OXYGEN.getSource(), oxygen);
+            int oxygen = item.get(NorthstarDataComponents.OXYGEN);
+            return oxygen == 0 ? FluidStack.EMPTY : new FluidStack(NorthstarFluids.OXYGEN.get(), oxygen);
         }
 
         @Override
@@ -68,11 +69,10 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             ItemStack item = getContainedItem();
             if (!isFluidValid(0, stack) || item == null)
                 return 0;
-            CompoundTag tag = item.getOrCreateTag();
-            int oxygen = tag.getInt("Oxygen");
+            int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
             int fillable = Mth.clamp(NorthstarOxygen.MAXIMUM_OXYGEN - oxygen, 0, stack.getAmount());
             if (action.execute() && fillable != 0) {
-                tag.putInt("Oxygen", oxygen + fillable);
+                item.set(NorthstarDataComponents.OXYGEN, oxygen + fillable);
                 sendData();
                 if (oxygen + fillable >= NorthstarOxygen.MAXIMUM_OXYGEN) {
                     AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 0.4f, 0);
@@ -92,17 +92,17 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
-            return new FluidStack(NorthstarFluids.OXYGEN.getSource(), drainAmount(maxDrain, action));
+            return new FluidStack(NorthstarFluids.OXYGEN.get(), drainAmount(maxDrain, action));
         }
 
         private int drainAmount(int amount, FluidAction action) {
             ItemStack item = getContainedItem();
             if (item == null)
                 return 0;
-            CompoundTag tag = item.getOrCreateTag();
-            int drainable = Math.min(amount, tag.getInt("Oxygen"));
+            int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
+            int drainable = Math.min(amount, oxygen);
             if (action.execute() && drainable != 0) {
-                tag.putInt("Oxygen", tag.getInt("Oxygen") - drainable);
+                item.set(NorthstarDataComponents.OXYGEN, oxygen - drainable);
                 sendData();
             }
             return drainable;
@@ -149,19 +149,18 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         }*/
     }
 
-
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
 
-        compound.put("item", container.getItem(0).save(new CompoundTag()));
+        compound.put("item", container.getItem(0).saveOptional(registries));
     }
 
     @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
 
-        container.setItem(0, ItemStack.of(compound.getCompound("item")));
+        container.setItem(0, ItemStack.parseOptional(registries, compound.getCompound("item")));
     }
 
     @Override
@@ -177,9 +176,9 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                 .forGoggles(tooltip);
 
         if (NorthstarItemTags.OXYGEN_SOURCES.matches(item)) {
-            CompoundTag tag = item.getTag();
+            int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
             CreateLang.builder()
-                    .add(CreateLang.number(tag != null ? tag.getInt("Oxygen") : 0)
+                    .add(CreateLang.number(oxygen)
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
@@ -196,11 +195,12 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         return true;
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && (side == null || side == getBlockState().getValue(OxygenFillerBlock.HORIZONTAL_FACING).getOpposite()))
-            return LazyOptional.of(() -> fluidHandler).cast();
-        return super.getCapability(cap, side);
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, NorthstarBlockEntityTypes.OXYGEN_FILLER.get(), (be, face) -> {
+            if (face == null || face == be.getBlockState().getValue(OxygenFillerBlock.HORIZONTAL_FACING).getOpposite())
+                return be.fluidHandler;
+            return null;
+        });
     }
 
 }

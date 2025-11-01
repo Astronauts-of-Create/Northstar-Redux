@@ -9,6 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -67,7 +68,7 @@ public record FuelType(
         }
 
         public Builder fluid(Fluid fluid) {
-            return fluid(CatnipServices.REGISTRIES.getKeyOrThrow(fluid));
+            return fluid(RegisteredObjectsHelper.getKeyOrThrow(fluid));
         }
 
         public Builder fluid(Mod mod, String tag) {
@@ -139,7 +140,7 @@ public record FuelType(
                         continue;
                     }
 
-                    fluids.getTag(tag).ifPresent(holders -> holders.forEach(holder -> cache.accept(fuel, holder.get(), 1)));
+                    fluids.getTag(tag).ifPresent(holders -> holders.forEach(holder -> cache.accept(fuel, holder.value(), 1)));
                     continue;
                 }
 

@@ -13,11 +13,13 @@ import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.data.Iterate;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -266,18 +268,18 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
     }
 
     @Override
-    protected void read(CompoundTag compound, boolean clientPacket) {
-        super.read(compound, clientPacket);
+    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(compound, registries, clientPacket);
 
         updateConnectivity = compound.contains("Uninitialized");
 
         controllerPos = null;
         if (compound.contains("Controller"))
-            controllerPos = NbtUtils.readBlockPos(compound.getCompound("Controller"));
+            controllerPos = NBTHelper.readBlockPos(compound, "Controller");
 
         lastKnownPos = null;
         if (compound.contains("LastKnownPos"))
-            lastKnownPos = NbtUtils.readBlockPos(compound.getCompound("LastKnownPos"));
+            lastKnownPos = NBTHelper.readBlockPos(compound, "LastKnownPos");
 
         width = compound.getInt("Width");
         height = compound.getInt("Height");
@@ -285,7 +287,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         if (width > getMaxWidth() || (compound.contains("MaxWidth") && compound.getInt("MaxWidth") != getMaxWidth()))
             updateConnectivity = true;
 
-        chain = compound.contains("Chain") ? NbtUtils.readBlockPos(compound.getCompound("Chain")) : null;
+        chain = compound.contains("Chain") ? NBTHelper.readBlockPos(compound, "Chain") : null;
         flipChain = compound.getBoolean("FlipChain");
 
         blades = compound.getInt("Blades");
@@ -297,8 +299,8 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
     }
 
     @Override
-    protected void write(CompoundTag compound, boolean clientPacket) {
-        super.write(compound, clientPacket);
+    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(compound, registries, clientPacket);
 
         if (updateConnectivity)
             compound.putBoolean("Uninitialized", true);

@@ -1,22 +1,16 @@
 package com.lightning.northstar.data.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.mrh0.createaddition.datagen.RecipeGen.LiquidBurningRecipeGen;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class NorthstarCreateAdditionLiquidBurningRecipeGen extends BaseRecipeProvider {
+import java.util.concurrent.CompletableFuture;
+
+public class NorthstarCreateAdditionLiquidBurningRecipeGen extends LiquidBurningRecipeGen {
 
     GeneratedRecipe
             $ = null,
@@ -31,8 +25,8 @@ public class NorthstarCreateAdditionLiquidBurningRecipeGen extends BaseRecipePro
 
     HYDROCARBON = create("hydrocarbon", NorthstarFluids.HYDROCARBON.get(), false);
 
-    public NorthstarCreateAdditionLiquidBurningRecipeGen(PackOutput output) {
-        super(output, Northstar.MOD_ID);
+    public NorthstarCreateAdditionLiquidBurningRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Northstar.MOD_ID);
     }
 
     @Override
@@ -46,48 +40,13 @@ public class NorthstarCreateAdditionLiquidBurningRecipeGen extends BaseRecipePro
     }
 
     public GeneratedRecipe create(String name, Fluid fluid, int burnTime, boolean superheated) {
-        // https://github.com/mrh0/createaddition/blob/1.20.1/src/main/java/com/mrh0/createaddition/recipe/liquid_burning/LiquidBurningRecipeSerializer.java
-        return register(consumer -> consumer.accept(new FinishedRecipe() {
-            @Override
-            public @NotNull JsonObject serializeRecipe() {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("type", "createaddition:liquid_burning");
-                serializeRecipeData(jsonObject);
-                return jsonObject;
-            }
-
-            @Override
-            public void serializeRecipeData(@NotNull JsonObject json) {
-                json.add("input", FluidIngredient.fromFluid(fluid, 1000).serialize());
-                json.addProperty("burnTime", burnTime);
-                if (superheated)
-                    json.addProperty("superheated", true);
-
-                JsonArray conditions = new JsonArray();
-                conditions.add(CraftingHelper.serialize(new ModLoadedCondition("createaddition")));
-                json.add("conditions", conditions);
-            }
-
-            @Override
-            public @NotNull ResourceLocation getId() {
-                return asResource("create_addition/liquid_burning/" + name);
-            }
-
-            @Override
-            public @NotNull RecipeSerializer<?> getType() {
-                throw new RuntimeException("Unsupported"); // Only used by #serializeRecipe
-            }
-
-            @Override
-            public @Nullable JsonObject serializeAdvancement() {
-                return null;
-            }
-
-            @Override
-            public @Nullable ResourceLocation getAdvancementId() {
-                return null;
-            }
-        }));
+        return create(name, b -> {
+            if (superheated)
+                b.superheated();
+            return b.require(fluid, 1000)
+                    .burnTime(burnTime)
+                    .whenModLoaded("createaddition");
+        });
     }
 
 }

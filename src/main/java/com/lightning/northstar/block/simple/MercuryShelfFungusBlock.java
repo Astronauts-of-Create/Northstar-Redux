@@ -66,8 +66,8 @@ public class MercuryShelfFungusBlock extends Block implements ProperWaterloggedB
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
-        return type == PathComputationType.AIR && !this.hasCollision || super.isPathfindable(state, level, pos, type);
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
+        return type == PathComputationType.AIR && !this.hasCollision || super.isPathfindable(state, type);
     }
 
     @Override

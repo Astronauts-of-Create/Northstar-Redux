@@ -16,7 +16,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,6 +28,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
@@ -135,7 +135,6 @@ public class NorthstarOxygen {
 
         if (NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.matches(entity)) {
             event.setCanBreathe(true);
-            event.setCanRefillAir(true);
             return;
         }
 
@@ -147,7 +146,6 @@ public class NorthstarOxygen {
         Provider sealer = oxygen.getSealer(entity.getEyePosition());
         if (sealer != null) {
             event.setCanBreathe(true);
-            event.setCanRefillAir(true);
             sealer.drainOxygen(NorthstarConfigs.server().oxygenSealerEntityActiveDrain.getF());
             return;
         }
@@ -166,7 +164,6 @@ public class NorthstarOxygen {
 
         if (isFullyCovered && !oxygenSource.isEmpty() && depleteOxygen(oxygenSource, world.getGameTime() % 20 == 0)) {
             event.setCanBreathe(true);
-            event.setCanRefillAir(true);
         } else if (!atmosphereBreathable && world.getGameTime() % 10 != entity.getId() % 10) {
             entity.hurt(world.damageSources().northstar$suffocation(), 1);
         }

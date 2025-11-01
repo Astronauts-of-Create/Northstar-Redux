@@ -10,6 +10,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -66,10 +67,19 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        return onBlockEntityUse(world, pos, be -> {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return use(state, level, pos, player, InteractionHand.MAIN_HAND, hitResult).result();
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return use(state, level, pos, player, hand, hitResult);
+    }
+
+    public ItemInteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return onBlockEntityUseItemOn(world, pos, be -> {
             if (hand != InteractionHand.MAIN_HAND)
-                return InteractionResult.PASS;
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             ItemStack held = player.getItemInHand(hand);
             ItemStack item = be.container.getItem(0);

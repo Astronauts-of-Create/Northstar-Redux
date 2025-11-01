@@ -11,6 +11,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -33,10 +34,19 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return use(state, level, pos, player, InteractionHand.MAIN_HAND, hitResult).result();
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return use(state, level, pos, player, hand, hitResult);
+    }
+
+    private ItemInteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         Direction dir = state.getValue(HORIZONTAL_FACING);
         if (hit.getDirection().getAxis() != dir.getAxis())
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         Vec3 localPos = hit.getLocation().subtract(Vec3.atLowerCornerOf(pos));
         float x = (float) switch (dir) {
@@ -50,7 +60,7 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
 
         int slot = (x < 1f / 3f ? 0 : x < 2f / 3f ? 1 : 2) + (y > 0.5f ? 3 : 0);
 
-        return onBlockEntityUse(level, pos, be -> {
+        return onBlockEntityUseItemOn(level, pos, be -> {
             ItemStack computer = be.container.getItem(slot);
             if (computer.isEmpty()) {
                 ItemStack held = player.getItemInHand(hand);
@@ -60,7 +70,7 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
                     be.notifyUpdate();
                 }
 
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
 
             if (!level.isClientSide) {
@@ -71,7 +81,7 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
             }
             level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + level.random.nextFloat());
 
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         });
     }
 

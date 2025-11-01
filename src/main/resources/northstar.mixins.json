@@ -12,7 +12,6 @@
     "LevelMixin",
     "LivingEntityMixin",
     "OxygenAndTempEntityMixin",
-    "PlayerMixin",
     "WindmillBearingBlockEntityMixin",
     "accessor.FlowingFluidAccessor",
     "block.CampfireBlockMixin",

@@ -1307,7 +1307,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+            .loot((c, b) -> c.add(b, c.createSilkTouchDispatchTable(b,
                     c.applyExplosionDecay(NorthstarItems.VOLCANIC_ASH, LootItem.lootTableItem(NorthstarItems.VOLCANIC_ASH)
                             .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 5.0F)))))))
             .simpleItem()

@@ -32,7 +32,7 @@ public class RocketFlameLandingParticle  extends SimpleAnimatedParticle {
 
     @Override
     public float getQuadSize(float scaleFactor) {
-        float f = ((float)this.age + pScaleFactor) / (float)this.lifetime;
+        float f = ((float)this.age + scaleFactor) / (float)this.lifetime;
         return this.quadSize * (1.0F - f * f * 0.5F);
     }
 

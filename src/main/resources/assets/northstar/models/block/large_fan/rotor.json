@@ -1,5 +1,5 @@
 {
-	"loader": "forge:obj",
+	"loader": "neoforge:obj",
 	"flip_v": true,
 	"model": "northstar:models/block/large_fan/rotor.obj",
 	"textures": {

@@ -158,7 +158,7 @@ public class NorthstarTags {
         C_ORES_TITANIUM(COMMON, "ores/titanium"),
         C_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
         C_ORES_ZINC(COMMON, "ores/zinc"),
-        C_STONES(COMMON, "stone"),
+        C_STONES(COMMON, "stones"),
         HEAVY_BLOCKS,
         MARS_BLOCKS,
         MARS_DEEP_STONE_REPLACEABLE,

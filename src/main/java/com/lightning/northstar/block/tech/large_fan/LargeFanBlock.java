@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -82,16 +83,14 @@ public class LargeFanBlock extends KineticBlock implements IBE<LargeFanBlockEnti
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(hand);
-
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         LargeFanBlockEntity be = getBlockEntity(level, pos);
         if (be != null && !be.isController())
             be = be.getControllerBE();
         if (be == null)
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-        if (!heldItem.isEmpty() && heldItem.getItem() == NorthstarItems.FAN_BLADE.asItem() && hit.getDirection().getAxis() == state.getValue(AXIS)) {
+        if (!heldItem.isEmpty() && heldItem.getItem() == NorthstarItems.FAN_BLADE.asItem() && hitResult.getDirection().getAxis() == state.getValue(AXIS)) {
             if (be.blades < LargeFanBlockEntity.MAXIMUM_BLADES) {
                 be.blades++;
                 be.sendData();
@@ -99,10 +98,10 @@ public class LargeFanBlock extends KineticBlock implements IBE<LargeFanBlockEnti
                     heldItem.setCount(heldItem.getCount() - 1);
                 player.setItemInHand(hand, heldItem);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        return super.use(state, level, pos, player, hand, hit);
+        return super.useItemOn(heldItem, state, level, pos, player, hand, hitResult);
     }
 
     @Override

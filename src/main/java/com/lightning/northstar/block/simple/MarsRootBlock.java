@@ -20,6 +20,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class MarsRootBlock extends MultifaceBlock implements BonemealableBlock {
 
+    public static final MapCodec<MarsRootBlock> CODEC = simpleCodec(MarsRootBlock::new);
+
     public final MultifaceSpreader spreader = new MultifaceSpreader(new MultifaceSpreader.DefaultSpreaderConfig(this) {
         @Override
         public @Nullable BlockState getStateForPlacement(BlockState currentState, BlockGetter level, BlockPos pos, Direction lookingDirection) {
@@ -36,12 +38,17 @@ public class MarsRootBlock extends MultifaceBlock implements BonemealableBlock {
     }
 
     @Override
+    protected MapCodec<? extends MultifaceBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public MultifaceSpreader getSpreader() {
         return spreader;
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return true;
     }
 

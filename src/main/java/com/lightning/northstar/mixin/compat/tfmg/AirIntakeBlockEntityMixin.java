@@ -11,7 +11,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,7 +31,7 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         super(type, pos, state);
     }
 
-    @ModifyVariable(method = "produceAir",
+    @ModifyVariable(method = "tick",
             at = @At("STORE"),
             ordinal = 0,
             remap = false)
@@ -49,12 +48,12 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         return production;
     }
 
-    @Redirect(method = "produceAir",
+    @Redirect(method = "tick",
             at = @At(value = "INVOKE",
-                    target = "Lcom/tterrag/registrate/util/entry/FluidEntry;getSource()Lnet/minecraftforge/fluids/ForgeFlowingFluid;",
+                    target = "Lcom/tterrag/registrate/util/entry/FluidEntry;get()Ljava/lang/Object;",
                     remap = false),
             remap = false)
-    private ForgeFlowingFluid northstar$convertToHotAir(FluidEntry<?> instance) {
+    private Object northstar$convertToHotAir(FluidEntry<?> instance) {
         // Only handle air for now, other gases will be implemented with the new planet system.
         return NorthstarTemperature.getTemperatureAt(level, worldPosition) >= 1000 ? TFMGFluids.HOT_AIR.getSource() : TFMGFluids.AIR.getSource();
     }

@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.client.BasicTickableSoundInstance;
+import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;

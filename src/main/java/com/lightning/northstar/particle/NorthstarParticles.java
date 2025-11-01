@@ -7,8 +7,8 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.Mth;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
@@ -23,10 +23,10 @@ import java.util.function.Supplier;
 
 public class NorthstarParticles {
 
-    private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Northstar.MOD_ID);
+    private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(Registries.PARTICLE_TYPE, Northstar.MOD_ID);
     private static final List<Consumer<RegisterParticleProvidersEvent>> FACTORIES = new ArrayList<>();
 
-    public static final RegistryObject<SimpleParticleType>
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType>
             COLD_AIR = simpleSprite("cold_air", () -> ColdAirParticle::new),
             DUST_CLOUD = simpleSprite("dust_cloud", () -> DustCloudParticle::new),
             GLOWSTONE = simpleSprite("glowstone", () -> GlowstoneParticle::new),
@@ -52,8 +52,8 @@ public class NorthstarParticles {
         FACTORIES.clear();
     }
 
-    private static RegistryObject<SimpleParticleType> simpleSprite(String name, Supplier<SpriteParticleProvider<SimpleParticleType>> supplier) {
-        RegistryObject<SimpleParticleType> entry = REGISTER.register(name, () -> new SimpleParticleType(false));
+    private static DeferredHolder<ParticleType<?>, SimpleParticleType> simpleSprite(String name, Supplier<SpriteParticleProvider<SimpleParticleType>> supplier) {
+        DeferredHolder<ParticleType<?>, SimpleParticleType> entry = REGISTER.register(name, () -> new SimpleParticleType(false));
         FACTORIES.add(event -> {
             SpriteParticleProvider<SimpleParticleType> factory = supplier.get();
             event.registerSpriteSet(entry.get(), sprite -> (a, b, c, d, e, f, g, h) -> factory.createParticle(a, b, c, d, e, f, g, h, sprite));

@@ -10,9 +10,9 @@ import static com.lightning.northstar.Northstar.REGISTRATE;
 
 public class NorthstarDisplaySources {
 
-    public static final RegistryEntry<TemperatureDisplaySource> TEMPERATURE = simple("temperature", TemperatureDisplaySource::new);
+    public static final RegistryEntry<DisplaySource, TemperatureDisplaySource> TEMPERATURE = simple("temperature", TemperatureDisplaySource::new);
 
-    private static <T extends DisplaySource> RegistryEntry<T> simple(String name, Supplier<T> supplier) {
+    private static <T extends DisplaySource> RegistryEntry<DisplaySource, T> simple(String name, Supplier<T> supplier) {
         return REGISTRATE.displaySource(name, supplier).register();
     }
 

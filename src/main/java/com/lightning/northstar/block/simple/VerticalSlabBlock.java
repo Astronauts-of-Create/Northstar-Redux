@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.simple;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -48,7 +49,7 @@ public class VerticalSlabBlock extends Block implements ProperWaterloggedBlock {
     }
 
     @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
+    protected MapCodec<? extends Block> codec() {
         return CODEC;
     }
 
@@ -122,8 +123,8 @@ public class VerticalSlabBlock extends Block implements ProperWaterloggedBlock {
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
-        return state.getValue(TYPE) != VerticalSlabType.DOUBLE && ProperWaterloggedBlock.super.canPlaceLiquid(level, pos, state, fluid);
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.getValue(TYPE) != VerticalSlabType.DOUBLE && ProperWaterloggedBlock.super.canPlaceLiquid(player, level, pos, state, fluid);
     }
 
     @Override
@@ -143,10 +144,10 @@ public class VerticalSlabBlock extends Block implements ProperWaterloggedBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
         return switch (type) {
             case AIR, LAND -> false;
-            case WATER -> level.getFluidState(pos).is(FluidTags.WATER);
+            case WATER -> state.getValue(WATERLOGGED);
         };
     }
 

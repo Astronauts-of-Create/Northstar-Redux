@@ -35,7 +35,7 @@ public class CustomIceBlock extends HalfTransparentBlock implements SealReactive
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
 
-        if (EnchantmentHelper.getItemEnchantmentLevel(pLevel.holderOrThrow(Enchantments.SILK_TOUCH), tool) == 0) {
+        if (EnchantmentHelper.getItemEnchantmentLevel(level.holderOrThrow(Enchantments.SILK_TOUCH), tool) == 0) {
             BlockState blockState = level.getBlockState(pos.below());
             if (blockState.blocksMotion() || blockState.liquid()) {
                 level.setBlockAndUpdate(pos, fluid.defaultFluidState().createLegacyBlock());

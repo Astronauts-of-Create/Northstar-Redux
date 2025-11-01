@@ -7,12 +7,12 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +29,7 @@ public class GoggleOverlayMixin {
                     shift = At.Shift.BEFORE,
                     ordinal = 2),
             remap = false)
-    private static void northstar$addOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height, CallbackInfo ci,
+    private static void northstar$addOverlay(GuiGraphics graphics, DeltaTracker tracker, CallbackInfo ci,
                                              @Local ClientLevel level,
                                              @Local BlockPos pos,
                                              @Local List<Component> tooltip) {

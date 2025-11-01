@@ -2,22 +2,23 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileEntityHitAction;
 import com.simibubi.create.api.registry.CreateRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class NorthstarPotatoProjectileEntityHitActions {
 
-    public static final DeferredRegister<Codec<? extends PotatoProjectileEntityHitAction>> REGISTER =
+    public static final DeferredRegister<MapCodec<? extends PotatoProjectileEntityHitAction>> REGISTER =
             DeferredRegister.create(CreateRegistries.POTATO_PROJECTILE_ENTITY_HIT_ACTION, Northstar.MOD_ID);
 
     public static class Freezing implements PotatoProjectileEntityHitAction {
         public static final Freezing INSTANCE = new Freezing();
-        public static final Codec<Freezing> CODEC = Codec.unit(INSTANCE);
+        public static final MapCodec<Freezing> CODEC = MapCodec.unit(INSTANCE);
 
         @Override
         public boolean execute(ItemStack projectile, EntityHitResult ray, Type type) {
@@ -27,7 +28,7 @@ public class NorthstarPotatoProjectileEntityHitActions {
         }
 
         @Override
-        public Codec<? extends PotatoProjectileEntityHitAction> codec() {
+        public MapCodec<? extends PotatoProjectileEntityHitAction> codec() {
             return CODEC;
         }
     }

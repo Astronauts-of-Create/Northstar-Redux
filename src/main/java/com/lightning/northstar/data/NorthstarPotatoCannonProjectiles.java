@@ -5,12 +5,12 @@ import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPotatoProjectileEntityHitActions;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoCannonProjectileType;
 import com.simibubi.create.api.registry.CreateRegistries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
 public class NorthstarPotatoCannonProjectiles {
 
-    public static void boostrap(BootstapContext<PotatoCannonProjectileType> context) {
+    public static void boostrap(BootstrapContext<PotatoCannonProjectileType> context) {
         register(context, "ice_cream", new PotatoCannonProjectileType.Builder()
                 .damage(5)
                 .reloadTicks(10)
@@ -22,7 +22,7 @@ public class NorthstarPotatoCannonProjectiles {
                 .build());
     }
 
-    private static void register(BootstapContext<PotatoCannonProjectileType> context, String name, PotatoCannonProjectileType type) {
+    private static void register(BootstrapContext<PotatoCannonProjectileType> context, String name, PotatoCannonProjectileType type) {
         context.register(ResourceKey.create(CreateRegistries.POTATO_PROJECTILE_TYPE, Northstar.asResource(name)), type);
     }
 

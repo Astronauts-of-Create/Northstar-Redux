@@ -6,7 +6,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +27,7 @@ public class VentBlock extends GrateBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack item = player.getItemInHand(hand);
+    protected ItemInteractionResult useItemOn(ItemStack item, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!item.isEmpty() && item.is(ItemTags.WOOL)) {
             DyeColor color = Arrays.stream(DyeColor.values())
                     .filter(dye -> DyeHelper.getWoolOfDye(dye).asItem() == item.getItem())
@@ -38,7 +37,7 @@ public class VentBlock extends GrateBlock {
             if (color != null) {
                 if (state.hasProperty(InsulatedVentBlock.COLOR)) {
                     if (state.getValue(InsulatedVentBlock.COLOR) == color)
-                        return InteractionResult.sidedSuccess(level.isClientSide);
+                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
 
                     popResource(level, pos, new ItemStack(DyeHelper.getWoolOfDye(state.getValue(InsulatedVentBlock.COLOR))));
                 }
@@ -52,11 +51,11 @@ public class VentBlock extends GrateBlock {
                     item.setCount(item.getCount() - 1);
                 player.setItemInHand(hand, item);
 
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
-        return super.use(state, level, pos, player, hand, hit);
+        return super.useItemOn(item, state, level, pos, player, hand, hitResult);
     }
 
 }

@@ -126,7 +126,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         }
 
         Matrix4f mm = ms.last().pose();
-        Matrix3f mn = ms.last().normal();
+        PoseStack.Pose mn = ms.last();
         VertexConsumer vc = buffer.getBuffer(RenderTypes.chain(CHAIN_LOCATION));
 
         float spacing = be.width * 0.5f * 2f / 16f;
@@ -135,7 +135,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         renderChain(mm, mn, vc, chainA, chainB, side, -spacing + 1 / 16f, -spacing, -2f / 16f, -1f / 16f, 1 - rot * 3, length * 3, dir.getOpposite(), light);
     }
 
-    private static void renderChain(Matrix4f mm, Matrix3f mn, VertexConsumer vc, Vector3f pos1, Vector3f pos2, Vector3f side, float d1, float d2, float d3, float d4, float offset, float length, Direction direction, int light) {
+    private static void renderChain(Matrix4f mm, PoseStack.Pose mn, VertexConsumer vc, Vector3f pos1, Vector3f pos2, Vector3f side, float d1, float d2, float d3, float d4, float offset, float length, Direction direction, int light) {
         length += offset;
 
         // front
@@ -151,14 +151,13 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         addVertex(mm, mn, vc, pos1.x + side.x * d2, pos1.y + side.y * d2, pos1.z + side.z * d2, 3f / 16f, offset, direction, light);
     }
 
-    private static void addVertex(Matrix4f pose, Matrix3f normal, VertexConsumer vc, float x, float y, float z, float u, float v, Direction direction, int light) {
-        vc.vertex(pose, x, y, z)
-                .color(1.0f, 1.0f, 1.0f, 1.0f)
-                .uv(u, v)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(light)
-                .normal(normal, direction.getStepX(), direction.getStepY(), direction.getStepZ())
-                .endVertex();
+    private static void addVertex(Matrix4f pose, PoseStack.Pose normal, VertexConsumer vc, float x, float y, float z, float u, float v, Direction direction, int light) {
+        vc.addVertex(pose, x, y, z)
+                .setColor(1.0f, 1.0f, 1.0f, 1.0f)
+                .setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(light)
+                .setNormal(normal, direction.getStepX(), direction.getStepY(), direction.getStepZ());
     }
 
 }
