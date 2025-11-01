@@ -89,7 +89,6 @@ public class Northstar {
         NorthstarEntityTypes.register();
         NorthstarFluids.register();
         DefaultOxygenConsumers.register();
-        NorthstarPotatoCannonProjectiles.register();
 
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();
@@ -111,6 +110,7 @@ public class Northstar {
             event.enqueueWork(() -> {
                 NorthstarAdvancements.register();
                 NorthstarTriggers.register();
+                NorthstarPotatoCannonProjectiles.register();
             });
         }
 
