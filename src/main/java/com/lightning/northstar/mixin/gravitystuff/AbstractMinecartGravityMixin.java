@@ -15,6 +15,7 @@ public class AbstractMinecartGravityMixin {
     private static final double CONSTANT = 0.08;
     private static final double EARTH_GRAV = 1;
     private static final double MOON_GRAV = 0.64;
+    private static final double AEGAEON_GRAV = 0.02;
     private static final double MARS_GRAV = 0.65;
     private static final double VENUS_GRAV = 0.92;
     private static final double MERCURY_GRAV = 0.65;
@@ -32,6 +33,8 @@ public class AbstractMinecartGravityMixin {
             PLANET_GRAV = MARS_GRAV;
         } else if (entity.level().dimension() == NorthstarDimensions.MOON_DIM_KEY) {
             PLANET_GRAV = MOON_GRAV;
+        } else if (entity.level().dimension() == NorthstarDimensions.AEGAEON_DIM_KEY) {
+            PLANET_GRAV = AEGAEON_GRAV;
         } else if (entity.level().dimension() == NorthstarDimensions.VENUS_DIM_KEY) {
             PLANET_GRAV = VENUS_GRAV;
         } else if (entity.level().dimension() == NorthstarDimensions.MERCURY_DIM_KEY) {

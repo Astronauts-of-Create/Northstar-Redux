@@ -9,6 +9,7 @@
     "can_place_on_wall": true,
     "can_be_placed_on": [
       "northstar:moon_sand",
+      "northstar:aegaeon_sand",
       "northstar:moon_deep_stone",
       "northstar:moon_stone",
       "minecraft:blackstone",

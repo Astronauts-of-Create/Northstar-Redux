@@ -25,6 +25,8 @@ public class NorthstarRenderers {
         event.registerEntityRenderer(NorthstarEntityTypes.MARS_COBRA.get(), MarsCobraRenderer::new);
         event.registerEntityRenderer(NorthstarEntityTypes.MARS_MOTH.get(), MarsMothRenderer::new);
 
+        event.registerEntityRenderer(NorthstarEntityTypes.AEGAEON_CRAWLER.get(), AegaeonCrawlerRenderer::new);
+
         event.registerEntityRenderer(NorthstarEntityTypes.MOON_LUNARGRADE.get(), MoonLunargradeRenderer::new);
         event.registerEntityRenderer(NorthstarEntityTypes.MOON_SNAIL.get(), MoonSnailRenderer::new);
         event.registerEntityRenderer(NorthstarEntityTypes.MOON_EEL.get(), MoonEelRenderer::new);

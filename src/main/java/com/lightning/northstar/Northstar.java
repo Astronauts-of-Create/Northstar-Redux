@@ -142,6 +142,9 @@ public class Northstar {
             event.register(NorthstarEntityTypes.MARS_MOTH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                     MarsMothEntity::mothSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
 
+            event.register(NorthstarEntityTypes.AEGAEON_CRAWLER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    AegaeonCrawler::crawlerSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
+
             event.register(NorthstarEntityTypes.VENUS_MIMIC.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                     VenusMimicEntity::mimicSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
             event.register(NorthstarEntityTypes.VENUS_SCORPION.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,

@@ -1644,6 +1644,22 @@ public class NorthstarBlocks {
             .register();
 
     // endregion
+    // region Aegaeon
+    public static final BlockEntry<GravelBlock> AEGAEON_SAND = REGISTRATE
+            .block("aegaeon_sand", GravelBlock::new)
+            .initialProperties(() -> SAND)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .sound(SoundType.SAND)
+                    .strength(0.5f, 8.0f))
+            .tag(BlockTags.MINEABLE_WITH_SHOVEL)
+            .tag(BlockTags.SAND)
+            .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.MOON_SURFACE_REPLACEABLE.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .item()
+            .tag(ItemTags.SAND)
+            .build()
+            .register();
     // region Moon
 
     public static final BlockEntry<GravelBlock> MOON_SAND = REGISTRATE
@@ -1660,6 +1676,22 @@ public class NorthstarBlocks {
             .item()
             .tag(ItemTags.SAND)
             .build()
+            .register();
+    public static final BlockEntry<Block> AEGAEON_STONE = REGISTRATE
+            .block("aegaeon_stone", Block::new)
+            .initialProperties(() -> STONE)
+            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .sound(SoundType.DEEPSLATE)
+                    .strength(3.5f, 8f)
+                    .requiresCorrectToolForDrops())
+            .transform(pickaxeOnly())
+            .tag(NorthstarBlockTags.BASE_STONE_MOON.tag)
+            .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.MOON_STONE_REPLACEABLE.tag)
+            .tag(NorthstarBlockTags.MOON_SURFACE_REPLACEABLE.tag)
+            .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
             .register();
 
     public static final BlockEntry<Block> MOON_STONE = REGISTRATE

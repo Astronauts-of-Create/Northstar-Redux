@@ -28,7 +28,9 @@ public class NorthstarDimensions {
     // mercury
     public static final ResourceKey<Level> MERCURY_DIM_KEY = ResourceKey.create(Registries.DIMENSION, Northstar.asResource("mercury"));
     public static final ResourceKey<DimensionType> MERCURY_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("mercury"));
-
+    // aegaeon
+    public static final ResourceKey<Level> AEGAEON_DIM_KEY = ResourceKey.create(Registries.DIMENSION, Northstar.asResource("aegaeon"));
+    public static final ResourceKey<DimensionType> AEGAEON_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Northstar.asResource("aegaeon"));
     public static void register() {
     }
 

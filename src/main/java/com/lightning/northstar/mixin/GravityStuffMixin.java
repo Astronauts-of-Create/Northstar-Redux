@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+
 @SuppressWarnings("unused")
 @Mixin(LivingEntity.class)
 public class GravityStuffMixin {
@@ -30,6 +31,7 @@ public class GravityStuffMixin {
     private static final double MARS_GRAV = 0.37;
     private static final double VENUS_GRAV = 0.89;
     private static final double MERCURY_GRAV = 0.38;
+    private static final double AEGAEON_GRAV = 0.02;
 
 
     private static final double GANYMEDE_GRAV = 0.14;
@@ -61,6 +63,8 @@ public class GravityStuffMixin {
             PLANET_GRAV = MOON_GRAV;
         } else if (entity.level().dimension() == NorthstarDimensions.MERCURY_DIM_KEY) {
             PLANET_GRAV = MERCURY_GRAV;
+        }else if (entity.level().dimension() == NorthstarDimensions.AEGAEON_DIM_KEY){
+            PLANET_GRAV = AEGAEON_GRAV;
         } else if (isInOrbit) {
             PLANET_GRAV = OUTER_MOON_GRAV;
         } else {
@@ -133,6 +137,9 @@ public class GravityStuffMixin {
         }
         if (level == NorthstarDimensions.VENUS_DIM_KEY) {
             return VENUS_GRAV;
+        }
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {
+            return AEGAEON_GRAV;
         }
         if (level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {
             return OUTER_MOON_GRAV;

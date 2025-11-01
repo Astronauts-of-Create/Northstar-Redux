@@ -30,6 +30,16 @@ public class NorthstarEntityTypes {
             .loot((p, e) -> p.add(e, LootTable.lootTable()))
             .register();
 
+    public static final EntityEntry<AegaeonCrawler> AEGAEON_CRAWLER = REGISTRATE
+            .entity("aegaeon_crawler", AegaeonCrawler::new, MobCategory.MONSTER)
+            .properties(p -> p.sized(0.8f, 1.5f)
+                    .fireImmune()
+                    .clientTrackingRange(8))
+            .tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN.tag)
+            .register();
+
+
+
     public static final EntityEntry<VenusScorpionEntity> VENUS_SCORPION = REGISTRATE
             .entity("venus_scorpion", VenusScorpionEntity::new, MobCategory.MONSTER)
             .properties(p -> p.sized(0.8f, 1.5f)

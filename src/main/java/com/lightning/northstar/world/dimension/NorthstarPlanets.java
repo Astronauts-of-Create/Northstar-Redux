@@ -20,6 +20,7 @@ public class NorthstarPlanets {
     private static final double MARS_GRAV = 0.37;
     private static final double VENUS_GRAV = 0.89;
     private static final double MERCURY_GRAV = 0.38;
+    private static final double AEGAEON_GRAV = 0.02;
 
     private static final double GANYMEDE_GRAV = 0.14;
     private static final double TITAN_GRAV = 0.14;
@@ -123,6 +124,14 @@ public class NorthstarPlanets {
     public static double saturn_origin_y = 0;
     static int saturn_time;
 
+    //Aegaeon COORDS
+    public static double  aegaeon_x = 0;
+    public static double  aegaeon_y = 0;
+    public static float aegaeon_orbit_speed = (float) (Math.PI / 40000);
+    public static double aegaeon_orbit_radius_x = 30;
+    public static double aegaeon_orbit_radius_y = 30;
+    static int aegaeon_time;
+
     //URANUS COORDS
     public static double uranus_x = 0;
     public static double uranus_y = 0;
@@ -215,6 +224,11 @@ public class NorthstarPlanets {
         saturn_x = (saturn_origin_x + (Math.cos(saturn_radian)* saturn_orbit_radius_x));
         saturn_y = (saturn_origin_y + (Math.sin(saturn_radian)* saturn_orbit_radius_y));
 
+        //calcs for aegaeon
+        double aegaeon_radian = aegaeon_orbit_speed * time;
+        aegaeon_x = (saturn_x + (Math.cos(aegaeon_radian)* aegaeon_orbit_radius_x));
+        aegaeon_y = (saturn_y + (Math.sin(aegaeon_radian)* aegaeon_orbit_radius_y));
+
         //calcs for uranus
         double uranus_radian = uranus_orbit_speed * time;
         uranus_x = (uranus_origin_x + (Math.cos(uranus_radian)* uranus_orbit_radius_x));
@@ -253,6 +267,7 @@ public class NorthstarPlanets {
             case "ceres" -> ceres_x;
             case "jupiter" -> jupiter_x;
             case "saturn" -> saturn_x;
+            case "aegaeon" -> aegaeon_x;
             case "uranus" -> uranus_x;
             case "neptune" -> neptune_x;
             case "pluto" -> pluto_x;
@@ -271,6 +286,7 @@ public class NorthstarPlanets {
             case "ceres" -> ceres_y;
             case "jupiter" -> jupiter_y;
             case "saturn" -> saturn_y;
+            case "aegaeon" -> aegaeon_y;
             case "uranus" -> uranus_y;
             case "neptune" -> neptune_y;
             case "pluto" -> pluto_y;
@@ -282,6 +298,7 @@ public class NorthstarPlanets {
         if (level == NorthstarDimensions.MARS_DIM_KEY) {return "mars";}
         if (level == NorthstarDimensions.MOON_DIM_KEY) {return "moon";}
         if (level == NorthstarDimensions.VENUS_DIM_KEY) {return "venus";}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return "aegaeon";}
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) {return "mercury";}
         if (level == Level.OVERWORLD) {return "earth";}
         return "earth";
@@ -290,6 +307,7 @@ public class NorthstarPlanets {
         if (level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {return true;}
         if (level == NorthstarDimensions.MARS_DIM_KEY) {return true;}
         if (level == NorthstarDimensions.MOON_DIM_KEY) {return true;}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return true;}
         if (level == NorthstarDimensions.VENUS_DIM_KEY) {return true;}
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) {return true;}
         if (level == Level.OVERWORLD) {return true;}
@@ -299,6 +317,7 @@ public class NorthstarPlanets {
     public static int getPlanetTemp(ResourceKey<Level> level) {
         if (level == NorthstarDimensions.MARS_DIM_KEY) {return -100;}
         if (level == NorthstarDimensions.MOON_DIM_KEY) {return -183;}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return -195;}
         if (level == NorthstarDimensions.VENUS_DIM_KEY) {return 464;}
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) {return 400;}
         if (level == Level.OVERWORLD) {return 15;}
@@ -312,6 +331,7 @@ public class NorthstarPlanets {
         if (level == NorthstarDimensions.MOON_DIM_KEY) {return 0;}
         if (level == NorthstarDimensions.VENUS_DIM_KEY) {return 4000;}
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) {return 0;}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return 0;}
         return 0;
     }
     public static int getComputingCost(ResourceKey<Level> level) {
@@ -320,6 +340,7 @@ public class NorthstarPlanets {
         if (level == NorthstarDimensions.MOON_DIM_KEY) {return 50;}
         if (level == NorthstarDimensions.VENUS_DIM_KEY) {return 200;}
         if (level == NorthstarDimensions.MERCURY_DIM_KEY) {return 800;}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return 900;}
         return 0;
     }
 
@@ -328,6 +349,7 @@ public class NorthstarPlanets {
             case "mercury" -> NorthstarDimensions.MERCURY_DIM_KEY;
             case "mars" -> NorthstarDimensions.MARS_DIM_KEY;
             case "venus" -> NorthstarDimensions.VENUS_DIM_KEY;
+            case "aegaeon" -> NorthstarDimensions.AEGAEON_DIM_KEY;
             case "earth" -> Level.OVERWORLD;
             case "earth_moon", "moon" -> NorthstarDimensions.MOON_DIM_KEY;
             default -> null;
@@ -338,12 +360,14 @@ public class NorthstarPlanets {
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.VENUS_DIM_KEY) {return false;}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return false;}
         return true;
     }
     public static boolean hasNormalGrav(ResourceKey<Level> level) {
         if(level == NorthstarDimensions.MARS_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return false;}
+        if(level == NorthstarDimensions.AEGAEON_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.VENUS_DIM_KEY) {return false;}
         return true;
     }
@@ -351,6 +375,7 @@ public class NorthstarPlanets {
     public static boolean canSeeSkyAtDay(ResourceKey<Level> level) {
         if(level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {return true;}
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return true;}
+        if(level == NorthstarDimensions.AEGAEON_DIM_KEY) {return true;}
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return true;}
         return false;
     }
@@ -358,6 +383,7 @@ public class NorthstarPlanets {
     public static boolean hasWeather(ResourceKey<Level> level) {
         if(level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return false;}
+        if(level == NorthstarDimensions.AEGAEON_DIM_KEY) {return false;}
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return false;}
         return true;
     }
@@ -367,6 +393,7 @@ public class NorthstarPlanets {
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return MOON_GRAV;}
         if(level == NorthstarDimensions.MARS_DIM_KEY) {return MARS_GRAV;}
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return MERCURY_GRAV;}
+        if(level == NorthstarDimensions.AEGAEON_DIM_KEY) {return AEGAEON_GRAV;}
         if(level == NorthstarDimensions.VENUS_DIM_KEY) {return VENUS_GRAV;}
         if(level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {return OUTER_MOON_GRAV;}
         return 1;
@@ -378,6 +405,7 @@ public class NorthstarPlanets {
         if(level == NorthstarDimensions.MARS_DIM_KEY) {return 3;}
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return 6;}
         if(level == NorthstarDimensions.VENUS_DIM_KEY) {return 9;}
+        if(level == NorthstarDimensions.AEGAEON_DIM_KEY) {return 10;}
         if(level == NorthstarDimensions.EARTH_ORBIT_DIM_KEY) {return 1;}
         return 1;
     }
@@ -403,6 +431,7 @@ public class NorthstarPlanets {
         if(resourceLocation == NorthstarDimensions.MARS_DIM_KEY.location()) {return true;}
         if(resourceLocation == NorthstarDimensions.MERCURY_DIM_KEY.location()) {return true;}
         if(resourceLocation == NorthstarDimensions.MOON_DIM_KEY.location()) {return true;}
+        if(resourceLocation == NorthstarDimensions.AEGAEON_DIM_KEY.location()) {return true;}
         if(resourceLocation == NorthstarDimensions.VENUS_DIM_KEY.location()) {return true;}
         return false;
     }
@@ -410,6 +439,7 @@ public class NorthstarPlanets {
         if(level == NorthstarDimensions.MARS_DIM_KEY) {return 1;}
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return 2;}
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return 3;}
+        if(level == NorthstarDimensions.AEGAEON_DIM_KEY) {return 7;}
         if(level == NorthstarDimensions.VENUS_DIM_KEY) {return 4;}
         return 0;
     }
@@ -421,6 +451,7 @@ public class NorthstarPlanets {
         if(level == NorthstarDimensions.MERCURY_DIM_KEY) {return 8;}
         if(level == NorthstarDimensions.VENUS_DIM_KEY) {return 0.6f;}
         if(level == NorthstarDimensions.MOON_DIM_KEY) {return 1.5f;}
+        if (level == NorthstarDimensions.AEGAEON_DIM_KEY) {return 0.6f;}
         if(level == NorthstarDimensions.MARS_DIM_KEY) {return 1.2f;}
 
 
