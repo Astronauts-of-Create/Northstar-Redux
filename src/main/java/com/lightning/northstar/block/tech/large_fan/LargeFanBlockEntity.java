@@ -4,8 +4,6 @@ import com.lightning.northstar.api.create.ReceivingKineticBlockEntity;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
-import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.chainDrive.ChainDriveBlock;
@@ -51,8 +49,6 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
 
     /** Installed blade count */
     protected int blades;
-    /** Amount of opened blocks on each side, used to calculate efficiency */
-    protected int openBlocks;
     /** Effective speed in RPM */
     protected LerpedFloat effectiveSpeed = LerpedFloat.linear();
 
@@ -112,42 +108,6 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
             angle = (angle + effectiveSpeed.getValue() / (20 * 60)) % 1;
         } else {
             effectiveSpeed.setValue(0);
-        }
-    }
-
-    @Override
-    public void lazyTick() {
-        super.lazyTick();
-
-        MutableBlockPos pos1 = new MutableBlockPos();
-        MutableBlockPos pos2 = new MutableBlockPos();
-        Axis axis = getAxis();
-        Direction direction = Direction.get(Direction.AxisDirection.POSITIVE, axis);
-        int accessible = 0;
-
-        for (int dir : Iterate.positiveAndNegative) {
-            pos1.set(worldPosition);
-
-            int maximum = 0;
-            for (int i = 1; i <= width; i++) {
-                pos2.set(pos1);
-                switch (axis) {
-                    case X -> pos1.setWithOffset(worldPosition, i * dir, 0, 0);
-                    case Y -> pos1.setWithOffset(worldPosition, 0, i * dir, 0);
-                    case Z -> pos1.setWithOffset(worldPosition, 0, 0, i * dir);
-                }
-                if (ProgressiveBlockSealer.isAirOccluded(level, pos2, pos1, direction, SealingMode.OXYGEN))
-                    break;
-                maximum = i;
-            }
-
-            accessible += maximum;
-            direction = direction.getOpposite();
-        }
-
-        if (accessible != openBlocks) {
-            openBlocks = accessible;
-            sendData();
         }
     }
 
