@@ -54,11 +54,10 @@ public class EntityLockPacket extends SimplePacketBase {
 
     @Override
     public boolean handle(Context context) {
-//        Entity entity = Minecraft.getInstance().level.getEntity(contraptionEntityId);
-//        if (entity instanceof RocketContraptionEntity rce) {
-//            rce.entityLockMap.put(playerID, info);
-//        }
-
+        Entity entity = Minecraft.getInstance().level.getEntity(contraptionEntityId);
+        if (entity instanceof RocketContraptionEntity rce) {
+            rce.entityLockMap.put(playerID, info);
+        }
         return true;
     }
 

@@ -114,7 +114,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                         entitiesWithinContraption :
                         level().getEntities(this, getBoundingBox())
         ) {
-            Northstar.LOGGER.info("Fixing entity mounting...");
             ((EntityMixin_I) entity).setRidingRocket(this);
             if (entity.getVehicle() != this) {
                 if (entity.getVehicle() != null) {
@@ -313,18 +312,16 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
             for (Entity entity : getEntitiesWithinContraption()) {
-                ((EntityMixin_I) entity).setRidingRocket(this);
-
                 if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
                     EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
-                    if (lockInfo == null) {
+                    if (lockInfo == null) { //Offset the player position by the rocket velocity
                         entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
                     } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
                         entity.setPos(
                                 position().x + lockInfo.offset().x,
                                 position().y + lockInfo.offset().y,
                                 position().z + lockInfo.offset().z);
-                        if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
+                        if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {//remove soft-lock after a few ticks
                             lockInfo.ticks().getAndAdd(-1);
                             if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
                         }
@@ -398,6 +395,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     public void removePassenger(Entity passenger) {
+        //If we dismount
         if (!level().isClientSide) lockEntity(passenger, 10);
         super.removePassenger(passenger);
     }
