@@ -68,6 +68,8 @@ public class NorthstarTags {
         C_BRINE(COMMON, "brine"),
         C_CARBON(COMMON, "carbon"),
         C_CHLORINE(COMMON, "chlorine"),
+        C_HYDROGEN_CHLORIDE(COMMON, "hydrogen_chloride"),
+        C_HYDROCHLORIC_ACID(COMMON, "hydrochloric_acid"),
         C_CHOCOLATE_ICE_CREAM(COMMON, "chocolate_ice_cream"),
         C_GASEOUS(COMMON, "gaseous"),
         C_HYDROCARBON(COMMON, "hydrocarbon"),

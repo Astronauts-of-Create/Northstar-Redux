@@ -19,5 +19,9 @@ public abstract class DamageSourcesMixin implements NorthstarDamageSources {
     public DamageSource northstar$suffocation() {
         return source(NorthstarDamageTypes.SUFFOCATION);
     }
+    @Override
+    public DamageSource northstar$acid() {
+        return source(NorthstarDamageTypes.ACID);
+    }
 
 }

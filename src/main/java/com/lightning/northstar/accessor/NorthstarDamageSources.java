@@ -8,4 +8,8 @@ public interface NorthstarDamageSources {
         throw new RuntimeException("This should be implemented by a mixin!");
     }
 
+    default DamageSource northstar$acid() {
+        throw new RuntimeException("This should be implemented by a mixin!");
+    }
+
 }

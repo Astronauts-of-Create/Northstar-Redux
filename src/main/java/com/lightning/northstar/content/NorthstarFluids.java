@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.fluid.HydrochloricAcidBlock;
 import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -53,6 +54,28 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_CHLORINE.tag)
             .register();
+
+    public static final FluidEntry<VirtualFluid> HYDROGEN_CHLORIDE = REGISTRATE
+            .virtualFluid("hydrogen_chloride")
+            .tag(NorthstarFluidTags.C_GASEOUS.tag)
+            .tag(NorthstarFluidTags.C_HYDROGEN_CHLORIDE.tag)
+            .register();
+
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> HYDROCHLORIC_ACID = REGISTRATE
+            .standardFluid("hydrochloric_acid",
+                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
+                            () -> 1f / 8f * 0.8f))
+            .properties(b -> b.viscosity(4000).density(1400))
+            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+                    .tickRate(8)
+                    .slopeFindDistance(3)
+                    .explosionResistance(100f))
+            .tag(NorthstarFluidTags.C_HYDROCHLORIC_ACID.tag)
+            .source(ForgeFlowingFluid.Source::new)
+            .block(HydrochloricAcidBlock::new)
+            .build()
+            .register();
+
 
     public static final FluidEntry<VirtualFluid> CHOCOLATE_ICE_CREAM = REGISTRATE
             .virtualFluid("chocolate_ice_cream")

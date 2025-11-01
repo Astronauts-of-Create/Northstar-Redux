@@ -1,6 +1,7 @@
 package com.lightning.northstar.data.recipe;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
@@ -31,11 +32,44 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarItemTags.C_DUSTS_SALT.tag)
                     .output(NorthstarFluids.BRINE.get(), 550)),
 
+    HYDROGEN_CHLORIDE = create("hydrogen_chloride",
+            b -> b.requiresHeat(HeatCondition.HEATED)
+                    .require(NorthstarFluids.CHLORINE.get(), 500)
+                    .require(NorthstarFluids.HYDROGEN.get(), 500)
+                    .output(NorthstarFluids.HYDROGEN_CHLORIDE.get(), 550)),
+
+    HYDROCHLORIC_ACID = create("hydrochloric_acid",
+                    b -> b.requiresHeat(HeatCondition.HEATED)
+                            .require(Fluids.WATER, 500)
+                            .require(NorthstarFluids.HYDROGEN_CHLORIDE.get(), 500)
+                            .output(NorthstarFluids.HYDROCHLORIC_ACID.get(), 1000)),
+
     GALENA = create("galena_to_lead_ingot_and_sulfuric_acid",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarItems.RAW_GALENA)
                     .output(NorthstarFluids.SULFURIC_ACID.get(), 550)
                     .output(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tfmg", "lead_ingot")))),
+
+    BLUE_AURENE_GLASS = create("blue_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.SUPERHEATED)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(Items.GLASS)
+                    .require(NorthstarFluids.HYDROCHLORIC_ACID.get(), 550)
+                    .output(NorthstarBlocks.BLUE_AURENE_GLASS)),
+
+    PORCELAIN_SKELETON = create("porcelain_skeleton",
+            b -> b.requiresHeat(HeatCondition.HEATED)
+                    .require(Items.SKELETON_SKULL)
+                    .require(NorthstarItems.HECTORITE_BALL)
+                    .output(NorthstarBlocks.PORCELAIN_SKELETON)
+                    .output(Items.SKELETON_SKULL)),
+
+    PORCELAIN_WITHER = create("porcelain_wither",
+            b -> b.requiresHeat(HeatCondition.HEATED)
+                    .require(Items.WITHER_SKELETON_SKULL)
+                    .require(NorthstarItems.HECTORITE_BALL)
+                    .output(NorthstarBlocks.PORCELAIN_WITHER)
+                    .output(Items.WITHER_SKELETON_SKULL)),
 
 
     CHOCOLATE_ICE_CREAM = create("chocolate_ice_cream",

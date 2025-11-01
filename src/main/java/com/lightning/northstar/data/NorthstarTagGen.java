@@ -231,6 +231,11 @@ public class NorthstarTagGen {
                     .add(NorthstarDamageTypes.SUFFOCATION);
             tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
                     .add(NorthstarDamageTypes.SUFFOCATION);
+            tag(DamageTypeTags.BYPASSES_ARMOR)
+                    .add(NorthstarDamageTypes.ACID);
+            tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
+                    .add(NorthstarDamageTypes.ACID);
+
         }
     }
 

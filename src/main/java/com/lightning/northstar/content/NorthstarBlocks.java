@@ -632,6 +632,296 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
+    public static final BlockEntry<GlassBlock> BLUE_AURENE_GLASS = REGISTRATE
+            .block("blue_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> GREEN_AURENE_GLASS = REGISTRATE
+            .block("green_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_GREEN)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> PURPLE_AURENE_GLASS = REGISTRATE
+            .block("purple_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_MAGENTA)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> YELLOW_AURENE_GLASS = REGISTRATE
+            .block("yellow_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_YELLOW)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> ORANGE_AURENE_GLASS = REGISTRATE
+            .block("orange_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_ORANGE)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEADED_BLUE_AURENE_GLASS = REGISTRATE
+            .block("leaded_blue_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEADED_GREEN_AURENE_GLASS = REGISTRATE
+            .block("leaded_green_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_GREEN)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEADED_YELLOW_AURENE_GLASS = REGISTRATE
+            .block("leaded_yellow_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_YELLOW)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEADED_PURPLE_AURENE_GLASS = REGISTRATE
+            .block("leaded_purple_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_MAGENTA)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEADED_ORANGE_AURENE_GLASS = REGISTRATE
+            .block("leaded_orange_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_ORANGE)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEAD_MESHED_GREEN_AURENE_GLASS = REGISTRATE
+            .block("lead_meshed_green_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_GREEN)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEAD_MESHED_PURPLE_AURENE_GLASS = REGISTRATE
+            .block("lead_meshed_purple_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_MAGENTA)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEAD_MESHED_ORANGE_AURENE_GLASS = REGISTRATE
+            .block("lead_meshed_orange_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_ORANGE)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEAD_MESHED_YELLOW_AURENE_GLASS = REGISTRATE
+            .block("lead_meshed_yellow_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_YELLOW)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<GlassBlock> LEAD_MESHED_BLUE_AURENE_GLASS = REGISTRATE
+            .block("lead_meshed_blue_aurene_glass", GlassBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .strength(0.3F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<PorcelainStatueBlock> PORCELAIN_SKELETON = REGISTRATE
+            .block("porcelain_skeleton", PorcelainStatueBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_GRAY)
+                    .strength(1F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate((c, p) -> p.horizontalBlock(c.get(), p.models().getExistingFile(p.modLoc("block/porcelain_skeleton"))))
+            .simpleItem()
+            .register();
+
+    public static final BlockEntry<PorcelainStatueBlock> PORCELAIN_WITHER = REGISTRATE
+            .block("porcelain_wither", PorcelainStatueBlock::new)
+            .initialProperties(() -> Blocks.GLASS)
+            .properties(p -> p
+                    .mapColor(MapColor.COLOR_GRAY)
+                    .strength(1F)
+                    .sound(SoundType.GLASS)
+                    .noOcclusion()
+                    .isValidSpawn((s, g, p2, e) -> false)
+                    .isRedstoneConductor((s, g, p2) -> false)
+                    .isSuffocating((s, g, p2) -> false)
+                    .isViewBlocking((s, g, p2) -> false)
+            )
+            .blockstate((c, p) -> p.horizontalBlock(c.get(), p.models().getExistingFile(p.modLoc("block/porcelain_wither"))))
+            .simpleItem()
+            .register();
+
+
     public static final BlockEntry<MartianGrassBlock> MARTIAN_GRASS = REGISTRATE
             .block("martian_grass", MartianGrassBlock::new)
             .initialProperties(() -> DIRT)
@@ -1550,18 +1840,6 @@ public class NorthstarBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<Block> COILER_PLANKS = REGISTRATE
-            .block("coiler_planks", Block::new)
-            .initialProperties(SharedProperties::wooden)
-            .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GREEN)
-                    .sound(SoundType.WOOD)
-                    .strength(2f, 3f))
-            .transform(axeOnly())
-            .tag(BlockTags.PLANKS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.plankRecipe(NorthstarItemTags.COILER_LOGS))
-            .simpleItem()
-            .register();
 
     public static final BlockEntry<SlabBlock> COILER_SLAB = REGISTRATE
             .block("coiler_slab", SlabBlock::new)
