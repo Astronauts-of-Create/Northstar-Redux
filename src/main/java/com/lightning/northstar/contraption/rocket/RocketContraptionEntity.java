@@ -343,7 +343,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
 
             if (data.seat != -1)
-                addSittingPassenger(newPassenger, data.seat);
+                newRocket.addSittingPassenger(newPassenger, data.seat);
         }
 
         if (controllingPlayer != null)
