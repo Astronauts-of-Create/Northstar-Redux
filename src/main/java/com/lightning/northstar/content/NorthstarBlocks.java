@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.crops.*;
+import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
 import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlock;
@@ -12,7 +12,8 @@ import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachi
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
+import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
@@ -38,6 +39,7 @@ import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
 import com.lightning.northstar.world.features.grower.WilterTreeGrower;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.stress.BlockStressValues;
@@ -84,7 +86,8 @@ import java.util.stream.IntStream;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
-import static com.simibubi.create.foundation.data.TagGen.*;
+import static com.simibubi.create.foundation.data.TagGen.axeOnly;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static net.minecraft.world.level.block.Blocks.*;
 
 public class NorthstarBlocks {
@@ -694,7 +697,6 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .noCollission()
                     .strength(0.2f)
-                    .randomTicks()
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.MINEABLE_WITH_HOE)
@@ -717,7 +719,6 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .noCollission()
                     .strength(0.2f)
-                    .randomTicks()
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.MINEABLE_WITH_HOE)
@@ -848,8 +849,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MARS_DEEP_STONE = REGISTRATE
@@ -865,9 +869,12 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Deep Mars Stone")
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     //mars deco blocks
@@ -1294,13 +1301,15 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.TUFF)
                     .strength(0.4f, 2f))
-            .transform(pickaxeOnly())
+            .tag(BlockTags.MINEABLE_WITH_SHOVEL)
             .tag(NorthstarBlockTags.BASE_STONE_MARS.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot((c, b) -> c.dropOther(b, NorthstarItems.VOLCANIC_ASH))
+            .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
+                    c.applyExplosionDecay(NorthstarItems.VOLCANIC_ASH, LootItem.lootTableItem(NorthstarItems.VOLCANIC_ASH)
+                            .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 5.0F)))))))
             .simpleItem()
             .register();
 
@@ -1666,8 +1675,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MOON_SURFACE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_STONE = REGISTRATE
@@ -1682,9 +1694,12 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .lang("Deep Moon Stone")
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<FrostBlock> FROST = REGISTRATE
@@ -2262,8 +2277,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .tag(NorthstarBlockTags.VENUS_STONE.tag)
             .tag(NorthstarBlockTags.VENUS_STONE_REPLACEABLE.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_STONE = REGISTRATE
@@ -2278,8 +2296,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_STONE_VENUS.tag)
             .tag(NorthstarBlockTags.VENUS_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.VENUS_STONE.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<GravelBlock> VENUS_GRAVEL = REGISTRATE
@@ -2980,8 +3001,11 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_STONE_MERCURY.tag)
             .tag(NorthstarBlockTags.MERCURY_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_STONE = REGISTRATE
@@ -2995,9 +3019,12 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_STONE_MERCURY.tag)
             .tag(NorthstarBlockTags.MERCURY_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
+            .tag(NorthstarBlockTags.C_STONES.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Deep Mercury Stone")
-            .simpleItem()
+            .item()
+            .tag(NorthstarItemTags.C_STONES.tag)
+            .build()
             .register();
 
     //mercury deco blocks
@@ -3290,6 +3317,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TUNGSTEN.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TUNGSTEN_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
             .build()
@@ -3463,6 +3491,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TUNGSTEN.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TUNGSTEN_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
             .build()
@@ -3577,8 +3606,8 @@ public class NorthstarBlocks {
 
     // endregion
 
-    public static final BlockEntry<GrateBlock> VENT_BLOCK = REGISTRATE
-            .block("vent_block", GrateBlock::new)
+    public static final BlockEntry<VentBlock> VENT = REGISTRATE
+            .block("vent", VentBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -3591,6 +3620,21 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
+            .register();
+
+    public static final BlockEntry<InsulatedVentBlock> INSULATED_VENT = REGISTRATE
+            .block("insulated_vent", InsulatedVentBlock::new)
+            .initialProperties(SharedProperties::netheriteMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .strength(4f, 8f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()
+                    .isSuffocating(NorthstarBlocks::never)
+                    .isViewBlocking(NorthstarBlocks::never))
+            .transform(pickaxeOnly())
+            .blockstate(InsulatedVentBlock::generateBlockStateModel)
+            .loot((c, b) -> c.dropOther(b, VENT))
             .register();
 
     public static final BlockEntry<Block> GLOWSTONE_LAMP = REGISTRATE
@@ -3617,8 +3661,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<MethaneIceBlock> METHANE_ICE = REGISTRATE
-            .block("methane_ice", MethaneIceBlock::new)
+    public static final BlockEntry<CustomIceBlock> METHANE_ICE = REGISTRATE
+            .block("methane_ice", p -> new CustomIceBlock(p, NorthstarFluids.METHANE.getSource()))
             .initialProperties(() -> ICE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GREEN)
                     .sound(SoundType.GLASS)
@@ -3864,9 +3908,8 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<OxygenConcentratorBlock> OXYGEN_CONCENTRATOR = REGISTRATE
-            .block("oxygen_concentrator", OxygenConcentratorBlock::new)
-            .lang("Atmospheric Concentrator")
+    public static final BlockEntry<AtmosphericConcentratorBlock> ATMOSPHERIC_CONCENTRATOR = REGISTRATE
+            .block("atmospheric_concentrator", AtmosphericConcentratorBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .noOcclusion()
@@ -3932,8 +3975,24 @@ public class NorthstarBlocks {
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
+            .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
             .item()
             .transform(customItemModel())
+            .register();
+
+    public static final BlockEntry<LargeFanBlock> LARGE_FAN = REGISTRATE
+            .block("large_fan", LargeFanBlock::new)
+            .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .noOcclusion()
+                    .isViewBlocking(NorthstarBlocks::never)
+                    .strength(8, 8))
+            .transform(pickaxeOnly())
+            .blockstate(NorthstarDataGenHelper.manualModel())
+            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
+            .item()
+            .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/large_fan/block_single")))
+            .build()
             .register();
 
     public static final BlockEntry<IceBoxBlock> ICE_BOX = REGISTRATE
@@ -3944,6 +4003,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .onRegister(MovementBehaviour.movementBehaviour(new BasinMovementBehaviour()))
+            .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
             .simpleItem()
             .register();
 

@@ -14,6 +14,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
@@ -59,6 +60,22 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                     .define('W', ItemTags.WOOL)
                     .pattern("SWS")
                     .pattern("SWS")),
+
+    FAN_BLADE = create(NorthstarItems.FAN_BLADE)
+            .unlockedByTag(() -> NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+            .viaShaped(b -> b.define('S', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .pattern("  S")
+                    .pattern(" S ")
+                    .pattern("S  ")),
+
+    GLOWSTONE_LAMP = create(NorthstarBlocks.GLOWSTONE_LAMP)
+            .unlockedBy(() -> Items.GLOWSTONE)
+            .returns(2)
+            .viaShaped(b -> b.define('#', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .define('G', Blocks.GLOWSTONE)
+                    .pattern(" # ")
+                    .pattern("#G#")
+                    .pattern(" # ")),
 
     GLOWSTONE_LANTERN = create(NorthstarBlocks.GLOWSTONE_LANTERN)
             .unlockedBy(() -> Items.GLOWSTONE)
@@ -153,6 +170,15 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                     .pattern("TCT")
                     .pattern("TPT")
                     .pattern("T T")),
+
+    LARGE_FAN = create(NorthstarBlocks.LARGE_FAN)
+            .unlockedByTag(() -> NorthstarItemTags.C_INGOTS_TITANIUM.tag)
+            .viaShaped(b -> b.define('T', NorthstarItemTags.C_INGOTS_TITANIUM.tag)
+                    .define('S', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .define('A', AllBlocks.SHAFT)
+                    .pattern("TTT")
+                    .pattern("SAS")
+                    .pattern("TTT")),
 
     LUNAR_SAPPHIRE_BLOCK = create(NorthstarBlocks.LUNAR_SAPPHIRE_BLOCK)
             .unlockedBy(() -> NorthstarItems.LUNAR_SAPPHIRE_SHARD)
@@ -375,6 +401,15 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                     .pattern("GG ")
                     .pattern("TTC")
                     .pattern("TT ")),
+
+    VENT = create(NorthstarBlocks.VENT)
+            .unlockedBy(() -> NorthstarItems.TITANIUM_INGOT)
+            .returns(3)
+            .viaShaped(b -> b.define('T', NorthstarItemTags.C_INGOTS_TITANIUM.tag)
+                    .define('S', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .pattern("TTT")
+                    .pattern("SSS")
+                    .pattern("TTT")),
 
     VENUS_STONE_BRICKS = createFourToFour(NorthstarBlocks.VENUS_STONE_BRICKS, NorthstarBlocks.VENUS_STONE),
 

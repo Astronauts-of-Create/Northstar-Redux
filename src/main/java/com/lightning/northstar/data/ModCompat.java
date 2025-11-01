@@ -1,20 +1,21 @@
 package com.lightning.northstar.data;
 
-public enum ModCompat implements Tags.Mod {
+public enum ModCompat implements Mod {
 
     CBC("createbigcannons"),
     CDG("createdieselgenerators"),
+    COPYCATS("copycats"),
     MEK("mekanism");
 
-    public final String name;
+    public final String modId;
 
-    ModCompat(String name) {
-        this.name = name;
+    ModCompat(String modId) {
+        this.modId = modId;
     }
 
     @Override
     public String getModId() {
-        return name;
+        return modId;
     }
 
 }

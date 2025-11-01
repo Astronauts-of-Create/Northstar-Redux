@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.client.renderer.block.SpinningBlockRenderer;
 import com.lightning.northstar.content.NorthstarPartialModels;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;

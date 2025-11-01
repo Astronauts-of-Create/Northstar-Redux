@@ -15,8 +15,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Supplier;
 
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class CriterionTriggerBase2ElectricBoogaloo<T extends CriterionTriggerBase2ElectricBoogaloo.Instance> implements CriterionTrigger<T> {
 
     private final ResourceLocation id;
