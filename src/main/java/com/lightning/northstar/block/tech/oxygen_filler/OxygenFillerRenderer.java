@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.AngleHelper;
 import net.minecraft.client.Minecraft;
@@ -12,16 +12,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public class OxygenFillerRenderer extends SmartBlockEntityRenderer<OxygenFillerBlockEntity> {
+public class OxygenFillerRenderer extends SafeBlockEntityRenderer<OxygenFillerBlockEntity> {
 
     public OxygenFillerRenderer(Context context) {
-        super(context);
     }
 
     @Override
     protected void renderSafe(OxygenFillerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
-
         ItemStack item = be.container.getItem(0);
         if (!item.isEmpty()) {
             ms.pushPose();
@@ -42,7 +39,6 @@ public class OxygenFillerRenderer extends SmartBlockEntityRenderer<OxygenFillerB
 
             ms.popPose();
         }
-
     }
 
 }

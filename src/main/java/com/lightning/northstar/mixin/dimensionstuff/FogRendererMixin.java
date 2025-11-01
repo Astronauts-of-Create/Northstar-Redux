@@ -1,6 +1,7 @@
 package com.lightning.northstar.mixin.dimensionstuff;
 
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Camera;
@@ -164,7 +165,7 @@ public abstract class FogRendererMixin {
             float rain_det = Minecraft.getInstance().level.getRainLevel(pPartialTicks);
             if (p < 2 && level.getRawBrightness(pCamera.getBlockPosition(), -7) >= 16) {
                 p += 0.01f;
-            } else if (p > 0 && !(level.getRawBrightness(pCamera.getBlockPosition(), -7) >= 16)) {
+            } else if (p > 0 && !(level.getRawBrightness(pCamera.getBlockPosition(), -7) >= 16) && !NorthstarOxygen.hasOxygen(level, pCamera.getBlockPosition())) {
                 p -= 0.01f;
             } else if (p < 0) {
                 p = 0;

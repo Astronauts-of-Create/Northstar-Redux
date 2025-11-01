@@ -4,7 +4,7 @@ import com.google.common.base.Supplier;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.Mod;
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import net.createmod.catnip.platform.CatnipServices;
@@ -125,7 +125,7 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
             return this;
         }
 
-        public Builder whenModLoaded(Tags.Mod mod) {
+        public Builder whenModLoaded(Mod mod) {
             return whenModLoaded(mod.getModId());
         }
 
@@ -133,7 +133,7 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
             return withCondition(new ModLoadedCondition(modId));
         }
 
-        public Builder whenModMissing(Tags.Mod mod) {
+        public Builder whenModMissing(Mod mod) {
             return whenModMissing(mod.getModId());
         }
 

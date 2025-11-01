@@ -11,7 +11,7 @@ public class NorthstarPartialModels {
             MARTIAN_STEEL_SPACE_SUIT_HELMET = armor("martian_steel_space_suit_helmet"),
             CIRCUIT_ENGRAVER_HEAD = block("circuit_engraver/head"),
             CIRCUIT_ENGRAVER_LASER = block("circuit_engraver/laser"),
-            ATMOSPHERIC_CONCENTRATOR_FAN = block("oxygen_concentrator/fan"),
+            ATMOSPHERIC_CONCENTRATOR_FAN = block("atmospheric_concentrator/fan"),
             WARM_SPINNER = block("temperature_regulator/warm_spinny"),
             COLD_SPINNER = block("temperature_regulator/cold_spinny"),
             OXYGEN_SEALER_FAN = block("oxygen_sealer/fan"),
@@ -33,7 +33,13 @@ public class NorthstarPartialModels {
             SOLAR_PANEL_FULL = block("solar_panel/solar_panel_full"),
             SOLAR_PANEL_SLIM = block("solar_panel/solar_panel_slim"),
             SOLAR_PANEL_NORTH = block("solar_panel/solar_panel_north"),
-            SOLAR_PANEL_SOUTH = block("solar_panel/solar_panel_south");
+            SOLAR_PANEL_SOUTH = block("solar_panel/solar_panel_south"),
+            LARGE_FAN_SINGLE = block("large_fan/block_single"),
+            LARGE_FAN_CENTER = block("large_fan/block_center"),
+            LARGE_FAN_CORNER = block("large_fan/block_corner"),
+            LARGE_FAN_SIDE = block("large_fan/block_side"),
+            LARGE_FAN_BLADE = block("large_fan/blade"),
+            LARGE_FAN_ROTOR = block("large_fan/rotor");
 
     private static PartialModel block(String path) {
         return PartialModel.of(Northstar.asResource("block/" + path));

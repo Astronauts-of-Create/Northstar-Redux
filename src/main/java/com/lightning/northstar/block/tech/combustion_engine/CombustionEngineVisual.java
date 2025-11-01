@@ -3,7 +3,9 @@ package com.lightning.northstar.block.tech.combustion_engine;
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
+import com.simibubi.create.content.kinetics.base.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.instance.InstanceTypes;
@@ -17,8 +19,9 @@ import org.joml.Quaternionf;
 
 import java.util.function.Consumer;
 
-public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionEngineBlockEntity> implements SimpleDynamicVisual {
+public class CombustionEngineVisual extends KineticBlockEntityVisual<CombustionEngineBlockEntity> implements SimpleDynamicVisual {
 
+    private final RotatingInstance shaft;
     private final OrientedInstance piston1;
     private final OrientedInstance piston2;
     private final OrientedInstance piston3;
@@ -27,9 +30,18 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
     private final OrientedInstance piston6;
 
     public CombustionEngineVisual(VisualizationContext context, CombustionEngineBlockEntity entity, float partialTick) {
-        super(context, entity, partialTick, Direction.SOUTH, Models.partial(AllPartialModels.SHAFT_HALF));
+        super(context, entity, partialTick);
 
-        Quaternionf rotation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(CombustionEngineBlock.HORIZONTAL_FACING)));
+        Direction facing = blockState.getValue(CombustionEngineBlock.HORIZONTAL_FACING);
+
+        shaft = instancerProvider()
+                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+                .createInstance()
+                .rotateToFace(Direction.NORTH, facing)
+                .setup(blockEntity)
+                .setPosition(getVisualPosition());
+
+        Quaternionf rotation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(facing));
 
         piston1 = instancerProvider()
                 .instancer(InstanceTypes.ORIENTED, Models.partial(NorthstarPartialModels.PISTON1))
@@ -63,6 +75,7 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
     public void beginFrame(Context ctx) {
         float time = AnimationTickHolder.getRenderTime(level) * Math.signum(blockEntity.getSpeed()) * 2f;
 
+        shaft.setup(blockEntity).setChanged();
         piston1.position(getVisualPosition()).translatePosition(0, getPistonOffset(time), 0).setChanged();
         piston2.position(getVisualPosition()).translatePosition(0, getPistonOffset(time + 2), 0).setChanged();
         piston3.position(getVisualPosition()).translatePosition(0, getPistonOffset(time + 4), 0).setChanged();
@@ -73,13 +86,12 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
 
     @Override
     public void updateLight(float partialTick) {
-        super.updateLight(partialTick);
-        relight(piston1, piston2, piston3, piston4, piston5, piston6);
+        relight(shaft, piston1, piston2, piston3, piston4, piston5, piston6);
     }
 
     @Override
     protected void _delete() {
-        super._delete();
+        shaft.delete();
         piston1.delete();
         piston2.delete();
         piston3.delete();
@@ -90,7 +102,7 @@ public class CombustionEngineVisual extends SingleAxisRotatingVisual<CombustionE
 
     @Override
     public void collectCrumblingInstances(Consumer<Instance> consumer) {
-        super.collectCrumblingInstances(consumer);
+        consumer.accept(shaft);
         consumer.accept(piston1);
         consumer.accept(piston2);
         consumer.accept(piston3);

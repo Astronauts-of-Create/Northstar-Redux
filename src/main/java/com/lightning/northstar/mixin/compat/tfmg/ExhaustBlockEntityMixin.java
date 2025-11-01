@@ -1,0 +1,46 @@
+package com.lightning.northstar.mixin.compat.tfmg;
+
+import com.drmangotea.tfmg.content.machinery.misc.exhaust.ExhaustBlockEntity;
+import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@Mixin(ExhaustBlockEntity.class)
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class ExhaustBlockEntityMixin implements NorthstarOxygenConsumingBlockEntity {
+
+    @Shadow(remap = false)
+    public FluidTank tankInventory;
+    @Unique
+    private int northstar$dumpedLastTick;
+
+    @Inject(method = "tick", at = @At("HEAD"), remap = false)
+    private void northstar$onDrain(CallbackInfo ci) {
+        northstar$dumpedLastTick = 0;
+    }
+
+    @Inject(method = "tick",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraftforge/fluids/capability/templates/FluidTank;drain(ILnet/minecraftforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/minecraftforge/fluids/FluidStack;",
+                    remap = false),
+            remap = false)
+    private void northstar$onDrain(CallbackInfo ci, @Local int drained) {
+        northstar$dumpedLastTick = Math.min(drained, tankInventory.getFluidAmount());
+    }
+
+    @Override
+    public float northstar$getOxygenUsage() {
+        return northstar$dumpedLastTick;
+    }
+
+}

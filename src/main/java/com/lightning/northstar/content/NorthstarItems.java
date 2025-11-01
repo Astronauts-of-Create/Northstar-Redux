@@ -64,6 +64,10 @@ public class NorthstarItems {
             .item("durable_fabric", Item::new)
             .register();
 
+    public static final ItemEntry<Item> FAN_BLADE = REGISTRATE
+            .item("fan_blade", Item::new)
+            .register();
+
     // TODO: "dusts/ash", "dusts/volcanic_ash"?
     public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
             .item("volcanic_ash_item", Item::new)
