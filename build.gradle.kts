@@ -113,9 +113,7 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
-    modCompileOnly(libs.copycats)
-    modImplementation(libs.cdg)
-    modImplementation(libs.tfmg)
+    modRuntimeOnly(libs.copycats)
 
     // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.
     forgeRuntimeLibrary(libs.jcpp)
