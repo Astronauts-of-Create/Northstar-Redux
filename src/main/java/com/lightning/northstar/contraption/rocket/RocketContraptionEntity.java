@@ -430,8 +430,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (auto_land_mode) {
             contraption.owner.displayClientMessage(Component.literal("Auto Landing Mode Enabled!").withStyle(ChatFormatting.GREEN), false);
         }
-
-        contraption.owner.displayClientMessage(Component.literal("All entities should remain seated for the duration of the flight!").withStyle(ChatFormatting.AQUA), false);
     }
 
     @Override
