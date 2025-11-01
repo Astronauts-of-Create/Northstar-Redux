@@ -114,6 +114,8 @@ dependencies {
 
     modImplementation(libs.jei.forge)
     modRuntimeOnly(libs.copycats)
+    modImplementation(libs.cdg)
+    modImplementation(libs.tfmg)
 
     // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.
     forgeRuntimeLibrary(libs.jcpp)
