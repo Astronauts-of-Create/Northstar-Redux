@@ -63,19 +63,19 @@ import java.util.function.Function;
  * TODO: Rocket launch / seating bugs
  * 1. players sitting in rideable entities, no clip through the rocket?
  *  - currently solved this by not allowing a player to sit in a rideable entity when in a rocket
- *
+ * <p>
  * 2. players sitting down can no clip through the rocket when they dismount
- *  - currently solved by soft-locking player in place for 10 ticks but could be improved (might not be foolproof)
- *      - the issue was that when the player dismounts, their dismount location could be different from the rocket's position, when the rocket is moving fast, updating dismount location to account for this isn't enough.
- *
+ * - currently solved by soft-locking player in place for 10 ticks but could be improved (might not be foolproof)
+ * - the issue was that when the player dismounts, their dismount location could be different from the rocket's position, when the rocket is moving fast, updating dismount location to account for this isn't enough.
+ * <p>
  * 3. when a boat/card is on the ship, if the player gets too close, they will noclip through the ship
- *  - possible solutions
- *      - break boat/minecart?
- *      - disable collisions of said entities?
- *      - understand why this happens in the first place, and fix it at that level instead of trying to patch it?
- *
+ * - possible solutions
+ * - break boat/minecart?
+ * - disable collisions of said entities?
+ * - understand why this happens in the first place, and fix it at that level instead of trying to patch it?
+ * <p>
  * 4. non-seated entities still bug out visually
- *   - This is a client side issue where entities arent being rendered as if they are riding the rocket (the client likely interpolates the position of the entity from the server, but doesn't keep it synchronized with the rocket's position)
+ * - This is a client side issue where entities arent being rendered as if they are riding the rocket (the client likely interpolates the position of the entity from the server, but doesn't keep it synchronized with the rocket's position)
  */
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
 
@@ -130,13 +130,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     private void fixEntityMounting(boolean inflatedAABB) {
         for (Entity entity :
                 inflatedAABB ?
-                        entitiesWithinContraption :
+                        level().getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1)) :
                         level().getEntities(this, getBoundingBox())
         ) {
             ((EntityMixin_I) entity).setRidingRocket(this);
             if (entity.getVehicle() != this) {
-                if (entity.getVehicle() != null) {
-                    Northstar.LOGGER.warn("Unmounting entity because they are in a vehicle that is not this rocket");
+                if (entity.getVehicle() != null) {//If an entity is not riding the rocket, or is riding something else, unmount them
                     entity.stopRiding();
                 }
                 if (!level().isClientSide//Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
