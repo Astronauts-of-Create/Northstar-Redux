@@ -5,16 +5,20 @@ import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarSounds;
+import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import com.lightning.northstar.util.mixinInterfaces.EntityMixin_I;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
+import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
+import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.VecHelper;
@@ -32,6 +36,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,6 +45,7 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -50,13 +56,19 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
 
-    /** In ticks */
+    /**
+     * In ticks
+     */
     public final static int LAUNCH_COUNTDOWN_TIME = 10 * 20;
-    /** maximum velocity, in blocks per tick */
+    private final static int TRANSPORT_DELAY_TIME = 40;
+    /**
+     * maximum velocity, in blocks per tick
+     */
     private static final float MAX_SPEED = 5;
 
     private List<Entity> entitiesWithinContraption = List.of();
@@ -74,7 +86,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     int soundTime = 0;
     int cooldown = 0;
     int cooldownLength = 100;
-    /** In ticks */
+    /**
+     * In ticks
+     */
     private int launchTime = 0;
     private boolean activeLaunch = false;
     public Player owner;
@@ -89,10 +103,33 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
         noCulling = true;
-
         lift_vel = 0.5f;
         launchingMode = true;
         landingMode = false;
+    }
+
+    private void fixEntityMounting(boolean inflatedAABB) {
+        for (Entity entity :
+                inflatedAABB ?
+                        entitiesWithinContraption :
+                        level().getEntities(this, getBoundingBox())
+        ) {
+            Northstar.LOGGER.info("Fixing entity mounting...");
+            ((EntityMixin_I) entity).setRidingRocket(this);
+            if (entity.getVehicle() != this) {
+                if (entity.getVehicle() != null) {
+                    Northstar.LOGGER.warn("Unmounting entity because they are in a vehicle that is not this rocket");
+                    entity.stopRiding();
+                }
+                if (!level().isClientSide//Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
+                        && !(entity instanceof LivingEntity)
+                        && !(entity instanceof SuperGlueEntity)
+                        && !(entity instanceof ItemEntity)) {
+                    lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
+                    entity.startRiding(this, true);
+                }
+            }
+        }
     }
 
     public static RocketContraptionEntity create(Level world, Contraption contraption) {
@@ -105,6 +142,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public void disassemble() {
         super.disassemble();
 
+        for (Entity entity : getEntitiesWithinContraption()) {
+            EntityMixin_I entity1 = (EntityMixin_I) entity;
+            entity1.setRidingRocket(null);
+        }
+
         RocketHandler.ROCKETS.remove(this);
     }
 
@@ -113,8 +155,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         Level level = level();
         if (!level.dimension().equals(destination)) {
             if (getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
-                transportDelay = Math.min(40, transportDelay + 1);
-                if (transportDelay == 40 && level instanceof ServerLevel sl) {
+                transportDelay = Math.min(TRANSPORT_DELAY_TIME, transportDelay + 1);
+                if (transportDelay == TRANSPORT_DELAY_TIME && level instanceof ServerLevel sl) {
                     changeDimension(sl.getServer().getLevel(destination));
                 }
             }
@@ -135,6 +177,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (launchingMode && launchTime == 0 && activeLaunch) {//Start blasting off
             if (!blasting) {//Only do this once
                 blasting = true;
+                fixEntityMounting(false);
             }
             if (!fuelBurned) { //We only burn the fuel once
                 Northstar.LOGGER.debug("BURNING FUEL");
@@ -179,6 +222,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (contraption.owner != null && !printed) {
             displayInfo();
+            fixEntityMounting(false);
             printed = true;
         }
 
@@ -195,7 +239,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 final_lift_vel = lift_vel - 0.5f;
             }
             if (this.getY() > RocketHandler.DIMENSION_CHANGE_HEIGHT) { //Start landing
-                if (level.isClientSide) flyingSound.stopSound();
+                if (level.isClientSide && flyingSound != null) flyingSound.stopSound();
                 startLanding();
                 this.cooldown = 0;
                 this.final_lift_vel = 0;
@@ -235,8 +279,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         tickActors();
 
-        if (isLaunchingOrLanding() && //No point in checking for collisions if we're not moving
-                collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
+        if (isLaunchingOrLanding() && collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
             if (!level.isClientSide) {
                 level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
                 if ((Math.abs(final_lift_vel) < 3 || hasExploded)) {
@@ -266,16 +309,30 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                     flyingSound.stopSound();
             }
         }
-
         if (!isStalled() && tickCount > 2 && transportDelay == 0) {
             move(0, final_lift_vel, 0);
-
             // TODO: non-seated entities still bug out visually
-            for (Entity entity : entitiesWithinContraption) {
-                if (contraption.getSeatOf(entity.getUUID()) == null)
-                    entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+            for (Entity entity : getEntitiesWithinContraption()) {
+                ((EntityMixin_I) entity).setRidingRocket(this);
+
+                if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
+                    EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
+                    if (lockInfo == null) {
+                        entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+                    } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
+                        entity.setPos(
+                                position().x + lockInfo.offset().x,
+                                position().y + lockInfo.offset().y,
+                                position().z + lockInfo.offset().z);
+                        if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
+                            lockInfo.ticks().getAndAdd(-1);
+                            if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
+                        }
+                    }
+                }
             }
         }
+
         slowing = false;
     }
 
@@ -301,8 +358,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (auto_land_mode) {
             contraption.owner.displayClientMessage(Component.literal("Auto Landing Mode Enabled!").withStyle(ChatFormatting.GREEN), false);
         }
-
-        contraption.owner.displayClientMessage(Component.literal("All entities should remain seated for the duration of the flight!").withStyle(ChatFormatting.AQUA), false);
     }
 
     @Override
@@ -318,6 +373,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     public @Nullable Entity changeDimension(ServerLevel destination, ITeleporter teleporter) {
+        Northstar.LOGGER.info("Changing ship " + this + " to dimension " + destination.toString());
         record PassengerData(Entity entity, Vec3 offset, int seat) {
         }
         List<PassengerData> passengers = new ArrayList<>();
@@ -333,14 +389,14 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (newRocket == null) {
             return null; // huh?
         }
-        newRocket.transportDelay = 40;
+        newRocket.transportDelay = TRANSPORT_DELAY_TIME;
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
-            if (newPassenger == null)
-                continue; // shouldn't happen unless this method is misused by another mod
+            if (newPassenger == null) continue; // shouldn't happen unless this method is misused by another mod
 
             newPassenger.setPos(newRocket.position().add(data.offset));
+            ((EntityMixin_I) newPassenger).setRidingRocket(newRocket);
 
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
