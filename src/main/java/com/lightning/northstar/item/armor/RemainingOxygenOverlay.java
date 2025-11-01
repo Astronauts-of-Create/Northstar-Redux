@@ -1,6 +1,6 @@
 package com.lightning.northstar.item.armor;
 
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.Color;
@@ -22,14 +22,14 @@ public class RemainingOxygenOverlay implements IGuiOverlay {
 
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (mc.options.hideGui || 
+        if (mc.options.hideGui ||
                 player == null ||
-                player.isSpectator() || 
+                player.isSpectator() ||
                 player.isCreative() ||
-                NorthstarOxygen.hasOxygen(player.level(), player.position()))
+                (NorthstarOxygen.hasOxygen(player.level(), player.position())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
             return;
 
-        ItemStack tank = NorthstarOxygen.getOxy(player);
+        ItemStack tank = NorthstarOxygen.getOxygenTank(player);
         if (tank.isEmpty())
             return;
         int remainingTime = tank.getOrCreateTag().getInt("Oxygen");

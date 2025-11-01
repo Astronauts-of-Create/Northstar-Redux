@@ -84,7 +84,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
             b -> b.require(NorthstarItemTags.C_SHEETS_IRON.tag)
                     .transitionTo(NorthstarItems.UNFINISHED_TARGETING_COMPUTER)
                     .addOutput(NorthstarItems.TARGETING_COMPUTER, 1)
-                    .loops(8)
+                    .loops(2)
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.POLISHED_DIAMOND))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItems.HARDENED_PRECISION_MECHANISM))
                     .addStep(EngravingRecipe::new, r -> r.duration(50))

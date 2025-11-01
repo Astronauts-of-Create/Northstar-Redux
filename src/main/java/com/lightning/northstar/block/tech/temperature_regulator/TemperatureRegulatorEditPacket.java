@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraption.ActorConfigPacket;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -102,8 +102,11 @@ public class TemperatureRegulatorEditPacket extends SimplePacketBase {
             return;
 
         if (world.getBlockEntity(pos) instanceof TemperatureRegulatorBlockEntity be) {
+            float oldTemperature = be.regulator.temperature;
             be.regulator.temperature = temperature;
             be.regulator.setBounds(be.getBlockPos(), limit, sizeX, sizeY, sizeZ);
+            if (!Mth.equal(oldTemperature, temperature))
+                be.onTemperatureChanged();
             be.sendData();
             be.setChanged();
         }

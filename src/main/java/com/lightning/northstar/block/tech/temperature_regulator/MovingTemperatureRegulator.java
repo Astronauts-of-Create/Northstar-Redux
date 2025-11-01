@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.contraption.ActorConfigPacket.ITakeConfig;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;

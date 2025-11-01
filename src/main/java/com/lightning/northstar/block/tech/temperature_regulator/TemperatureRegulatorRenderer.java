@@ -32,7 +32,7 @@ public class TemperatureRegulatorRenderer extends KineticBlockEntityRenderer<Tem
         SuperByteBuffer shaft = CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), Direction.DOWN);
         standardKineticRotationTransform(shaft, be, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-        SuperByteBuffer spinner = CachedBufferer.partial(warm ? NorthstarPartialModels.WARM_SPINNY : NorthstarPartialModels.COLD_SPINNY, be.getBlockState());
+        SuperByteBuffer spinner = CachedBufferer.partial(warm ? NorthstarPartialModels.WARM_SPINNER : NorthstarPartialModels.COLD_SPINNER, be.getBlockState());
         kineticRotationTransform(spinner, be, Direction.Axis.Y, angle, light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
     }
 

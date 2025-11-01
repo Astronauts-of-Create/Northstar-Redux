@@ -1,8 +1,10 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -16,7 +18,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE<CombustionEngineBlockEntity> {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE<CombustionEngineBlockEntity>, OxygenConsumer {
 
     protected static final VoxelShape SHAPE_AXIS_X = Block.box(0, 0, 2, 16, 13, 14);
     protected static final VoxelShape SHAPE_AXIS_Z = Block.box(2, 0, 0, 14, 13, 16);
@@ -46,6 +52,18 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return state.getValue(HORIZONTAL_FACING).getOpposite() == face;
+    }
+
+    @Override
+    public boolean northstar$isOxygenConsumptionDynamic(BlockGetter level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public float northstar$getOxygenConsumption(BlockGetter level, BlockPos pos, float base) {
+        if (level.getBlockEntity(pos) instanceof CombustionEngineBlockEntity be && be.generatorSpeed != 0 && !be.isOverStressed())
+            return base * 20;
+        return 0;
     }
 
     @Override

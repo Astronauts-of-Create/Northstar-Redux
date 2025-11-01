@@ -1,6 +1,8 @@
 package com.lightning.northstar.util;
 
+import net.createmod.catnip.lang.Lang;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.DoubleUnaryOperator;
 
@@ -11,11 +13,17 @@ public enum TemperatureUnit {
     // Yes it should be 273.5 but since we usually uses integers for Celsius use 273 to avoid the .5
     KELVIN("K", d -> d + 273, d -> d - 273);
 
+    public static final TemperatureUnit[] ALL = values();
+
+    public final Component name;
+    public final Component nameAndSymbol;
     public final String symbol;
     public final DoubleUnaryOperator fromCelsius;
     public final DoubleUnaryOperator toCelsius;
 
     TemperatureUnit(String symbol, DoubleUnaryOperator fromCelsius, DoubleUnaryOperator toCelsius) {
+        this.name = Component.translatable("northstar.temperature_unit." + Lang.asId(name()));
+        this.nameAndSymbol = name.copy().append(" (" + symbol + ")");
         this.symbol = symbol;
         this.fromCelsius = fromCelsius;
         this.toCelsius = toCelsius;

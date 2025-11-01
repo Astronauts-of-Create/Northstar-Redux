@@ -13,6 +13,7 @@ import org.joml.Quaternionf;
 
 public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockEntity> implements DynamicInstance {
 
+    private final RotatingInstance shaft;
     private final OrientedData piston1;
     private final OrientedData piston2;
     private final OrientedData piston3;
@@ -23,7 +24,16 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
     public CombustionEngineVisual(MaterialManager materialManager, CombustionEngineBlockEntity entity) {
         super(materialManager, entity);
 
-        Quaternionf rotation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(CombustionEngineBlock.HORIZONTAL_FACING)));
+        Direction facing = blockState.getValue(CombustionEngineBlock.HORIZONTAL_FACING);
+
+        shaft = instancerProvider()
+                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+                .createInstance()
+                .rotateToFace(Direction.NORTH, facing)
+                .setup(blockEntity)
+                .setPosition(getVisualPosition());
+
+        Quaternionf rotation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(facing));
 
         piston1 = materialManager
                 .defaultSolid()
@@ -69,6 +79,7 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
     public void beginFrame() {
         float time = AnimationTickHolder.getRenderTime() * Math.signum(blockEntity.getSpeed()) * 2f;
 
+        shaft.setup(blockEntity).setChanged();
         piston1.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time), 0);
         piston2.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time + 2), 0);
         piston3.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time + 4), 0);
@@ -80,12 +91,13 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
     @Override
     public void updateLight() {
         super.updateLight();
-        relight(pos, piston1, piston2, piston3, piston4, piston5, piston6);
+        relight(pos, shaft, piston1, piston2, piston3, piston4, piston5, piston6);
     }
 
     @Override
     public void remove() {
         super.remove();
+        shaft.delete();
         piston1.delete();
         piston2.delete();
         piston3.delete();

@@ -94,14 +94,6 @@ public final class Tags<T, R> {
 
     }
 
-    public interface Mod {
-        String getModId();
-
-        default ResourceLocation loc(String path) {
-            return ResourceLocation.fromNamespaceAndPath(getModId(), path);
-        }
-    }
-
     public interface Tag<T> {
         TagKey<T> tag();
     }

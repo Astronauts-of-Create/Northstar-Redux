@@ -19,14 +19,14 @@ public class TemperatureRegulatorVisual extends HalfShaftInstance<TemperatureReg
         warmSpinner = materialManager
                 .defaultSolid()
                 .material(AllMaterialSpecs.ROTATING)
-                .getModel(NorthstarPartialModels.WARM_SPINNY)
+                .getModel(NorthstarPartialModels.WARM_SPINNER)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
 
         coldSpinner = materialManager
                 .defaultSolid()
                 .material(AllMaterialSpecs.ROTATING)
-                .getModel(NorthstarPartialModels.COLD_SPINNY)
+                .getModel(NorthstarPartialModels.COLD_SPINNER)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
     }

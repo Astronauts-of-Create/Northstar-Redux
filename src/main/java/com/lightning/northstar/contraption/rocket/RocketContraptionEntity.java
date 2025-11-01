@@ -9,7 +9,7 @@ import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
@@ -344,7 +344,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
 
             if (data.seat != -1)
-                addSittingPassenger(newPassenger, data.seat);
+                newRocket.addSittingPassenger(newPassenger, data.seat);
         }
 
         if (controllingPlayer != null)

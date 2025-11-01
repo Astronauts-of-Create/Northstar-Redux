@@ -2,7 +2,7 @@ package com.lightning.northstar.mixin.dimensionstuff;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.particle.DustCloudParticleData;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -366,7 +366,7 @@ public class LevelRendererMixin {
                 BlockPos newpos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING,
                         new BlockPos(pCamera.getBlockPosition().getX() + level.random.nextIntBetweenInclusive(-64, 64), 0, pCamera.getBlockPosition().getZ() + level.random.nextIntBetweenInclusive(-64, 64)));
                 level.isClientSide();
-                level.addAlwaysVisibleParticle(new DustCloudParticleData(), newpos.getX(), newpos.getY() + level.random.nextInt(3), newpos.getZ(), 0, 0, 0);
+                level.addAlwaysVisibleParticle(NorthstarParticles.DUST_CLOUD.get(), newpos.getX(), newpos.getY() + level.random.nextInt(3), newpos.getZ(), 0, 0, 0);
             }
             if (!(rain_det <= 0.0F)) {
                 if (level.effects().tickRain(level, ticks, pCamera))
@@ -398,8 +398,7 @@ public class LevelRendererMixin {
                             double d3 = (double) fluidstate.getHeight(levelreader, blockpos1);
                             double d4 = Math.max(d2, d3);
                             if (level.random.nextInt(10) == 0) {
-                                ParticleOptions particleoptions = new DustCloudParticleData();
-                                this.minecraft.level.addParticle(particleoptions, (double) blockpos1.getX() + d0, (double) blockpos1.getY() + d4 + level.random.nextInt(4), (double) blockpos1.getZ() + d1, 0.0D, 0.0D, 0.0D);
+                                this.minecraft.level.addParticle(NorthstarParticles.DUST_CLOUD.get(), (double) blockpos1.getX() + d0, (double) blockpos1.getY() + d4 + level.random.nextInt(4), (double) blockpos1.getZ() + d1, 0.0D, 0.0D, 0.0D);
                             }
                         }
                     }

@@ -16,6 +16,7 @@ import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.features.NorthstarFeatures;
 import com.lightning.northstar.world.features.trunkplacers.NorthstarTrunkPlacerTypes;
+import com.lightning.northstar.world.oxygen.DefaultOxygenConsumers;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -86,6 +87,8 @@ public class Northstar {
         NorthstarDimensions.register();
         NorthstarEntityTypes.register();
         NorthstarFluids.register();
+        DefaultOxygenConsumers.register();
+        NorthstarPotatoProjectileEntityHitActions.register(modEventBus);
 
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();

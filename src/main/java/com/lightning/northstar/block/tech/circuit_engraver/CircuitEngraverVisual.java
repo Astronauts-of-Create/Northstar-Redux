@@ -6,6 +6,7 @@ import com.lightning.northstar.content.NorthstarPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.Direction;
 
 public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEntity> implements DynamicInstance {
@@ -23,12 +24,13 @@ public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEnt
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
 
-        laser =  materialManager
+        laser = materialManager
                 .defaultCutout()
                 .material(AllMaterialSpecs.ROTATING)
                 .getModel(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
+        laser.light(LightTexture.FULL_BRIGHT);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEnt
     @Override
     public void updateLight() {
         super.updateLight();
-        relight(pos, head, laser);
+        relight(pos, head);
     }
 
     @Override

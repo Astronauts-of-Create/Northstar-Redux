@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.lightning.northstar.client.renderer.block.SpinningBlockRenderer;
 import com.lightning.northstar.content.NorthstarPartialModels;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
@@ -49,7 +49,7 @@ public class TemperatureRegulatorMovementBehaviour implements MovementBehaviour 
             regulator.regulator.sealer.getVisualizer().render(matrices.getModelViewProjection(), buffer);
         }
 
-        PartialModel model = warm ? NorthstarPartialModels.WARM_SPINNY : NorthstarPartialModels.COLD_SPINNY;
+        PartialModel model = warm ? NorthstarPartialModels.WARM_SPINNER : NorthstarPartialModels.COLD_SPINNER;
 
         SpinningBlockRenderer.renderInContraption(context, renderWorld, matrices, buffer, model, rpm);
     }
