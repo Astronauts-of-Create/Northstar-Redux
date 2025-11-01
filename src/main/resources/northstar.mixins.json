@@ -55,7 +55,8 @@
     "oxygen.AbstractFurnaceBlockMixin",
     "oxygen.BaseFireBlockMixin",
     "oxygen.CampfireBlockMixin",
-    "oxygen.LeavesBlockMixin"
+    "oxygen.LeavesBlockMixin",
+    "EntityMixin"
   ],
   "client": [
     "PlayerFrostEffectMixin",
