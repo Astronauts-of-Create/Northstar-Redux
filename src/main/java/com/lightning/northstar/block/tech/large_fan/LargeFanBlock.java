@@ -194,7 +194,7 @@ public class LargeFanBlock extends KineticBlock implements IBE<LargeFanBlockEnti
             if (be == null || be.blades == 0)
                 return super.onSneakWrenched(state, context);
 
-            IWrenchable.playRemoveSound(world, pos);
+            super.playRemoveSound(world, pos);
 
             be.blades--;
             be.sendData();

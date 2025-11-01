@@ -30,7 +30,9 @@ public class CircuitEngraverVisual extends ShaftInstance<CircuitEngraverBlockEnt
                 .getModel(NorthstarPartialModels.CIRCUIT_ENGRAVER_LASER)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y);
-        laser.light(LightTexture.FULL_BRIGHT);
+        laser.skyLight = (byte) LightTexture.sky(LightTexture.FULL_BRIGHT);
+        laser.blockLight = (byte) LightTexture.block(LightTexture.FULL_BRIGHT);
+        laser.markDirty();
     }
 
     @Override

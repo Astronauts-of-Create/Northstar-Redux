@@ -3,8 +3,8 @@ package com.lightning.northstar.data.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.api.data.recipe.StandardRecipeGen;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -16,7 +16,7 @@ import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class NorthstarCreateAdditionLiquidBurningRecipeGen extends BaseRecipeProvider {
+public class NorthstarCreateAdditionLiquidBurningRecipeGen extends StandardRecipeGen {
 
     GeneratedRecipe
             $ = null,
@@ -37,7 +37,7 @@ public class NorthstarCreateAdditionLiquidBurningRecipeGen extends BaseRecipePro
 
     @Override
     public @NotNull String getName() {
-        return modid + "'s create addition liquid burning recipes";
+        return Northstar.MOD_ID + "'s create addition liquid burning recipes";
     }
 
     public GeneratedRecipe create(String name, Fluid fluid, boolean superheated) {
@@ -70,7 +70,7 @@ public class NorthstarCreateAdditionLiquidBurningRecipeGen extends BaseRecipePro
 
             @Override
             public @NotNull ResourceLocation getId() {
-                return asResource("create_addition/liquid_burning/" + name);
+                return Northstar.asResource("create_addition/liquid_burning/" + name);
             }
 
             @Override

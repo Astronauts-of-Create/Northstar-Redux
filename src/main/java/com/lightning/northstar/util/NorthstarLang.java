@@ -5,7 +5,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
-import net.createmod.catnip.lang.LangNumberFormat;
+import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;

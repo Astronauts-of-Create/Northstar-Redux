@@ -1,12 +1,13 @@
 package com.lightning.northstar.world.oxygen;
 
 import com.lightning.northstar.world.sealer.SealableBlock;
-import com.simibubi.create.api.registry.SimpleRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -20,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface OxygenConsumer {
 
-    SimpleRegistry<Block, OxygenConsumer> REGISTRY = SimpleRegistry.create();
+    AttachedRegistry<Block, OxygenConsumer> REGISTRY = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 
     static <B extends Block> NonNullConsumer<? super B> oxygenConsumer(OxygenConsumer consumer) {
         return b -> REGISTRY.register(b, consumer);

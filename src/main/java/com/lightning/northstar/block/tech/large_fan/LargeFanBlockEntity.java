@@ -10,9 +10,9 @@ import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.chainDrive.ChainDriveBlock;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.animation.LerpedFloat;
-import net.createmod.catnip.data.Iterate;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -243,20 +243,20 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
             return false;
         }
 
-        CreateLang.translate("gui.goggles.kinetic_stats")
+        Lang.translate("gui.goggles.kinetic_stats")
                 .forGoggles(tooltip);
 
         addStressImpactStats(tooltip, calculateStressApplied() * width * width);
 
         if (blades < MINIMUM_BLADES) {
-            CreateLang.text("Not enough blades")
+            Lang.text("Not enough blades")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip);
         } else {
-            CreateLang.text("Added volume:")
+            Lang.text("Added volume:")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            CreateLang.number(getExtraSealedVolume())
+            Lang.number(getExtraSealedVolume())
                     .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " blocks")
                     .forGoggles(tooltip, 1);

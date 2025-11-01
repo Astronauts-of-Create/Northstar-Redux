@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.large_fan;
 
-import net.createmod.catnip.lang.Lang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.properties.EnumProperty;

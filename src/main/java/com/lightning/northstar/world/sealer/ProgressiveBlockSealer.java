@@ -273,12 +273,12 @@ public class ProgressiveBlockSealer {
         }
 
         if (isPlayerSneaking && extraVolume != 0) {
-            CreateLang.number(maximumSealed)
+            Lang.number(maximumSealed)
                     .style(ChatFormatting.BLUE)
                     .add(NorthstarLang.translate("gui.goggles.sealer.capacity_speed")
                             .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 2);
-            CreateLang.number(extraVolume)
+            Lang.number(extraVolume)
                     .style(ChatFormatting.BLUE)
                     .add(NorthstarLang.translate("gui.goggles.sealer.capacity_extra")
                             .style(ChatFormatting.GRAY))

@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.block.crops.*;
+import com.lightning.northstar.block.display.TemperatureDisplaySource;
 import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
 import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
@@ -41,12 +42,12 @@ import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockModel;
 import com.simibubi.create.content.kinetics.simpleRelays.CogwheelBlockItem;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
+import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -3976,7 +3977,7 @@ public class NorthstarBlocks {
             .transform(BlockStressDefaults.setImpact(16))
             .onRegister(AllMovementBehaviours.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
             .onRegister(AllInteractionBehaviours.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
-            .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
+            .onRegister(AllDisplayBehaviours.assignDataBehaviour(new TemperatureDisplaySource(), "temperature"))
             .item()
             .transform(customItemModel())
             .register();
@@ -3990,7 +3991,7 @@ public class NorthstarBlocks {
                     .strength(8, 8))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
-            .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
+            .transform(BlockStressDefaults.setImpact(8))
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/large_fan/block_single")))
             .build()
@@ -4004,7 +4005,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenHelper.manualModel())
             .onRegister(AllMovementBehaviours.movementBehaviour(new BasinMovementBehaviour()))
-            .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
+            .onRegister(AllDisplayBehaviours.assignDataBehaviour(new TemperatureDisplaySource(), "temperature"))
             .simpleItem()
             .register();
 

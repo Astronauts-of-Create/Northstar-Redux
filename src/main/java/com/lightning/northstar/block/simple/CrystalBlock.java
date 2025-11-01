@@ -2,7 +2,7 @@ package com.lightning.northstar.block.simple;
 
 import com.google.common.collect.Maps;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-import net.createmod.catnip.data.Iterate;
+import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;

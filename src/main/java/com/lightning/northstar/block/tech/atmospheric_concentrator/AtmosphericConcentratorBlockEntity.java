@@ -3,12 +3,12 @@ package com.lightning.northstar.block.tech.atmospheric_concentrator;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
-import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -94,15 +94,15 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
         } else {
             NorthstarLang.translate("gui.goggles.atmospheric_concentrator.collected_fluid")
                     .style(ChatFormatting.GRAY)
-                    .add(CreateLang.fluidName(new FluidStack(fluid, 1)))
+                    .add(Lang.fluidName(new FluidStack(fluid, 1)))
                     .forGoggles(tooltip);
 
-            CreateLang.builder()
-                    .add(CreateLang.number(tank.getPrimaryHandler().getFluidAmount())
+            Lang.builder()
+                    .add(Lang.number(tank.getPrimaryHandler().getFluidAmount())
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(tank.getPrimaryHandler().getCapacity())
+                    .add(Lang.number(tank.getPrimaryHandler().getCapacity())
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
@@ -111,7 +111,7 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
 
-            CreateLang.number(getCollectionSpeed())
+            Lang.number(getCollectionSpeed())
                     .add(NorthstarLang.MB_PER_TICK)
                     .style(ChatFormatting.GOLD)
                     .forGoggles(tooltip, 1);

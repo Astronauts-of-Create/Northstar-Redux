@@ -5,7 +5,7 @@ import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -43,7 +43,7 @@ public class GoggleOverlayMixin {
                         .style(ChatFormatting.GRAY)
                         .forGoggles(tooltip);
 
-                CreateLang.number(consumption)
+                Lang.number(consumption)
                         .add(NorthstarLang.MB_PER_TICK)
                         .style(ChatFormatting.GOLD)
                         .forGoggles(tooltip, 1);

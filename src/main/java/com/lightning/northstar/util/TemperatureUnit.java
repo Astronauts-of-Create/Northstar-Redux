@@ -1,6 +1,6 @@
 package com.lightning.northstar.util;
 
-import net.createmod.catnip.lang.Lang;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.network.chat.Component;
 

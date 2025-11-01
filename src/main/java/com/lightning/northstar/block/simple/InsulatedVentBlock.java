@@ -65,7 +65,7 @@ public class InsulatedVentBlock extends VentBlock implements SealableBlock, IWre
             Level level = context.getLevel();
             BlockPos pos = context.getClickedPos();
 
-            IWrenchable.playRemoveSound(level, pos);
+            IWrenchable.super.playRemoveSound(level, pos);
             popResource(level, pos, new ItemStack(DyeHelper.getWoolOfDye(state.getValue(COLOR))));
             level.setBlock(pos, NorthstarBlocks.VENT.get().withPropertiesOf(state), Block.UPDATE_ALL);
             return InteractionResult.SUCCESS;

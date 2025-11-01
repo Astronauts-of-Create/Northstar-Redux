@@ -1,8 +1,7 @@
 package com.lightning.northstar.mixin.compat.tfmg;
 
-import com.drmangotea.tfmg.content.machinery.misc.exhaust.ExhaustBlockEntity;
+import com.drmangotea.tfmg.blocks.machines.exhaust.ExhaustBlockEntity;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,8 +33,8 @@ public class ExhaustBlockEntityMixin implements NorthstarOxygenConsumingBlockEnt
                     target = "Lnet/minecraftforge/fluids/capability/templates/FluidTank;drain(ILnet/minecraftforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/minecraftforge/fluids/FluidStack;",
                     remap = false),
             remap = false)
-    private void northstar$onDrain(CallbackInfo ci, @Local int drained) {
-        northstar$dumpedLastTick = Math.min(drained, tankInventory.getFluidAmount());
+    private void northstar$onDrain2(CallbackInfo ci) {
+        northstar$dumpedLastTick = Math.min(20, tankInventory.getFluidAmount());
     }
 
     @Override

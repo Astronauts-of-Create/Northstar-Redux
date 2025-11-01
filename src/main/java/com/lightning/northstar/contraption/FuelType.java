@@ -6,9 +6,9 @@ import com.lightning.northstar.data.Mod;
 import com.lightning.northstar.data.Tags;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -67,7 +67,7 @@ public record FuelType(
         }
 
         public Builder fluid(Fluid fluid) {
-            return fluid(CatnipServices.REGISTRIES.getKeyOrThrow(fluid));
+            return fluid(RegisteredObjects.getKeyOrThrow(fluid));
         }
 
         public Builder fluid(Mod mod, String tag) {

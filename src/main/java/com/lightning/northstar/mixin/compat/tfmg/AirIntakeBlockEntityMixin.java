@@ -1,22 +1,17 @@
 package com.lightning.northstar.mixin.compat.tfmg;
 
-import com.drmangotea.tfmg.content.machinery.misc.air_intake.AirIntakeBlockEntity;
-import com.drmangotea.tfmg.registry.TFMGFluids;
+import com.drmangotea.tfmg.blocks.engines.intake.AirIntakeBlockEntity;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
-import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import com.tterrag.registrate.util.entry.FluidEntry;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -32,7 +27,7 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         super(type, pos, state);
     }
 
-    @ModifyVariable(method = "produceAir",
+    @ModifyVariable(method = "tick",
             at = @At("STORE"),
             ordinal = 0,
             remap = false)
@@ -47,16 +42,6 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         northstar$lastConsumed = production;
         sealer.drainOxygen(production);
         return production;
-    }
-
-    @Redirect(method = "produceAir",
-            at = @At(value = "INVOKE",
-                    target = "Lcom/tterrag/registrate/util/entry/FluidEntry;getSource()Lnet/minecraftforge/fluids/ForgeFlowingFluid;",
-                    remap = false),
-            remap = false)
-    private ForgeFlowingFluid northstar$convertToHotAir(FluidEntry<?> instance) {
-        // Only handle air for now, other gases will be implemented with the new planet system.
-        return NorthstarTemperature.getTemperatureAt(level, worldPosition) >= 1000 ? TFMGFluids.HOT_AIR.getSource() : TFMGFluids.AIR.getSource();
     }
 
     @Override

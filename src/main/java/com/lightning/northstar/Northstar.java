@@ -6,6 +6,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.data.NorthstarPotatoCannonProjectiles;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.item.NorthstarPotions;
@@ -88,7 +89,7 @@ public class Northstar {
         NorthstarEntityTypes.register();
         NorthstarFluids.register();
         DefaultOxygenConsumers.register();
-        NorthstarPotatoProjectileEntityHitActions.register(modEventBus);
+        NorthstarPotatoCannonProjectiles.register();
 
         NorthstarTrunkPlacerTypes.register(modEventBus);
         NorthstarPartialModels.register();

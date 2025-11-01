@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.compat.tfmg;
 
-import com.drmangotea.tfmg.content.machinery.misc.exhaust.ExhaustBlock;
+import com.drmangotea.tfmg.blocks.machines.exhaust.ExhaustBlock;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import net.minecraft.MethodsReturnNonnullByDefault;

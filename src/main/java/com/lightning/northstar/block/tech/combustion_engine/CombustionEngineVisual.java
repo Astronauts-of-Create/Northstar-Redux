@@ -6,14 +6,18 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.math.Axis;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import net.minecraft.core.Direction;
 import org.joml.Quaternionf;
 
 public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockEntity> implements DynamicInstance {
 
-    private final RotatingInstance shaft;
+    private final RotatingData shaft;
     private final OrientedData piston1;
     private final OrientedData piston2;
     private final OrientedData piston3;
@@ -26,12 +30,12 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
 
         Direction facing = blockState.getValue(CombustionEngineBlock.HORIZONTAL_FACING);
 
-        shaft = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+        shaft = materialManager
+                .defaultSolid()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(AllPartialModels.SHAFT_HALF, entity.getBlockState(), facing)
                 .createInstance()
-                .rotateToFace(Direction.NORTH, facing)
-                .setup(blockEntity)
-                .setPosition(getVisualPosition());
+                .setRotationAxis(facing.getAxis());
 
         Quaternionf rotation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(facing));
 
@@ -79,7 +83,7 @@ public class CombustionEngineVisual extends ShaftInstance<CombustionEngineBlockE
     public void beginFrame() {
         float time = AnimationTickHolder.getRenderTime() * Math.signum(blockEntity.getSpeed()) * 2f;
 
-        shaft.setup(blockEntity).setChanged();
+        shaft.setRotationalSpeed(blockEntity.getSpeed());
         piston1.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time), 0);
         piston2.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time + 2), 0);
         piston3.setPosition(getInstancePosition()).nudge(0, getPistonOffset(time + 4), 0);

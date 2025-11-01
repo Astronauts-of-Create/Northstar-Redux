@@ -9,16 +9,18 @@ import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import net.minecraft.core.Direction;
 
-public class AtmosphericConcentratorVisual extends KineticBlockEntityInstance<OxygenConcentratorBlockEntity> implements DynamicInstance {
+public class AtmosphericConcentratorVisual extends KineticBlockEntityInstance<AtmosphericConcentratorBlockEntity> implements DynamicInstance {
 
     private final RotatingData shaft;
     private final RotatingData propeller;
 
-    public AtmosphericConcentratorVisual(MaterialManager materialManager, OxygenConcentratorBlockEntity entity) {
+    public AtmosphericConcentratorVisual(MaterialManager materialManager, AtmosphericConcentratorBlockEntity entity) {
         super(materialManager, entity);
 
-        shaft = instancerProvider()
-                .instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, Direction.DOWN))
+        shaft = (RotatingData) materialManager
+                .defaultSolid()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(AllPartialModels.SHAFT_HALF, entity.getBlockState(), Direction.DOWN)
                 .createInstance()
                 .setRotationAxis(Direction.Axis.Y)
                 .setPosition(getInstancePosition());

@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.compat.tfmg;
 
-import com.drmangotea.tfmg.content.machinery.misc.air_intake.AirIntakeBlock;
+import com.drmangotea.tfmg.blocks.engines.intake.AirIntakeBlock;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import com.lightning.northstar.world.sealer.SealableBlock;

@@ -179,16 +179,16 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
         if (NorthstarItemTags.OXYGEN_SOURCES.matches(item)) {
             CompoundTag tag = item.getTag();
             Lang.builder()
-                    .add(CreateLang.number(tag != null ? tag.getInt("Oxygen") : 0)
+                    .add(Lang.number(tag != null ? tag.getInt("Oxygen") : 0)
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(NorthstarOxygen.MAXIMUM_OXYGEN)
+                    .add(Lang.number(NorthstarOxygen.MAXIMUM_OXYGEN)
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
         } else {
-            CreateLang.text("Cannot hold oxygen")
+            Lang.text("Cannot hold oxygen")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip, 1);
         }
