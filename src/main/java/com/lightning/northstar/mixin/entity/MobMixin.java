@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin;
+package com.lightning.northstar.mixin.entity;
 
 import com.lightning.northstar.item.NorthstarEnchantments;
 import net.minecraft.world.entity.Entity;
