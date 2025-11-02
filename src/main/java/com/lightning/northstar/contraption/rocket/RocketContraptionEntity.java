@@ -1,6 +1,8 @@
 package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.config.CommonConfig;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
@@ -9,7 +11,6 @@ import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.util.mixinInterfaces.EntityMixin_I;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -131,11 +132,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     private void fixEntityMounting(AABB box) {
         for (Entity entity : level().getEntities(this, box)) {
-            ((EntityMixin_I) entity).setRidingRocket(this);
             if (entity.getVehicle() != this) {
-                if (entity.getVehicle() != null) {//If an entity is not riding the rocket, or is riding something else, unmount them
-                    entity.stopRiding();
-                }
+                passengerDismountRidable(entity);
                 if (!level().isClientSide//Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
                         && !(entity instanceof LivingEntity)
                         && !(entity instanceof SuperGlueEntity)
@@ -156,12 +154,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     @Override
     public void disassemble() {
         super.disassemble();
-
-        for (Entity entity : getEntitiesWithinContraption()) {
-            EntityMixin_I entity1 = (EntityMixin_I) entity;
-            entity1.setRidingRocket(null);
-        }
-
         RocketHandler.ROCKETS.remove(this);
     }
 
@@ -334,6 +326,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             // TODO: non-seated entities still bug out visually
             for (Entity entity : getEntitiesWithinContraption()) {
                 if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
+                    passengerDismountRidable(entity);
+
                     EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
                     if (lockInfo == null) { //Offset the player position by the rocket velocity
                         entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
@@ -350,8 +344,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 }
             }
         }
-
         slowing = false;
+    }
+
+    private static boolean dismountRideable = NorthstarConfigs.common().dismountRideableEntityWhenInRocket.get();
+
+    private void passengerDismountRidable(Entity passenger) {
+        if (dismountRideable && passenger.getVehicle() != null && passenger instanceof ServerPlayer) {
+            passenger.stopRiding();
+        }
     }
 
     public HashMap<UUID, EntityLockPacket.LockInfo> entityLockMap = new HashMap<>();
@@ -484,10 +485,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
             if (newPassenger == null) continue; // shouldn't happen unless this method is misused by another mod
-
             newPassenger.setPos(newRocket.position().add(data.offset));
-            ((EntityMixin_I) newPassenger).setRidingRocket(newRocket);
-
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
         }
