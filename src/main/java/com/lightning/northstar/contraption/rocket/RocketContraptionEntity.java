@@ -8,7 +8,7 @@ import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSoundEvents;
@@ -27,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -127,6 +128,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         tickActors();
 
         entitiesWithinContraption = level.getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1));
+        for (Entity entity : entitiesWithinContraption) {
+            if (entity instanceof ServerPlayer player) {
+                player.northstar$setPositionRelativeTo(this);
+            }
+        }
 
         if (launchTime > 0 && activeLaunch) {
             launchTime--;
@@ -343,7 +349,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
 
             if (data.seat != -1)
-                addSittingPassenger(newPassenger, data.seat);
+                newRocket.addSittingPassenger(newPassenger, data.seat);
         }
 
         if (controllingPlayer != null)

@@ -16,7 +16,7 @@
     },
     "particle": {
       "options": {
-        "type": "northstar:glowstone_particle"
+        "type": "northstar:glowstone"
       }
     }
   },

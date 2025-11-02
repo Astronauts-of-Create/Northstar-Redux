@@ -30,6 +30,7 @@ public class NorthstarParticles {
             COLD_AIR = simpleSprite("cold_air", () -> ColdAirParticle::new),
             DUST_CLOUD = simpleSprite("dust_cloud", () -> DustCloudParticle::new),
             GLOWSTONE = simpleSprite("glowstone", () -> GlowstoneParticle::new),
+            LEAK = simpleSprite("leak", () -> LeakParticle::new),
             OXY_FLOW = simpleSprite("oxy_flow", () -> OxyFlowParticle::new),
             ROCKET_FLAME = simpleSprite("rocket_flame", () -> RocketFlameParticle::new),
             ROCKET_FLAME_LANDING = simpleSprite("rocket_flame_landing", () -> RocketFlameLandingParticle::new),

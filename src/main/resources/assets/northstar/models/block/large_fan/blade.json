@@ -1,0 +1,25 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"texture_size": [16, 32],
+	"textures": {
+		"0": "northstar:block/fan_blade",
+		"particle": "northstar:block/fan_blade"
+	},
+	"elements": [
+		{
+			"from": [-3, 0, -0.25],
+			"to": [3, 16, 0.25],
+			"rotation": {"angle": -45, "axis": "y", "origin": [0, 0, 0]},
+			"faces": {
+				"north": {"uv": [2, 0, 14, 16], "texture": "#0"},
+				"east": {"uv": [2, 0, 3, 16], "texture": "#0"},
+				"south": {"uv": [14, 0, 2, 16], "texture": "#0"},
+				"west": {"uv": [13, 0, 14, 16], "texture": "#0"},
+				"up": {"uv": [2, 0, 14, 0.5], "texture": "#0"},
+				"down": {"uv": [2, 15.5, 14, 16], "texture": "#0"}
+			}
+		}
+	]
+}

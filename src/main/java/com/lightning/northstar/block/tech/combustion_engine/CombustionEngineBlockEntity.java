@@ -1,11 +1,11 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
-import com.lightning.northstar.block.tech.oxygen_concentrator.OxygenConcentratorBlock;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
@@ -36,14 +37,19 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity implements IHaveGoggleInformation {
 
     public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     public SmartFluidTankBehaviour tank;
+    protected float usageBuffer;
     protected float generatorSpeed;
     protected Fluid lastFluid;
     protected FuelType fuelType;
@@ -90,6 +96,8 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
         if (!fluid.getFluid().equals(lastFluid)) {
             lastFluid = fluid.getFluid();
             fuelType = FuelType.getFuelType(lastFluid);
+            if (fuelType != null && (fuelType.combustionEngineRpm() == 0 || fuelType.combustionEngineUse() == 0))
+                fuelType = null;
         }
 
         FuelType fuel = this.fuelType;
@@ -103,13 +111,17 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             return;
         }
 
-        if (fluid.getAmount() < fuel.combustionEngineEfficiency()) {
+        if (generatorSpeed > 0 && !isOverStressed())
+            usageBuffer += fuel.combustionEngineUse();
+        int drainable = Math.min(fluid.getAmount(), (int) usageBuffer);
+        tank.getPrimaryHandler().drain(drainable, IFluidHandler.FluidAction.EXECUTE);
+        usageBuffer -= drainable;
+
+        if (usageBuffer > 1) {
             setGeneratorSpeed(0);
         } else if (generatorSpeed == 0) {
             setGeneratorSpeed(fuel.combustionEngineRpm());
         }
-
-        tank.getPrimaryHandler().drain(fuel.combustionEngineEfficiency(), FluidAction.EXECUTE);
     }
 
     private void setGeneratorSpeed(float generatorSpeed) {
@@ -124,7 +136,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public void tickAudio() {
         super.tickAudio();
 
-        if (!Mth.equal(generatorSpeed, 0)) {
+        if (!Mth.equal(generatorSpeed, 0) && !isOverStressed()) {
             if (sound == null || sound.isStopped()) {
                 sound = new BasicTickableSoundInstance(NorthstarSounds.COMBUSTION_ENGINE.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
                 sound.setLooping(true);
@@ -147,8 +159,8 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER && side == getBlockState().getValue(OxygenConcentratorBlock.HORIZONTAL_FACING))
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+        if (cap == ForgeCapabilities.FLUID_HANDLER && (side == null || side == getBlockState().getValue(AtmosphericConcentratorBlock.HORIZONTAL_FACING)))
             return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }
@@ -183,8 +195,8 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             NorthstarLang.translate("gui.goggles.fuel_use")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            CreateLang.number(fuelType.combustionEngineEfficiency())
-                    .style(ChatFormatting.AQUA)
+            CreateLang.number(fuelType.combustionEngineUse())
+                    .style(ChatFormatting.GOLD)
                     .add(NorthstarLang.MB_PER_TICK)
                     .forGoggles(tooltip, 1);
         }

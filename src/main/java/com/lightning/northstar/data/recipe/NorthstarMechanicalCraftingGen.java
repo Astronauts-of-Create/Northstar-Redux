@@ -75,7 +75,7 @@ public class NorthstarMechanicalCraftingGen extends MechanicalCraftingRecipeGen 
                     .patternLine("T#T")
                     .disallowMirrored()),
 
-    OXYGEN_CONCENTRATOR = create(NorthstarBlocks.OXYGEN_CONCENTRATOR::get)
+    ATMOSPHERIC_CONCENTRATOR = create(NorthstarBlocks.ATMOSPHERIC_CONCENTRATOR::get)
             .returns(1)
             .recipe(b -> b.key('C', NorthstarItems.CIRCUIT)
                     .key('F', AllBlocks.FLUID_TANK)

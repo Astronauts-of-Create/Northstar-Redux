@@ -1,6 +1,10 @@
 package com.lightning.northstar.block.simple;
 
+import com.google.common.collect.Maps;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -11,130 +15,89 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-public class CrystalBlock extends Block implements SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+import java.util.Map;
+
+public class CrystalBlock extends Block implements ProperWaterloggedBlock {
+
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    protected final VoxelShape northAabb;
-    protected final VoxelShape southAabb;
-    protected final VoxelShape eastAabb;
-    protected final VoxelShape westAabb;
-    protected final VoxelShape upAabb;
-    protected final VoxelShape downAabb;
+    private static final int OFFSET = 4;
+    private static final int SIZE = 7;
+    public static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(Map.of(
+            Direction.UP, Block.box(OFFSET, 0, OFFSET, 16 - OFFSET, SIZE, 16 - OFFSET),
+            Direction.DOWN, Block.box(OFFSET, 16 - SIZE, OFFSET, 16 - OFFSET, 16, 16 - OFFSET),
+            Direction.NORTH, Block.box(OFFSET, OFFSET, 16 - SIZE, 16 - OFFSET, 16 - OFFSET, 16),
+            Direction.SOUTH, Block.box(OFFSET, OFFSET, 0, 16 - OFFSET, 16 - OFFSET, SIZE),
+            Direction.EAST, Block.box(0, OFFSET, OFFSET, SIZE, 16 - OFFSET, 16 - OFFSET),
+            Direction.WEST, Block.box(16 - SIZE, OFFSET, OFFSET, 16, 16 - OFFSET, 16 - OFFSET)));
 
-    public CrystalBlock(BlockBehaviour.Properties pProperties) {
-        super(pProperties);
-        int pOffset = 4;
-        int pSize = 7;
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, Boolean.FALSE).setValue(FACING, Direction.UP));
-        this.upAabb = Block.box((double)pOffset, 0.0D, (double)pOffset, (double)(16 - pOffset), (double)pSize, (double)(16 - pOffset));
-        this.downAabb = Block.box((double)pOffset, (double)(16 - pSize), (double)pOffset, (double)(16 - pOffset), 16.0D, (double)(16 - pOffset));
-        this.northAabb = Block.box((double)pOffset, (double)pOffset, (double)(16 - pSize), (double)(16 - pOffset), (double)(16 - pOffset), 16.0D);
-        this.southAabb = Block.box((double)pOffset, (double)pOffset, 0.0D, (double)(16 - pOffset), (double)(16 - pOffset), (double)pSize);
-        this.eastAabb = Block.box(0.0D, (double)pOffset, (double)pOffset, (double)pSize, (double)(16 - pOffset), (double)(16 - pOffset));
-        this.westAabb = Block.box((double)(16 - pSize), (double)pOffset, (double)pOffset, 16.0D, (double)(16 - pOffset), (double)(16 - pOffset));
-    }
-    @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return switch (pState.getValue(FACING)) {
-            case NORTH -> this.northAabb;
-            case SOUTH -> this.southAabb;
-            case EAST -> this.eastAabb;
-            case WEST -> this.westAabb;
-            case DOWN -> this.downAabb;
-            default -> this.upAabb;
-        };
+    public CrystalBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+
+        registerDefaultState(defaultBlockState()
+                .setValue(FACING, Direction.UP)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        Direction direction = pState.getValue(FACING);
-        BlockPos blockpos = pPos.relative(direction.getOpposite());
-        return pLevel.getBlockState(blockpos).isFaceSturdy(pLevel, blockpos, direction);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(FACING, WATERLOGGED));
     }
 
-       /**
-        * Update the provided state given the provided neighbor direction and neighbor state, returning a new state.
-        * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
-        * returns its solidified counterpart.
-        * Note that this method should ideally consider only the specific direction passed in.
-        */
     @Override
-    @SuppressWarnings("deprecation")
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-        BlockPos.MutableBlockPos blockpos = pCurrentPos.mutable();
-        for(Direction direction : Direction.values()) {
-            blockpos.setWithOffset(pCurrentPos, direction);
-            pLevel.scheduleTick(blockpos, pLevel.getBlockState(blockpos).getBlock(), 3);
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPES.get(state.getValue(FACING));
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockpos = pos.relative(direction.getOpposite());
+        return level.getBlockState(blockpos).isFaceSturdy(level, blockpos, direction);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        updateWater(level, state, pos);
+
+        MutableBlockPos neighbor = new MutableBlockPos();
+        for (Direction dir : Iterate.directions) {
+            neighbor.setWithOffset(pos, dir);
+            level.scheduleTick(neighbor, level.getBlockState(neighbor).getBlock(), 3);
         }
 
-
-        if (pState.getValue(WATERLOGGED)) {
-            pLevel.scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
-        }
-
-        return pDirection == pState.getValue(FACING).getOpposite() && ! pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
+        return direction == state.getValue(FACING).getOpposite() && !state.canSurvive(level, pos) ?
+                Blocks.AIR.defaultBlockState() :
+                super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        LevelAccessor levelaccessor = pContext.getLevel();
-        BlockPos blockpos = pContext.getClickedPos();
-        return this.defaultBlockState().setValue(WATERLOGGED, levelaccessor.getFluidState(blockpos).getType() == Fluids.WATER).setValue(FACING, pContext.getClickedFace());
-    }
-
-    /**
-     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#rotate} whenever
-     * possible. Implementing/overriding is fine.
-     */
-
-    @Deprecated
-    @Override
-    public BlockState rotate(BlockState pState, Rotation pRotation) {
-        return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
-    }
-
-    /**
-     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     * @deprecated call via {@link net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#mirror} whenever
-     * possible. Implementing/overriding is fine.
-     */
-    @Deprecated
-    @Override
-    public BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return withWater(defaultBlockState(), context).setValue(FACING, context.getClickedFace());
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(WATERLOGGED, FACING);
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
-    /**
-     * @deprecated call via {@link
-     * net.minecraft.world.level.block.state.BlockBehaviour.BlockStateBase#getPistonPushReaction} whenever possible.
-     * Implementing/overriding is fine.
-     */
-    @Deprecated
     @Override
-    public PushReaction getPistonPushReaction(BlockState pState) {
+    public FluidState getFluidState(BlockState state) {
+        return fluidState(state);
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.DESTROY;
     }
 

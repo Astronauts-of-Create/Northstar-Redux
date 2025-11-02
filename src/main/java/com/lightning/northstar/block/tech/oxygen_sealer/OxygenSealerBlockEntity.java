@@ -4,17 +4,20 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.SealingProvider;
+import com.lightning.northstar.world.oxygen.OxygenTrackingSealer;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
-import com.lightning.northstar.world.NorthstarOxygen;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -24,20 +27,27 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, SealingProvider {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, NorthstarOxygen.Provider {
 
-    protected final ProgressiveBlockSealer sealer = new ProgressiveBlockSealer();
-    protected SmartFluidTankBehaviour oxygenTank;
+    protected final OxygenTrackingSealer sealer = new OxygenTrackingSealer(SealingMode.OXYGEN);
+    protected SmartFluidTankBehaviour tank;
     protected int sealCooldown;
     protected float drain;
+    protected float pendingDrain;
+    protected float activeDrain;
     protected boolean active;
 
     protected int audioTick;
@@ -48,14 +58,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        behaviours.add(oxygenTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 1, 1000, true));
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (isFluidHandlerCap(cap) && (side == null || side == getBlockState().getValue(OxygenSealerBlock.HORIZONTAL_FACING).getOpposite()))
-            return oxygenTank.getCapability().cast();
-        return super.getCapability(cap, side);
+        behaviours.add(tank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 1, 1000, true));
     }
 
     @Override
@@ -73,46 +76,64 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+
+        level.northstar$oxygen().enqueueUpdates(sealer.getSealedBlocks());
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
         if (sealer.isSealInProgress()) {
             if (sealer.updateSeal(level, getMaximumSealedBlocks())) {
                 sealCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
+                level.northstar$oxygen().enqueueUpdates(sealer.getUpdatedBlocks());
             }
         } else if (sealCooldown-- <= 0) {
             sealer.beginSeal(level, worldPosition, Direction.UP);
         }
 
         if (sealer.hasLeak()) {
+            sealer.renderLeakPath(level);
             active = false;
             return;
         }
 
-        FluidStack fluid = oxygenTank.getPrimaryHandler().getFluid();
+        FluidStack fluid = tank.getPrimaryHandler().getFluid();
         if (!NorthstarOxygen.isOxygen(fluid.getFluid()) || fluid.isEmpty() || isOverStressed() || speed == 0f) {
             active = false;
             return;
         }
 
-        int drainable = Math.min((int) drain, fluid.getAmount());
-        oxygenTank.getPrimaryHandler().drain(drainable, IFluidHandler.FluidAction.EXECUTE);
-        drain -= drainable;
-        active = drain < 1;
+        int drainable = Math.min((int) pendingDrain, fluid.getAmount());
+        tank.getPrimaryHandler().drain(drainable, IFluidHandler.FluidAction.EXECUTE);
+        pendingDrain -= drainable;
+        active = pendingDrain < 1;
 
-        if (active) {
-            drain += sealer.getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF();
+        if (!active)
+            return;
 
-            if (level.isClientSide) {
-                if (audioTick++ % 13 == 0) {
-                    level.playLocalSound(worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0, false);
-                }
+        drain = sealer.getPassiveDrain() + sealer.getActiveDrain() + sealer.calculateDynamicConsumption(level) + activeDrain;
+        pendingDrain += drain;
+        activeDrain = 0;
+    }
 
-                if (level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
-                    level.addParticle(NorthstarParticles.OXY_FLOW.get(), worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, 0, 0, 0);
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void tickAudio() {
+        super.tickAudio();
 
-            }
+        if (!active)
+            return;
+
+        if (audioTick++ % 13 == 0) {
+            level.playLocalSound(worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0, false);
         }
+
+        if (level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
+            level.addParticle(NorthstarParticles.OXY_FLOW.get(), worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, 0, 0, 0);
     }
 
     @Override
@@ -129,44 +150,52 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         return active && sealer.getSealedBlocks().contains(BlockPos.asLong(x, y, z));
     }
 
+    @Override
+    public void drainOxygen(float oxygen) {
+        activeDrain += oxygen;
+    }
+
     public int getMaximumSealedBlocks() {
         return (int) (NorthstarConfigs.server().oxygenSealerBlocksPerRpm.get() * Math.abs(speed));
     }
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
-            tooltip.add(Component.empty());
-        }
-
         NorthstarLang.translate("gui.oxygen_sealer")
                 .forGoggles(tooltip);
 
-        sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks());
+        if (StressImpact.isEnabled())
+            addStressImpactStats(tooltip, calculateStressApplied());
+
+        sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks(), isPlayerSneaking);
         if (!sealer.hasLeak()) {
-            if (active) {
-                NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
-                        .style(ChatFormatting.GRAY)
-                        .forGoggles(tooltip);
-                CreateLang.number(sealer.getSealedBlockCount() * NorthstarConfigs.server().oxygenSealerOxygenPerBlockPerTick.getF())
-                        .style(ChatFormatting.AQUA)
-                        .add(NorthstarLang.MB_PER_TICK)
-                        .forGoggles(tooltip, 1);
-            } else {
-                NorthstarLang.translate("gui.oxygen_sealer.no_oxygen")
-                        .style(ChatFormatting.RED)
-                        .forGoggles(tooltip);
-            }
+            NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            CreateLang.number(drain)
+                    .style(ChatFormatting.GOLD)
+                    .add(NorthstarLang.MB_PER_TICK)
+                    .forGoggles(tooltip, 1);
+        }
+        NorthstarLang.addTankTooltip(tooltip, tank.getPrimaryHandler());
+
+        if (!active && !sealer.hasLeak()) {
+            NorthstarLang.translate("gui.oxygen_sealer.no_oxygen")
+                    .style(ChatFormatting.RED)
+                    .forGoggles(tooltip);
         }
 
         if (isPlayerSneaking)
             sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
 
-        tooltip.add(Component.empty());
-
-        containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(ForgeCapabilities.FLUID_HANDLER));
-
         return true;
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+        if (isFluidHandlerCap(cap) && (side == null || side == getBlockState().getValue(OxygenSealerBlock.HORIZONTAL_FACING).getOpposite()))
+            return tank.getCapability().cast();
+        return super.getCapability(cap, side);
     }
 
     public boolean isActive() {

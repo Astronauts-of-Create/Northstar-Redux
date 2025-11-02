@@ -2,26 +2,22 @@ package com.lightning.northstar.block.simple;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -29,71 +25,77 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedBlock{
+public class MercuryShelfFungusBlock extends Block implements ProperWaterloggedBlock {
+
     public static final int MIN_SHELVES = 1;
     public static final int MAX_SHELVES = 6;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty SHELVES = IntegerProperty.create("shelves", 1, 6);
-    protected static final float AABB_OFFSET = 2.5F;
-    private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(2D, 3.0D, 11.0D, 14D, 13.0D, 16.0D),
-            Direction.SOUTH, Block.box(2D, 3.0D, 0.0D, 14D, 13.0D, 5.0D), Direction.WEST, Block.box(11.0D, 3.0D, 2D, 16.0D, 13.0D, 14D),
-            Direction.EAST, Block.box(0.0D, 3.0D, 2D, 5.0D, 13.0D, 14D)));
-    
+    public static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
+            Direction.NORTH, Block.box(2D, 3, 11, 14, 13, 16),
+            Direction.SOUTH, Block.box(2D, 3, 0, 14, 13, 5),
+            Direction.WEST, Block.box(11, 3, 2D, 16, 13, 14),
+            Direction.EAST, Block.box(0, 3, 2D, 5, 13, 14)));
 
     public MercuryShelfFungusBlock(BlockBehaviour.Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(SHELVES, MIN_SHELVES));
-    }
-    @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return getShape(pState);
-    }
 
-    public static VoxelShape getShape(BlockState pState) {
-        return AABBS.get(pState.getValue(FACING));
+        registerDefaultState(defaultBlockState()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(SHELVES, MIN_SHELVES)
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState pState, BlockGetter pReader, BlockPos pPos) {
-        return pState.getFluidState().isEmpty();
-    }
-    @SuppressWarnings("deprecation")
-    @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
-        return pType == PathComputationType.AIR && !this.hasCollision ? true : super.isPathfindable(pState, pLevel, pPos, pType);
-    }
-
-    
-    
-    @Override
-    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
-        return pFacing.getOpposite() == pState.getValue(FACING) && ! pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : pState;
-    }
-    
-    @Override
-    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
-        return pUseContext.getItemInHand().is(this.asItem());
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(FACING, SHELVES, WATERLOGGED));
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        BlockState blockstate = this.defaultBlockState();
-        BlockState clickedState = pContext.getLevel().getBlockState(pContext.getClickedPos());
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return getShape(state);
+    }
+
+    public static VoxelShape getShape(BlockState state) {
+        return SHAPES.get(state.getValue(FACING));
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getFluidState().isEmpty();
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
+        return type == PathComputationType.AIR && !this.hasCollision || super.isPathfindable(state, level, pos, type);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        updateWater(level, state, pos);
+        return direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, pos) ? Blocks.AIR.defaultBlockState() : state;
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+        return context.getItemInHand().is(asItem());
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState blockstate = withWater(defaultBlockState(), context);
+        BlockState clickedState = context.getLevel().getBlockState(context.getClickedPos());
         if (clickedState.is(blockstate.getBlock())) {
             return clickedState.setValue(SHELVES, Math.min(MAX_SHELVES, clickedState.getValue(SHELVES) + 1));
         }
-        FluidState fluidState = pContext.getLevel().getFluidState(pContext.getClickedPos());
-        LevelReader levelreader = pContext.getLevel();
-        BlockPos blockpos = pContext.getClickedPos();
-        Direction[] adirection = pContext.getNearestLookingDirections();
-              
-        for(Direction direction : adirection) {
+        LevelReader level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+
+        for (Direction direction : context.getNearestLookingDirections()) {
             if (direction.getAxis().isHorizontal()) {
-                Direction direction1 = direction.getOpposite();
-                blockstate = blockstate.setValue(FACING, direction1);
-                if (blockstate.canSurvive(levelreader, blockpos)) {
-                    return blockstate.setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
+                blockstate = blockstate.setValue(FACING, direction.getOpposite());
+                if (blockstate.canSurvive(level, pos)) {
+                    return blockstate;
                 }
             }
         }
@@ -102,35 +104,16 @@ public class MercuryShelfFungusBlock extends Block implements SimpleWaterloggedB
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public FluidState getFluidState(BlockState pState) {
-        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
-    }
-
-
-    @Override
-    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        Direction direction = pState.getValue(FACING);
-        BlockPos blockpos = pPos.relative(direction.getOpposite());
-        BlockState blockstate = pLevel.getBlockState(blockpos);
-        return blockstate.isFaceSturdy(pLevel, blockpos, direction);
+    public FluidState getFluidState(BlockState state) {
+        return fluidState(state);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, WATERLOGGED, SHELVES);
-    }
-    public BlockState getStateForGeneration(BlockState state, WorldGenLevel level, BlockPos blockpos1, Direction direction) {
-        BlockState blockstate = this.defaultBlockState();
-        for(Direction dir : Direction.Plane.HORIZONTAL) {
-            if(level.getBlockState(blockpos1.relative(dir)).isSolidRender(level, blockpos1.relative(dir))) {
-                blockstate = blockstate.setValue(FACING, dir);
-            }
-        }
-        if(blockstate != this.defaultBlockState())
-            return blockstate;
-        else
-            return null;
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockpos = pos.relative(direction.getOpposite());
+        BlockState blockstate = level.getBlockState(blockpos);
+        return blockstate.isFaceSturdy(level, blockpos, direction);
     }
 
 }

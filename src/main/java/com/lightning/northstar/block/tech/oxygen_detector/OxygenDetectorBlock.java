@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.oxygen_detector;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.foundation.block.IBE;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,6 +19,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class OxygenDetectorBlock extends DirectionalBlock implements IBE<OxygenDetectorBlockEntity> {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -33,6 +38,13 @@ public class OxygenDetectorBlock extends DirectionalBlock implements IBE<OxygenD
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(FACING, POWERED));
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        if (context.getPlayer() != null && context.getPlayer().isCrouching())
+            return defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
+        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
@@ -58,13 +70,6 @@ public class OxygenDetectorBlock extends DirectionalBlock implements IBE<OxygenD
     @Override
     public int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return getSignal(state, level, pos, direction);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if (context.getPlayer().isCrouching())
-            return defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
-        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override

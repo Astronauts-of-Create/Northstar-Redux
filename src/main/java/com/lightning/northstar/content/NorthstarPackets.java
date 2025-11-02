@@ -9,6 +9,7 @@ import com.lightning.northstar.contraption.ActorConfigPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
+import com.lightning.northstar.network.packet.RelativeTeleportPacket;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,10 +41,11 @@ public enum NorthstarPackets {
     ROCKET_SYNC(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket::new, PLAY_TO_CLIENT),
     ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket::new, PLAY_TO_CLIENT),
     ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket::new, PLAY_TO_CLIENT),
-    ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket::new, PLAY_TO_CLIENT);
+    ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket::new, PLAY_TO_CLIENT),
+    RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
-    public static final int NETWORK_VERSION = 4;
+    public static final int NETWORK_VERSION = 5;
     public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
     private static SimpleChannel channel;
 

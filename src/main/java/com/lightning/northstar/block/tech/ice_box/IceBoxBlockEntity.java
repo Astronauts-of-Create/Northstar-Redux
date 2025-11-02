@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.NorthstarTemperature;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -337,9 +337,14 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         NorthstarLang.translate("gui.goggles.ice_box_contents")
                 .forGoggles(tooltip);
 
+        NorthstarLang.translate("gui.goggles.generic.temperature")
+                .style(ChatFormatting.GRAY)
+                .forGoggles(tooltip);
+        NorthstarLang.temperature(NorthstarTemperature.getTemperatureAt(level, worldPosition))
+                .forGoggles(tooltip, 1);
+
         IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
         IFluidHandler fluids = fluidCapability.orElse(null);
-        boolean isEmpty = true;
 
         for (int i = 0; i < items.getSlots(); i++) {
             ItemStack stackInSlot = items.getStackInSlot(i);
@@ -351,7 +356,6 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
                     .add(CreateLang.text(" x" + stackInSlot.getCount())
                             .style(ChatFormatting.GREEN))
                     .forGoggles(tooltip, 1);
-            isEmpty = false;
         }
         LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
         for (int b = 0; b < fluids.getTanks(); b++) {
@@ -372,11 +376,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
                                 .style(ChatFormatting.DARK_GRAY))
                         .forGoggles(tooltip, 1);
             }
-            isEmpty = false;
         }
-
-        if (isEmpty)
-            tooltip.remove(0);
 
         return true;
     }

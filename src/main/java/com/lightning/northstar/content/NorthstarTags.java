@@ -59,6 +59,7 @@ public class NorthstarTags {
 
     public enum NorthstarFluidTags implements Tags.Tag<Fluid> {
 
+        BREATHABLE,
         COMPAT_CBC_MOLTEN_CAST_IRON,
         COMPAT_CDG_BIODIESEL,
         COMPAT_TFMG_KEROSENE,
@@ -84,6 +85,8 @@ public class NorthstarTags {
         C_SULFURIC_ACID(COMMON, "sulfuric_acid"),
         C_TITANIUM_TETRACHLORIDE(COMMON, "titanium_tetrachloride"),
         C_VANILLA_ICE_CREAM(COMMON, "vanilla_ice_cream"),
+        /** @deprecated poor naming, use {@link #BREATHABLE} instead. */
+        @Deprecated(since = "0.5.0", forRemoval = true)
         IS_OXY;
 
         public final TagKey<Fluid> tag;
@@ -161,6 +164,7 @@ public class NorthstarTags {
         C_ORES_TITANIUM(COMMON, "ores/titanium"),
         C_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
         C_ORES_ZINC(COMMON, "ores/zinc"),
+        C_STONES(COMMON, "stone"),
         HEAVY_BLOCKS,
         MARS_BLOCKS,
         MARS_DEEP_STONE_REPLACEABLE,
@@ -261,6 +265,7 @@ public class NorthstarTags {
         C_SHEETS_MARTIAN_STEEL(COMMON, "plates/martian_steel"),
         C_SHEETS_TITANIUM(COMMON, "plates/titanium"),
         C_SHEETS_TUNGSTEN(COMMON, "plates/tungsten"),
+        C_STONES(COMMON, "stones"),
         C_STRIPPED_LOGS(COMMON, "stripped_logs"),
         HEAT_RESISTANT,
         /** Items that can be used to light up extinguished torches/lanterns */

@@ -17,7 +17,7 @@ public class NorthstarToolTiers {
     static {
         MARTIAN_STEEL = TierSortingRegistry.registerTier(
                 new ForgeTier(4,
-                        4000,
+                        1800,
                         9f,
                         5f,
                         30,
