@@ -100,12 +100,6 @@ public class Northstar {
         NorthstarConfigs.register(modContext::registerConfig);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus, forgeEventBus));
-
-        ModLoadingContext.get().registerConfig(
-                net.minecraftforge.fml.config.ModConfig.Type.COMMON, // The config should be for both client and server
-                ModConfig.SPEC,        // The config specification we created
-                MOD_ID + "-common.toml" // The name of the file to save in the 'config' folder
-        );
     }
 
 
