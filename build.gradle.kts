@@ -113,7 +113,7 @@ dependencies {
     forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
 
     modImplementation(libs.jei.forge)
-    modCompileOnly(libs.copycats)
+    modImplementation(libs.copycats)
     modImplementation(libs.cdg)
     modImplementation(libs.tfmg)
 

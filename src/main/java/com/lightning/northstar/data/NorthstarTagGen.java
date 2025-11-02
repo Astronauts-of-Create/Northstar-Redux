@@ -1,6 +1,8 @@
 package com.lightning.northstar.data;
 
+import com.drmangotea.tfmg.registry.TFMGBlocks;
 import com.drmangotea.tfmg.registry.TFMGFluids;
+import com.jesz.createdieselgenerators.CDGBlocks;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
@@ -56,6 +58,7 @@ public class NorthstarTagGen {
         }
 
         tags.tag(NorthstarBlockTags.AIR_PASSES_THROUGH)
+                .add(NorthstarBlockTags.BLOCKS_AIR)
                 .add(Blocks.OAK_DOOR, Blocks.OAK_TRAPDOOR, Blocks.JUNGLE_DOOR, Blocks.JUNGLE_TRAPDOOR,
                         Blocks.ACACIA_DOOR, Blocks.ACACIA_TRAPDOOR, Blocks.MANGROVE_TRAPDOOR,
                         Blocks.CHERRY_DOOR, Blocks.CHERRY_TRAPDOOR, Blocks.BAMBOO_DOOR, Blocks.BAMBOO_TRAPDOOR,
@@ -104,7 +107,10 @@ public class NorthstarTagGen {
                         Blocks.PURPLE_STAINED_GLASS_PANE,
                         Blocks.MAGENTA_STAINED_GLASS_PANE,
                         Blocks.PINK_STAINED_GLASS_PANE)
-                .add(BlockTags.WALLS);
+                .add(BlockTags.WALLS)
+                .add(Blocks.FURNACE, Blocks.BLAST_FURNACE, Blocks.SMOKER)
+                .opt(CDGBlocks.HUGE_DIESEL_ENGINE.get())
+                .opt(TFMGBlocks.LARGE_ENGINE.get());
 
         tags.tag(NorthstarBlockTags.MARS_DEEP_STONE_REPLACEABLE)
                 .add(Blocks.TUFF)

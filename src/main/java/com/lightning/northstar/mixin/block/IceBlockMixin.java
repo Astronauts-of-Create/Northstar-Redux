@@ -26,7 +26,7 @@ public abstract class IceBlockMixin implements SealableBlock, SealReactiveBlock 
 
     @Override
     public boolean northstar$isFaceSealed(BlockGetter level, BlockPos pos, BlockState state, Direction direction, boolean source, SealingMode mode) {
-        return source || mode != SealingMode.TEMPERATURE; // allow temperature to propagate inside the block
+        return source;
     }
 
     @Override
