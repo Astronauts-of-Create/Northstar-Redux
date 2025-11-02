@@ -1,5 +1,6 @@
 package com.lightning.northstar.mixin;
 
+import com.lightning.northstar.ModConfig;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.util.mixinInterfaces.EntityMixin_I;
@@ -37,8 +38,8 @@ public abstract class EntityMixin implements EntityMixin_I {
     @Inject(method = "startRiding(Lnet/minecraft/world/entity/Entity;Z)Z",
             at = @At("HEAD"), cancellable = true)
     private void northstar$StartRiding(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> cir) {
-        //We must use a mixin to be more proactive in stopping the player from riding when they should not
-        if ((Object) this instanceof ServerPlayer /*LivingEntity*/ self) {
+        if (ModConfig.dismountRideableEntitiesInRockets
+                && (Object) this instanceof ServerPlayer /*LivingEntity*/ self) {
             EntityMixin_I mix = (EntityMixin_I) self;
             if (mix.getRidingRocket() != null && vehicle != mix.getRidingRocket()) {
                 Northstar.LOGGER.warn("Passenger trying to mount non-rocket while already in a rocket.");

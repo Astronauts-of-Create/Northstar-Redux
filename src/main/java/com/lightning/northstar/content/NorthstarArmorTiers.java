@@ -21,7 +21,7 @@ public record NorthstarArmorTiers(String name,
                                   float knockbackResistance,
                                   Supplier<Ingredient> repairMaterial) implements ArmorMaterial {
 
-    private static final int[] DURABILITY_PER_SLOT = new int[] { 15, 20, 18, 15 };
+    private static final int[] DURABILITY_PER_SLOT = new int[] { 11, 16, 15, 13 };
 
     @Override
     public int getDurabilityForType(ArmorItem.@NotNull Type type) {
@@ -65,7 +65,7 @@ public record NorthstarArmorTiers(String name,
 
     public static final ArmorMaterial MARTIAN_STEEL_ARMOR = new NorthstarArmorTiers(
             "martian_steel_armor",
-            300,
+            30,
             new int[] { 3, 8, 6, 3 },
             25,
             SoundEvents.ARMOR_EQUIP_IRON,
@@ -75,7 +75,7 @@ public record NorthstarArmorTiers(String name,
 
     public static final ArmorMaterial IRON_SPACE_SUIT = new NorthstarArmorTiers(
             "iron_space_suit",
-            300,
+            20,
             new int[] { 2, 7, 5, 2 },
             25,
             SoundEvents.ARMOR_EQUIP_IRON,
@@ -85,7 +85,7 @@ public record NorthstarArmorTiers(String name,
 
     public static final ArmorMaterial MARTIAN_STEEL_SPACE_SUIT = new NorthstarArmorTiers(
             "martian_steel_space_suit",
-            300,
+            35,
             new int[] { 3, 8, 6, 3 },
             25,
             SoundEvents.ARMOR_EQUIP_IRON,

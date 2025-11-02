@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -45,6 +46,7 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -127,12 +129,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         landingMode = false;
     }
 
-    private void fixEntityMounting(boolean inflatedAABB) {
-        for (Entity entity :
-                inflatedAABB ?
-                        level().getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1)) :
-                        level().getEntities(this, getBoundingBox())
-        ) {
+    private void fixEntityMounting(AABB box) {
+        for (Entity entity : level().getEntities(this, box)) {
             ((EntityMixin_I) entity).setRidingRocket(this);
             if (entity.getVehicle() != this) {
                 if (entity.getVehicle() != null) {//If an entity is not riding the rocket, or is riding something else, unmount them
@@ -186,6 +184,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         tickActors();
 
         entitiesWithinContraption = level.getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1));
+        for (Entity entity : entitiesWithinContraption) {
+            if (entity instanceof ServerPlayer player) {
+                player.northstar$setPositionRelativeTo(this);
+            }
+        }
 
         if (launchTime > 0 && activeLaunch) {
             launchTime--;
@@ -194,7 +197,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (launchingMode && launchTime == 0 && activeLaunch) {//Start blasting off
             if (!blasting) {//Only do this once
                 blasting = true;
-                fixEntityMounting(false);
+                fixEntityMounting(getBoundingBox());
             }
             if (!fuelBurned) { //We only burn the fuel once
                 Northstar.LOGGER.debug("BURNING FUEL");
@@ -239,7 +242,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (contraption.owner != null && !printed) {
             displayInfo();
-            fixEntityMounting(false);
+            fixEntityMounting(getBoundingBox());
             printed = true;
         }
 
@@ -492,7 +495,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (controllingPlayer != null)
             NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new RocketControlPacket(controllingPlayer, getId(), getContraption().localControlsPos));
 
-        fixEntityMounting(true);
+        fixEntityMounting(getBoundingBox());
         return newRocket;
     }
 

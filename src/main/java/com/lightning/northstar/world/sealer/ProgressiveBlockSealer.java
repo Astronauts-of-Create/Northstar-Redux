@@ -290,7 +290,8 @@ public class ProgressiveBlockSealer {
         if (cooldown > 0) {
             NorthstarLang.translate("gui.goggles.sealer.cooldown")
                     .style(ChatFormatting.GRAY)
-                    .add(CreateLang.number(Math.round(cooldown / 20f)))
+                    .add(CreateLang.number(Math.round(cooldown / 20f))
+                            .style(ChatFormatting.AQUA))
                     .forGoggles(tooltip);
         } else {
             NorthstarLang.translate("gui.goggles.sealer.sealing")
