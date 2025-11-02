@@ -57,7 +57,7 @@ public abstract class ServerLevelMixin extends Level implements NorthstarLevel {
     public void getSeed(CallbackInfoReturnable<Long> info) {
         long offset = NorthstarPlanets.getSeedOffset(dimension());
         if (offset != 0)
-            info.setReturnValue(info.getReturnValueI() + offset);
+            info.setReturnValue(info.getReturnValueJ() + offset);
     }
 
 }
