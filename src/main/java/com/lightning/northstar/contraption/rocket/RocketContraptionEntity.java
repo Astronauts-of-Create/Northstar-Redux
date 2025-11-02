@@ -111,7 +111,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
             if (getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT) {
                 transportDelay = Math.min(40, transportDelay + 1);
                 if (transportDelay == 40 && level instanceof ServerLevel sl) {
-                    changeDimension(new DimensionTransition(sl.getServer().getLevel(destination), this, DimensionTransition.DO_NOTHING));
+                    changeDimension(new DimensionTransition(sl.getServer().getLevel(destination), this.position(), Vec3.ZERO, getYRot(), getXRot(), DimensionTransition.DO_NOTHING));
                 }
             }
         } else {
@@ -320,7 +320,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
         newRocket.transportDelay = 40;
 
         for (PassengerData data : passengers) {
-            Entity newPassenger = data.entity.changeDimension(transition);
+            Entity newPassenger = data.entity.changeDimension(new DimensionTransition(transition.newLevel(), data.entity.position(), Vec3.ZERO, data.entity.getYRot(), data.entity.getXRot(), DimensionTransition.DO_NOTHING));
             if (newPassenger == null)
                 continue; // shouldn't happen unless this method is misused by another mod
 
