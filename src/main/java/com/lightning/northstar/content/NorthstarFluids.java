@@ -199,7 +199,7 @@ public class NorthstarFluids {
 
     public static final FluidEntry<BaseFlowingFluid.Flowing> BIOFUEL = REGISTRATE
             .standardFluid("biofuel",
-                    SolidRenderedPlaceableFluidType.create(0xFFFFFF, 0xFFFFFF,
+                    SolidRenderedPlaceableFluidType.create(0x9ac846, 0xffffffff,
                             () -> 1f / 8f * 0.25f))
             .properties(b -> b.viscosity(1000)
                     .density(1400))
