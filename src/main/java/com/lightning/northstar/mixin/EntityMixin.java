@@ -22,13 +22,13 @@ public abstract class EntityMixin implements EntityMixin_I {
 //    @Unique
 //    RocketContraptionEntity ridingRocket = null;
 //
-//    public RocketContraptionEntity getRidingRocket() {//TODO: theres gotta be a better way to do this without adding data to all entities (But I think a global hashmap would be worse)
+    public RocketContraptionEntity getRidingRocket() {
 //        Entity self = (Entity) (Object) this;
 //        if (ridingRocket != null &&
 //                (!ridingRocket.isAlive() || !ridingRocket.getEntitiesWithinContraption().contains(self))
 //        ) ridingRocket = null;
-//        return ridingRocket;
-//    }
+        return null;
+    }
 //
     public void setRidingRocket(RocketContraptionEntity rocket) {
 ////        ridingRocket = rocket;
