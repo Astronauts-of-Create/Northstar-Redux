@@ -1,8 +1,7 @@
 package com.lightning.northstar.data;
 
-import com.drmangotea.tfmg.registry.TFMGBlocks;
 import com.drmangotea.tfmg.registry.TFMGFluids;
-import com.jesz.createdieselgenerators.CDGBlocks;
+import com.jesz.createdieselgenerators.blocks.BlockRegistry;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
@@ -109,8 +108,7 @@ public class NorthstarTagGen {
                         Blocks.PINK_STAINED_GLASS_PANE)
                 .add(BlockTags.WALLS)
                 .add(Blocks.FURNACE, Blocks.BLAST_FURNACE, Blocks.SMOKER)
-                .opt(CDGBlocks.HUGE_DIESEL_ENGINE.get())
-                .opt(TFMGBlocks.LARGE_ENGINE.get());
+                .opt(BlockRegistry.HUGE_DIESEL_ENGINE.get());
 
         tags.tag(NorthstarBlockTags.MARS_DEEP_STONE_REPLACEABLE)
                 .add(Blocks.TUFF)
