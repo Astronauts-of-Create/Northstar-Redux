@@ -9,6 +9,7 @@ import com.lightning.northstar.contraption.ActorConfigPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
+import com.lightning.northstar.network.packet.RelativeTeleportPacket;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -29,9 +30,10 @@ public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
     ROCKET_SYNC(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket.STREAM_CODEC),
     ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket.STREAM_CODEC),
     ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket.STREAM_CODEC),
-    ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket.STREAM_CODEC);
+    ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket.STREAM_CODEC),
+    RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC);
 
-    public static final int NETWORK_VERSION = 4;
+    public static final int NETWORK_VERSION = 5;
 
     private final CatnipPacketRegistry.PacketType<?> type;
 

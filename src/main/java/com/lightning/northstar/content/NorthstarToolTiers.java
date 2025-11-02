@@ -12,7 +12,7 @@ public class NorthstarToolTiers {
     static {
         MARTIAN_STEEL = new SimpleTier(
                 Tags.Blocks.NEEDS_NETHERITE_TOOL,
-                4000,
+                1800,
                 9f,
                 5f,
                 30,
