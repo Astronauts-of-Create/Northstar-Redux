@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.LevelAccessor;
@@ -21,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RocketControlsClientHandler {
 
@@ -42,11 +45,28 @@ public class RocketControlsClientHandler {
     }
 
     public static void startControlling(RocketContraptionEntity rce, BlockPos controllerLocalPos) {
+        if (NorthstarConfigs.common().forceAllPassengersSeatedInRocket.get()) {
+            AtomicBoolean allPlayersSeated = new AtomicBoolean(true);
+            rce.getEntitiesWithinContraption().forEach(entity -> {
+                if (entity instanceof ServerPlayer player) {
+                    if (player.getVehicle() != rce) {
+                        allPlayersSeated.set(false);
+                    }
+                }
+            });
+            if (!allPlayersSeated.get()) {
+                stopControlling();
+                Minecraft.getInstance().player.displayClientMessage(
+                        Component.translatable("northstar.contraption.controls.sit_down").withStyle(ChatFormatting.AQUA), true);
+                return;
+            }
+        }
+
         entityRef = new WeakReference<>(rce);
         controlsPos = controllerLocalPos;
         displaytime = 0;
 
-        if (rce != null && rce.isLaunchingOrLanding()) {
+        if (rce != null && rce.isInFlight()) {
             Minecraft.getInstance().player.displayClientMessage(
                     CreateLang.translateDirect("contraption.controls.start_controlling", rce.getContraptionName()), true);
         } else {
@@ -137,14 +157,14 @@ public class RocketControlsClientHandler {
         if (!releasedKeys.isEmpty()) {
             NorthstarPackets.getChannel()
                     .sendToServer(new RocketControlsInputPacket(releasedKeys, false, rce.getId(), controlsPos, false));
-    // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
+            // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
         }
 
         // Newly Pressed Keys
         if (!newKeys.isEmpty()) {
             NorthstarPackets.getChannel().sendToServer(new RocketControlsInputPacket(newKeys, true, rce.getId(), controlsPos, false));
             packetCooldown = PACKET_RATE;
-    // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
+            // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
         }
 
         // Keepalive Pressed Keys
