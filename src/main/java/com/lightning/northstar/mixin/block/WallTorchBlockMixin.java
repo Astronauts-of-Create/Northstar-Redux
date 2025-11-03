@@ -50,9 +50,10 @@ public class WallTorchBlockMixin extends Block implements LiquidBlockContainer, 
 
     @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
     public void northstar$updatePlacementShape(BlockPlaceContext context, CallbackInfoReturnable<BlockState> info) {
-        if (!NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos())) {
-            BlockState state = info.getReturnValue() == null ? defaultBlockState() : info.getReturnValue();
-
+        BlockState state = info.getReturnValue();
+        if (state != null &&
+                state.getBlock() == Blocks.WALL_TORCH &&
+                !NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos())) {
             info.setReturnValue(northstar$copyStateExtinguished(state));
         }
     }
@@ -87,9 +88,9 @@ public class WallTorchBlockMixin extends Block implements LiquidBlockContainer, 
 
     @Override
     public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (fluidState.getType() != Fluids.WATER) {
+        if (fluidState.getType() != Fluids.WATER || state.getBlock() != Blocks.WALL_TORCH) {
             if (fluidState.getType() instanceof FlowingFluidAccessor flowing)
-                flowing.beforeDestroyingBlock(level, pos, state);
+                flowing.northstar$beforeDestroyingBlock(level, pos, state);
             level.setBlock(pos, fluidState.createLegacyBlock(), 3);
             return true;
         }
