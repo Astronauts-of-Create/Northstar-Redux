@@ -1,7 +1,6 @@
 package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.config.CommonConfig;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
@@ -18,7 +17,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
-import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -47,7 +45,6 @@ import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -61,26 +58,22 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-
-/**
- * TODO: Rocket launch / seating bugs
- * 1. players sitting in rideable entities, no clip through the rocket?
- *  - currently solved this by not allowing a player to sit in a rideable entity when in a rocket
- * <p>
- * 2. players sitting down can no clip through the rocket when they dismount
- * - currently solved by soft-locking player in place for 10 ticks but could be improved (might not be foolproof)
- * - the issue was that when the player dismounts, their dismount location could be different from the rocket's position, when the rocket is moving fast, updating dismount location to account for this isn't enough.
- * <p>
- * 3. when a boat/card is on the ship, if the player gets too close, they will noclip through the ship
- * - possible solutions
- * - break boat/minecart?
- * - disable collisions of said entities?
- * - understand why this happens in the first place, and fix it at that level instead of trying to patch it?
- * <p>
- * 4. non-seated entities still bug out visually
- * - This is a client side issue where entities arent being rendered as if they are riding the rocket (the client likely interpolates the position of the entity from the server, but doesn't keep it synchronized with the rocket's position)
- */
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
+    /**
+     * TODO: Rocket launch / seating bugs
+     * 1. players sitting in rideable entities, no clip through the rocket?
+     *  - currently solved this by not allowing a player to sit in a rideable entity when in a rocket
+     * 2. players sitting down can no clip through the rocket when they dismount
+     * - currently solved by soft-locking player in place for 10 ticks but could be improved (might not be foolproof)
+     * - the issue was that when the player dismounts, their dismount location could be different from the rocket's position, when the rocket is moving fast, updating dismount location to account for this isn't enough.
+     * 3. when a boat/card is on the ship, if the player gets too close, they will noclip through the ship
+     * - possible solutions
+     * - break boat/minecart?
+     * - disable collisions of said entities?
+     * - understand why this happens in the first place, and fix it at that level instead of trying to patch it?
+     * 4. non-seated entities still bug out visually
+     * - This is a client side issue where entities arent being rendered as if they are riding the rocket (the client likely interpolates the position of the entity from the server, but doesn't keep it synchronized with the rocket's position)
+     */
 
     /**
      * In ticks
@@ -122,27 +115,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     private int transportDelay;
 
+    public Map<UUID, EntityLockPacket.LockInfo> entityLockMap = new HashMap<>();
+    private static boolean dismountRideable = NorthstarConfigs.common().dismountRideableEntityWhenInRocket.get();
+
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
         noCulling = true;
         lift_vel = 0.5f;
         launchingMode = true;
         landingMode = false;
-    }
-
-    private void fixEntityMounting(AABB box) {
-        for (Entity entity : level().getEntities(this, box)) {
-            if (entity.getVehicle() != this) {
-                passengerDismountRidable(entity);
-                if (!level().isClientSide//Temporary solution to prevent large entities like boats from jostling the player and shoving them out of the rocket
-                        && !(entity instanceof LivingEntity)
-                        && !(entity instanceof SuperGlueEntity)
-                        && !(entity instanceof ItemEntity)) {
-                    lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
-                    entity.startRiding(this, true);
-                }
-            }
-        }
     }
 
     public static RocketContraptionEntity create(Level world, Contraption contraption) {
@@ -175,7 +156,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         tickActors();
 
-        entitiesWithinContraption = level.getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1));
+        //We want to inflate the bounding box only if the rocket is above ground
+        if (isInFlight())
+            entitiesWithinContraption = level.getEntities(this, getBoundingBox().inflate(1, MAX_SPEED * 4, 1));
+        else
+            entitiesWithinContraption = level.getEntities(this, getBoundingBox());
+
         for (Entity entity : entitiesWithinContraption) {
             if (entity instanceof ServerPlayer player) {
                 player.northstar$setPositionRelativeTo(this);
@@ -189,7 +175,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (launchingMode && launchTime == 0 && activeLaunch) {//Start blasting off
             if (!blasting) {//Only do this once
                 blasting = true;
-                fixEntityMounting(getBoundingBox());
+                //Make sure all passengers within immediate bounding box are mounted
+                for (Entity entity : entitiesWithinContraption) {
+                    fixEntityMounting(entity);
+                }
             }
             if (!fuelBurned) { //We only burn the fuel once
                 Northstar.LOGGER.debug("BURNING FUEL");
@@ -234,7 +223,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (contraption.owner != null && !printed) {
             displayInfo();
-            fixEntityMounting(getBoundingBox());
             printed = true;
         }
 
@@ -291,7 +279,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         tickActors();
 
-        if (isLaunchingOrLanding() && collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
+        if (isInFlight() && collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
             if (!level.isClientSide) {
                 level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
                 if ((Math.abs(final_lift_vel) < 3 || hasExploded)) {
@@ -337,7 +325,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                                 position().y + lockInfo.offset().y,
                                 position().z + lockInfo.offset().z);
                         if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {//remove soft-lock after a few ticks
-                            lockInfo.ticks().getAndAdd(-1);
+                            lockInfo.ticks().decrementAndGet();
                             if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
                         }
                     }
@@ -347,7 +335,19 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         slowing = false;
     }
 
-    private static boolean dismountRideable = NorthstarConfigs.common().dismountRideableEntityWhenInRocket.get();
+    private void fixEntityMounting(Entity entity) {
+        if (!level().isClientSide) {
+            if (entity.getVehicle() != this) {
+                passengerDismountRidable(entity);
+                if (!(entity instanceof LivingEntity) &&
+                        !(entity instanceof SuperGlueEntity) &&
+                        !(entity instanceof ItemEntity)) {
+                    lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
+                    entity.startRiding(this, true);
+                }
+            }
+        }
+    }
 
     private void passengerDismountRidable(Entity passenger) {
         if (dismountRideable && passenger.getVehicle() != null && passenger instanceof ServerPlayer) {
@@ -355,7 +355,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
     }
 
-    public HashMap<UUID, EntityLockPacket.LockInfo> entityLockMap = new HashMap<>();
 
     /**
      * Add a soft-release entry, to lock the player in for a few ticks (This should happen on the server side)
@@ -370,11 +369,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         BlockPos seatPos = contraption.getSeatOf(passenger.getUUID());
         if (seatPos != null) {
-            Northstar.LOGGER.info("Locking " + passenger + " to seat for " + ticks + " ticks");
+            Northstar.LOGGER.debug("Locking {} to seat for {} ticks", passenger, ticks);
             Vec3 offset = VecHelper.getCenterOf(seatPos);//.add(0, passenger.getBoundingBox().getYsize(), 0);
             entry = new EntityLockPacket.LockInfo(offset, new AtomicInteger(ticks));
         } else {//If the player dismounts from the rocket without a seat or dismounts from a boat for instance
-            Northstar.LOGGER.info("Locking " + passenger + " to position for " + ticks + " ticks");
+            Northstar.LOGGER.debug("Locking {} to position for {} ticks", passenger, ticks);
             Vec3 offset = passenger.position().subtract(position()).add(0, final_lift_vel, 0);
             entry = new EntityLockPacket.LockInfo(offset, new AtomicInteger(ticks));
         }
@@ -384,47 +383,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             entityLockMap.put(passenger.getUUID(), entry);
             NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new EntityLockPacket(passenger.getUUID(), getId(), entry));
         }
-    }
-
-    @Override
-    public void positionRider(Entity passenger, MoveFunction callback) {
-        if (!hasPassenger(passenger))
-            return;
-
-        Vec3 transformedVector = getPassengerPosition(passenger, 1);
-        if (transformedVector == null) {
-            //Added
-            EntityLockPacket.LockInfo lockInfo = entityLockMap.get(passenger.getUUID());
-            if (lockInfo != null) {
-                callback.accept(passenger,
-                        position().x + lockInfo.offset().x,
-                        position().y + lockInfo.offset().y,
-                        position().z + lockInfo.offset().z);
-                if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
-                    lockInfo.ticks().getAndAdd(-1);
-                    if (lockInfo.ticks().get() < 0) entityLockMap.remove(passenger.getUUID());
-                }
-            }//--------------
-            return;
-        }
-
-        float offset = -1 / 8f;
-        if (passenger instanceof AbstractContraptionEntity)
-            offset = 0.0f;
-        callback.accept(passenger, transformedVector.x,
-                transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) + offset, transformedVector.z);
-    }
-
-    @Override
-    public void removePassenger(Entity passenger) {
-        //If we dismount
-        if (!level().isClientSide) lockEntity(passenger, DISMOUNT_SOFT_LOCK_TICKS);
-        super.removePassenger(passenger);
-    }
-
-    @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity entityLiving) {
-        return super.getDismountLocationForPassenger(entityLiving).add(0, final_lift_vel, 0);
     }
 
     private void writeSyncPacket() {
@@ -464,7 +422,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     @Override
     public @Nullable Entity changeDimension(ServerLevel destination, ITeleporter teleporter) {
-        Northstar.LOGGER.info("Changing ship " + this + " to dimension " + destination.toString());
+        Northstar.LOGGER.debug("Changing ship {} to dimension: {}", this, destination.toString());
         record PassengerData(Entity entity, Vec3 offset, int seat) {
         }
         List<PassengerData> passengers = new ArrayList<>();
@@ -488,12 +446,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
+            fixEntityMounting(data.entity);
         }
 
         if (controllingPlayer != null)
             NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new RocketControlPacket(controllingPlayer, getId(), getContraption().localControlsPos));
-
-        fixEntityMounting(getBoundingBox());
         return newRocket;
     }
 
@@ -656,8 +613,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return true;
     }
 
-    public boolean isLaunchingOrLanding() {
-        return blasting || landingMode;
+    /**
+     * @return Are we actually going up or down (true) or Are we on the ground? (false)
+     */
+    public boolean isInFlight() {
+        return blasting || landingMode || Math.abs(lift_vel) > 0 || getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT;
     }
 
     public boolean isActiveLaunch() {
@@ -781,6 +741,27 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     @OnlyIn(Dist.CLIENT)
     public void applyLocalTransforms(PoseStack matrixStack, float partialTicks) {
         TransformStack.of(matrixStack).nudge(getId());
+    }
+
+    @Override
+    public void positionRider(Entity passenger, MoveFunction callback) {
+        EntityLockPacket.LockInfo lockInfo = entityLockMap.get(passenger.getUUID());
+        if (lockInfo != null) {
+            callback.accept(passenger,
+                    position().x + lockInfo.offset().x,
+                    position().y + lockInfo.offset().y,
+                    position().z + lockInfo.offset().z);
+            if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
+                lockInfo.ticks().decrementAndGet();
+                if (lockInfo.ticks().get() < 0) entityLockMap.remove(passenger.getUUID());
+            }
+        } else super.positionRider(passenger, callback);
+    }
+
+    @Override
+    public void removePassenger(Entity passenger) {//called when the player gets out of their seat
+        if (!level().isClientSide) lockEntity(passenger, DISMOUNT_SOFT_LOCK_TICKS);
+        super.removePassenger(passenger);
     }
 
 }
