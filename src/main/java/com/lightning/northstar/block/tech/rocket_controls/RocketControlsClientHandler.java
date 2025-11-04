@@ -45,23 +45,6 @@ public class RocketControlsClientHandler {
     }
 
     public static void startControlling(RocketContraptionEntity rce, BlockPos controllerLocalPos) {
-        if (NorthstarConfigs.common().forceAllPassengersSeatedInRocket.get()) {
-            AtomicBoolean allPlayersSeated = new AtomicBoolean(true);
-            rce.getEntitiesWithinContraption().forEach(entity -> {
-                if (entity instanceof ServerPlayer player) {
-                    if (player.getVehicle() != rce) {
-                        allPlayersSeated.set(false);
-                    }
-                }
-            });
-            if (!allPlayersSeated.get()) {
-                stopControlling();
-                Minecraft.getInstance().player.displayClientMessage(
-                        Component.translatable("northstar.contraption.controls.sit_down").withStyle(ChatFormatting.AQUA), true);
-                return;
-            }
-        }
-
         entityRef = new WeakReference<>(rce);
         controlsPos = controllerLocalPos;
         displaytime = 0;
