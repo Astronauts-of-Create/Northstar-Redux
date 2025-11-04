@@ -93,6 +93,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public boolean landingMode;
     boolean fuelBurned = false;
     boolean printed = false;
+
+    public boolean isInFlight = false; //False while on ground, true while in the air
     public boolean blasting = false;
     public boolean slowing = false;
     public boolean hasExploded = false;
@@ -127,14 +129,19 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     }
 
     public static RocketContraptionEntity create(Level world, Contraption contraption) {
-        RocketContraptionEntity entity = new RocketContraptionEntity(NorthstarEntityTypes.ROCKET_CONTRAPTION.get(), world);
-        entity.setContraption(contraption);
-        return entity;
+        RocketContraptionEntity rce = new RocketContraptionEntity(NorthstarEntityTypes.ROCKET_CONTRAPTION.get(), world);
+        rce.setContraption(contraption);
+
+        rce.level().getEntities(rce, rce.getBoundingBox()).forEach(rce::fixEntityMounting);
+        return rce;
     }
 
     @Override
     public void disassemble() {
         super.disassemble();
+
+        //Enable collisions again for all players
+        entitiesWithinContraption.stream().filter(entity -> entity instanceof Player).forEach(entity -> entity.northstar$disableColllision(false));
         RocketHandler.ROCKETS.remove(this);
     }
 
@@ -165,6 +172,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         for (Entity entity : entitiesWithinContraption) {
             if (entity instanceof ServerPlayer player) {
                 player.northstar$setPositionRelativeTo(this);
+                entity.northstar$disableColllision(isInFlight());
+            } else if (entity instanceof Player) {
+                entity.northstar$disableColllision(isInFlight());
             }
         }
 
@@ -175,6 +185,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (launchingMode && launchTime == 0 && activeLaunch) {//Start blasting off
             if (!blasting) {//Only do this once
                 blasting = true;
+                isInFlight = true;
                 //Make sure all passengers within immediate bounding box are mounted
                 for (Entity entity : entitiesWithinContraption) {
                     fixEntityMounting(entity);
@@ -291,6 +302,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                         }
                     }
                     move(0, -1, 0); // temporary fix for the rocket disassembling one block above the ground
+                    isInFlight = false;
                     disassemble();
                     final_lift_vel = 0; // don't move entities when disassembling
                     if (this.landingMode && isUsingTicket) {//Consume the ticket
@@ -313,12 +325,15 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
             for (Entity entity : getEntitiesWithinContraption()) {
+                if (entity instanceof SuperGlueEntity) continue; //Make sure we are ignoring the super glue entity!
+
                 if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
                     passengerDismountRidable(entity);
 
                     EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
                     if (lockInfo == null) { //Offset the player position by the rocket velocity
                         entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+//                        entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y + final_lift_vel, entity.getDeltaMovement().z);
                     } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
                         entity.setPos(
                                 position().x + lockInfo.offset().x,
@@ -338,6 +353,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     private void fixEntityMounting(Entity entity) {
         if (!level().isClientSide) {
             if (entity.getVehicle() != this) {
+                //Lock any nonliving entities for the duration of the flight
                 passengerDismountRidable(entity);
                 if (!(entity instanceof LivingEntity) &&
                         !(entity instanceof SuperGlueEntity) &&
@@ -387,7 +403,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     private void writeSyncPacket() {
         RocketContraptionSyncPacket packet = new RocketContraptionSyncPacket(getId(), position(), lift_vel, launchTime,
-                launchingMode, landingMode, blasting, slowing, activeLaunch);
+                launchingMode, landingMode, blasting, slowing, activeLaunch, isInFlight);
         NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), packet);
     }
 
@@ -403,10 +419,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         contraption.owner.displayClientMessage(Component.literal("Return Fuel Cost: ~" + contraption.fuelReturnCost).withStyle(ChatFormatting.GOLD), false);
         contraption.owner.displayClientMessage(Component.literal("Heat Shielding: " + contraption.heatShielding() + "; Required: " + (int) Math.ceil(heatCost)).withStyle(ChatFormatting.YELLOW), false);
         contraption.owner.displayClientMessage(Component.literal("Engine Count: " + contraption.hasJetEngine() + "; Required: " + requiredJets).withStyle(ChatFormatting.BLUE), false);
-
         if (auto_land_mode) {
             contraption.owner.displayClientMessage(Component.literal("Auto Landing Mode Enabled!").withStyle(ChatFormatting.GREEN), false);
         }
+        contraption.owner.displayClientMessage(Component.literal("All players should remain seated for the duration of the flight!").withStyle(ChatFormatting.AQUA), false);
     }
 
     @Override
@@ -446,7 +462,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
-            fixEntityMounting(data.entity);
+            newRocket.fixEntityMounting(data.entity);
         }
 
         if (controllingPlayer != null)
@@ -484,6 +500,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         rce.landingMode = packet.landing;
         rce.blasting = packet.blasting;
         rce.slowing = packet.slowing;
+        rce.isInFlight = packet.isInFlight;
         rce.activeLaunch = packet.activeLaunch;
     }
 
@@ -613,11 +630,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return true;
     }
 
-    /**
-     * @return Are we actually going up or down (true) or Are we on the ground? (false)
-     */
+
     public boolean isInFlight() {
-        return blasting || landingMode || Math.abs(lift_vel) > 0 || getY() >= RocketHandler.DIMENSION_CHANGE_HEIGHT;
+        return isInFlight;
     }
 
     public boolean isActiveLaunch() {
@@ -641,11 +656,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         return (RocketContraption) contraption;
     }
 
+
     @Override
     protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
         super.writeAdditional(compound, spawnPacket);
-
         compound.putBoolean("blasting", this.blasting);
+        compound.putBoolean("isInFlight", this.isInFlight);
         compound.putBoolean("slowing", this.slowing);
         compound.putBoolean("isUsingTicket", this.isUsingTicket);
         compound.putBoolean("launched", this.launchingMode);
@@ -673,6 +689,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         super.readAdditional(compound, spawnData);
 
         blasting = compound.contains("blasting") && compound.getBoolean("SequencedOffsetLimit");
+        isInFlight = compound.contains("isInFlight") && compound.getBoolean("isInFlight");
         slowing = compound.contains("slowing") && compound.getBoolean("slowing");
         isUsingTicket = compound.contains("isUsingTicket") && compound.getBoolean("isUsingTicket");
         launchingMode = compound.contains("launched") && compound.getBoolean("launched");
