@@ -117,7 +117,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     public Map<UUID, EntityLockPacket.LockInfo> entityLockMap = new HashMap<>();
     private static boolean dismountRideable = NorthstarConfigs.common().dismountRideableEntityWhenInRocket.get();
-    private static boolean forceAllPassengersSeated = NorthstarConfigs.common().forceAllPassengersSeatedInRocket.get();
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -338,10 +337,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     private void fixEntityMounting(Entity entity) {
         if (!level().isClientSide) {
-            if (forceAllPassengersSeated && entity instanceof ServerPlayer) {
-                lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
-                if (entity.getVehicle() != this) entity.startRiding(this, true);
-            } else if (entity.getVehicle() != this) {
+            if (entity.getVehicle() != this) {
                 passengerDismountRidable(entity);
                 if (!(entity instanceof LivingEntity) &&
                         !(entity instanceof SuperGlueEntity) &&
