@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 public class CommonConfig extends ConfigBase {
 
     public final ConfigBool dismountRideableEntityWhenInRocket = b(true, "dismountRideableEntityWhenInRocket");
-    public final ConfigBool forceAllPassengersSeatedInRocket = b(false, "forceAllPassengersToBeSeatedWhenLaunching");
     @Override
     public @NotNull String getName() {
         return "common";
