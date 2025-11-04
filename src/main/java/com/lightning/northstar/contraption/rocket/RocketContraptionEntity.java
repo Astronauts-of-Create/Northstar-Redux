@@ -139,9 +139,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     @Override
     public void disassemble() {
         super.disassemble();
-
-        //Enable collisions again for all players
-        entitiesWithinContraption.stream().filter(entity -> entity instanceof Player).forEach(entity -> entity.northstar$disableColllision(false));
         RocketHandler.ROCKETS.remove(this);
     }
 
@@ -170,11 +167,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             entitiesWithinContraption = level.getEntities(this, getBoundingBox());
 
         for (Entity entity : entitiesWithinContraption) {
-            if (entity instanceof ServerPlayer player) {
-                player.northstar$setPositionRelativeTo(this);
-                entity.northstar$disableColllision(isInFlight());
-            } else if (entity instanceof Player) {
-                entity.northstar$disableColllision(isInFlight());
+            if (entity instanceof Player player) {
+                player.northstar$setRelativeEntity(this, 2);
             }
         }
 
