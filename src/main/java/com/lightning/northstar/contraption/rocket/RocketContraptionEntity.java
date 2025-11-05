@@ -118,7 +118,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     private int transportDelay;
 
     public Map<UUID, EntityLockPacket.LockInfo> entityLockMap = new HashMap<>();
-    private static boolean dismountRideable = NorthstarConfigs.common().dismountRideableEntityWhenInRocket.get();
 
     public RocketContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
@@ -131,8 +130,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     public static RocketContraptionEntity create(Level world, Contraption contraption) {
         RocketContraptionEntity rce = new RocketContraptionEntity(NorthstarEntityTypes.ROCKET_CONTRAPTION.get(), world);
         rce.setContraption(contraption);
-
-        rce.level().getEntities(rce, rce.getBoundingBox()).forEach(rce::fixEntityMounting);
         return rce;
     }
 
@@ -180,10 +177,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             if (!blasting) {//Only do this once
                 blasting = true;
                 isInFlight = true;
-                //Make sure all passengers within immediate bounding box are mounted
-                for (Entity entity : entitiesWithinContraption) {
-                    fixEntityMounting(entity);
-                }
             }
             if (!fuelBurned) { //We only burn the fuel once
                 Northstar.LOGGER.debug("BURNING FUEL");
@@ -318,24 +311,22 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (!isStalled() && tickCount > 2 && transportDelay == 0) {
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
-            for (Entity entity : getEntitiesWithinContraption()) {
-                if (entity instanceof SuperGlueEntity) continue; //Make sure we are ignoring the super glue entity!
+            for (Entity passenger : entitiesWithinContraption) {
+                if (passenger instanceof SuperGlueEntity) continue; //Make sure we are ignoring the super glue entity!
 
-                if (entity.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
-                    passengerDismountRidable(entity);
-
-                    EntityLockPacket.LockInfo lockInfo = entityLockMap.get(entity.getUUID());
+                if (passenger.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
+                    EntityLockPacket.LockInfo lockInfo = entityLockMap.get(passenger.getUUID());
                     if (lockInfo == null) { //Offset the player position by the rocket velocity
-                        entity.setPos(entity.getX(), entity.getY() + final_lift_vel, entity.getZ());
+                        passenger.setPos(passenger.getX(), passenger.getY() + final_lift_vel, passenger.getZ());
 //                        entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y + final_lift_vel, entity.getDeltaMovement().z);
                     } else { //We need to hold the player in their seat for a short time before letting them go, this is to prevent players from clipping through the ship
-                        entity.setPos(
+                        passenger.setPos(
                                 position().x + lockInfo.offset().x,
                                 position().y + lockInfo.offset().y,
                                 position().z + lockInfo.offset().z);
                         if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {//remove soft-lock after a few ticks
                             lockInfo.ticks().decrementAndGet();
-                            if (lockInfo.ticks().get() < 0) entityLockMap.remove(entity.getUUID());
+                            if (lockInfo.ticks().get() < 0) entityLockMap.remove(passenger.getUUID());
                         }
                     }
                 }
@@ -343,29 +334,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
         slowing = false;
     }
-
-    private void fixEntityMounting(Entity entity) {
-        if (!level().isClientSide) {
-            if (entity.getVehicle() != this) {
-                //Lock any nonliving entities for the duration of the flight
-                passengerDismountRidable(entity);
-                if (!(entity instanceof LivingEntity) &&
-                        !(entity instanceof SuperGlueEntity) &&
-                        !(entity instanceof ItemEntity)) {
-                    lockEntity(entity, EntityLockPacket.LockInfo.FOREVER);
-                    entity.startRiding(this, true);
-                }
-            }
-        }
-    }
-
-    private void passengerDismountRidable(Entity passenger) {
-        if (dismountRideable && passenger.getVehicle() != null && passenger instanceof ServerPlayer) {
-            passenger.stopRiding();
-        }
-    }
-
-
     /**
      * Add a soft-release entry, to lock the player in for a few ticks (This should happen on the server side)
      *
@@ -443,11 +411,11 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             int seat = contraption.getSeats().indexOf(contraption.getSeatOf(passenger.getUUID()));
             passengers.add(new PassengerData(passenger, offset, seat));
         }
-
         RocketContraptionEntity newRocket = (RocketContraptionEntity) super.changeDimension(destination, teleporter);
         if (newRocket == null) {
             return null; // huh?
         }
+        newRocket.entityLockMap = entityLockMap;
         newRocket.transportDelay = TRANSPORT_DELAY_TICKS;
 
         for (PassengerData data : passengers) {
@@ -456,7 +424,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             newPassenger.setPos(newRocket.position().add(data.offset));
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
-            newRocket.fixEntityMounting(data.entity);
         }
 
         if (controllingPlayer != null)
