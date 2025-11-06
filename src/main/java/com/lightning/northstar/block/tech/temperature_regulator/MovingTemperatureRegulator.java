@@ -35,6 +35,9 @@ public class MovingTemperatureRegulator implements NorthstarTemperature.Provider
             sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, null);
         }
 
+        if (sealer.hasLeak() && regulator.showLeak)
+            sealer.renderLeakPath(context.contraption.entity.level(), context.contraption.entity);
+
         active = !sealer.hasLeak();
     }
 

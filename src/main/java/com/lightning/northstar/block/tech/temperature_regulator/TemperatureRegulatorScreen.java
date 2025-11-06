@@ -86,6 +86,13 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
             onClose();
         });
         addRenderableWidget(confirm);
+
+        if (entityId != -1) {
+            IconButton showLeak = new IconButton(x + 179, y + 31, AllIcons.I_ACTIVE);
+            showLeak.setToolTip(Component.translatable("northstar.gui.sealer.toggle_leak"));
+            showLeak.withCallback(() -> regulator.showLeak = !regulator.showLeak);
+            addRenderableWidget(showLeak);
+        }
     }
 
     private ScrollInput addScrollInput(ScrollInput input, int value, String name) {
