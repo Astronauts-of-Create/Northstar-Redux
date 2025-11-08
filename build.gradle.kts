@@ -102,6 +102,7 @@ dependencies {
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
+    include(libs.mixinextras.forge)
 
     modImplementation(variantOf(libs.create) { classifier("slim") })
     modImplementation(libs.ponder.forge)
