@@ -77,7 +77,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addOutput(Items.IRON_NUGGET, 5)
                     .addOutput(NorthstarBlocks.IRON_COGWHEEL, 10)
                     .loops(5)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarTags.NorthstarItemTags.C_INGOTS_TITANIUM.tag))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_NUGGETS_TITANIUM.tag))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_COGWHEEL))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_LARGE_COGWHEEL))),
 
