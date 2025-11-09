@@ -165,22 +165,27 @@ public class NorthstarItems {
     public static final ItemEntry<SwordItem> MARTIAN_SWORD = REGISTRATE
             .item("martian_sword", p -> new SwordItem(NorthstarToolTiers.MARTIAN_STEEL, 3, -2.4f, p))
             .properties(p -> p.stacksTo(1))
+            .model((c, p) -> p.handheld(c::get))
             .register();
     public static final ItemEntry<PickaxeItem> MARTIAN_PICKAXE = REGISTRATE
             .item("martian_pickaxe", p -> new PickaxeItem(NorthstarToolTiers.MARTIAN_STEEL, 1, -2.8f, p))
             .properties(p -> p.stacksTo(1))
+            .model((c, p) -> p.handheld(c::get))
             .register();
     public static final ItemEntry<ShovelItem> MARTIAN_SHOVEL = REGISTRATE
             .item("martian_shovel", p -> new ShovelItem(NorthstarToolTiers.MARTIAN_STEEL, 1.5f, -3.0f, p))
             .properties(p -> p.stacksTo(1))
+            .model((c, p) -> p.handheld(c::get))
             .register();
     public static final ItemEntry<AxeItem> MARTIAN_AXE = REGISTRATE
             .item("martian_axe", p -> new AxeItem(NorthstarToolTiers.MARTIAN_STEEL, 5, -3.0f, p))
             .properties(p -> p.stacksTo(1))
+            .model((c, p) -> p.handheld(c::get))
             .register();
     public static final ItemEntry<HoeItem> MARTIAN_HOE = REGISTRATE
             .item("martian_hoe", p -> new HoeItem(NorthstarToolTiers.MARTIAN_STEEL, -2, 0.0f, p))
             .properties(p -> p.stacksTo(1))
+            .model((c, p) -> p.handheld(c::get))
             .register();
 
     public static final ItemEntry<ArmorItem> MARTIAN_STEEL_HELMET = REGISTRATE
