@@ -150,15 +150,18 @@ public class NorthstarItems {
             .register();
 
     public static final ItemEntry<SequencedAssemblyItem> DORMANT_MARTIAN_SAPLING_SEQUENCED =
-            sequencedIngredient("dormant_martian_sapling_sequenced", b ->
-                    b.model((c, p) -> p.generated(c::get, p.modLoc("item/dormant_martian_sapling"))));
+            sequencedIngredient("dormant_martian_sapling_sequenced", b -> b
+                    .lang("Dormant Martian Sapling")
+                    .model((c, p) -> p.generated(c::get, p.modLoc("item/dormant_martian_sapling"))));
 
     public static final ItemEntry<Item> DORMANT_MARTIAN_SEED = REGISTRATE
             .item("dormant_martian_seed", Item::new)
             .register();
+
     public static final ItemEntry<SequencedAssemblyItem> DORMANT_MARTIAN_SEED_SEQUENCED =
-            sequencedIngredient("dormant_martian_seed_sequenced", b ->
-                    b.model((c, p) -> p.generated(c::get, p.modLoc("item/dormant_martian_seed"))));
+            sequencedIngredient("dormant_martian_seed_sequenced", b -> b
+                    .lang("Dormant Martian Seed")
+                    .model((c, p) -> p.generated(c::get, p.modLoc("item/dormant_martian_seed"))));
 
     // region armor and tools
 
@@ -493,20 +496,14 @@ public class NorthstarItems {
     }
 
     private static ItemEntry<SequencedAssemblyItem> sequencedIngredient(String name, Consumer<ItemBuilder<SequencedAssemblyItem, CreateRegistrate>> builder) {
-        try {
-            REGISTRATE.setCreativeTab(null);
-
-            return REGISTRATE
-                    .item(name, SequencedAssemblyItem::new)
-                    .transform(b -> {
-                        if (builder != null)
-                            builder.accept(b);
-                        return b;
-                    })
-                    .register();
-        } finally {
-            REGISTRATE.setCreativeTab(NorthstarCreativeModeTab.ITEMS);
-        }
+        return REGISTRATE
+                .item(name, SequencedAssemblyItem::new)
+                .transform(b -> {
+                    if (builder != null)
+                        builder.accept(b);
+                    return b;
+                })
+                .register();
     }
 
 }
