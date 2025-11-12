@@ -13,6 +13,7 @@ forge = "net.minecraftforge:forge:1.20.1-47.4.0"
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"
 jcpp = "org.anarres:jcpp:1.4.14"
 jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.112"
+kubejs = "dev.latvian.mods:kubejs-forge:2001.6.5-build.16"
 mclib = "com.eliotlash.mclib:mclib:20"
 minecraft = "com.mojang:minecraft:1.20.1"
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
