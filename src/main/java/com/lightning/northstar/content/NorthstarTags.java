@@ -153,7 +153,7 @@ public class NorthstarTags {
         @Deprecated
         BLOCKS_AIR,
         C_ORES_COPPER(COMMON, "ores/copper"),
-        C_ORES_LEAD(COMMON, "ores/lead"),
+        C_ORES_GALENA(COMMON, "ores/galena"),
         C_ORES_DIAMOND(COMMON, "ores/diamond"),
         C_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
         C_ORES_GOLD(COMMON, "ores/gold"),
@@ -251,12 +251,14 @@ public class NorthstarTags {
         C_DUSTS_SALT(COMMON, "dusts/salt"),
         C_INGOTS(COMMON, "ingots"),
         C_INGOTS_BRASS(COMMON, "ingots/brass"),
+        C_INGOTS_LEAD(COMMON, "ingots/lead"),
         C_INGOTS_MARTIAN_STEEL(COMMON, "ingots/martian_steel"),
         C_INGOTS_TITANIUM(COMMON, "ingots/titanium"),
         C_INGOTS_TUNGSTEN(COMMON, "ingots/tungsten"),
         C_NUGGETS(COMMON, "nuggets"),
         C_NUGGETS_TITANIUM(COMMON, "nuggets/titanium"),
         C_NUGGETS_TUNGSTEN(COMMON, "nuggets/tungsten"),
+        C_RAW_MATERIALS_LITHIUM(COMMON, "raw_materials/lithium"),
         C_SHEETS(COMMON, "plates"),
         C_SHEETS_BRASS(COMMON, "plates/brass"),
         C_SHEETS_COPPER(COMMON, "plates/copper"),
@@ -275,7 +277,7 @@ public class NorthstarTags {
         OXYGEN_SOURCES,
         // Space ores, used for crushing recipes
         SPACE_ORE_COPPER("space_ore/copper"),
-        SPACE_ORE_LEAD("space_ore/lead"),
+        SPACE_ORE_GALENA("space_ore/galena"),
         SPACE_ORE_DIAMOND("space_ore/diamond"),
         SPACE_ORE_GLOWSTONE("space_ore/glowstone"),
         SPACE_ORE_GOLD("space_ore/gold"),

@@ -34,9 +34,9 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
 
     HYDROGEN_CHLORIDE = create("hydrogen_chloride",
             b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(NorthstarFluids.CHLORINE.get(), 500)
-                    .require(NorthstarFluids.HYDROGEN.get(), 500)
-                    .output(NorthstarFluids.HYDROGEN_CHLORIDE.get(), 550)),
+                    .require(NorthstarFluidTags.C_CHLORINE.tag(), 500)
+                    .require(NorthstarFluidTags.C_HYDROGEN.tag(), 500)
+                    .output(NorthstarFluids.HYDROGEN_CHLORIDE.get(), 1000)),
 
     HYDROCHLORIC_ACID = create("hydrochloric_acid",
                     b -> b.requiresHeat(HeatCondition.HEATED)
@@ -44,18 +44,79 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                             .require(NorthstarFluids.HYDROGEN_CHLORIDE.get(), 500)
                             .output(NorthstarFluids.HYDROCHLORIC_ACID.get(), 1000)),
 
-    GALENA = create("galena_to_lead_ingot_and_sulfuric_acid",
+    // Note: Galena processing uses crushing (→ crushed lead) and smelting (→ lead ingots)
+    // instead of mixing to maintain TFMG compatibility via tags
+
+    AURENE_GLASS = create("aurene_glass",
             b -> b.requiresHeat(HeatCondition.HEATED)
                     .require(NorthstarItems.RAW_GALENA)
-                    .output(NorthstarFluids.SULFURIC_ACID.get(), 550)
-                    .output(ForgeRegistries.ITEMS.getValue(new ResourceLocation("tfmg", "lead_ingot")))),
-
-    BLUE_AURENE_GLASS = create("blue_aurene_glass",
-            b -> b.requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(NorthstarItems.RAW_GALENA)
                     .require(Items.GLASS)
-                    .require(NorthstarFluids.HYDROCHLORIC_ACID.get(), 550)
-                    .output(NorthstarBlocks.BLUE_AURENE_GLASS)),
+                    .require(NorthstarFluidTags.C_HYDROGEN_CHLORIDE.tag(), 550)
+                    .output(0.2f, NorthstarBlocks.BLUE_AURENE_GLASS)
+                    .output(0.2f, NorthstarBlocks.GREEN_AURENE_GLASS)
+                    .output(0.2f, NorthstarBlocks.YELLOW_AURENE_GLASS)
+                    .output(0.2f, NorthstarBlocks.ORANGE_AURENE_GLASS)
+                    .output(0.2f, NorthstarBlocks.PURPLE_AURENE_GLASS)),
+
+    LEADED_BLUE_AURENE_GLASS = create("leaded_blue_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.BLUE_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEADED_BLUE_AURENE_GLASS)),
+
+    LEADED_GREEN_AURENE_GLASS = create("leaded_green_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.GREEN_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEADED_GREEN_AURENE_GLASS)),
+
+    LEADED_YELLOW_AURENE_GLASS = create("leaded_yellow_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.YELLOW_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEADED_YELLOW_AURENE_GLASS)),
+
+    LEADED_ORANGE_AURENE_GLASS = create("leaded_orange_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.ORANGE_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEADED_ORANGE_AURENE_GLASS)),
+
+    LEADED_PURPLE_AURENE_GLASS = create("leaded_purple_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.PURPLE_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEADED_PURPLE_AURENE_GLASS)),
+
+    LEAD_MESHED_BLUE_AURENE_GLASS = create("lead_meshed_blue_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.LEADED_BLUE_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEAD_MESHED_BLUE_AURENE_GLASS)),
+
+    LEAD_MESHED_GREEN_AURENE_GLASS = create("lead_meshed_green_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.LEADED_GREEN_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEAD_MESHED_GREEN_AURENE_GLASS)),
+
+    LEAD_MESHED_YELLOW_AURENE_GLASS = create("lead_meshed_yellow_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.LEADED_YELLOW_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEAD_MESHED_YELLOW_AURENE_GLASS)),
+
+    LEAD_MESHED_ORANGE_AURENE_GLASS = create("lead_meshed_orange_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.LEADED_ORANGE_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEAD_MESHED_ORANGE_AURENE_GLASS)),
+
+    LEAD_MESHED_PURPLE_AURENE_GLASS = create("lead_meshed_purple_aurene_glass",
+            b -> b.requiresHeat(HeatCondition.NONE)
+                    .require(NorthstarItems.RAW_GALENA)
+                    .require(NorthstarBlocks.LEADED_PURPLE_AURENE_GLASS)
+                    .output(NorthstarBlocks.LEAD_MESHED_PURPLE_AURENE_GLASS)),
 
     PORCELAIN_SKELETON = create("porcelain_skeleton",
             b -> b.requiresHeat(HeatCondition.HEATED)

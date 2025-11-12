@@ -39,21 +39,18 @@ public class NorthstarFluids {
 
     public static final FluidEntry<VirtualFluid> OXYGEN = REGISTRATE
             .virtualFluid("oxygen")
-            .properties(p -> p.density(0))
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_OXYGEN.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> HYDROGEN = REGISTRATE
             .virtualFluid("hydrogen")
-            .properties(p -> p.density(0))
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_HYDROGEN.tag)
             .register();
 
     public static final FluidEntry<VirtualFluid> CHLORINE = REGISTRATE
             .virtualFluid("chlorine")
-            .properties(p -> p.density(0))
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_CHLORINE.tag)
             .register();
@@ -222,7 +219,7 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> BIOFUEL = REGISTRATE
             .standardFluid("biofuel",
-                    SolidRenderedPlaceableFluidType.create(0x9ac846, 0xffffffff,
+                    SolidRenderedPlaceableFluidType.create(0xFFFFFF, 0xFFFFFF,
                             () -> 1f / 8f * 0.25f))
             .properties(b -> b.viscosity(1000)
                     .density(1400))
@@ -233,7 +230,6 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_BIOFUEL.tag)
             .source(ForgeFlowingFluid.Source::new)
             .bucket()
-            .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
             .build()
             .register();
 

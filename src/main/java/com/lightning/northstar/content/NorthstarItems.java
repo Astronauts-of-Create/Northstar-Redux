@@ -476,6 +476,8 @@ public class NorthstarItems {
             .item("sodium_catalyst", Item::new)
             .register();
 
+    // Galena (PbS) is the primary ore of lead. Using "galena" for the raw ore and "lead" for refined products
+    // provides clear distinction and TFMG compatibility (TFMG provides lead ingots from galena ore)
     public static final ItemEntry<Item> RAW_GALENA = REGISTRATE
             .item("raw_galena", Item::new)
             .register();

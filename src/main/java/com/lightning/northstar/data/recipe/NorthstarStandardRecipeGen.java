@@ -113,77 +113,6 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .unlockedBy(() -> Items.ICE)
             .viaShapeless(b -> b.requires(Items.ICE)),
 
-    ORANGE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.ORANGE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    GREEN_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.GREEN_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    YELLOW_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.YELLOW_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-
-    PURPLE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.PURPLE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEADED_BLUE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEADED_BLUE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEADED_GREEN_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEADED_GREEN_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEADED_YELLOW_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEADED_YELLOW_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEADED_ORANGE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEADED_ORANGE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEADED_PURPLE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEADED_PURPLE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEAD_MESHED_BLUE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEAD_MESHED_BLUE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEAD_MESHED_GREEN_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEAD_MESHED_GREEN_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEAD_MESHED_YELLOW_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEAD_MESHED_YELLOW_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEAD_MESHED_ORANGE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEAD_MESHED_ORANGE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
-    LEAD_MESHED_PURPLE_AURENE_GLASS_FROM_BLUE = create(NorthstarBlocks.LEAD_MESHED_PURPLE_AURENE_GLASS)
-            .unlockedBy(() -> NorthstarBlocks.BLUE_AURENE_GLASS)
-            .withSuffix("_from_blue")
-            .viaStonecutting(() -> NorthstarBlocks.BLUE_AURENE_GLASS.get()),
-
     IRON_COGWHEEL = create(NorthstarBlocks.IRON_COGWHEEL)
             .unlockedBy(() -> AllBlocks.SHAFT)
             .viaShapeless(b -> b.requires(AllBlocks.SHAFT)
@@ -510,10 +439,6 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .rewardXP(0.4f)
             .inSmoker(),
 
-    RAW_GALENA = create(() -> ForgeRegistries.ITEMS.getValue(new ResourceLocation("tfmg", "lead_ingot")))
-            .viaCooking(() -> NorthstarItems.RAW_GALENA)
-            .rewardXP(0.4f)
-            .inSmoker(),
 
 
     POLISHED_MARS_STONE = create(NorthstarBlocks.POLISHED_MARS_STONE)
