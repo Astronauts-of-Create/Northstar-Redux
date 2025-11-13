@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "northstar:block/titanium_sheetmetal",
-    "side": "northstar:block/titanium_sheetmetal",
-    "top": "northstar:block/titanium_sheetmetal"
-  }
-}

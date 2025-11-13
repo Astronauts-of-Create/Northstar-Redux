@@ -1,8 +1,0 @@
-{
-  "parent": "northstar:block/vertical_slab",
-  "textures": {
-    "bottom": "northstar:block/titanium_plating",
-    "side": "northstar:block/titanium_plating",
-    "top": "northstar:block/titanium_plating"
-  }
-}

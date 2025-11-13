@@ -39,7 +39,7 @@ public class NorthstarTags {
     enum Namespace {
 
         MOD(Northstar.MOD_ID, false, true),
-        COMMON("forge"), // "forge" on Forge, "c" on NeoForge/fabric
+        COMMON("forge"), // "forge" on Forge, "c" on NeoForge/Fabric
         ;
 
         public final String id;
@@ -147,6 +147,7 @@ public class NorthstarTags {
         /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
         @Deprecated
         BLOCKS_AIR,
+        C_ORES_COAL(COMMON, "ores/coal"),
         C_ORES_COPPER(COMMON, "ores/copper"),
         C_ORES_DIAMOND(COMMON, "ores/diamond"),
         C_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
@@ -268,6 +269,7 @@ public class NorthstarTags {
         OXYGEN_SEALING,
         OXYGEN_SOURCES,
         // Space ores, used for crushing recipes
+        SPACE_ORE_COAL("space_ore/coal"),
         SPACE_ORE_COPPER("space_ore/copper"),
         SPACE_ORE_DIAMOND("space_ore/diamond"),
         SPACE_ORE_GLOWSTONE("space_ore/glowstone"),
