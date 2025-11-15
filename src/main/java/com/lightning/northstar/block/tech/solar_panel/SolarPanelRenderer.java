@@ -55,4 +55,9 @@ public class SolarPanelRenderer extends KineticBlockEntityRenderer<SolarPanelBlo
         ms.popPose();
     }
 
+    @Override
+    protected BlockState getRenderedBlockState(SolarPanelBlockEntity be) {
+        return shaft(getRotationAxisOf(be));
+    }
+
 }
