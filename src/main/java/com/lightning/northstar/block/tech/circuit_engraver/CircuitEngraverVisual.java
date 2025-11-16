@@ -8,13 +8,12 @@ import com.simibubi.create.foundation.render.AllInstanceTypes;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
 
-public class CircuitEngraverVisual extends SingleAxisRotatingVisual<CircuitEngraverBlockEntity> implements SimpleDynamicVisual {
+public class CircuitEngraverVisual extends SingleAxisRotatingVisual<CircuitEngraverBlockEntity> {
 
     private final RotatingInstance head;
     private final RotatingInstance laser;
@@ -35,7 +34,9 @@ public class CircuitEngraverVisual extends SingleAxisRotatingVisual<CircuitEngra
     }
 
     @Override
-    public void beginFrame(Context ctx) {
+    public void tick(Context context) {
+        super.tick(context);
+
         boolean running = blockEntity.isRunning();
         float speed = running ? blockEntity.getSpeed() : 0;
 
