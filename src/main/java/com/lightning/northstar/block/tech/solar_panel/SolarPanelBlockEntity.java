@@ -27,15 +27,15 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     public void tick() {
         super.tick();
 
-        int light = Math.max(0, level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken());
-        if (light != lastLight && getFlickerScore() <= 64) {
-            lastLight = light;
-            generatedSpeed = MAXIMUM_SPEED * light / 15f * NorthstarPlanets.getSunMultiplier(level.dimension());
-            updateGeneratedRotation();
-        }
-
         if (level.isClientSide()) {
             targetAngle.tickChaser();
+        } else {
+            int light = Math.max(0, level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken());
+            if (light != lastLight && getFlickerScore() <= 64) {
+                lastLight = light;
+                generatedSpeed = MAXIMUM_SPEED * light / 15f * NorthstarPlanets.getSunMultiplier(level.dimension());
+                updateGeneratedRotation();
+            }
         }
     }
 
