@@ -41,7 +41,10 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
             create(() -> ingot)
                     .unlockedBy(() -> nuggets)
                     .withSuffix("_from_nuggets")
-                    .viaShapeless(b -> b.requires(nuggets, 9));
+                    .viaShaped(b -> b.define('#', nuggets)
+                            .pattern("###")
+                            .pattern("###")
+                            .pattern("###"));
         }
         if (block != null) {
             create(() -> ingot)
@@ -53,7 +56,10 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
             create(() -> block)
                     .unlockedBy(() -> ingot)
                     .withSuffix("_from_ingot")
-                    .viaShapeless(b -> b.requires(ingot, 9));
+                    .viaShaped(b -> b.define('#', ingot)
+                            .pattern("###")
+                            .pattern("###")
+                            .pattern("###"));
         }
     }
 

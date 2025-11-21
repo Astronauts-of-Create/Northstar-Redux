@@ -36,6 +36,7 @@ import com.lightning.northstar.data.NorthstarConfiguredFeatures;
 import com.lightning.northstar.data.util.NorthstarDataGenLoot;
 import com.lightning.northstar.data.util.NorthstarDataGenModels;
 import com.lightning.northstar.data.util.NorthstarDataGenRecipes;
+import com.lightning.northstar.data.util.NorthstarDataGenTags;
 import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
 import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
 import com.lightning.northstar.world.features.grower.WilterTreeGrower;
@@ -82,6 +83,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.common.Tags;
 
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -102,6 +104,7 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> MARTIAN_STEEL_BLOCK = REGISTRATE
             .block("martian_steel_block", Block::new)
+            .lang("Block of Martian Steel")
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.NETHERITE_BLOCK)
@@ -109,6 +112,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .simpleItem()
+            .transform(NorthstarDataGenTags.apply(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS))
+            .transform(NorthstarBlockTags.C_STORAGE_BLOCKS_MARTIAN_STEEL.tagBlockAndItem())
             .register();
 
     public static final BlockEntry<Block> MARTIAN_STEEL_SHEETMETAL = REGISTRATE
@@ -288,8 +293,10 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(10f, 15f)
                     .requiresCorrectToolForDrops())
-            .transform(pickaxeOnly())
             .simpleItem()
+            .transform(pickaxeOnly())
+            .transform(NorthstarDataGenTags.apply(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS))
+            .transform(NorthstarBlockTags.C_STORAGE_BLOCKS_TITANIUM.tagBlockAndItem())
             .register();
 
     public static final BlockEntry<Block> TITANIUM_SHEETMETAL = REGISTRATE
@@ -429,15 +436,18 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> TUNGSTEN_BLOCK = REGISTRATE
             .block("tungsten_block", Block::new)
+            .lang("Block of Tungsten")
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(30f, 16f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .transform(pickaxeOnly())
+            .transform(NorthstarDataGenTags.apply(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS))
+            .transform(NorthstarBlockTags.C_STORAGE_BLOCKS_TUNGSTEN.tagBlockAndItem())
             .tag(NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
-            .simpleItem()
             .register();
 
     public static final BlockEntry<Block> TUNGSTEN_SHEETMETAL = REGISTRATE
@@ -948,7 +958,7 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> CHISELED_MARS_STONE_BRICKS = REGISTRATE
             .block("chiseled_mars_stone", Block::new)
-            .lang("Chieseled Mars Stone Bricks")
+            .lang("Chiseled Mars Stone Bricks")
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE_BRICKS)
@@ -1064,6 +1074,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -1203,6 +1214,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -1864,6 +1876,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -2021,6 +2034,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -2120,8 +2134,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.AMETHYST)
                     .strength(2f, 5f)
                     .requiresCorrectToolForDrops())
-            .transform(pickaxeOnly())
             .simpleItem()
+            .transform(pickaxeOnly())
+            .tag(BlockTags.CRYSTAL_SOUND_BLOCKS)
             .register();
 
     public static final BlockEntry<ClusterBlock> LUNAR_SAPPHIRE_CLUSTER = REGISTRATE
@@ -2191,8 +2206,9 @@ public class NorthstarBlocks {
                     .strength(2f, 5f)
                     .randomTicks()
                     .requiresCorrectToolForDrops())
-            .transform(pickaxeOnly())
             .simpleItem()
+            .transform(pickaxeOnly())
+            .tag(BlockTags.CRYSTAL_SOUND_BLOCKS)
             .register();
 
     // endregion
@@ -2218,6 +2234,7 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> VENUS_DEEP_STONE = REGISTRATE
             .block("venus_deep_stone", Block::new)
+            .lang("Deep Venus Stone")
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
                     .sound(SoundType.DEEPSLATE)
@@ -2681,6 +2698,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -2829,6 +2847,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -3118,6 +3137,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -3282,6 +3302,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
