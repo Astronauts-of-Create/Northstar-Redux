@@ -1,6 +1,5 @@
 package com.lightning.northstar.entity;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.crops.MartianFlowerBlock;
 import com.lightning.northstar.block.crops.MartianTallFlowerBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
@@ -128,7 +127,6 @@ public class MarsMothEntity extends Monster implements GeoAnimatable {
         if (isResting()) {
             return NorthstarSounds.MARS_MOTH_SNORE.get();
         }
-        Northstar.LOGGER.debug("GABINGA!!!");
         if (random.nextInt(9) == 0) {
             return NorthstarSounds.MARS_MOTH_IDLE.get();
         }

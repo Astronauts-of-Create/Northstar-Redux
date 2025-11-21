@@ -4,26 +4,24 @@ import com.lightning.northstar.block.simple.ExtinguishedTorchBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.mixin.accessor.FlowingFluidAccessor;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import com.lightning.northstar.world.sealer.SealReactiveBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LiquidBlockContainer;
-import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -36,12 +34,15 @@ public class TorchBlockMixin extends Block implements LiquidBlockContainer, Seal
         super(properties);
     }
 
-    @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
-    public void northstar$updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
-                                      BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
+    @ModifyReturnValue(method = "updateShape", at = @At("RETURN"))
+    public BlockState northstar$updateShape(BlockState state,
+                                            @Local(argsOnly = true) LevelAccessor level,
+                                            @Local(argsOnly = true, ordinal = 0) BlockPos pos) {
         if (state.getBlock() == Blocks.TORCH && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
-            info.setReturnValue(NorthstarBlocks.EXTINGUISHED_TORCH.get().defaultBlockState());
+            level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
+            return NorthstarBlocks.EXTINGUISHED_TORCH.get().defaultBlockState();
         }
+        return state;
     }
 
     @Override

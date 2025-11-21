@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin;
+package com.lightning.northstar.mixin.block;
 
 import com.google.common.cache.CacheBuilder;
 import net.minecraft.world.level.block.Block;

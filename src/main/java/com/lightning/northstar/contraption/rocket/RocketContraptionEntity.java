@@ -143,7 +143,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 blasting = true;
             }
             if (!fuelBurned) { //We only burn the fuel once
-                Northstar.LOGGER.debug("BURNING FUEL");
                 if (contraption.fuelAmount() < contraption.fuelCost) {  //If we dont have enough fuel, disassemble
                     this.disassemble();
                 } else {

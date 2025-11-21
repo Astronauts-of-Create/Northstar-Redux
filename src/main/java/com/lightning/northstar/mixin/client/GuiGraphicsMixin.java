@@ -3,7 +3,6 @@ package com.lightning.northstar.mixin.client;
 import com.lightning.northstar.accessor.NorthstarGuiGraphics;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import net.createmod.catnip.theme.Color;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;

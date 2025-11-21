@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin;
+package com.lightning.northstar.mixin.level;
 
 import com.lightning.northstar.accessor.NorthstarDamageSources;
 import com.lightning.northstar.content.NorthstarDamageTypes;

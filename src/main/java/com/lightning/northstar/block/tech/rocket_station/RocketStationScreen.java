@@ -56,9 +56,6 @@ public class RocketStationScreen extends AbstractContainerScreen<RocketStationMe
         this.menu.slotsChanged(this.menu.contentHolder.container);
         int x = ((width - (imageWidth + (imageWidth / 2))) / 2);
         int y = (height - (imageHeight + (imageHeight / 2))) / 2;
-        if (this.menu.contentHolder == null) {
-            Northstar.LOGGER.debug("Ruh roh");
-        }
         if (this.menu.target != null)
             pPoseStack.drawString(font, Component.literal("Estimated Fuel Cost: " + this.menu.fuelCost + " gJ"), x + imageWidth - 110, y + imageWidth - 100, 0x313a54);
         if (this.menu.target == null)

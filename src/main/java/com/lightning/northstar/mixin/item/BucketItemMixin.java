@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin;
+package com.lightning.northstar.mixin.item;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
@@ -38,24 +38,6 @@ public abstract class BucketItemMixin extends Item {
 
     public BucketItemMixin(Properties pProperties) {
         super(pProperties);
-    }
-
-    @SuppressWarnings("deprecation")
-    //  @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
-    // at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
-    // cancellable = true)
-    protected void emptyContentsReal(@Nullable Player pPlayer, Level pLevel, BlockPos pPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> info) {
-        BlockState blockstate = pLevel.getBlockState(pPos);
-        if (!(this.content instanceof FlowingFluid)) {
-            info.setReturnValue(false);
-        } else if (pLevel.dimensionType().ultraWarm() && this.content.is(FluidTags.WATER) && NorthstarTemperature.getTemperatureAt(pLevel, pPos) < 212) {
-            if (!pLevel.setBlock(pPos, this.content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
-                info.setReturnValue(false);
-            } else {
-                this.playEmptySound(pPlayer, pLevel, pPos, this.content);
-                info.setReturnValue(true);
-            }
-        }
     }
 
     @SuppressWarnings("deprecation")

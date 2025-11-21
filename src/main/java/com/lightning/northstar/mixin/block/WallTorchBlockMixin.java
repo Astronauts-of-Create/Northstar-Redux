@@ -7,9 +7,12 @@ import com.lightning.northstar.mixin.accessor.FlowingFluidAccessor;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.sealer.SealReactiveBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,13 +26,12 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -46,22 +48,24 @@ public class WallTorchBlockMixin extends Block implements LiquidBlockContainer, 
         super(properties);
     }
 
-    @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
-    public void northstar$updatePlacementShape(BlockPlaceContext context, CallbackInfoReturnable<BlockState> info) {
-        BlockState state = info.getReturnValue();
-        if (state != null &&
-                state.getBlock() == Blocks.WALL_TORCH &&
-                !NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos())) {
-            info.setReturnValue(northstar$copyStateExtinguished(state));
-        }
+    @Nullable
+    @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
+    public BlockState northstar$updatePlacementLit(@Nullable BlockState state,
+                                                   @Local(argsOnly = true) BlockPlaceContext context) {
+        if (state != null && state.getBlock() == Blocks.WALL_TORCH && !NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos()))
+            return northstar$copyStateExtinguished(state);
+        return state;
     }
 
-    @Inject(method = "updateShape", at = @At("TAIL"), cancellable = true)
-    public void northstar$updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
-                                      BlockPos pos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> info) {
+    @ModifyReturnValue(method = "updateShape", at = @At("RETURN"))
+    public BlockState northstar$updateShape(BlockState state,
+                                            @Local(argsOnly = true) LevelAccessor level,
+                                            @Local(argsOnly = true, ordinal = 0) BlockPos pos) {
         if (state.getBlock() == Blocks.WALL_TORCH && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
-            info.setReturnValue(northstar$copyStateExtinguished(state));
+            level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
+            return northstar$copyStateExtinguished(state);
         }
+        return state;
     }
 
     @Override
