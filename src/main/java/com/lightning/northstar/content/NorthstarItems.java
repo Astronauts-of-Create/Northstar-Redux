@@ -117,6 +117,10 @@ public class NorthstarItems {
             .item("enriched_glowstone_ore", Item::new)
             .register();
 
+    public static final ItemEntry<Item> HECTORITE_BALL = REGISTRATE
+            .item("hectorite_ball", Item::new)
+            .register();
+
     // TODO: rename to ingot
     public static final ItemEntry<Item> MARTIAN_STEEL = REGISTRATE
             .item("martian_steel", Item::new)
@@ -471,6 +475,13 @@ public class NorthstarItems {
     public static final ItemEntry<Item> SODIUM_CATALYST = REGISTRATE
             .item("sodium_catalyst", Item::new)
             .register();
+
+    // Galena (PbS) is the primary ore of lead. Using "galena" for the raw ore and "lead" for refined products
+    // provides clear distinction and TFMG compatibility (TFMG provides lead ingots from galena ore)
+    public static final ItemEntry<Item> RAW_GALENA = REGISTRATE
+            .item("raw_galena", Item::new)
+            .register();
+
 
     public static final ItemEntry<Item> RUTILE_CONCENTRATE = REGISTRATE
             .item("rutile_concentrate", Item::new)

@@ -200,6 +200,12 @@ public class NorthstarTagGen {
                 .add(Items.LEATHER_CHESTPLATE)
                 .add(Items.LEATHER_LEGGINGS)
                 .add(Items.LEATHER_BOOTS);
+
+        tags.tag(NorthstarItemTags.C_INGOTS_LEAD)
+                .opt(ModCompat.TFMG, "lead_ingot");
+
+        tags.tag(NorthstarItemTags.C_RAW_MATERIALS_LITHIUM)
+                .opt(ModCompat.TFMG, "crushed_raw_lithium");
     }
 
     private static void entities(RegistrateTagsProvider<EntityType<?>> provider) {
@@ -246,6 +252,13 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarFluidTags.COMPAT_CDG_BIODIESEL)
                 .opt(ModCompat.CDG, "biodiesel");
+
+        tags.tag(NorthstarFluidTags.COMPAT_TFMG_KEROSENE)
+                .opt(ModCompat.TFMG, "kerosene");
+        tags.tag(NorthstarFluidTags.COMPAT_TFMG_DIESEL)
+                .opt(ModCompat.TFMG, "diesel");
+        tags.tag(NorthstarFluidTags.COMPAT_TFMG_NAPHTHA)
+                .opt(ModCompat.TFMG, "naphtha");
     }
 
     public static class Damage extends TagsProvider<DamageType> {
@@ -256,9 +269,11 @@ public class NorthstarTagGen {
         @Override
         protected void addTags(HolderLookup.Provider provider) {
             tag(DamageTypeTags.BYPASSES_ARMOR)
-                    .add(NorthstarDamageTypes.SUFFOCATION);
+                    .add(NorthstarDamageTypes.SUFFOCATION)
+                    .add(NorthstarDamageTypes.ACID);
             tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
-                    .add(NorthstarDamageTypes.SUFFOCATION);
+                    .add(NorthstarDamageTypes.SUFFOCATION)
+                    .add(NorthstarDamageTypes.ACID);
         }
     }
 

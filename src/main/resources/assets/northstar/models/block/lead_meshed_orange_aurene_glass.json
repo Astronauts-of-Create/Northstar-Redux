@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "all": "northstar:block/lead_meshed_orange_aurene_glass"
+  }
+}

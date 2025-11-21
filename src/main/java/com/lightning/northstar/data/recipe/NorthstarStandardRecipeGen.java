@@ -10,13 +10,20 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
+
+import static net.minecraft.data.recipes.SingleItemRecipeBuilder.stonecutting;
 
 public class NorthstarStandardRecipeGen extends StandardRecipeGen {
 
@@ -432,6 +439,8 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .rewardXP(0.4f)
             .inSmoker(),
 
+
+
     POLISHED_MARS_STONE = create(NorthstarBlocks.POLISHED_MARS_STONE)
             .viaCooking(() -> NorthstarBlocks.MARS_STONE)
             .rewardXP(0.1f)
@@ -477,6 +486,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
             .inBlastFurnace();
 
     // endregion
+
 
     private GeneratedRecipe createLamp(ItemProviderEntry<? extends ItemLike> lamp, Supplier<? extends ItemLike> casing, Supplier<? extends ItemLike> core) {
         return create(lamp)

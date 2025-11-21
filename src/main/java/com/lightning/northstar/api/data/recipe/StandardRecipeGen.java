@@ -170,6 +170,21 @@ public abstract class StandardRecipeGen extends BaseRecipeProvider {
             return unlockedBy(item).viaCookingIngredient(() -> Ingredient.of(item.get()));
         }
 
+        public GeneratedRecipe viaStonecutting(Supplier<? extends ItemLike> input) {
+            return register(consumer -> {
+                SingleItemRecipeBuilder b = SingleItemRecipeBuilder.stonecutting(
+                        Ingredient.of(input.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        result.get(),
+                        amount
+                );
+                if (unlockedBy != null)
+                    b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+                b.save(consumer, createLocation("stonecutting"));
+            });
+        }
+
+
         public Cooking viaCookingTag(Supplier<TagKey<Item>> tag) {
             return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.of(tag.get()));
         }
