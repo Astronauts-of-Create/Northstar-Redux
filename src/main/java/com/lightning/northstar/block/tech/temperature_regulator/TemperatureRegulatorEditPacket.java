@@ -113,7 +113,7 @@ public class TemperatureRegulatorEditPacket extends SimplePacketBase {
     }
 
     private static int clampSize(int size) {
-        return Mth.clamp(size, 1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE);
+        return Mth.clamp(size, 0, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE);
     }
 
 }

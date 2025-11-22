@@ -23,6 +23,7 @@ public class MovingOxygenSealer implements NorthstarOxygen.Provider {
     public float activeDrain;
     public float drain;
     public boolean active;
+    public boolean showLeak;
 
     MovingOxygenSealer(Contraption contraption) {
         this.contraption = contraption;
@@ -36,6 +37,8 @@ public class MovingOxygenSealer implements NorthstarOxygen.Provider {
         }
 
         if (sealer.hasLeak()) {
+            if (showLeak)
+                sealer.renderLeakPath(context.contraption.entity.level(), context.contraption.entity);
             active = false;
             return;
         }

@@ -8,6 +8,8 @@ import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
+import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -39,6 +41,16 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
     }
 
     @Override
+    protected void init() {
+        super.init();
+
+        IconButton showLeak = new IconButton(guiLeft + 157, guiTop + 7, AllIcons.I_ACTIVE);
+        showLeak.setToolTip(Component.translatable("northstar.gui.sealer.toggle_leak"));
+        showLeak.withCallback(() -> sealer.showLeak = !sealer.showLeak);
+        addRenderableWidget(showLeak);
+    }
+
+    @Override
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.blit(BACKGROUND, guiLeft, guiTop, 0, 0, windowWidth, windowHeight, 256, 64);
 
@@ -65,12 +77,11 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
                         "%d:%02d:%02d".formatted(remainingSeconds / 60 / 60, remainingSeconds / 60 % 60, remainingSeconds % 60) :
                         "%02d:%02d".formatted(remainingSeconds / 60, remainingSeconds % 60);
 
-        Component status = sealer.sealer.hasLeak() ?
+        MutableComponent line1 = sealer.sealer.hasLeak() ?
                 Component.translatable("northstar.gui.goggles.sealer.area_too_big").withStyle(ChatFormatting.RED) :
-                sealer.active ?
+                Component.translatable("northstar.generic.status").append(sealer.active ?
                         Component.translatable("northstar.gui.oxygen_sealer.sealed").withStyle(ChatFormatting.GREEN) :
-                        Component.translatable("northstar.gui.oxygen_sealer.no_oxygen").withStyle(ChatFormatting.GOLD);
-        MutableComponent line1 = Component.translatable("northstar.generic.status").append(status);
+                        Component.translatable("northstar.gui.oxygen_sealer.no_oxygen").withStyle(ChatFormatting.GOLD));
         MutableComponent line2 = sealer.sealer.hasLeak() ?
                 NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
                         .add(Lang.number(NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get())
@@ -82,16 +93,19 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
                                 .style(ChatFormatting.BLUE))
                         .component();
         MutableComponent line3 = NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
+                .text(" ")
                 .add(Lang.number(usagePerTick)
                         .style(ChatFormatting.GOLD)
                         .add(NorthstarLang.MB_PER_TICK))
                 .component();
         MutableComponent line4 = NorthstarLang.translate("gui.oxygen_sealer.available_oxygen")
+                .text(" ")
                 .add(Lang.number(totalOxygen)
                         .add(NorthstarLang.MB)
                         .style(ChatFormatting.GOLD))
                 .component();
         MutableComponent line5 = NorthstarLang.translate("gui.oxygen_sealer.remaining_time")
+                .text(" ")
                 .add(Lang.text(remainingTime)
                         .style(ChatFormatting.AQUA))
                 .component();

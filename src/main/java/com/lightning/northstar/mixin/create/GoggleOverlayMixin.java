@@ -5,8 +5,10 @@ import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -33,6 +35,8 @@ public class GoggleOverlayMixin {
                                              @Local ClientLevel level,
                                              @Local BlockPos pos,
                                              @Local List<Component> tooltip) {
+        if (!GogglesItem.isWearingGoggles(Minecraft.getInstance().player))
+            return;
         Block block = level.getBlockState(pos).getBlock();
 
         OxygenConsumer consumer = block instanceof OxygenConsumer cons ? cons : OxygenConsumer.REGISTRY.get(block);

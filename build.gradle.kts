@@ -8,7 +8,7 @@ plugins {
     id("dev.architectury.loom") version "1.11.440"
 }
 
-version = "0.5.1+1.20.1-create5" // https://semver.org/
+version = "0.5.2+1.20.1-create5" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -91,6 +91,11 @@ repositories {
             includeGroupByRegex("org\\.parchmentmc.*")
         }
     }
+    maven("https://maven.latvian.dev/releases") {
+        content {
+            includeGroupByRegex("dev\\.latvian\\..*")
+        }
+    }
 }
 
 dependencies {
@@ -104,6 +109,7 @@ dependencies {
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.forge)
+    include(libs.mixinextras.forge)
 
     modImplementation(variantOf(libs.create) { classifier("slim") })
     modImplementation(libs.registrate)
@@ -115,6 +121,7 @@ dependencies {
     modImplementation(libs.jei.forge)
     modImplementation(libs.copycats)
     modImplementation(libs.cdg)
+    modImplementation(libs.kubejs)
     modImplementation(libs.tfmg)
 
     // see https://github.com/cc-tweaked/CC-Tweaked/discussions/1752

@@ -1,6 +1,0 @@
-{
-  "parent": "northstar:block/pointed_crimsite",
-  "textures": {
-    "cross": "northstar:block/pointed_crimsite_down_tip_merge"
-  }
-}

@@ -26,7 +26,7 @@ public class RemainingOxygenOverlay implements IGuiOverlay {
                 player == null ||
                 player.isSpectator() ||
                 player.isCreative() ||
-                (NorthstarOxygen.hasOxygen(player.level(), player.position())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
+                (NorthstarOxygen.hasOxygen(player.level(), player.getEyePosition())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
             return;
 
         ItemStack tank = NorthstarOxygen.getOxygenTank(player);

@@ -1,6 +1,5 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarMenuTypes;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
@@ -71,9 +70,6 @@ public class RocketStationMenu extends MenuBase<RocketStationBlockEntity> {
         int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
         dif = Mth.roundToward(dif, 100) / 20;
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(contentHolder.getLevel().dimension()) + 1000;
-        if (dif != 0) {
-            Northstar.LOGGER.debug("{}", dif);
-        }
         return cost * 8;
     }
 

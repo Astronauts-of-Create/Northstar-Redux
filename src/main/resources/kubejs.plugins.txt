@@ -1,0 +1,1 @@
+com.lightning.northstar.compat.kubejs.NorthstarKubeJsPlugin

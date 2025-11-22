@@ -26,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -143,7 +144,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (++processingTicks >= r.getProcessingDuration()) {
             if (FreezingRecipe.apply(this, r)) {
                 processingTicks = 0;
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2 | 16);
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
             }
         }
     }

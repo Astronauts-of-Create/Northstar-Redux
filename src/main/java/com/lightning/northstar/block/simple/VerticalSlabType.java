@@ -12,6 +12,8 @@ public enum VerticalSlabType implements StringRepresentable {
     SOUTH("south"),
     DOUBLE("double");
 
+    public static final VerticalSlabType[] ALL = values();
+
     private final String name;
 
     VerticalSlabType(String name) {

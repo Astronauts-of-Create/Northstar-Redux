@@ -30,6 +30,7 @@ public class BaseTemperatureRegulator {
     protected boolean limit;
     protected int sizeX, sizeY, sizeZ;
     protected float temperature;
+    protected boolean showLeak;
 
     public BaseTemperatureRegulator() {
         limit = false;

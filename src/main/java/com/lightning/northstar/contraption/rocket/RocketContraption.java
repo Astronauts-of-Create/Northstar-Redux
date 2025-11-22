@@ -1,6 +1,5 @@
 package com.lightning.northstar.contraption.rocket;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlockEntity;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
@@ -114,7 +113,6 @@ public class RocketContraption extends TranslatingContraption {
             }
         }
         if (blockState.is(NorthstarBlocks.AUTO_LANDER.get())) {
-            Northstar.LOGGER.debug("AUTO LANDER");
             this.hasAutoLander = true;
         }
         if (blockState.is(NorthstarBlocks.INTERPLANETARY_NAVIGATOR.get())) {

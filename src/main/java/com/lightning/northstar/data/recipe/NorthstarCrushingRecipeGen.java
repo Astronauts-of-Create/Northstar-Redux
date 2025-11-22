@@ -56,6 +56,13 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
             b -> b.duration(300)
                     .output(Items.GLOWSTONE_DUST, 2)),
 
+    SPACE_COAL_ORE = create("space_coal_ore",
+            b -> b.duration(350)
+                    .require(NorthstarItemTags.SPACE_ORE_COAL.tag)
+                    .output(Items.COAL, 2)
+                    .output(0.25f, Items.COAL)
+                    .output(0.75f, AllItems.EXP_NUGGET)),
+
     SPACE_COPPER_ORE = create("space_copper_ore",
             b -> b.duration(350)
                     .require(NorthstarItemTags.SPACE_ORE_COPPER.tag)

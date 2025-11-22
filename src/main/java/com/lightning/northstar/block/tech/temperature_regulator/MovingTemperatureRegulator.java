@@ -7,7 +7,6 @@ import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -33,8 +32,11 @@ public class MovingTemperatureRegulator implements NorthstarTemperature.Provider
         if (sealer.isSealInProgress()) {
             sealer.updateSeal(context.contraption.getContraptionWorld(), NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get());
         } else {
-            sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, Direction.UP);
+            sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, null);
         }
+
+        if (sealer.hasLeak() && regulator.showLeak)
+            sealer.renderLeakPath(context.contraption.entity.level(), context.contraption.entity);
 
         active = !sealer.hasLeak();
     }
