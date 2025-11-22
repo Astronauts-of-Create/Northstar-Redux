@@ -131,7 +131,7 @@ public class NorthstarTemperature {
         if (entity.level().isClientSide())
             return;
 
-        float temp = NorthstarTemperature.getTemperatureAt(entity.level(), entity.position());
+        float temp = NorthstarTemperature.getTemperatureAt(entity.level(), entity.getEyePosition());
         boolean hasInsulation = NorthstarTemperature.hasInsulation(entity);
         boolean hasHeatProtection = NorthstarTemperature.hasHeatProtection(entity);
 

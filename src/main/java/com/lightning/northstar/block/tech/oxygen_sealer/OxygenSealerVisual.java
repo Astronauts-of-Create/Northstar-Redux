@@ -6,14 +6,15 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
 import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
 
-public class OxygenSealerVisual extends KineticBlockEntityVisual<OxygenSealerBlockEntity> implements SimpleDynamicVisual {
+public class OxygenSealerVisual extends KineticBlockEntityVisual<OxygenSealerBlockEntity> implements SimpleTickableVisual {
 
     private final RotatingInstance shaft;
     private final RotatingInstance propeller;
@@ -33,7 +34,7 @@ public class OxygenSealerVisual extends KineticBlockEntityVisual<OxygenSealerBlo
     }
 
     @Override
-    public void beginFrame(Context ctx) {
+    public void tick(Context context) {
         shaft.setup(blockEntity).setChanged();
         propeller.setup(blockEntity).setChanged();
     }

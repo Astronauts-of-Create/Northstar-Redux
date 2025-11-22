@@ -8,19 +8,17 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -60,7 +58,7 @@ public class FreezingRecipe extends ProcessingRecipe<RecipeInput, FreezingRecipe
         List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
         List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
-        List<FluidIngredient> fluidIngredients = recipe instanceof ProcessingRecipe<?, ?> r ? r.getFluidIngredients() : List.of();
+        List<SizedFluidIngredient> fluidIngredients = recipe instanceof ProcessingRecipe<?, ?> r ? r.getFluidIngredients() : List.of();
 
         for (boolean simulate : Iterate.trueAndFalse) {
             if (!simulate && test)
@@ -89,8 +87,8 @@ public class FreezingRecipe extends ProcessingRecipe<RecipeInput, FreezingRecipe
 
             boolean fluidsAffected = false;
             FluidIngredients:
-            for (FluidIngredient fluidIngredient : fluidIngredients) {
-                int amountRequired = fluidIngredient.getRequiredAmount();
+            for (SizedFluidIngredient fluidIngredient : fluidIngredients) {
+                int amountRequired = fluidIngredient.amount();
 
                 for (int tank = 0; tank < availableFluids.getTanks(); tank++) {
                     FluidStack fluidStack = availableFluids.getFluidInTank(tank);
@@ -121,9 +119,12 @@ public class FreezingRecipe extends ProcessingRecipe<RecipeInput, FreezingRecipe
 
             if (simulate) {
                 if (recipe instanceof FreezingRecipe r) {
-                    recipeOutputItems.addAll(r.rollResults());
+                    CraftingInput remainderInput = new DummyCraftingContainer(availableItems, extractedItemsFromSlot)
+                            .asCraftInput();
+
+                    recipeOutputItems.addAll(r.rollResults(icebox.getLevel().random));
                     recipeOutputFluids.addAll(r.getFluidResults());
-                    recipeOutputItems.addAll(r.getRemainingItems(icebox.getInputInventory()));
+                    recipeOutputItems.addAll(r.getRemainingItems(remainderInput));
                 }
             }
 

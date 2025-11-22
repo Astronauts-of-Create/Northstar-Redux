@@ -197,7 +197,10 @@ public class LargeFanBlock extends KineticBlock implements IBE<LargeFanBlockEnti
 
             be.blades--;
             be.sendData();
-            player.addItem(NorthstarItems.FAN_BLADE.asStack());
+            if (player == null) // is that even possible? technically nullable through UseOnContext
+                popResource(world, pos, NorthstarItems.FAN_BLADE.asStack());
+            else
+                player.getInventory().placeItemBackInInventory(NorthstarItems.FAN_BLADE.asStack());
 
             return InteractionResult.SUCCESS;
         });

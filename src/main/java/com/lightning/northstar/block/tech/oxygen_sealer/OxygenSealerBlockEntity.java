@@ -25,6 +25,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -129,7 +130,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
             return;
 
         if (audioTick++ % 13 == 0) {
-            level.playLocalSound(worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0, false);
+            level.playSound(null, worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0);
         }
 
         if (level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())

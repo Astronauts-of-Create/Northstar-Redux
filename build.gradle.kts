@@ -8,7 +8,7 @@ plugins {
     id("dev.architectury.loom") version "1.11.440"
 }
 
-version = "0.5.1+1.21.1" // https://semver.org/
+version = "0.5.2+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -91,6 +91,16 @@ repositories {
             includeGroupByRegex("org\\.parchmentmc.*")
         }
     }
+    maven("https://maven.latvian.dev/releases") {
+        content {
+            includeGroupByRegex("dev\\.latvian\\..*")
+        }
+    }
+    maven("https://jitpack.io") {
+        content {
+            includeGroupByRegex("com\\.github\\..*")
+        }
+    }
 }
 
 dependencies {
@@ -104,9 +114,11 @@ dependencies {
     annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.neoforge)
+    include(libs.mixinextras.neoforge)
 
     modImplementation(variantOf(libs.create) { classifier("slim") }) {
         exclude(group = "maven.modrinth", module = "journeymap")
+        exclude(group = "cc.tweaked")
     }
     modImplementation(libs.ponder.neoforge)
     modImplementation(libs.registrate)
@@ -124,6 +136,9 @@ dependencies {
     }
     modImplementation(libs.cdg)
     modImplementation(libs.cca)
+    modImplementation(libs.kubejs)
+    modImplementation(libs.kubejs.create)
+    forgeRuntimeLibrary("dev.latvian.apps:tiny-java-server:1.0.0-build.26")
     modImplementation(libs.tfmg)
 
     // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.

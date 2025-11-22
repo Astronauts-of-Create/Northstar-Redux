@@ -4,8 +4,8 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"particle": "northstar:block/vent_block",
-		"all": "northstar:block/vent_block"
+		"particle": "northstar:block/vent",
+		"all": "northstar:block/vent"
 	},
 	"elements": [
 		{

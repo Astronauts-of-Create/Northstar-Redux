@@ -20,7 +20,7 @@ public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
     ICE = create("water",
             b -> b.colderThan(0)
                     .duration(100)
-                    .require(FluidTags.WATER, 2000)
+                    .require(FluidTags.WATER, 1000)
                     .output(Items.ICE)),
 
     LIQUID_HYDROGEN = createGas("hydrogen", -253,
@@ -34,7 +34,7 @@ public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
     METHANE_ICE = create("methane_ice",
             b -> b.colderThan(-182)
                     .duration(100)
-                    .require(NorthstarFluidTags.C_METHANE.tag, 2000)
+                    .require(NorthstarFluidTags.C_METHANE.tag, 1000)
                     .output(NorthstarBlocks.METHANE_ICE)),
 
     VANILLA_ICE_CREAM = create("vanilla_ice_cream",

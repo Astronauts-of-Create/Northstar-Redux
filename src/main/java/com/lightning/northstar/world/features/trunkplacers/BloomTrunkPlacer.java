@@ -184,7 +184,6 @@ public class BloomTrunkPlacer extends TrunkPlacer {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos.MutableBlockPos blockpos$mutableblockpos3 = new BlockPos.MutableBlockPos();
         this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY() + 12, pPos.getZ()), pConfig);
-        Northstar.LOGGER.debug("{}", this.placeShroomLight(pLevel, pBlockSetter, pRandom, blockpos$mutableblockpos3.set(pPos.getX(), pPos.getY() + 12, pPos.getZ()), pConfig));
         Northstar.LOGGER.debug("YOOOOOOOOOOOOOOOO, BIOLUMINESCENCE");
         Northstar.LOGGER.debug("{}X    {}Y    {}Z", pPos.getX(), pPos.getY() + 12, pPos.getZ());
 

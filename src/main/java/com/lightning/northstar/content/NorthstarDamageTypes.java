@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
+import com.simibubi.create.foundation.damageTypes.DamageTypeBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -17,7 +18,7 @@ public class NorthstarDamageTypes {
     }
 
     public static void bootstrap(BootstrapContext<DamageType> context) {
-        context.register(SUFFOCATION, new DamageType("suffocation", DamageScaling.NEVER, 0.0f));
+        new DamageTypeBuilder(SUFFOCATION).scaling(DamageScaling.NEVER).register(context);
     }
 
 }

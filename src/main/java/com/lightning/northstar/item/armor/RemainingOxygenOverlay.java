@@ -27,7 +27,7 @@ public class RemainingOxygenOverlay implements LayeredDraw.Layer {
                 player == null ||
                 player.isSpectator() ||
                 player.isCreative() ||
-                (NorthstarOxygen.hasOxygen(player.level(), player.position())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
+                (NorthstarOxygen.hasOxygen(player.level(), player.getEyePosition())) && !player.canDrownInFluidType(player.getEyeInFluidType()))
             return;
 
         ItemStack tank = NorthstarOxygen.getOxygenTank(player);

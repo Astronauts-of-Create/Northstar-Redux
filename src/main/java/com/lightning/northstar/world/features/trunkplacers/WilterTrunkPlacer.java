@@ -109,7 +109,6 @@ public class WilterTrunkPlacer extends TrunkPlacer {
                 curve_z = 0;
             }
             curve_z *= Zadd;
-            Northstar.LOGGER.debug("{}", curve_x);
             int Xpos = pPos.getX() + curve_x + x_offset;
             int Zpos = pPos.getZ() + curve_z + z_offset;
             int j = pPos.getY() + i;

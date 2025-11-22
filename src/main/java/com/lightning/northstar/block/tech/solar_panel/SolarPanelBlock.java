@@ -3,6 +3,7 @@ package com.lightning.northstar.block.tech.solar_panel;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -18,6 +19,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<SolarPanelBlockEntity> {
 
     public static final VoxelShape SHAPE_X = Block.box(1, 0, 0, 15, 14, 16);
@@ -81,8 +86,11 @@ public class SolarPanelBlock extends HorizontalKineticBlock implements IBE<Solar
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context)
-                .setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getCounterClockWise());
+        Direction facing = getPreferredHorizontalFacing(context);
+        if (facing == null || (context.getPlayer() != null && context.getPlayer().isCrouching())) {
+            facing = context.getHorizontalDirection();
+        }
+        return defaultBlockState().setValue(HORIZONTAL_FACING, facing);
     }
 
     @Override

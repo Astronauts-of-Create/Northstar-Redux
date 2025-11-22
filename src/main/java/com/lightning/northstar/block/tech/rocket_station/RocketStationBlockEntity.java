@@ -310,10 +310,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
         dif = Mth.roundToward(dif, 100) / 20;
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(this.level.dimension()) + 1000;
-
-        if (dif != 0) {
-            Northstar.LOGGER.debug("{}", dif);
-        }
         return cost * 8;
     }
 
@@ -330,10 +326,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
         dif = Mth.roundToward(dif, 100) / 20;
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(target) + 1000;
-
-        if (dif != 0) {
-            Northstar.LOGGER.debug("{}", dif);
-        }
         return cost * 8;
     }
 

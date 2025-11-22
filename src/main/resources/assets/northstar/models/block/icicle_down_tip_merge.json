@@ -1,6 +1,0 @@
-{
-  "parent": "northstar:block/icicle",
-  "textures": {
-    "cross": "northstar:block/icicle_down_tip_merge"
-  }
-}

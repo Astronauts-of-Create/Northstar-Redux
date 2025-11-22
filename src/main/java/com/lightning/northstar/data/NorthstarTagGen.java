@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import com.copycatsplus.copycats.CCBlocks;
 import com.drmangotea.tfmg.registry.TFMGBlocks;
 import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.jesz.createdieselgenerators.CDGBlocks;
@@ -72,7 +73,10 @@ public class NorthstarTagGen {
 
                 .add(AllBlocks.BLAZE_BURNER.get(), AllBlocks.ANDESITE_LADDER.get(), AllBlocks.BRASS_LADDER.get(),
                         AllBlocks.COPPER_LADDER.get(), AllBlocks.ANDESITE_SCAFFOLD.get(), AllBlocks.BRASS_SCAFFOLD.get(),
-                        AllBlocks.COPPER_SCAFFOLD.get(), AllBlocks.PACKAGER.get(), AllBlocks.REPACKAGER.get());
+                        AllBlocks.COPPER_SCAFFOLD.get(), AllBlocks.PACKAGER.get(), AllBlocks.REPACKAGER.get(),
+                        AllBlocks.COPYCAT_BASE.get())
+
+                .opt(CCBlocks.COPYCAT_BASE.get());
 
         tags.tag(NorthstarBlockTags.ARGYRE_REPLACEABLE)
                 .add(Blocks.AIR, Blocks.CAVE_AIR,

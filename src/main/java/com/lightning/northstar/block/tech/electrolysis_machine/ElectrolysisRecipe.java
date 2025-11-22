@@ -45,7 +45,7 @@ public class ElectrolysisRecipe extends StandardProcessingRecipe<RecipeWrapper> 
             return false;
         }
 
-        if (er.getFluidIngredients().get(0).getRequiredAmount() > machine.inputTank.getPrimaryHandler().getFluidAmount()) {
+        if (er.getFluidIngredients().get(0).amount() > machine.inputTank.getPrimaryHandler().getFluidAmount()) {
             return false;
         }
 
@@ -60,7 +60,7 @@ public class ElectrolysisRecipe extends StandardProcessingRecipe<RecipeWrapper> 
         }
 
         if (!simulate) {
-            machine.inputTank.getPrimaryHandler().drain(er.getFluidIngredients().get(0).getRequiredAmount(), IFluidHandler.FluidAction.EXECUTE);
+            machine.inputTank.getPrimaryHandler().drain(er.getFluidIngredients().get(0).amount(), IFluidHandler.FluidAction.EXECUTE);
             left.fill(er.getFluidResults().get(0), IFluidHandler.FluidAction.EXECUTE);
             right.fill(er.getFluidResults().get(1), IFluidHandler.FluidAction.EXECUTE);
         }

@@ -2,6 +2,7 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.ChatFormatting;
@@ -46,34 +47,23 @@ public class NorthstarCreativeModeTab {
                     .displayItems(createItemDisplay(NorthstarCreativeModeTab.TECH))
                     .build());
 
-    private static void registerItem(CreativeModeTab.Output event, String planet) {
-        ItemStack stack = new ItemStack(NorthstarItems.STAR_MAP.get());
-        stack.set(DataComponents.CUSTOM_NAME, Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-        stack.set(NorthstarDataComponents.PLANET, planet);
-        event.accept(stack);
-    }
-
-    private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
-        ItemStack stack = new ItemStack(item);
-        stack.set(NorthstarDataComponents.OXYGEN, NorthstarOxygen.MAXIMUM_OXYGEN);
-        event.accept(stack);
-    }
-
     private static CreativeModeTab.DisplayItemsGenerator createItemDisplay(DeferredHolder<CreativeModeTab, CreativeModeTab> tab) {
         return (parameters, output) -> {
             Map<Item, Consumer<CreativeModeTab.Output>> builders = Map.of(
                     NorthstarItems.STAR_MAP.get(), out -> {
-                        registerItem(out, "earth");
-                        registerItem(out, "moon");
-                        registerItem(out, "mars");
-                        registerItem(out, "mercury");
-                        registerItem(out, "venus");
+                        registerStarMap(out, "earth");
+                        registerStarMap(out, "moon");
+                        registerStarMap(out, "mars");
+                        registerStarMap(out, "mercury");
+                        registerStarMap(out, "venus");
                     },
                     NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get()),
                     NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get())
             );
 
             for (RegistryEntry<Item, Item> item : REGISTRATE.getAll(Registries.ITEM)) {
+                if (item.get() instanceof SequencedAssemblyItem)
+                    continue;
                 if (CreateRegistrate.isInCreativeTab(item, tab)) {
                     output.accept(item.get(), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 
@@ -84,6 +74,19 @@ public class NorthstarCreativeModeTab {
                 }
             }
         };
+    }
+
+    private static void registerStarMap(CreativeModeTab.Output event, String planet) {
+        ItemStack item = new ItemStack(NorthstarItems.STAR_MAP.get());
+        item.set(DataComponents.CUSTOM_NAME, Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
+        item.set(NorthstarDataComponents.PLANET, planet);
+        event.accept(item);
+    }
+
+    private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
+        ItemStack stack = new ItemStack(item);
+        stack.set(NorthstarDataComponents.OXYGEN, NorthstarOxygen.MAXIMUM_OXYGEN);
+        event.accept(stack);
     }
 
     public static void register(IEventBus eventBus) {

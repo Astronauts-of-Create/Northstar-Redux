@@ -4,6 +4,7 @@ import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -18,7 +19,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -53,11 +53,9 @@ public abstract class ServerLevelMixin extends Level implements NorthstarLevel {
     }
 
     //yay :]
-    @Inject(method = "getSeed", at = @At("RETURN"), cancellable = true)
-    public void getSeed(CallbackInfoReturnable<Long> info) {
-        long offset = NorthstarPlanets.getSeedOffset(dimension());
-        if (offset != 0)
-            info.setReturnValue(info.getReturnValueJ() + offset);
+    @ModifyReturnValue(method = "getSeed", at = @At("RETURN"))
+    private long northstar$modifySeed(long seed) {
+        return seed + NorthstarPlanets.getSeedOffset(dimension());
     }
 
 }

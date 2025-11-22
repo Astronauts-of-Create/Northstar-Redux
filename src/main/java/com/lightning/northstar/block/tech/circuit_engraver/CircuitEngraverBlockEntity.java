@@ -88,7 +88,7 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
         if (currentRecipe != null && processingTicks < currentRecipe.getProcessingDuration())
             return HOLD;
 
-        List<TransportedItemStack> outputs = RecipeApplier.applyRecipeOn(level, transported.stack.copyWithCount(1), currentRecipe)
+        List<TransportedItemStack> outputs = RecipeApplier.applyRecipeOn(level, transported.stack.copyWithCount(1), currentRecipe, true)
                 .stream()
                 .map(stack -> {
                     TransportedItemStack copy = transported.copy();

@@ -47,9 +47,9 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
         int x = guiLeft, y = guiTop;
 
-        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), regulator.sizeX, "Width (X)");
-        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), regulator.sizeY, "Height (Y)");
-        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), regulator.sizeZ, "Depth (Z)");
+        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), regulator.sizeX + 1, "Width (X)");
+        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), regulator.sizeY + 1, "Height (Y)");
+        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), regulator.sizeZ + 1, "Depth (Z)");
 
         // condition is negated because a click is simulated to sync the states of everything
         boolean[] limit = { regulator.bounds.minX == Integer.MIN_VALUE };
@@ -82,16 +82,23 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
         confirm.withCallback(() -> {
             CatnipServices.NETWORK.sendToServer(new TemperatureRegulatorEditPacket(entityId, pos,
                     (int) unit.toCelsius(temperature.getState()),
-                    limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
+                    limit[0], sizeX.getState() - 1, sizeY.getState() - 1, sizeZ.getState() - 1));
             onClose();
         });
         addRenderableWidget(confirm);
+
+        if (entityId != -1) {
+            IconButton showLeak = new IconButton(x + 179, y + 31, AllIcons.I_ACTIVE);
+            showLeak.setToolTip(Component.translatable("northstar.gui.sealer.toggle_leak"));
+            showLeak.withCallback(() -> regulator.showLeak = !regulator.showLeak);
+            addRenderableWidget(showLeak);
+        }
     }
 
     private ScrollInput addScrollInput(ScrollInput input, int value, String name) {
         Label label = new Label(0, input.getY() + 6, Component.empty())
                 .withShadow();
-        input.withRange(1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE + 1)
+        input.withRange(1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE + 2)
                 .calling(i -> label.setX(input.getX() + input.getWidth() / 2 - font.width(label.text) / 2))
                 .writingTo(label)
                 .titled(Component.literal(name))

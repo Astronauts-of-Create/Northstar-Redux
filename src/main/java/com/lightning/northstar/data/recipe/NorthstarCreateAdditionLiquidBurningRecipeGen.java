@@ -5,6 +5,7 @@ import com.lightning.northstar.content.NorthstarFluids;
 import com.mrh0.createaddition.datagen.RecipeGen.LiquidBurningRecipeGen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,12 +35,12 @@ public class NorthstarCreateAdditionLiquidBurningRecipeGen extends LiquidBurning
         return modid + "'s create addition liquid burning recipes";
     }
 
-    public GeneratedRecipe create(String name, Fluid fluid, boolean superheated) {
+    public GeneratedRecipe create(String name, FlowingFluid fluid, boolean superheated) {
         // values are the same as they would be for buckets, see somewhere inside BlazeBurnerBlockEntity
         return create(name, fluid, superheated ? 3200 : 1600, superheated);
     }
 
-    public GeneratedRecipe create(String name, Fluid fluid, int burnTime, boolean superheated) {
+    public GeneratedRecipe create(String name, FlowingFluid fluid, int burnTime, boolean superheated) {
         return create(name, b -> {
             if (superheated)
                 b.superheated();

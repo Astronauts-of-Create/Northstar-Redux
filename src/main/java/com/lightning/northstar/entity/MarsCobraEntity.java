@@ -183,7 +183,6 @@ public class MarsCobraEntity extends Monster implements GeoAnimatable {
             double d0 = vec31.length();
             vec31 = vec31.normalize();
             double d1 = vec3.dot(vec31);
-            Northstar.LOGGER.debug("{}, comparer: {}", d1, (1.0D - 0.35D / (d0 / 8)));
             return d1 > 1.0D - 0.35D / (d0 / 8) && pPlayer.hasLineOfSight(this);
         }
     }

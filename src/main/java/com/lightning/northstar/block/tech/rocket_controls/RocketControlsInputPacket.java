@@ -1,6 +1,5 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import io.netty.buffer.ByteBuf;
@@ -62,7 +61,7 @@ public class RocketControlsInputPacket implements ServerboundPacketPayload {
         }
 
         if (rce.toGlobalVector(Vec3.atCenterOf(controlsPos), 0).closerThan(player.position(), 16)) {
-            Northstar.LOGGER.debug("Key press Detected!");
+
             RocketControlsServerHandler.receivePressed(world, rce, controlsPos, uniqueID, activatedButtons, press);
         }
     }
