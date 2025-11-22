@@ -9,7 +9,7 @@ import com.lightning.northstar.mixin.accessor.NorthstarContraptionWorld;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.AllBlocks;
-import net.createmod.catnip.data.Iterate;
+import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

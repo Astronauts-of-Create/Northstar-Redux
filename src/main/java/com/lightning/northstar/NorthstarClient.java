@@ -12,7 +12,7 @@ import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
-import net.createmod.catnip.lang.LangNumberFormat;
+import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;

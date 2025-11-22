@@ -2,11 +2,11 @@ package com.lightning.northstar.data.util;
 
 import com.lightning.northstar.block.simple.VerticalSlabBlock;
 import com.lightning.northstar.block.simple.VerticalSlabType;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
