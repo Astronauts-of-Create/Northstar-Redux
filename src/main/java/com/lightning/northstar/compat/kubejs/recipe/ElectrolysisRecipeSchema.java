@@ -1,6 +1,6 @@
 package com.lightning.northstar.compat.kubejs.recipe;
 
-import dev.latvian.mods.kubejs.create.recipe.CreateRecipeComponents;
+import com.lightning.northstar.compat.kubejs.component.CreateRecipeComponents;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.FluidStackComponent;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;

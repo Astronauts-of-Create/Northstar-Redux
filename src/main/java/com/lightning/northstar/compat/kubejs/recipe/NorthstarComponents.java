@@ -1,9 +1,9 @@
 package com.lightning.northstar.compat.kubejs.recipe;
 
+import com.lightning.northstar.compat.kubejs.component.CreateRecipeComponents;
+import com.lightning.northstar.compat.kubejs.component.ProcessingOutputRecipeComponent;
 import com.mojang.datafixers.util.Either;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import dev.latvian.mods.kubejs.create.recipe.CreateRecipeComponents;
-import dev.latvian.mods.kubejs.create.recipe.ProcessingOutputRecipeComponent;
 import dev.latvian.mods.kubejs.recipe.component.FluidStackComponent;
 import dev.latvian.mods.kubejs.recipe.component.IngredientComponent;
 import dev.latvian.mods.kubejs.recipe.component.ListRecipeComponent;

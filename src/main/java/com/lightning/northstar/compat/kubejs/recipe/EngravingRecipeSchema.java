@@ -1,7 +1,7 @@
 package com.lightning.northstar.compat.kubejs.recipe;
 
+import com.lightning.northstar.compat.kubejs.component.ProcessingOutputRecipeComponent;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import dev.latvian.mods.kubejs.create.recipe.ProcessingOutputRecipeComponent;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.IngredientComponent;
 import dev.latvian.mods.kubejs.recipe.component.TimeComponent;
@@ -14,7 +14,7 @@ import java.util.List;
 public interface EngravingRecipeSchema {
 
     RecipeKey<List<Ingredient>> INGREDIENTS = IngredientComponent.INGREDIENT.instance().asList().inputKey("ingredients");
-    RecipeKey<List< ProcessingOutput>> RESULTS = ProcessingOutputRecipeComponent.TYPE.instance().asList().outputKey("results");
+    RecipeKey<List<ProcessingOutput>> RESULTS = ProcessingOutputRecipeComponent.TYPE.instance().asList().outputKey("results");
     RecipeKey<TickDuration> TIME = TimeComponent.TICKS.inputKey("processingTime").optional(TickDuration.of(100L));
 
     RecipeSchema SCHEMA = new RecipeSchema(RESULTS, INGREDIENTS, TIME);
