@@ -15,7 +15,6 @@ geckolib-neoforge = "software.bernie.geckolib:geckolib-neoforge-1.21.1:4.7.2"
 jcpp = "org.anarres:jcpp:1.4.14"
 jei-neoforge = "mezz.jei:jei-1.21.1-neoforge:19.25.0.322"
 kubejs = "dev.latvian.mods:kubejs-neoforge:2101.7.2-build.285"
-kubejs-create = "maven.modrinth:kubejs-create:2101.3.1-build.18"
 mclib = "com.eliotlash.mclib:mclib:20"
 minecraft = "com.mojang:minecraft:1.21.1"
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }

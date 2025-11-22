@@ -137,8 +137,8 @@ dependencies {
     modImplementation(libs.cdg)
     modImplementation(libs.cca)
     modImplementation(libs.kubejs)
-    modImplementation(libs.kubejs.create)
     forgeRuntimeLibrary("dev.latvian.apps:tiny-java-server:1.0.0-build.26")
+
     modImplementation(libs.tfmg)
 
     // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.
