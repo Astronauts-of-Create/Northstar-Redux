@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -17,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -109,6 +111,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_BRINE.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_BRINE.tag)
             .build()
             .register();
 
@@ -126,6 +130,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_LIQUID_HYDROGEN.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_LIQUID_HYDROGEN.tag)
             .tag(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.tag)
             .build()
             .register();
@@ -143,6 +149,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_LIQUID_OXYGEN.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_LIQUID_OXYGEN.tag)
             .build()
             .register();
 
@@ -159,6 +167,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_METHANE.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_METHANE.tag)
             .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
             .build()
             .register();
@@ -176,6 +186,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_SULFURIC_ACID.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_SULFURIC_ACID.tag)
             .build()
             .register();
 
@@ -193,6 +205,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_HYDROCARBON.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_HYDROCARBON.tag)
             .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
             .build()
             .register();
@@ -210,6 +224,8 @@ public class NorthstarFluids {
             .tag(NorthstarFluidTags.C_BIOFUEL.tag)
             .source(BaseFlowingFluid.Source::new)
             .bucket()
+            .tag(Tags.Items.BUCKETS)
+            .tag(NorthstarItemTags.C_BUCKETS_BIOFUEL.tag)
             .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
             .build()
             .register();

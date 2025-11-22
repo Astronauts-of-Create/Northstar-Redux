@@ -184,7 +184,6 @@ public class NorthstarItems {
                     .attributes(SwordItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 3, -2.4f)))
             .model((c, p) -> p.handheld(c::get))
             .tag(ItemTags.SWORDS)
-            .tag(Tags.Items.TOOLS)
             .register();
 
     public static final ItemEntry<PickaxeItem> MARTIAN_PICKAXE = REGISTRATE
@@ -193,7 +192,7 @@ public class NorthstarItems {
             .properties(p -> p.stacksTo(1)
                     .attributes(PickaxeItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 1, -2.8f)))
             .model((c, p) -> p.handheld(c::get))
-            .tag(Tags.Items.TOOLS)
+            .tag(ItemTags.PICKAXES)
             .register();
 
     public static final ItemEntry<ShovelItem> MARTIAN_SHOVEL = REGISTRATE
@@ -202,7 +201,7 @@ public class NorthstarItems {
             .properties(p -> p.stacksTo(1)
                     .attributes(ShovelItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 1.5f, -3.0f)))
             .model((c, p) -> p.handheld(c::get))
-            .tag(Tags.Items.TOOLS)
+            .tag(ItemTags.SHOVELS)
             .register();
 
     public static final ItemEntry<AxeItem> MARTIAN_AXE = REGISTRATE
@@ -211,7 +210,7 @@ public class NorthstarItems {
             .properties(p -> p.stacksTo(1)
                     .attributes(AxeItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 5, -3.0f)))
             .model((c, p) -> p.handheld(c::get))
-            .tag(Tags.Items.TOOLS)
+            .tag(ItemTags.AXES)
             .register();
 
     public static final ItemEntry<HoeItem> MARTIAN_HOE = REGISTRATE
@@ -220,32 +219,37 @@ public class NorthstarItems {
             .properties(p -> p.stacksTo(1)
                     .attributes(HoeItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, -2, 0.0f)))
             .model((c, p) -> p.handheld(c::get))
-            .tag(Tags.Items.TOOLS)
+            .tag(ItemTags.HOES)
             .register();
 
     public static final ItemEntry<ArmorItem> MARTIAN_STEEL_HELMET = REGISTRATE
             .item("martian_steel_helmet", p -> new ArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_ARMOR, ArmorItem.Type.HELMET, p))
             .properties(p -> p.durability(11 * 30))
+            .tag(ItemTags.HEAD_ARMOR)
             .register();
 
     public static final ItemEntry<ArmorItem> MARTIAN_STEEL_CHESTPLATE = REGISTRATE
             .item("martian_steel_chestplate", p -> new ArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_ARMOR, ArmorItem.Type.CHESTPLATE, p))
             .properties(p -> p.durability(16 * 30))
+            .tag(ItemTags.CHEST_ARMOR)
             .register();
 
     public static final ItemEntry<ArmorItem> MARTIAN_STEEL_LEGGINGS = REGISTRATE
             .item("martian_steel_leggings", p -> new ArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_ARMOR, ArmorItem.Type.LEGGINGS, p))
             .properties(p -> p.durability(15 * 30))
+            .tag(ItemTags.LEG_ARMOR)
             .register();
 
     public static final ItemEntry<ArmorItem> MARTIAN_STEEL_BOOTS = REGISTRATE
             .item("martian_steel_boots", p -> new ArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_ARMOR, ArmorItem.Type.BOOTS, p))
             .properties(p -> p.durability(13 * 30))
+            .tag(ItemTags.FOOT_ARMOR)
             .register();
 
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_HELMET = REGISTRATE
             .item("iron_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, IronSpaceSuitArmorModel::new))
             .properties(p -> p.durability(11 * 20))
+            .tag(ItemTags.HEAD_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
@@ -253,6 +257,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
             .item("iron_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, IronSpaceSuitArmorModel::new))
             .properties(p -> p.durability(16 * 20))
+            .tag(ItemTags.CHEST_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.OXYGEN_SOURCES.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
@@ -262,6 +267,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
             .item("iron_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, IronSpaceSuitArmorModel::new))
             .properties(p -> p.durability(15 * 20))
+            .tag(ItemTags.LEG_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
@@ -269,6 +275,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_BOOTS = REGISTRATE
             .item("iron_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, IronSpaceSuitArmorModel::new))
             .properties(p -> p.durability(13 * 20))
+            .tag(ItemTags.FOOT_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
@@ -276,6 +283,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> MARTIAN_STEEL_SPACE_SUIT_HELMET = REGISTRATE
             .item("martian_steel_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_SPACE_SUIT, ArmorItem.Type.HELMET, p, MartianSteelSpaceSuitArmorModel::new))
             .properties(p -> p.durability(11 * 35))
+            .tag(ItemTags.HEAD_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.HEAT_RESISTANT.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
@@ -284,6 +292,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE = REGISTRATE
             .item("martian_steel_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, MartianSteelSpaceSuitArmorModel::new))
             .properties(p -> p.durability(16 * 35))
+            .tag(ItemTags.CHEST_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.OXYGEN_SOURCES.tag)
             .tag(NorthstarItemTags.HEAT_RESISTANT.tag)
@@ -294,6 +303,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> MARTIAN_STEEL_SPACE_SUIT_LEGGINGS = REGISTRATE
             .item("martian_steel_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, MartianSteelSpaceSuitArmorModel::new))
             .properties(p -> p.durability(15 * 35))
+            .tag(ItemTags.LEG_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.HEAT_RESISTANT.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
@@ -302,6 +312,7 @@ public class NorthstarItems {
     public static final ItemEntry<SpaceSuitArmorItem> MARTIAN_STEEL_SPACE_SUIT_BOOTS = REGISTRATE
             .item("martian_steel_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.MARTIAN_STEEL_SPACE_SUIT, ArmorItem.Type.BOOTS, p, MartianSteelSpaceSuitArmorModel::new))
             .properties(p -> p.durability(13 * 35))
+            .tag(ItemTags.FOOT_ARMOR)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.HEAT_RESISTANT.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
@@ -310,21 +321,25 @@ public class NorthstarItems {
     public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_HELMET = REGISTRATE
             .item("broken_iron_space_suit_helmet", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p))
             .properties(p -> p.durability(11 * 20))
+            .tag(ItemTags.HEAD_ARMOR)
             .register();
 
     public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
             .item("broken_iron_space_suit_chestpiece", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p))
             .properties(p -> p.durability(16 * 20))
+            .tag(ItemTags.CHEST_ARMOR)
             .register();
 
     public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
             .item("broken_iron_space_suit_leggings", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p))
             .properties(p -> p.durability(15 * 20))
+            .tag(ItemTags.LEG_ARMOR)
             .register();
 
     public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_BOOTS = REGISTRATE
             .item("broken_iron_space_suit_boots", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p))
             .properties(p -> p.durability(13 * 20))
+            .tag(ItemTags.FOOT_ARMOR)
             .register();
 
     // endregion
@@ -435,6 +450,8 @@ public class NorthstarItems {
                     .saturationModifier(0.7F)
                     .build()))
             .model((c, p) -> p.generated(c::get, p.modLoc("item/ice_cream_vanilla")))
+            .tag(Tags.Items.FOODS)
+            .tag(NorthstarItemTags.C_FOODS_ICE_CREAM.tag)
             .register();
 
     public static final ItemEntry<Item> CHOCOLATE_ICE_CREAM = REGISTRATE
@@ -445,6 +462,8 @@ public class NorthstarItems {
                     .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 280, 0, false, false, true), 1.0F)
                     .build()))
             .model((c, p) -> p.generated(c::get, p.modLoc("item/ice_cream_chocolate")))
+            .tag(Tags.Items.FOODS)
+            .tag(NorthstarItemTags.C_FOODS_ICE_CREAM.tag)
             .register();
 
     public static final ItemEntry<Item> STRAWBERRY_ICE_CREAM = REGISTRATE
@@ -455,6 +474,8 @@ public class NorthstarItems {
                     .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 280, 0, false, false, true), 1.0F)
                     .build()))
             .model((c, p) -> p.generated(c::get, p.modLoc("item/ice_cream_strawberry")))
+            .tag(Tags.Items.FOODS)
+            .tag(NorthstarItemTags.C_FOODS_ICE_CREAM.tag)
             .register();
 
     public static final ItemEntry<Item> FLATTENED_DOUGH = REGISTRATE
@@ -468,11 +489,14 @@ public class NorthstarItems {
     public static final ItemEntry<Item> ICE_CREAM_CONE = REGISTRATE
             .item("ice_cream_cone", Item::new)
             .properties(p -> p.food(Foods.MELON_SLICE))
+            .tag(Tags.Items.FOODS)
             .register();
 
     public static final ItemEntry<SeedItem> MARTIAN_STRAWBERRY = REGISTRATE
             .item("martian_strawberry", p -> new SeedItem(NorthstarBlocks.MARTIAN_STRAWBERRY_BUSH.get(), p))
             .properties(p -> p.food(Foods.APPLE))
+            .tag(Tags.Items.FOODS)
+            .tag(Tags.Items.FOODS_BERRY)
             .register();
 
     public static final ItemEntry<Item> ASTRONOMICAL_READING = REGISTRATE
