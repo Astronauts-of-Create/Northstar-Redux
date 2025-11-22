@@ -29,8 +29,8 @@ public class GuiGraphicsMixin implements NorthstarGuiGraphics {
             int width = (int) (13 * fraction);
             int barX = x + 2;
             int barY = y + 14; // 13 by default
-            self.fill(RenderType.guiOverlay(), barX, barY, barX + 13, barY + 1, 0xFF000000);
-            self.fill(RenderType.guiOverlay(), barX, barY, barX + width, barY + 1, 0xFF8191B1);
+            self.fill(RenderType.guiOverlay(), barX, barY, barX + 13, barY + 2, 0xFF000000);
+            self.fill(RenderType.guiOverlay(), barX, barY, barX + width, barY + 1, 0xFF4D98FA);
         }
 
     }
