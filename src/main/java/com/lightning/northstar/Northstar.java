@@ -58,7 +58,7 @@ public class Northstar {
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID);
 
     static {
-        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new TooltipHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2)))
+        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new TooltipHelper.Palette(TooltipHelper.styleFromColor(0x80AFD2), TooltipHelper.styleFromColor(0x4D98FA)))
                 .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 
