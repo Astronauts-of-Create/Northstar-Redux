@@ -91,6 +91,8 @@ public class Northstar {
 
         NorthstarConfigs.register(container::registerConfig);
 
+        modEventBus.addListener(NorthstarDataMaps::register);
+
         RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus));
     }
 
@@ -101,9 +103,7 @@ public class Northstar {
         public static void init(FMLCommonSetupEvent event) {
             NorthstarPackets.registerPackets();
 
-            event.enqueueWork(() -> {
-                NorthstarAdvancements.register();
-            });
+            event.enqueueWork(NorthstarAdvancements::register);
         }
 
         @SubscribeEvent
