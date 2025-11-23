@@ -2,7 +2,7 @@
   "required": true,
   "priority": 1200,
   "package": "com.lightning.northstar.mixin",
-  "plugin": "com.llamalad7.mixinextras.platform.forge.MixinExtrasConfigPlugin",
+  "plugin": "com.llamalad7.mixinextras.platform.neoforge.MixinExtrasConfigPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "block.BlockMixin",
