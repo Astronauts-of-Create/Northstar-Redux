@@ -4,14 +4,10 @@ import com.lightning.northstar.block.simple.ExtinguishedTorchBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.mixin.accessor.FlowingFluidAccessor;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import com.lightning.northstar.world.sealer.SealReactiveBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,7 +19,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

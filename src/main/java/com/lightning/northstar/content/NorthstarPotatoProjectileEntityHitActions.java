@@ -1,7 +1,6 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileEntityHitAction;
 import com.simibubi.create.api.registry.CreateRegistries;

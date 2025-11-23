@@ -14,7 +14,7 @@ import java.util.List;
 public interface EngravingRecipeSchema {
 
     RecipeKey<List<Ingredient>> INGREDIENTS = IngredientComponent.INGREDIENT.instance().asList().inputKey("ingredients");
-    RecipeKey<List< ProcessingOutput>> RESULTS = ProcessingOutputRecipeComponent.TYPE.instance().asList().outputKey("results");
+    RecipeKey<List<ProcessingOutput>> RESULTS = ProcessingOutputRecipeComponent.TYPE.instance().asList().outputKey("results");
     RecipeKey<TickDuration> TIME = TimeComponent.TICKS.inputKey("processingTime").optional(TickDuration.of(100L));
 
     RecipeSchema SCHEMA = new RecipeSchema(RESULTS, INGREDIENTS, TIME);
