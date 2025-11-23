@@ -64,6 +64,7 @@ public class NorthstarDataGen {
 
         generator.addProvider(event.includeServer(), new NorthstarAdvancements(output, lookupProvider));
         generator.addProvider(event.includeServer(), new NorthstarTagGen.Damage(output, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeServer(), new NorthstarDataMapProvider(output, lookupProvider));
 
         // Recipes:
         generator.addProvider(event.includeServer(), new NorthstarCompactingRecipeGen(output, lookupProvider));
