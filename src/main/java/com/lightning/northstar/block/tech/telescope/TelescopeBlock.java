@@ -74,8 +74,8 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
         if (!level.isClientSide()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof TelescopeBlockEntity && canSeeSky(pos.above(), level, state.getValue(FACING)) &&
-                    (level.isNight() || NorthstarPlanets.canSeeSkyAtDay(level.dimension())) && (!level.isRaining() || !NorthstarPlanets.hasWeather(level.dimension()))
-                    && NorthstarPlanets.planetHasSky(level.dimension())) {
+                    (level.isNight() || NorthstarPlanets.canSeeSkyAtDay(level.dimensionTypeRegistration())) && (!level.isRaining() || !NorthstarPlanets.hasWeather(level.dimensionTypeRegistration()))
+                    && NorthstarPlanets.planetHasSky(level.dimensionTypeRegistration())) {
                 player.openMenu((TelescopeBlockEntity) entity, pos);
             } else {
                 player.displayClientMessage(Component.translatable("northstar.gui.telescope_fail"), true);
