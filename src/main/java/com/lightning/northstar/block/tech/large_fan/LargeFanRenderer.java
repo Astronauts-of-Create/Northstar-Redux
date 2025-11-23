@@ -2,8 +2,10 @@ package com.lightning.northstar.block.tech.large_fan;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.client.NorthstarRenderTypes;
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -11,11 +13,15 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.Arrays;
@@ -51,7 +57,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
             case SIDE -> NorthstarPartialModels.LARGE_FAN_SIDE;
         };
         CachedBufferer.partialFacing(model, state, dir)
-                .rotateCentered(dir, patch.rotation)
+                .rotateCentered(dir, patch.rotation * Mth.DEG_TO_RAD)
                 .light(light)
                 .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
 
@@ -73,7 +79,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         CachedBufferer.block(AllBlocks.SHAFT.getDefaultState().setValue(BlockStateProperties.AXIS, axis))
                 .translate(offset)
                 .scale(scale.x, scale.y, scale.z)
-                .rotate(dir, angle * Mth.RAD_TO_DEG)
+                .rotate(dir, angle)
                 .unCentre()
                 .light(light)
                 .renderInto(ms, buffer.getBuffer(RenderType.solid()));
@@ -81,13 +87,13 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         CachedBufferer.partialFacing(NorthstarPartialModels.LARGE_FAN_ROTOR, state, dir)
                 .translate(offset)
                 .scale(size)
-                .rotate(dir, angle * Mth.RAD_TO_DEG)
+                .rotate(dir, angle)
                 .unCentre()
                 .light(light)
                 .renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-        //if (be.chain != null)
-        //    renderChain(be, be.getBlockPos(), be.chain, offset, ms, buffer, light, dir, rot);
+        if (be.chain != null)
+            renderChain(be, be.getBlockPos(), be.chain, offset, ms, buffer, light, dir, rot);
 
         for (int i = 0; i < blades; i++) {
             float a = angle + Mth.TWO_PI * i / blades;
@@ -95,7 +101,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
             CachedBufferer.partial(NorthstarPartialModels.LARGE_FAN_BLADE, state)
                     .translate(offset)
                     .scale(size)
-                    .rotate(dir, a * Mth.RAD_TO_DEG)
+                    .rotate(dir, a)
                     .rotateY(AngleHelper.horizontalAngle(dir))
                     .rotateX(AngleHelper.verticalAngle(dir))
                     .light(light)
@@ -103,9 +109,10 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         }
     }
 
+
     // not the prettiest code but it works. and yes the chain is very slightly skewed to avoid computing the side vector 3 times.
     // but it shouldn't be a problem unless the fan is thousands of blocks wide (and even then it might not be noticeable)
-    /*protected void renderChain(LargeFanBlockEntity be, BlockPos pos1, BlockPos pos2, Vector3f center, PoseStack ms, MultiBufferSource buffer, int light, Direction dir, float rot) {
+    protected void renderChain(LargeFanBlockEntity be, BlockPos pos1, BlockPos pos2, Vector3f center, PoseStack ms, MultiBufferSource buffer, int light, Direction dir, float rot) {
         Vector3f step = CHAIN_STEP[(be.flipChain ? dir.getOpposite() : dir).ordinal()];
 
         Vector3f chainA = this.chainA.set(center).add(step);
@@ -121,7 +128,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
 
         Matrix4f mm = ms.last().pose();
         Matrix3f mn = ms.last().normal();
-        VertexConsumer vc = buffer.getBuffer(RenderTypes.chain(CHAIN_LOCATION));
+        VertexConsumer vc = buffer.getBuffer(NorthstarRenderTypes.chain(CHAIN_LOCATION));
 
         float spacing = be.width * 0.5f * 2f / 16f;
 
@@ -153,6 +160,6 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
                 .uv2(light)
                 .normal(normal, direction.getStepX(), direction.getStepY(), direction.getStepZ())
                 .endVertex();
-    }*/
+    }
 
 }
