@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin.create;
+package com.lightning.northstar.mixin.compat.create;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.util.NorthstarLang;

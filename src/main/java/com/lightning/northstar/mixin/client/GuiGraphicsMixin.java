@@ -32,7 +32,6 @@ public class GuiGraphicsMixin implements NorthstarGuiGraphics {
             self.fill(RenderType.guiOverlay(), barX, barY, barX + 13, barY + 2, 0xFF000000);
             self.fill(RenderType.guiOverlay(), barX, barY, barX + width, barY + 1, 0xFF4D98FA);
         }
-
     }
 
 }

@@ -2,10 +2,9 @@ package com.lightning.northstar.block.tech.jet_engine;
 
 import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
-import com.lightning.northstar.particle.*;
+import com.lightning.northstar.particle.NorthstarParticles;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.util.RandomSource;

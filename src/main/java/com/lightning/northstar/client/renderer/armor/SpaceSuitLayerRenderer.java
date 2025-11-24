@@ -1,7 +1,7 @@
 package com.lightning.northstar.client.renderer.armor;
 
-import com.lightning.northstar.content.NorthstarPartialModels;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.createmod.catnip.render.CachedBuffers;

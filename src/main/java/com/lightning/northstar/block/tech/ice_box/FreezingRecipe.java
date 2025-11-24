@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.ice_box;
 
 import com.google.gson.JsonObject;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;

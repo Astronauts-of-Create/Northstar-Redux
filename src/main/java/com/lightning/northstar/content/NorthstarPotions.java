@@ -1,4 +1,4 @@
-package com.lightning.northstar.item;
+package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import net.minecraft.world.effect.MobEffectInstance;

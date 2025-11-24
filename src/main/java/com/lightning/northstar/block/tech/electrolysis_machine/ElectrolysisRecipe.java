@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;

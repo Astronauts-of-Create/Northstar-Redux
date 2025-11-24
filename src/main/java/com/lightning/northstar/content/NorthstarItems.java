@@ -1,12 +1,12 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.block.crops.SeedItem;
+import com.lightning.northstar.client.model.armor.BrokenIronSpaceSuitArmorModel;
 import com.lightning.northstar.client.model.armor.IronSpaceSuitArmorModel;
 import com.lightning.northstar.client.model.armor.MartianSteelSpaceSuitArmorModel;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.item.MartianFlowerItem;
-import com.lightning.northstar.item.armor.BrokenIronSpaceSuitArmorItem;
-import com.lightning.northstar.item.armor.SpaceSuitArmorItem;
+import com.lightning.northstar.item.SeedItem;
+import com.lightning.northstar.item.SpaceSuitArmorItem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
@@ -290,20 +290,20 @@ public class NorthstarItems {
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
 
-    public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_HELMET = REGISTRATE
-            .item("broken_iron_space_suit_helmet", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p))
+    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_HELMET = REGISTRATE
+            .item("broken_iron_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, BrokenIronSpaceSuitArmorModel::new))
             .register();
 
-    public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
-            .item("broken_iron_space_suit_chestpiece", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p))
+    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
+            .item("broken_iron_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, BrokenIronSpaceSuitArmorModel::new))
             .register();
 
-    public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
-            .item("broken_iron_space_suit_leggings", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p))
+    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
+            .item("broken_iron_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, BrokenIronSpaceSuitArmorModel::new))
             .register();
 
-    public static final ItemEntry<BrokenIronSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_BOOTS = REGISTRATE
-            .item("broken_iron_space_suit_boots", p -> new BrokenIronSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p))
+    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_BOOTS = REGISTRATE
+            .item("broken_iron_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, BrokenIronSpaceSuitArmorModel::new))
             .register();
 
     // endregion

@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin.create;
+package com.lightning.northstar.mixin.compat.create;
 
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.llamalad7.mixinextras.sugar.Local;

@@ -2,8 +2,8 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;

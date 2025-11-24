@@ -1,8 +1,8 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
-import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.client.BasicTickableSoundInstance;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarSounds;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;

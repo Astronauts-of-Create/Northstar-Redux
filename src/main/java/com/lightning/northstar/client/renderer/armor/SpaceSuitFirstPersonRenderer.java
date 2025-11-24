@@ -1,4 +1,4 @@
-package com.lightning.northstar.item.client;
+package com.lightning.northstar.client.renderer.armor;
 
 import com.lightning.northstar.content.NorthstarEntityResources;
 import com.lightning.northstar.content.NorthstarItems;
