@@ -6,6 +6,7 @@ import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.entity.*;
+import com.lightning.northstar.item.NorthstarEnchantments;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;

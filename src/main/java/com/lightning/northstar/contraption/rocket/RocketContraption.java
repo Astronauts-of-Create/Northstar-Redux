@@ -6,6 +6,7 @@ import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntit
 import com.lightning.northstar.compat.copycats.CopycatsPlusHelper;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarContraptionTypes;
+import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.contraption.FuelType;
