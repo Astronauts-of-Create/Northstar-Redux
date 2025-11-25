@@ -204,7 +204,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 final_lift_vel = lift_vel - 0.5f;
             }
             if (this.getY() > RocketHandler.DIMENSION_CHANGE_HEIGHT) { //Start landing
-                if (level.isClientSide) flyingSound.stopSound();
+                if (level.isClientSide && flyingSound != null) flyingSound.stopSound();
                 startLanding();
                 this.cooldown = 0;
                 this.final_lift_vel = 0;
