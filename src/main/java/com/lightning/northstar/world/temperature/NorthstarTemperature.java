@@ -4,8 +4,8 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
@@ -39,7 +39,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
 public class NorthstarTemperature {
@@ -203,19 +204,18 @@ public class NorthstarTemperature {
     }
 
     public static boolean hasInsulation(LivingEntity entity) {
-        return (entity.getItemBySlot(EquipmentSlot.HEAD).is(NorthstarTags.NorthstarItemTags.INSULATING.tag) &&
-                entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarTags.NorthstarItemTags.INSULATING.tag) &&
-                entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarTags.NorthstarItemTags.INSULATING.tag) &&
-                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarTags.NorthstarItemTags.INSULATING.tag))
+        return (entity.getItemBySlot(EquipmentSlot.HEAD).is(NorthstarItemTags.INSULATING.tag) &&
+                entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarItemTags.INSULATING.tag) &&
+                entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarItemTags.INSULATING.tag) &&
+                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.INSULATING.tag))
                 || NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
-
     }
 
     public static boolean hasHeatProtection(LivingEntity entity) {
-        return (entity.getItemBySlot(EquipmentSlot.HEAD).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag) &&
-                entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag) &&
-                entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag) &&
-                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarTags.NorthstarItemTags.HEAT_RESISTANT.tag));
+        return (entity.getItemBySlot(EquipmentSlot.HEAD).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
+                entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
+                entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
+                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.HEAT_RESISTANT.tag));
     }
 
     public static double getHeatRating(ResourceKey<Level> level) {

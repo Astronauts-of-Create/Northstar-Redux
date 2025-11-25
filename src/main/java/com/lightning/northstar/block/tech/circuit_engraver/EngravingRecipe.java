@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.circuit_engraver;
 
 import com.lightning.northstar.compat.jei.subcategory.AssemblyEngraving;
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;

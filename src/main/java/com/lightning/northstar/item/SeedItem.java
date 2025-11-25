@@ -1,4 +1,4 @@
-package com.lightning.northstar.block.crops;
+package com.lightning.northstar.item;
 
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.block.Block;

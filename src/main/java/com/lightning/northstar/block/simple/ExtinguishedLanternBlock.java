@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.simple;
 
-import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public class ExtinguishedLanternBlock extends LanternBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.getAbilities().mayBuild ||
-                !stack.is(NorthstarTags.NorthstarItemTags.IGNITION_SOURCE.tag) ||
+                !stack.is(NorthstarItemTags.IGNITION_SOURCE.tag) ||
                 !NorthstarOxygen.hasOxygen(level, pos)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }

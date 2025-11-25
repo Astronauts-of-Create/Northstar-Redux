@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.tech.ice_box;
 
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

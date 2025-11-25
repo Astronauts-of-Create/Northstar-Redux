@@ -1,6 +1,6 @@
 package com.lightning.northstar.block.simple;
 
-import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -13,8 +13,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -67,7 +67,7 @@ public class ExtinguishedTorchWallBlock extends WallTorchBlock implements Proper
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.getAbilities().mayBuild ||
-                !stack.is(NorthstarTags.NorthstarItemTags.IGNITION_SOURCE.tag) ||
+                !stack.is(NorthstarItemTags.IGNITION_SOURCE.tag) ||
                 !NorthstarOxygen.hasOxygen(level, pos) ||
                 state.getValue(WATERLOGGED)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

@@ -3,6 +3,7 @@ package com.lightning.northstar.content;
 import com.lightning.northstar.block.crops.*;
 import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlock;
 import com.lightning.northstar.block.tech.cogs.SpaceCogWheelBlock;
@@ -13,7 +14,6 @@ import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
-import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
@@ -58,8 +58,8 @@ import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ColorRGBA;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
@@ -3639,7 +3639,8 @@ public class NorthstarBlocks {
             .initialProperties(() -> Blocks.TORCH)
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
-                    .instabreak())
+                    .instabreak()
+                    .lightLevel(s -> 0))
             .blockstate((c, p) -> p.simpleBlock(c.get(), p.models().torch(c.getName(), p.blockTexture(c.get())).renderType("cutout")))
             .item((b, p) -> new StandingAndWallBlockItem(b, NorthstarBlocks.EXTINGUISHED_TORCH_WALL.get(), p, Direction.DOWN))
             .model(NorthstarDataGenModels.itemGeneratedBlock())
@@ -3652,7 +3653,8 @@ public class NorthstarBlocks {
             .initialProperties(() -> WALL_TORCH)
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
-                    .instabreak())
+                    .instabreak()
+                    .lightLevel(s -> 0))
             .blockstate((c, p) -> p.horizontalBlock(c.get(), p.models().torchWall(c.getName(), p.blockTexture(EXTINGUISHED_TORCH.get())).renderType("cutout"), 90))
             .loot((c, b) -> c.dropOther(b, EXTINGUISHED_TORCH))
             .register();
@@ -3660,7 +3662,8 @@ public class NorthstarBlocks {
     public static final BlockEntry<ExtinguishedLanternBlock> EXTINGUISHED_LANTERN = REGISTRATE
             .block("extinguished_lantern", ExtinguishedLanternBlock::new)
             .initialProperties(() -> Blocks.LANTERN)
-            .properties(p -> p.sound(SoundType.LANTERN))
+            .properties(p -> p.sound(SoundType.LANTERN)
+                    .lightLevel(s -> 0))
             .transform(pickaxeOnly())
             .blockstate(NorthstarDataGenModels.manualModel())
             .item()

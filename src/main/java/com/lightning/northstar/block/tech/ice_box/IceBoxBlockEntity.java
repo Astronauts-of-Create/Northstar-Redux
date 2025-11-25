@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.ice_box;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;

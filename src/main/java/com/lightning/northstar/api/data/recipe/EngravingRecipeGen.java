@@ -1,7 +1,7 @@
 package com.lightning.northstar.api.data.recipe;
 
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.api.data.recipe.StandardProcessingRecipeGen;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.minecraft.core.HolderLookup;

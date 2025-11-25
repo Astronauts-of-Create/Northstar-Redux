@@ -2,7 +2,7 @@ package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;

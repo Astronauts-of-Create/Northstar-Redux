@@ -1,7 +1,7 @@
-package com.lightning.northstar.item.armor;
+package com.lightning.northstar.client.renderer;
 
-import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.content.NorthstarDataComponents;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.theme.Color;

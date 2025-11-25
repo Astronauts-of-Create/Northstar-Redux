@@ -27,7 +27,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import static com.lightning.northstar.content.NorthstarTags.Namespace.*;
+import static com.lightning.northstar.content.NorthstarTags.Namespace.COMMON;
+import static com.lightning.northstar.content.NorthstarTags.Namespace.MOD;
 
 public class NorthstarTags {
 

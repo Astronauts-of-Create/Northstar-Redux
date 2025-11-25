@@ -1,16 +1,21 @@
 package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.*;
+import com.lightning.northstar.content.NorthstarDataComponents;
+import com.lightning.northstar.content.NorthstarEntityTypes;
+import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
-import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.*;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
 import com.tterrag.registrate.util.RegistrateDistExecutor;
@@ -47,7 +52,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 public class RocketContraptionEntity extends AbstractContraptionEntity {
 
@@ -194,7 +202,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
                 final_lift_vel = lift_vel - 0.5f;
             }
             if (this.getY() > RocketHandler.DIMENSION_CHANGE_HEIGHT) { //Start landing
-                if (level.isClientSide) flyingSound.stopSound();
+                if (level.isClientSide && flyingSound != null) flyingSound.stopSound();
                 startLanding();
                 this.cooldown = 0;
                 this.final_lift_vel = 0;

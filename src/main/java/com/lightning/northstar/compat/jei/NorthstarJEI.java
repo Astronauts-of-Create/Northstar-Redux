@@ -8,14 +8,16 @@ import com.lightning.northstar.compat.jei.category.ElectrolysisCategory;
 import com.lightning.northstar.compat.jei.category.EngravingCategory;
 import com.lightning.northstar.compat.jei.category.FreezingCategory;
 import com.lightning.northstar.compat.jei.category.FuelTypeCategory;
-import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRegistries;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.registration.*;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.common.util.RegistryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -29,7 +31,8 @@ import net.minecraft.world.level.material.Fluid;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 @JeiPlugin

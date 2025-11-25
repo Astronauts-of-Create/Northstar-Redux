@@ -1,6 +1,7 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHandler;
+import com.lightning.northstar.client.renderer.RemainingOxygenOverlay;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
@@ -8,7 +9,6 @@ import com.lightning.northstar.client.renderer.effect.VenusEffects;
 import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.lightning.northstar.util.NorthstarLang;

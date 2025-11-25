@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.compat.create;
 
-import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.mixin.accessor.NorthstarContraptionWorld;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -37,7 +37,7 @@ public class CopycatBlockMixin implements SealableBlock {
         }
         return material != null &&
                 material != AllBlocks.COPYCAT_BASE.getDefaultState() &&
-                !NorthstarTags.NorthstarBlockTags.AIR_PASSES_THROUGH.matches(material) &&
+                !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(material) &&
                 Block.isFaceFull(state.getShape(level, pos), direction);
     }
 
