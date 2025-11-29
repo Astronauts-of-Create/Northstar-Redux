@@ -8,6 +8,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.Lang;
@@ -141,12 +142,17 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if (isFluidHandlerCap(cap) && side == Direction.UP)
-            return inputTank.getCapability().cast();
-        if (isFluidHandlerCap(cap) && side == getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getClockWise())
-            return outputTankL.getCapability().cast();
-        if (isFluidHandlerCap(cap) && side == getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getCounterClockWise())
-            return outputTankR.getCapability().cast();
+        if (isFluidHandlerCap(cap)) {
+            if (side == null)
+                return LazyOptional.of(() -> new CombinedTankWrapper(inputTank.getPrimaryHandler(), outputTankL.getPrimaryHandler(), outputTankR.getPrimaryHandler())).cast();
+            if (side == Direction.UP)
+                return inputTank.getCapability().cast();
+            Direction facing = getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING);
+            if (side == facing.getClockWise())
+                return outputTankL.getCapability().cast();
+            if (side == facing.getCounterClockWise())
+                return outputTankR.getCapability().cast();
+        }
         return super.getCapability(cap, side);
     }
 
