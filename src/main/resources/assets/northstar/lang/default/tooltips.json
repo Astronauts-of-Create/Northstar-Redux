@@ -8,6 +8,8 @@
 
   "block.northstar.astronomy_table.tooltip.summary": "Used to combine 3 _Astronomical Readings_ into a _Star Map_",
 
+  "block.northstar.atmospheric_concentrator.tooltip.summary": "Collects _Oxygen_ or _Carbon_ from the air.",
+
   "block.northstar.auto_lander.tooltip.summary": "Automatically lands your _Rocket_ safely.",
 
   "block.northstar.combustion_engine.tooltip.summary": "Burns _Rocket Fuel_ to produce _Kinetic Energy_",
@@ -25,8 +27,6 @@
   "block.northstar.large_fan.tooltip.behaviour2": "Changes the side of the chain.",
   "block.northstar.large_fan.tooltip.condition3": "When Wrenched while Sneaking",
   "block.northstar.large_fan.tooltip.behaviour3": "Removes a fan blade, if none are installed, picks up the block.",
-
-  "block.northstar.oxygen_concentrator.tooltip.summary": "Collects _Oxygen_ or _Carbon_ from the air.",
 
   "block.northstar.oxygen_detector.tooltip.summary": "Emits _redstone signal_ when block in front is oxygenated.",
 
