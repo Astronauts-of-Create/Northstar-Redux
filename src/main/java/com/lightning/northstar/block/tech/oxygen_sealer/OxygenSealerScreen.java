@@ -77,6 +77,8 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
                         "%d:%02d:%02d".formatted(remainingSeconds / 60 / 60, remainingSeconds / 60 % 60, remainingSeconds % 60) :
                         "%02d:%02d".formatted(remainingSeconds / 60, remainingSeconds % 60);
 
+        int maximumSealed = NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get();
+
         MutableComponent line1 = sealer.sealer.hasLeak() ?
                 Component.translatable("northstar.gui.goggles.sealer.area_too_big").withStyle(ChatFormatting.RED) :
                 Component.translatable("northstar.generic.status").append(sealer.active ?
@@ -84,9 +86,10 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
                         Component.translatable("northstar.gui.oxygen_sealer.no_oxygen").withStyle(ChatFormatting.GOLD));
         MutableComponent line2 = sealer.sealer.hasLeak() ?
                 NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
-                        .add(CreateLang.number(NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get())
+                        .add(CreateLang.number(maximumSealed)
                                 .style(ChatFormatting.BLUE))
-                        .text(" blocks")
+                        .text(" ")
+                        .add(NorthstarLang.blocks(maximumSealed))
                         .component() :
                 NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
                         .add(CreateLang.number(sealer.sealer.getSealedBlockCount())
