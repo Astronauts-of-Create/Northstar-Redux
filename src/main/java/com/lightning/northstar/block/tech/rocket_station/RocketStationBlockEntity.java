@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.rocket_station;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
@@ -443,7 +444,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Rocket Station");
+        return NorthstarBlocks.ROCKET_STATION.get().getName();
     }
 
 }
