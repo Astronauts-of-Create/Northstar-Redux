@@ -2,8 +2,8 @@ package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.TemperatureUnit;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.lang.LangNumberFormat;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @OnlyIn(Dist.CLIENT)
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
     private static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/temperature_regulator.png");
@@ -47,15 +52,15 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
         int x = guiLeft, y = guiTop;
 
-        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), regulator.sizeX, "Width (X)");
-        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), regulator.sizeY, "Height (Y)");
-        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), regulator.sizeZ, "Depth (Z)");
+        ScrollInput sizeX = addScrollInput(new ScrollInput(x + 29, y + 11, 25, 18), regulator.sizeX + 1, "width");
+        ScrollInput sizeY = addScrollInput(new ScrollInput(x + 58, y + 11, 25, 18), regulator.sizeY + 1, "height");
+        ScrollInput sizeZ = addScrollInput(new ScrollInput(x + 87, y + 11, 25, 18), regulator.sizeZ + 1, "depth");
 
         // condition is negated because a click is simulated to sync the states of everything
         boolean[] limit = { regulator.bounds.minX == Integer.MIN_VALUE };
 
         IconButton fill = new IconButton(x + 7, y + 11, AllIcons.I_NONE);
-        fill.setToolTip(Component.literal("Enable limits"));
+        fill.setToolTip(Component.translatable("northstar.gui.temperature_regulator.toggle_limits"));
         fill.withCallback(() -> {
             limit[0] = !limit[0];
             fill.setIcon(limit[0] ? AllIcons.I_CONFIRM : AllIcons.I_DISABLE);
@@ -68,7 +73,7 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
 
         TemperatureUnit unit = NorthstarConfigs.client().temperatureUnit.get();
 
-        ScrollInput temperature = addScrollInput(new ScrollInput(x + 129, y + 11, 46, 18), 0, "Temperature")
+        ScrollInput temperature = addScrollInput(new ScrollInput(x + 129, y + 11, 46, 18), 0, "temperature")
                 .addHint(Component.translatable("northstar.gui.temperature_regulator.step")
                         .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY))
                 .withRange((int) unit.fromCelsius(NorthstarTemperature.MINIMUM_TEMPERATURE), (int) unit.fromCelsius(NorthstarTemperature.MAXIMUM_TEMPERATURE + 1))
@@ -82,19 +87,26 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
         confirm.withCallback(() -> {
             NorthstarPackets.getChannel().sendToServer(new TemperatureRegulatorEditPacket(entityId, pos,
                     (int) unit.toCelsius(temperature.getState()),
-                    limit[0], sizeX.getState(), sizeY.getState(), sizeZ.getState()));
+                    limit[0], sizeX.getState() - 1, sizeY.getState() - 1, sizeZ.getState() - 1));
             onClose();
         });
         addRenderableWidget(confirm);
+
+        if (entityId != -1) {
+            IconButton showLeak = new IconButton(x + 179, y + 31, AllIcons.I_ACTIVE);
+            showLeak.setToolTip(Component.translatable("northstar.gui.sealer.toggle_leak"));
+            showLeak.withCallback(() -> regulator.showLeak = !regulator.showLeak);
+            addRenderableWidget(showLeak);
+        }
     }
 
     private ScrollInput addScrollInput(ScrollInput input, int value, String name) {
         Label label = new Label(0, input.getY() + 6, Component.empty())
                 .withShadow();
-        input.withRange(1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE + 1)
+        input.withRange(1, TemperatureRegulatorBlockEntity.MAX_LIMIT_SIZE + 2)
                 .calling(i -> label.setX(input.getX() + input.getWidth() / 2 - font.width(label.text) / 2))
                 .writingTo(label)
-                .titled(Component.literal(name))
+                .titled(Component.translatable("northstar.gui.temperature_regulator." + name))
                 .setState(value)
                 .onChanged();
         addRenderableWidget(label);
@@ -110,15 +122,17 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
             graphics.blit(BACKGROUND, guiLeft, guiTop, 0, 0, windowWidth, 36, 256, 64);
             graphics.blit(BACKGROUND, guiLeft, guiTop + 36, 0, 40, windowWidth, 24, 256, 64);
 
+            int maximumSealed = NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get();
             Component status = regulator.sealer.hasLeak() ?
                     Component.translatable("northstar.gui.goggles.sealer.area_too_big").withStyle(ChatFormatting.RED) :
                     Component.translatable("northstar.gui.oxygen_sealer.sealed").withStyle(ChatFormatting.GREEN);
             MutableComponent line1 = Component.translatable("northstar.generic.status").append(status);
             MutableComponent line2 = regulator.sealer.hasLeak() ?
                     NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
-                            .add(CreateLang.number(NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get())
+                            .add(CreateLang.number(maximumSealed)
                                     .style(ChatFormatting.BLUE))
-                            .text(" blocks")
+                            .text(" ")
+                            .add(NorthstarLang.blocks(maximumSealed))
                             .component() :
                     NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
                             .add(CreateLang.number(regulator.sealer.getSealedBlockCount())

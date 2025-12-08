@@ -5,6 +5,7 @@ import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.foundation.utility.CreateLang;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -36,7 +37,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
     public static final int HEIGHT = 60;
 
     public FuelTypeCategory(IGuiHelper guiHelper) {
-        super(RECIPE_TYPE, Component.literal("Fuel Type"), guiHelper.createDrawableItemLike(NorthstarBlocks.JET_ENGINE), WIDTH, HEIGHT);
+        super(RECIPE_TYPE, Component.translatable("northstar.recipe.fuel_type"), guiHelper.createDrawableItemLike(NorthstarBlocks.JET_ENGINE), WIDTH, HEIGHT);
     }
 
     @Override
@@ -58,27 +59,32 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
         Font font = Minecraft.getInstance().font;
         List<Component> tooltip = new ArrayList<>();
 
-        NorthstarLang.text("Combustion Engine:")
+        NorthstarLang.builder()
+                .add(NorthstarBlocks.COMBUSTION_ENGINE.get().getName())
+                .text(":")
                 .forGoggles(tooltip);
 
-        NorthstarLang.text("Usage: ")
+        NorthstarLang.translate("recipe.fuel_type.consumption")
                 .add(NorthstarLang.number(recipe.combustionEngineUse())
                         .add(NorthstarLang.MB_PER_TICK)
                         .style(ChatFormatting.GOLD))
                 .forGoggles(tooltip, 1);
 
-        NorthstarLang.text("Speed: ")
+        NorthstarLang.translate("recipe.fuel_type.speed")
                 .add(NorthstarLang.number(recipe.combustionEngineRpm())
-                        .text(" RPM")
+                        .text(" ")
+                        .add(CreateLang.translate("generic.unit.rpm"))
                         .style(ChatFormatting.AQUA))
                 .forGoggles(tooltip, 1);
 
-        NorthstarLang.text("Rocket Engine:")
+        NorthstarLang.builder()
+                .add(NorthstarBlocks.JET_ENGINE.get().getName())
+                .text(":")
                 .forGoggles(tooltip);
 
-        NorthstarLang.text("Energy: ")
+        NorthstarLang.translate("recipe.fuel_type.energy")
                 .add(NorthstarLang.number(recipe.gjPerMb())
-                        .text(" gJ/mB")
+                        .add(NorthstarLang.GJ_PER_MB)
                         .style(ChatFormatting.AQUA))
                 .forGoggles(tooltip, 1);
 
@@ -88,4 +94,5 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
             y += 10;
         }
     }
+
 }

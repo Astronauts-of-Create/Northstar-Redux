@@ -78,7 +78,6 @@ public class TelescopeScreen extends AbstractSimiContainerScreen<TelescopeMenu> 
         printButton.withCallback(() -> {
             if (selectedPlanet != null) {
                 NorthstarPackets.getChannel().sendToServer(TelescopePrintPacket.print(menu.contentHolder.getBlockPos(), selectedPlanet));
-                //Northstar.LOGGER.debug("WE'VE BEEN CLICKED, SCATTER!!!!!");
             }
         });
 

@@ -4,9 +4,9 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.oxygen.OxygenTrackingSealer;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
-import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
@@ -129,7 +129,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
             return;
 
         if (audioTick++ % 13 == 0) {
-            level.playLocalSound(worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0, false);
+            level.playSound(null, worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0);
         }
 
         if (level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())

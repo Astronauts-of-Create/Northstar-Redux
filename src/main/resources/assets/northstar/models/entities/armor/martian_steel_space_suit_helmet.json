@@ -8,8 +8,8 @@
 	"elements": [
 		{
 			"name": "bb_main",
-			"from": [3.5, 22.75, 3.5],
-			"to": [12.5, 31.75, 12.5],
+			"from": [3.45, 22.7, 3.45],
+			"to": [12.55, 31.8, 12.55],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [2, 2, 4, 4], "texture": "#1"},

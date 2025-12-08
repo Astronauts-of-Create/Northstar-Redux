@@ -1,8 +1,8 @@
 package com.lightning.northstar.block.tech.circuit_engraver;
 
-import com.lightning.northstar.content.NorthstarSounds;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
 import com.lightning.northstar.client.BasicTickableSoundInstance;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarSounds;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
@@ -85,7 +85,7 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
         if (currentRecipe != null && processingTicks < currentRecipe.getProcessingDuration())
             return HOLD;
 
-        List<TransportedItemStack> outputs = RecipeApplier.applyRecipeOn(level, transported.stack.copyWithCount(1), currentRecipe)
+        List<TransportedItemStack> outputs = RecipeApplier.applyRecipeOn(level, transported.stack.copyWithCount(1), currentRecipe, true)
                 .stream()
                 .map(stack -> {
                     TransportedItemStack copy = transported.copy();

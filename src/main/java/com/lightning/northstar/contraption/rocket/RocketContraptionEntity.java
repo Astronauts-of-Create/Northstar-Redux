@@ -15,7 +15,9 @@ import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.*;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
@@ -54,7 +56,10 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -169,7 +174,6 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 isInFlight = true;
             }
             if (!fuelBurned) { //We only burn the fuel once
-                Northstar.LOGGER.debug("BURNING FUEL");
                 if (contraption.fuelAmount() < contraption.fuelCost) {  //If we dont have enough fuel, disassemble
                     this.disassemble();
                 } else {
@@ -195,9 +199,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (level.isClientSide) {
             // this code feels really stupid but I don't care enough to clean it up
-            if (Math.abs(final_lift_vel) > 0.5f) {
-                int volume = NorthstarPlanets.getPlanetAtmosphereCost(level.dimension()) / 400;
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound(Math.max(volume, 1)));
+            if (Math.abs(final_lift_vel) > 0.5f && NorthstarPlanets.getPlanetAtmosphereCost(level.dimension()) != 0) {
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound());
             }
         } else {
             if (this.tickCount % 40 == 0) { //Send a packet containing data from server to client every 40 ticks
@@ -234,7 +237,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
 
             if (soundTime % 40 == 0 && launchTime == 0 && blasting) {
-                level.playLocalSound(this.getX(), this.getY() - 20, this.getZ(), NorthstarSounds.ROCKET_BLAST.get(), SoundSource.BLOCKS, 5, 0, false);
+                level.playLocalSound(this.getX(), this.getY() - 20, this.getZ(), NorthstarSounds.ROCKET_BLAST.get(), SoundSource.BLOCKS, 0.5f, 0, false);
                 i = 0;
                 soundTime = 0;
             } else {
@@ -247,7 +250,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             }
 
             if (slowing) {
-                level.playLocalSound(this.getX(), this.getY() - 8, this.getZ(), NorthstarSounds.ROCKET_LANDING.get(), SoundSource.BLOCKS, 4, 0, false);
+                level.playLocalSound(this.getX(), this.getY() - 8, this.getZ(), NorthstarSounds.ROCKET_LANDING.get(), SoundSource.BLOCKS, 0.5f, 0, false);
                 i = 0;
                 soundTime = 0;
             }
@@ -269,7 +272,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         if (isInFlight() && collidesWithBlocks(landingMode ? Direction.DOWN : Direction.UP)) { //If we collide with the world
             if (!level.isClientSide) {
-                level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 3, 0, true);
+                level.playLocalSound(getX(), getY(), getZ(), AllSoundEvents.STEAM.getMainEvent(), SoundSource.BLOCKS, 0.5f, 0, true);
                 if ((Math.abs(final_lift_vel) < 3 || hasExploded)) {
                     if (this.landingMode && !isUsingTicket) {//Give the player a return ticket
                         ItemStack returnTicket = createReturnTicket();
@@ -425,7 +428,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     private RocketAirSound flyingSound;
 
     @OnlyIn(Dist.CLIENT)
-    private void tickAirSound(float maxVolume) {
+    private void tickAirSound() {
         if (level().isClientSide) {
             float pitch = (float) Mth.clamp(getDeltaMovement().length(), .2f, 3f);
             if (flyingSound == null || flyingSound.isStopped()) {
@@ -433,7 +436,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 Minecraft.getInstance().getSoundManager().play(flyingSound);
             }
             flyingSound.setPitch(pitch);
-            flyingSound.fadeIn(maxVolume);
+            flyingSound.fadeIn(0.5f);
         }
     }
 

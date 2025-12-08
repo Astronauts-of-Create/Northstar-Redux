@@ -1,9 +1,9 @@
 package com.lightning.northstar.mixin.block;
 
 import com.lightning.northstar.world.sealer.SealReactiveBlock;
-import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

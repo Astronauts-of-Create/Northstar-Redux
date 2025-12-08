@@ -8,12 +8,11 @@ import com.simibubi.create.foundation.render.AllInstanceTypes;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
 
-public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<TemperatureRegulatorBlockEntity> implements SimpleDynamicVisual {
+public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<TemperatureRegulatorBlockEntity> {
 
     private final RotatingInstance warmSpinner;
     private final RotatingInstance coldSpinner;
@@ -35,7 +34,9 @@ public class TemperatureRegulatorVisual extends SingleAxisRotatingVisual<Tempera
     }
 
     @Override
-    public void beginFrame(Context context) {
+    public void tick(Context context) {
+        super.tick(context);
+
         float speed = blockEntity.getSpeed();
         boolean warm = blockEntity.isCurrentlyWarm();
 

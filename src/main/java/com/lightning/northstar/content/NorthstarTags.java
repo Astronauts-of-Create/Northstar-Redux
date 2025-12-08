@@ -2,7 +2,10 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.util.NorthstarDataGenTags;
 import com.simibubi.create.AllTags;
+import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -24,7 +27,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.lightning.northstar.content.NorthstarTags.Namespace.*;
+import static com.lightning.northstar.content.NorthstarTags.Namespace.COMMON;
+import static com.lightning.northstar.content.NorthstarTags.Namespace.MOD;
 
 public class NorthstarTags {
 
@@ -39,7 +43,7 @@ public class NorthstarTags {
     enum Namespace {
 
         MOD(Northstar.MOD_ID, false, true),
-        COMMON("forge"), // "forge" on Forge, "c" on NeoForge/fabric
+        COMMON("forge"), // "forge" on Forge, "c" on NeoForge/Fabric
         ;
 
         public final String id;
@@ -147,6 +151,10 @@ public class NorthstarTags {
         /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
         @Deprecated
         BLOCKS_AIR,
+        C_STORAGE_BLOCKS_MARTIAN_STEEL(COMMON, "storage_blocks/martian_steel"),
+        C_STORAGE_BLOCKS_TITANIUM(COMMON, "storage_blocks/titanium"),
+        C_STORAGE_BLOCKS_TUNGSTEN(COMMON, "storage_blocks/tungsten"),
+        C_ORES_COAL(COMMON, "ores/coal"),
         C_ORES_COPPER(COMMON, "ores/copper"),
         C_ORES_DIAMOND(COMMON, "ores/diamond"),
         C_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
@@ -219,7 +227,15 @@ public class NorthstarTags {
             return tag;
         }
 
-        @SuppressWarnings("deprecation")
+        public TagKey<Item> item() {
+            return ItemTags.create(tag.location());
+        }
+
+        public <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> tagBlockAndItem() {
+            return NorthstarDataGenTags.apply(tag, item());
+        }
+
+                @SuppressWarnings("deprecation")
         public boolean matches(Block block) {
             return block.builtInRegistryHolder().is(tag);
         }
@@ -243,6 +259,10 @@ public class NorthstarTags {
         COILER_LOGS,
         C_DUSTS(COMMON, "dusts"),
         C_DUSTS_SALT(COMMON, "dusts/salt"),
+        C_DUSTS_VOLCANIC_ASH(COMMON, "dusts/volcanic_ash"),
+        C_GEMS_SAPPHIRE(COMMON, "gems/sapphire"),
+        C_FABRICS(COMMON, "fabrics"),
+        C_FIBERS(COMMON, "fibers"),
         C_INGOTS(COMMON, "ingots"),
         C_INGOTS_BRASS(COMMON, "ingots/brass"),
         C_INGOTS_MARTIAN_STEEL(COMMON, "ingots/martian_steel"),
@@ -251,6 +271,9 @@ public class NorthstarTags {
         C_NUGGETS(COMMON, "nuggets"),
         C_NUGGETS_TITANIUM(COMMON, "nuggets/titanium"),
         C_NUGGETS_TUNGSTEN(COMMON, "nuggets/tungsten"),
+        C_RAW_MATERIALS_MARTIAN_IRON_ORE(COMMON, "raw_materials/martian_iron_ore"),
+        C_RAW_MATERIALS_TITANIUM(COMMON, "raw_materials/titanium"),
+        C_RAW_MATERIALS_TUNGSTEN(COMMON, "raw_materials/tungsten"),
         C_SHEETS(COMMON, "plates"),
         C_SHEETS_BRASS(COMMON, "plates/brass"),
         C_SHEETS_COPPER(COMMON, "plates/copper"),
@@ -268,6 +291,7 @@ public class NorthstarTags {
         OXYGEN_SEALING,
         OXYGEN_SOURCES,
         // Space ores, used for crushing recipes
+        SPACE_ORE_COAL("space_ore/coal"),
         SPACE_ORE_COPPER("space_ore/copper"),
         SPACE_ORE_DIAMOND("space_ore/diamond"),
         SPACE_ORE_GLOWSTONE("space_ore/glowstone"),

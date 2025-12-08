@@ -3,6 +3,7 @@ package com.lightning.northstar.block.tech.large_fan;
 import com.lightning.northstar.api.create.ReceivingKineticBlockEntity;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -120,17 +121,23 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
 
     public void onNeighborChange(BlockPos neighbor, boolean manual) {
         BlockState neighborState = level.getBlockState(neighbor);
+        BlockPos structurePos = getBlockAttachedTo(neighbor);
 
         if (neighbor.equals(chain) && !(neighborState.getBlock() instanceof ChainDriveBlock)) {
-            BlockPos block = getBlockAttachedTo(chain);
             chain = null;
-            if (block != null && level.getBlockEntity(block) instanceof KineticBlockEntity be) {
+            if (structurePos != null && level.getBlockEntity(structurePos) instanceof KineticBlockEntity be) {
                 be.detachKinetics();
                 be.attachKinetics();
             }
             updateNeighbors = true;
             sendData();
-        } else if (manual && chain == null && neighborState.getBlock() instanceof ChainDriveBlock && level.getBlockEntity(neighbor) instanceof KineticBlockEntity be) {
+        } else if (manual &&
+                chain == null &&
+                structurePos != null &&
+                neighborState.getBlock() instanceof ChainDriveBlock &&
+                neighborState.getValue(ChainDriveBlock.AXIS) == getAxis() &&
+                getFirstAxisBetween(neighbor, structurePos) != getAxis() &&
+                level.getBlockEntity(neighbor) instanceof KineticBlockEntity be) {
             be.detachKinetics();
             be.attachKinetics();
         }
@@ -149,17 +156,17 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
 
     @Override
     public float propagateRotationFrom(KineticBlockEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff, boolean connectedViaAxes, boolean connectedViaCogs) {
-        return propagateRotationOf(target, stateFrom, stateTo);
+        return propagateRotationOf(target, stateFrom, stateTo, diff);
     }
 
     @Override
     public float propagateRotationTo(KineticBlockEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff,
                                      boolean connectedViaAxes, boolean connectedViaCogs) {
-        float ratio = propagateRotationOf(target, stateFrom, stateTo);
+        float ratio = propagateRotationOf(target, stateFrom, stateTo, diff);
         return ratio != 0 ? ratio : super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
     }
 
-    private float propagateRotationOf(KineticBlockEntity target, BlockState stateFrom, BlockState stateTo) {
+    private float propagateRotationOf(KineticBlockEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff) {
         BlockPos pos = target.getBlockPos();
         if (isMultiBlockPart(target.getBlockPos()))
             return 1;
@@ -174,7 +181,8 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
             chain = null;
         if (chain == null &&
                 stateTo.getBlock() instanceof ChainDriveBlock &&
-                stateTo.getValue(ChainDriveBlock.AXIS) == stateFrom.getValue(LargeFanBlock.AXIS))
+                stateTo.getValue(ChainDriveBlock.AXIS) == stateFrom.getValue(LargeFanBlock.AXIS) &&
+                getFirstAxisBetween(BlockPos.ZERO, diff) != stateTo.getValue(ChainDriveBlock.AXIS))
             chain = pos;
 
         if (!Objects.equals(chain, controller.chain)) {
@@ -209,16 +217,18 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         addStressImpactStats(tooltip, calculateStressApplied() * width * width);
 
         if (blades < MINIMUM_BLADES) {
-            CreateLang.text("Not enough blades")
+            NorthstarLang.translate("gui.goggles.large_fan.not_enough_blades")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip);
         } else {
-            CreateLang.text("Added volume:")
+            NorthstarLang.translate("gui.goggles.large_fan.added_volume")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.number(getExtraSealedVolume())
                     .style(ChatFormatting.BLUE)
-                    .text(ChatFormatting.GRAY, " blocks")
+                    .text(" ")
+                    .add(NorthstarLang.blocks(getExtraSealedVolume())
+                            .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 1);
         }
 
@@ -444,6 +454,8 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
 
     // endregion
 
+    // TODO: those utility methods could definitely be moved to their own place
+
     private static List<Vec3i> getEdges(Axis axis, int width, int height) {
         Vec3i step1 = axis == Axis.X ? new Vec3i(0, 1, 0) : new Vec3i(1, 0, 0);
         Vec3i step2 = axis == Axis.Z ? new Vec3i(0, 1, 0) : new Vec3i(0, 0, 1);
@@ -473,6 +485,13 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         }
 
         return corners;
+    }
+
+    private static Direction.Axis getFirstAxisBetween(BlockPos pos1, BlockPos pos2) {
+        if (pos1.getX() != pos2.getX()) return Direction.Axis.X;
+        if (pos1.getY() != pos2.getY()) return Direction.Axis.Y;
+        if (pos1.getZ() != pos2.getZ()) return Direction.Axis.Z;
+        return null;
     }
 
 }

@@ -3,13 +3,12 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.accessor.NorthstarSequencedAssemblyRecipeBuilder;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.content.NorthstarPotions;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.data.ModCompat;
-import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
@@ -77,7 +76,7 @@ public class NorthstarSequencedAssemblyRecipeGen extends SequencedAssemblyRecipe
                     .addOutput(Items.IRON_NUGGET, 5)
                     .addOutput(NorthstarBlocks.IRON_COGWHEEL, 10)
                     .loops(5)
-                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarTags.NorthstarItemTags.C_INGOTS_TITANIUM.tag))
+                    .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarItemTags.C_NUGGETS_TITANIUM.tag))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_COGWHEEL))
                     .addStep(DeployerApplicationRecipe::new, r -> r.require(NorthstarBlocks.IRON_LARGE_COGWHEEL))),
 

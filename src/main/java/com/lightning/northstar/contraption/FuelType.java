@@ -146,7 +146,7 @@ public record FuelType(
                 ResourceLocation fluidLoc = ResourceLocation.parse(rawFluid);
                 fluids.getOptional(fluidLoc).ifPresentOrElse(
                         fluid -> cache.accept(fuel, fluid, 2),
-                        () -> Northstar.LOGGER.warn("Fuel '{}' tried to reference fluid '{}' which could be found.", key, fluidLoc));
+                        () -> Northstar.LOGGER.warn("Fuel '{}' tried to reference fluid '{}' which could not be found.", key, fluidLoc));
             }
         }
     }

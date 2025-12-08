@@ -1,5 +1,7 @@
 package com.lightning.northstar.block.tech.astronomy_table;
 
+import com.lightning.northstar.content.NorthstarBlocks;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -10,7 +12,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AstronomyTableBlockEntity extends BlockEntity implements MenuProvider  {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class AstronomyTableBlockEntity extends BlockEntity implements MenuProvider {
 
     public AstronomyTableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -23,7 +29,7 @@ public class AstronomyTableBlockEntity extends BlockEntity implements MenuProvid
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Astronomy Table");
+        return NorthstarBlocks.ASTRONOMY_TABLE.get().getName();
     }
 
 }

@@ -4,8 +4,8 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.data.ModCompat;
 import com.simibubi.create.api.data.recipe.CompactingRecipeGen;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
@@ -83,7 +83,7 @@ public class NorthstarCompactingRecipeGen extends CompactingRecipeGen {
 
     MARTIAN_STEEL_INGOT = create("martian_steel_ingot",
             b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(NorthstarTags.NorthstarItemTags.C_INGOTS_TITANIUM.tag)
+                    .require(NorthstarItemTags.C_INGOTS_TITANIUM.tag)
                     .require(NorthstarItems.RAW_MARTIAN_IRON_ORE)
                     .require(NorthstarItems.VOLCANIC_ASH)
                     .output(NorthstarItems.MARTIAN_STEEL, 2)),

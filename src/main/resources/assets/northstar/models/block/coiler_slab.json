@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "northstar:block/coiler_planks",
-    "side": "northstar:block/coiler_planks",
-    "top": "northstar:block/coiler_planks"
-  }
-}

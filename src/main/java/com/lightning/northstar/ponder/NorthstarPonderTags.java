@@ -1,8 +1,8 @@
 package com.lightning.northstar.ponder;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.content.NorthstarItems;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;

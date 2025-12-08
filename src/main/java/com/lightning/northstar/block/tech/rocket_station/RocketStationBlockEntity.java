@@ -2,14 +2,15 @@ package com.lightning.northstar.block.tech.rocket_station;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.contraption.rocket.RocketHandler;
-import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
-import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.*;
 import com.simibubi.create.content.trains.station.GlobalStation;
@@ -45,13 +46,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RocketStationBlockEntity extends SmartBlockEntity implements IDisplayAssemblyExceptions, IControlContraption, MenuProvider {
 
@@ -309,10 +311,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
         dif = Mth.roundToward(dif, 100) / 20;
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(this.level.dimension()) + 1000;
-
-        if (dif != 0) {
-            Northstar.LOGGER.debug("{}", dif);
-        }
         return cost * 8;
     }
 
@@ -329,10 +327,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
         dif = Mth.roundToward(dif, 100) / 20;
         int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(target) + 1000;
-
-        if (dif != 0) {
-            Northstar.LOGGER.debug("{}", dif);
-        }
         return cost * 8;
     }
 
@@ -381,12 +375,6 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
         lastException = exception;
         sendData();
     }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return super.getCapability(cap, side);
-    }
-
 
     @SuppressWarnings("unused")
     private boolean shouldAssemble() {
@@ -456,7 +444,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Rocket Station");
+        return NorthstarBlocks.ROCKET_STATION.get().getName();
     }
 
 }

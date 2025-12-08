@@ -8,12 +8,12 @@ import com.simibubi.create.foundation.render.AllInstanceTypes;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
-import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
 import net.minecraft.core.Direction;
 
 import java.util.function.Consumer;
 
-public class AtmosphericConcentratorVisual extends KineticBlockEntityVisual<AtmosphericConcentratorBlockEntity> implements SimpleDynamicVisual {
+public class AtmosphericConcentratorVisual extends KineticBlockEntityVisual<AtmosphericConcentratorBlockEntity> implements SimpleTickableVisual {
 
     private final RotatingInstance shaft;
     private final RotatingInstance propeller;
@@ -33,7 +33,7 @@ public class AtmosphericConcentratorVisual extends KineticBlockEntityVisual<Atmo
     }
 
     @Override
-    public void beginFrame(Context ctx) {
+    public void tick(Context context) {
         shaft.setup(blockEntity).setChanged();
         propeller.setup(blockEntity).setChanged();
     }

@@ -4,13 +4,9 @@ import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
-import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.entity.*;
-import com.lightning.northstar.item.NorthstarEnchantments;
-import com.lightning.northstar.item.NorthstarPotions;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
-import com.lightning.northstar.item.NorthstarTooltipModifier;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
@@ -60,8 +56,7 @@ public class Northstar {
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID);
 
     static {
-        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x9ba4ae), TooltipHelper.styleFromColor(0x80afd2)))
-                .andThen(new NorthstarTooltipModifier())
+        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new FontHelper.Palette(TooltipHelper.styleFromColor(0x80AFD2), TooltipHelper.styleFromColor(0x4D98FA)))
                 .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
 

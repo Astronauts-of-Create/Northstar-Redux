@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface FlowingFluidAccessor {
 
     @Invoker("beforeDestroyingBlock")
-    void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state);
+    void northstar$beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state);
 
 }

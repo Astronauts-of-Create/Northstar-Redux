@@ -1,7 +1,7 @@
 package com.lightning.northstar.client;
 
+import com.lightning.northstar.client.renderer.armor.SpaceSuitFirstPersonRenderer;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
-import com.lightning.northstar.item.client.SpaceSuitFirstPersonRenderer;
 import com.simibubi.create.content.trains.CameraDistanceModifier;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;

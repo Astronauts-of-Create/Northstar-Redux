@@ -5,6 +5,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.MutableAABB;
 import com.lightning.northstar.util.NorthstarLang;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
 import it.unimi.dsi.fastutil.longs.*;
 import net.createmod.catnip.data.Iterate;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -224,27 +226,46 @@ public class ProgressiveBlockSealer {
     }
 
     public void renderLeakPath(Level level) {
+        renderLeakPath(level, null);
+    }
+
+    public void renderLeakPath(Level level, @Nullable AbstractContraptionEntity contraption) {
         if (!hasLeak || leakPath.isEmpty() || !level.isClientSide)
             return;
 
-        MutableBlockPos prev = tempPos1;
-        MutableBlockPos pos = tempPos2;
+        MutableBlockPos pos = tempPos1;
         RandomSource random = level.random;
 
-        prev.set(leakPath.getLong(0));
+        double px = 0, py = 0, pz = 0;
+        double cx, cy, cz;
 
-        for (int i = 1, j = leakPath.size(); i < j; i++) {
+        for (int i = 0, j = leakPath.size(); i < j; i++) {
             pos.set(leakPath.getLong(i));
 
-            level.addParticle(NorthstarParticles.LEAK.get(),
-                    pos.getX() + random.nextFloat() * 0.4 + 0.3,
-                    pos.getY() + random.nextFloat() * 0.4 + 0.3,
-                    pos.getZ() + random.nextFloat() * 0.4 + 0.3,
-                    prev.getX() - pos.getX(),
-                    prev.getY() - pos.getY(),
-                    prev.getZ() - pos.getZ());
+            cx = pos.getX() + 0.5;
+            cy = pos.getY() + 0.5;
+            cz = pos.getZ() + 0.5;
 
-            prev.set(pos);
+            if (contraption != null) {
+                Vec3 global = contraption.toGlobalVector(new Vec3(cx, cy, cz), 1);
+                cx = global.x;
+                cy = global.y;
+                cz = global.z;
+            }
+
+            if (i != 0) {
+                level.addParticle(NorthstarParticles.LEAK.get(),
+                        cx - 0.2 + random.nextFloat() * 0.4,
+                        cy - 0.2 + random.nextFloat() * 0.4,
+                        cz - 0.2 + random.nextFloat() * 0.4,
+                        px - cx,
+                        py - cy,
+                        pz - cz);
+            }
+
+            px = cx;
+            py = cy;
+            pz = cz;
         }
     }
 
@@ -258,7 +279,9 @@ public class ProgressiveBlockSealer {
                     .forGoggles(tooltip);
             CreateLang.number(maximumSealed + extraVolume)
                     .style(ChatFormatting.BLUE)
-                    .text(ChatFormatting.GRAY, " blocks")
+                    .text(" ")
+                    .add(NorthstarLang.blocks(maximumSealed + extraVolume)
+                            .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 1);
         } else {
             NorthstarLang.translate("gui.goggles.sealer.blocks_filled")

@@ -1,12 +1,14 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.item.NorthstarRecipeTypes;
+import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.Lang;
@@ -100,12 +102,11 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
-            tooltip.add(Component.empty());
-        }
-
         CreateLang.translate("gui.goggles.electrolysis_machine")
                 .forGoggles(tooltip);
+
+        if (StressImpact.isEnabled())
+            addStressImpactStats(tooltip, calculateStressApplied());
 
         addTankToolTip(tooltip, "gui.goggles.electrolysis_input", inputTank);
         addTankToolTip(tooltip, "gui.goggles.electrolysis_orange_port", outputTankL);
@@ -141,12 +142,17 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if (isFluidHandlerCap(cap) && side == Direction.UP)
-            return inputTank.getCapability().cast();
-        if (isFluidHandlerCap(cap) && side == getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getClockWise())
-            return outputTankL.getCapability().cast();
-        if (isFluidHandlerCap(cap) && side == getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getCounterClockWise())
-            return outputTankR.getCapability().cast();
+        if (isFluidHandlerCap(cap)) {
+            if (side == null)
+                return LazyOptional.of(() -> new CombinedTankWrapper(inputTank.getPrimaryHandler(), outputTankL.getPrimaryHandler(), outputTankR.getPrimaryHandler())).cast();
+            if (side == Direction.UP)
+                return inputTank.getCapability().cast();
+            Direction facing = getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING);
+            if (side == facing.getClockWise())
+                return outputTankL.getCapability().cast();
+            if (side == facing.getCounterClockWise())
+                return outputTankR.getCapability().cast();
+        }
         return super.getCapability(cap, side);
     }
 

@@ -1,20 +1,28 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHandler;
+import com.lightning.northstar.client.renderer.RemainingOxygenOverlay;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
 import com.lightning.northstar.client.renderer.effect.VenusEffects;
 import com.lightning.northstar.content.NorthstarFluids;
-import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
+import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
+import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.dimension.NorthstarDimensions;
+import net.createmod.catnip.lang.LangNumberFormat;
 import net.createmod.ponder.foundation.PonderIndex;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
@@ -22,6 +30,7 @@ import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -73,6 +82,21 @@ public class NorthstarClient {
 
     @EventBusSubscriber(modid = Northstar.MOD_ID, value = Dist.CLIENT)
     public static class ForgeBusEvents {
+        @SubscribeEvent
+        public static void onItemTooltip(ItemTooltipEvent event) {
+            ItemStack stack = event.getItemStack();
+            CompoundTag tag = stack.getTag();
+            if (tag == null || !NorthstarItemTags.OXYGEN_SOURCES.matches(stack)) {
+                return;
+            }
+            MutableComponent tooltip = Component.translatable("northstar.gui.tooltip.oxygen")
+                    .append(LangNumberFormat.format(tag.getInt("Oxygen")))
+                    .append(NorthstarLang.MB.component())
+                    .withStyle(ChatFormatting.GRAY);
+
+            event.getToolTip().add(1, tooltip);
+        }
+
         @SubscribeEvent
         public static void onTick(ClientTickEvent event) {
             if (event.phase == Phase.START) {

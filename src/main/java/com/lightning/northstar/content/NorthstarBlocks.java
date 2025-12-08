@@ -3,6 +3,7 @@ package com.lightning.northstar.content;
 import com.lightning.northstar.block.crops.*;
 import com.lightning.northstar.block.simple.*;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableBlock;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.block.tech.auto_lander.AutoLanderBlock;
 import com.lightning.northstar.block.tech.circuit_engraver.CircuitEngraverBlock;
 import com.lightning.northstar.block.tech.cogs.SpaceCogWheelBlock;
@@ -13,7 +14,6 @@ import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
-import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
@@ -33,7 +33,10 @@ import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegul
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.data.NorthstarConfiguredFeatures;
-import com.lightning.northstar.util.NorthstarDataGenHelper;
+import com.lightning.northstar.data.util.NorthstarDataGenLoot;
+import com.lightning.northstar.data.util.NorthstarDataGenModels;
+import com.lightning.northstar.data.util.NorthstarDataGenRecipes;
+import com.lightning.northstar.data.util.NorthstarDataGenTags;
 import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
 import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
 import com.lightning.northstar.world.features.grower.WilterTreeGrower;
@@ -80,6 +83,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.common.Tags;
 
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -100,14 +104,16 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> MARTIAN_STEEL_BLOCK = REGISTRATE
             .block("martian_steel_block", Block::new)
+            .lang("Block of Martian Steel")
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(30f, 15f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
+            .transform(NorthstarDataGenTags.apply(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS))
+            .transform(NorthstarBlockTags.C_STORAGE_BLOCKS_MARTIAN_STEEL.tagBlockAndItem())
             .register();
 
     public static final BlockEntry<Block> MARTIAN_STEEL_SHEETMETAL = REGISTRATE
@@ -119,8 +125,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.sheetmetalRecipe(NorthstarItemTags.C_SHEETS_MARTIAN_STEEL))
+            .recipe(NorthstarDataGenRecipes.sheetmetal(NorthstarItemTags.C_SHEETS_MARTIAN_STEEL))
             .simpleItem()
             .register();
 
@@ -133,9 +138,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.simpleSlab())
+            .blockstate(NorthstarDataGenModels.slab())
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(MARTIAN_STEEL_SHEETMETAL))
+            .recipe(NorthstarDataGenRecipes.slab(MARTIAN_STEEL_SHEETMETAL))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -149,9 +154,9 @@ public class NorthstarBlocks {
                     .strength(5f, 15f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.simpleVerticalSlab())
-            .loot(NorthstarDataGenHelper.verticalSlabLoot())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(MARTIAN_STEEL_SHEETMETAL))
+            .blockstate(NorthstarDataGenModels.verticalSlab())
+            .loot(NorthstarDataGenLoot.verticalSlabLoot())
+            .recipe(NorthstarDataGenRecipes.verticalSlab(MARTIAN_STEEL_SHEETMETAL))
             .simpleItem()
             .register();
 
@@ -164,8 +169,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.platingRecipe(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL))
+            .recipe(NorthstarDataGenRecipes.plating(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL))
             .simpleItem()
             .register();
 
@@ -177,7 +181,6 @@ public class NorthstarBlocks {
                     .strength(5f, 15f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -190,9 +193,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.simpleSlab())
+            .blockstate(NorthstarDataGenModels.slab())
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(MARTIAN_STEEL_PLATING))
+            .recipe(NorthstarDataGenRecipes.slab(MARTIAN_STEEL_PLATING))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -206,9 +209,9 @@ public class NorthstarBlocks {
                     .strength(5f, 15f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.simpleVerticalSlab())
-            .loot(NorthstarDataGenHelper.verticalSlabLoot())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(MARTIAN_STEEL_PLATING))
+            .blockstate(NorthstarDataGenModels.verticalSlab())
+            .loot(NorthstarDataGenLoot.verticalSlabLoot())
+            .recipe(NorthstarDataGenRecipes.verticalSlab(MARTIAN_STEEL_PLATING))
             .simpleItem()
             .register();
 
@@ -220,8 +223,8 @@ public class NorthstarBlocks {
                     .strength(5f, 15f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(MARTIAN_STEEL_PLATING))
+            .blockstate(NorthstarDataGenModels.stairs())
+            .recipe(NorthstarDataGenRecipes.stair(MARTIAN_STEEL_PLATING))
             .simpleItem()
             .register();
 
@@ -234,8 +237,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL))
             .simpleItem()
             .register();
 
@@ -251,8 +254,8 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.grateRecipe(NorthstarItemTags.C_SHEETS_MARTIAN_STEEL))
+            .blockstate(NorthstarDataGenModels.cubeAllCutoutMipped())
+            .recipe(NorthstarDataGenRecipes.grate(NorthstarItemTags.C_SHEETS_MARTIAN_STEEL))
             .simpleItem()
             .register();
 
@@ -265,7 +268,6 @@ public class NorthstarBlocks {
                     .strength(4f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -279,7 +281,6 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -292,9 +293,10 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(10f, 15f)
                     .requiresCorrectToolForDrops())
-            .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
+            .transform(pickaxeOnly())
+            .transform(NorthstarDataGenTags.apply(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS))
+            .transform(NorthstarBlockTags.C_STORAGE_BLOCKS_TITANIUM.tagBlockAndItem())
             .register();
 
     public static final BlockEntry<Block> TITANIUM_SHEETMETAL = REGISTRATE
@@ -306,8 +308,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.platingRecipe(NorthstarItemTags.C_SHEETS_TITANIUM))
+            .recipe(NorthstarDataGenRecipes.plating(NorthstarItemTags.C_SHEETS_TITANIUM))
             .simpleItem()
             .register();
 
@@ -320,9 +321,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.simpleSlab())
+            .blockstate(NorthstarDataGenModels.slab())
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(TITANIUM_SHEETMETAL))
+            .recipe(NorthstarDataGenRecipes.slab(TITANIUM_SHEETMETAL))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -336,9 +337,9 @@ public class NorthstarBlocks {
                     .strength(4f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.simpleVerticalSlab())
-            .loot(NorthstarDataGenHelper.verticalSlabLoot())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(TITANIUM_SHEETMETAL))
+            .blockstate(NorthstarDataGenModels.verticalSlab())
+            .loot(NorthstarDataGenLoot.verticalSlabLoot())
+            .recipe(NorthstarDataGenRecipes.verticalSlab(TITANIUM_SHEETMETAL))
             .simpleItem()
             .register();
 
@@ -351,8 +352,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.platingRecipe(NorthstarItemTags.C_INGOTS_TITANIUM))
+            .recipe(NorthstarDataGenRecipes.plating(NorthstarItemTags.C_INGOTS_TITANIUM))
             .simpleItem()
             .register();
 
@@ -365,9 +365,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.simpleSlab())
+            .blockstate(NorthstarDataGenModels.slab())
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(TITANIUM_PLATING))
+            .recipe(NorthstarDataGenRecipes.slab(TITANIUM_PLATING))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -381,9 +381,9 @@ public class NorthstarBlocks {
                     .strength(4f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.simpleVerticalSlab())
-            .loot(NorthstarDataGenHelper.verticalSlabLoot())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(TITANIUM_PLATING))
+            .blockstate(NorthstarDataGenModels.verticalSlab())
+            .loot(NorthstarDataGenLoot.verticalSlabLoot())
+            .recipe(NorthstarDataGenRecipes.verticalSlab(TITANIUM_PLATING))
             .simpleItem()
             .register();
 
@@ -395,8 +395,8 @@ public class NorthstarBlocks {
                     .strength(4f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(TITANIUM_PLATING))
+            .blockstate(NorthstarDataGenModels.stairs())
+            .recipe(NorthstarDataGenRecipes.stair(TITANIUM_PLATING))
             .simpleItem()
             .register();
 
@@ -409,8 +409,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(NorthstarItemTags.C_INGOTS_TITANIUM))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(NorthstarItemTags.C_INGOTS_TITANIUM))
             .simpleItem()
             .register();
 
@@ -426,8 +426,8 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.grateRecipe(NorthstarItemTags.C_SHEETS_TITANIUM))
+            .blockstate(NorthstarDataGenModels.cubeAllCutoutMipped())
+            .recipe(NorthstarDataGenRecipes.grate(NorthstarItemTags.C_SHEETS_TITANIUM))
             .simpleItem()
             .register();
 
@@ -436,16 +436,18 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> TUNGSTEN_BLOCK = REGISTRATE
             .block("tungsten_block", Block::new)
+            .lang("Block of Tungsten")
             .initialProperties(SharedProperties::netheriteMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_BLACK)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .strength(30f, 16f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .transform(pickaxeOnly())
+            .transform(NorthstarDataGenTags.apply(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS))
+            .transform(NorthstarBlockTags.C_STORAGE_BLOCKS_TUNGSTEN.tagBlockAndItem())
             .tag(NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .simpleItem()
             .register();
 
     public static final BlockEntry<Block> TUNGSTEN_SHEETMETAL = REGISTRATE
@@ -458,8 +460,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.sheetmetalRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
+            .recipe(NorthstarDataGenRecipes.sheetmetal(NorthstarItemTags.C_SHEETS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -472,9 +473,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.simpleSlab())
+            .blockstate(NorthstarDataGenModels.slab())
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(TUNGSTEN_SHEETMETAL))
+            .recipe(NorthstarDataGenRecipes.slab(TUNGSTEN_SHEETMETAL))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -488,9 +489,9 @@ public class NorthstarBlocks {
                     .strength(6f, 16f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.simpleVerticalSlab())
-            .loot(NorthstarDataGenHelper.verticalSlabLoot())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(TUNGSTEN_SHEETMETAL))
+            .blockstate(NorthstarDataGenModels.verticalSlab())
+            .loot(NorthstarDataGenLoot.verticalSlabLoot())
+            .recipe(NorthstarDataGenRecipes.verticalSlab(TUNGSTEN_SHEETMETAL))
             .simpleItem()
             .register();
 
@@ -504,8 +505,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.platingRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
+            .recipe(NorthstarDataGenRecipes.plating(NorthstarItemTags.C_INGOTS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -518,9 +518,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.simpleSlab())
+            .blockstate(NorthstarDataGenModels.slab())
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(TUNGSTEN_PLATING))
+            .recipe(NorthstarDataGenRecipes.slab(TUNGSTEN_PLATING))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -534,9 +534,9 @@ public class NorthstarBlocks {
                     .strength(6f, 16f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.simpleVerticalSlab())
-            .loot(NorthstarDataGenHelper.verticalSlabLoot())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(TUNGSTEN_PLATING))
+            .blockstate(NorthstarDataGenModels.verticalSlab())
+            .loot(NorthstarDataGenLoot.verticalSlabLoot())
+            .recipe(NorthstarDataGenRecipes.verticalSlab(TUNGSTEN_PLATING))
             .simpleItem()
             .register();
 
@@ -548,8 +548,8 @@ public class NorthstarBlocks {
                     .strength(6f, 16f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(TUNGSTEN_PLATING))
+            .blockstate(NorthstarDataGenModels.stairs())
+            .recipe(NorthstarDataGenRecipes.stair(TUNGSTEN_PLATING))
             .simpleItem()
             .register();
 
@@ -563,8 +563,8 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(NorthstarItemTags.C_INGOTS_TUNGSTEN))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(NorthstarItemTags.C_INGOTS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -580,8 +580,8 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.grateRecipe(NorthstarItemTags.C_SHEETS_TUNGSTEN))
+            .blockstate(NorthstarDataGenModels.cubeAllCutoutMipped())
+            .recipe(NorthstarDataGenRecipes.grate(NorthstarItemTags.C_SHEETS_TUNGSTEN))
             .simpleItem()
             .register();
 
@@ -599,7 +599,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.ARGYRE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.BASE_SURFACE_BLOCKS_MARS.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(ItemTags.SAND)
             .build()
@@ -613,7 +612,6 @@ public class NorthstarBlocks {
                     .strength(0.65f, 2.0f))
             .tag(BlockTags.MINEABLE_WITH_SHOVEL)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             // TODO: Flint drops?
             .simpleItem()
             .register();
@@ -629,7 +627,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.BASE_SURFACE_BLOCKS_MARS.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -640,7 +637,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.GRASS)
                     .strength(0.65f, 8f)
                     .randomTicks())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .register();
 
@@ -653,10 +650,10 @@ public class NorthstarBlocks {
                     .instabreak()
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.XYZ))
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -668,7 +665,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.GRAVEL)
                     .strength(0.5f, 8f))
             .tag(BlockTags.MINEABLE_WITH_SHOVEL)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.dropOther(b, MARS_SOIL))
             .simpleItem()
             .register();
@@ -681,7 +678,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.GRASS)
                     .strength(0.2f, 0.2f))
             .tag(BlockTags.MINEABLE_WITH_HOE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .lang("Mars Echo Worm Nest")
             .item()
@@ -703,10 +700,10 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.ARGYRE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.multiface("cutout_mipped"))
             .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, RegistrateBlockLootTables.HAS_SHEARS)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -724,10 +721,10 @@ public class NorthstarBlocks {
             .tag(BlockTags.MINEABLE_WITH_HOE)
             .tag(NorthstarBlockTags.ARGYRE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.multiface("cutout_mipped"))
             .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, RegistrateBlockLootTables.HAS_SILK_TOUCH)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -738,7 +735,7 @@ public class NorthstarBlocks {
                     .randomTicks()
                     .instabreak()
                     .noCollission())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, c.applyExplosionDecay(b, LootTable.lootTable()
                     .withPool(LootPool.lootPool()
                             .add(LootItem.lootTableItem(NorthstarItems.MARTIAN_STRAWBERRY)))
@@ -763,10 +760,10 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot(NorthstarDataGenHelper.cropLoot(NorthstarItems.MARS_TULIP_FLOWER, NorthstarItems.MARS_TULIP_SEEDS, 2))
+            .blockstate(NorthstarDataGenModels.manualModel())
+            .loot(NorthstarDataGenLoot.cropLoot(NorthstarItems.MARS_TULIP_FLOWER, NorthstarItems.MARS_TULIP_SEEDS, 2))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -779,10 +776,10 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot(NorthstarDataGenHelper.cropLoot(NorthstarItems.MARS_PALM_FLOWER, NorthstarItems.MARS_PALM_SEEDS, 2))
+            .blockstate(NorthstarDataGenModels.manualModel())
+            .loot(NorthstarDataGenLoot.cropLoot(NorthstarItems.MARS_PALM_FLOWER, NorthstarItems.MARS_PALM_SEEDS, 2))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -796,10 +793,10 @@ public class NorthstarBlocks {
                     .noCollission()
                     .offsetType(BlockBehaviour.OffsetType.XZ)
                     .lightLevel(pState -> 7))
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .loot(NorthstarDataGenHelper.cropLoot(NorthstarItems.MARS_SPROUT_FLOWER, NorthstarItems.MARS_SPROUT_SEEDS, 2))
+            .blockstate(NorthstarDataGenModels.manualModel())
+            .loot(NorthstarDataGenLoot.cropLoot(NorthstarItems.MARS_SPROUT_FLOWER, NorthstarItems.MARS_SPROUT_SEEDS, 2))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -811,11 +808,11 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission()
                     .lightLevel(pState -> 14))
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, c.createSinglePropConditionTable(b, MartianTallFlowerBlock.HALF, DoubleBlockHalf.LOWER)))
             .lang("Tall Mars Sprout")
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock("_top"))
+            .model(NorthstarDataGenModels.itemGeneratedBlock("_top"))
             .build()
             .register();
 
@@ -830,9 +827,9 @@ public class NorthstarBlocks {
                     .dynamicShape()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.dripstone())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock("_up_tip"))
+            .model(NorthstarDataGenModels.itemGeneratedBlock("_up_tip"))
             .build()
             .register();
 
@@ -850,7 +847,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
             .build()
@@ -870,7 +866,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Deep Mars Stone")
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
@@ -886,7 +881,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -899,9 +893,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("s"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(MARS_STONE_BRICKS))
+            .recipe(NorthstarDataGenRecipes.slab(MARS_STONE_BRICKS))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -916,8 +910,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .lang("Mars Stone Brick Vertical Slab")
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(MARS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.verticalSlab("s"))
+            .recipe(NorthstarDataGenRecipes.verticalSlab(MARS_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -928,8 +922,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(MARS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.stairs("s"))
+            .recipe(NorthstarDataGenRecipes.stair(MARS_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -942,8 +936,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.WALLS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.wallRecipe(MARS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.wall("s"))
+            .recipe(NorthstarDataGenRecipes.wall(MARS_STONE_BRICKS))
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -957,22 +951,21 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(MARS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(MARS_STONE_BRICKS))
             .simpleItem()
             .register();
 
     public static final BlockEntry<Block> CHISELED_MARS_STONE_BRICKS = REGISTRATE
             .block("chiseled_mars_stone", Block::new)
-            .lang("Chieseled Mars Stone Bricks")
+            .lang("Chiseled Mars Stone Bricks")
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.DEEPSLATE_BRICKS)
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.chiseledRecipe(MARS_STONE_BRICK_SLAB))
+            .recipe(NorthstarDataGenRecipes.chiseled(MARS_STONE_BRICK_SLAB))
             .simpleItem()
             .register();
 
@@ -984,7 +977,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -997,7 +989,6 @@ public class NorthstarBlocks {
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -1013,7 +1004,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -1031,7 +1021,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -1049,7 +1038,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -1067,7 +1055,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -1085,9 +1072,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -1103,7 +1090,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -1123,7 +1109,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -1141,7 +1126,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_QUARTZ.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
@@ -1160,7 +1144,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -1178,7 +1161,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -1196,7 +1178,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -1214,7 +1195,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -1232,9 +1212,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -1250,7 +1230,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -1270,7 +1249,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -1288,7 +1266,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_QUARTZ.tag)
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
@@ -1306,7 +1283,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
                     c.applyExplosionDecay(NorthstarItems.VOLCANIC_ASH, LootItem.lootTableItem(NorthstarItems.VOLCANIC_ASH)
                             .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 5.0F)))))))
@@ -1321,7 +1297,6 @@ public class NorthstarBlocks {
                     .strength(2f, 4f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -1336,7 +1311,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .item()
             .tag(NorthstarItemTags.WILTER_LOGS.tag)
             .build()
@@ -1350,7 +1325,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .item()
             .tag(NorthstarItemTags.WILTER_LOGS.tag)
             .build()
@@ -1364,8 +1339,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.PLANKS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.plankRecipe(NorthstarItemTags.WILTER_LOGS))
+            .recipe(NorthstarDataGenRecipes.plank(NorthstarItemTags.WILTER_LOGS))
             .simpleItem()
             .register();
 
@@ -1377,9 +1351,9 @@ public class NorthstarBlocks {
                     .strength(2f, 3f))
             .transform(axeOnly())
             .tag(BlockTags.WOODEN_SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("_planks"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(WILTER_PLANKS))
+            .recipe(NorthstarDataGenRecipes.slab(WILTER_PLANKS))
             .item()
             .tag(ItemTags.WOODEN_SLABS)
             .build()
@@ -1392,8 +1366,8 @@ public class NorthstarBlocks {
                     .sound(SoundType.WOOD)
                     .strength(2f, 3f))
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(WILTER_PLANKS))
+            .blockstate(NorthstarDataGenModels.stairs("_planks"))
+            .recipe(NorthstarDataGenRecipes.stair(WILTER_PLANKS))
             .simpleItem()
             .register();
 
@@ -1404,9 +1378,9 @@ public class NorthstarBlocks {
                     .randomTicks()
                     .instabreak()
                     .noCollission())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.crossCutoutMipped())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -1420,7 +1394,7 @@ public class NorthstarBlocks {
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.MINEABLE_WITH_HOE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.leaves())
             .loot((c, b) -> c.add(b, c.createLeavesDrops(b, WILTER_SAPLING.get(), 1f / 20f, 1f / 16f, 1f / 12f, 1f / 10f)))
             .simpleItem()
             .register();
@@ -1436,7 +1410,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS, BlockTags.MINEABLE_WITH_AXE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .item()
             .tag(NorthstarItemTags.ARGYRE_LOGS.tag)
             .build()
@@ -1450,7 +1424,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .item()
             .tag(NorthstarItemTags.ARGYRE_LOGS.tag)
             .build()
@@ -1464,9 +1438,9 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.crossCutoutMipped())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -1480,7 +1454,7 @@ public class NorthstarBlocks {
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.MINEABLE_WITH_HOE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.leaves())
             .loot((c, b) -> c.add(b, c.createLeavesDrops(b, ARGYRE_SAPLING.get(), 1f / 20f, 1f / 16f, 1f / 12f, 1f / 10f)))
             .simpleItem()
             .register();
@@ -1493,8 +1467,7 @@ public class NorthstarBlocks {
                     .strength(2f, 3f))
             .transform(axeOnly())
             .tag(BlockTags.PLANKS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.plankRecipe(NorthstarItemTags.ARGYRE_LOGS))
+            .recipe(NorthstarDataGenRecipes.plank(NorthstarItemTags.ARGYRE_LOGS))
             .simpleItem()
             .register();
 
@@ -1506,9 +1479,9 @@ public class NorthstarBlocks {
                     .strength(2f, 3f))
             .transform(axeOnly())
             .tag(BlockTags.WOODEN_SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("_planks"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(ARGYRE_PLANKS))
+            .recipe(NorthstarDataGenRecipes.slab(ARGYRE_PLANKS))
             .item()
             .tag(ItemTags.WOODEN_SLABS)
             .build()
@@ -1521,8 +1494,8 @@ public class NorthstarBlocks {
                     .sound(SoundType.WOOD)
                     .strength(2f, 3f))
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(ARGYRE_PLANKS))
+            .blockstate(NorthstarDataGenModels.stairs("_planks"))
+            .recipe(NorthstarDataGenRecipes.stair(ARGYRE_PLANKS))
             .simpleItem()
             .register();
 
@@ -1537,7 +1510,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .item()
             .tag(NorthstarItemTags.COILER_LOGS.tag)
             .build()
@@ -1551,7 +1524,7 @@ public class NorthstarBlocks {
                     .strength(2f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .item()
             .tag(NorthstarItemTags.COILER_LOGS.tag)
             .build()
@@ -1565,8 +1538,7 @@ public class NorthstarBlocks {
                     .strength(2f, 3f))
             .transform(axeOnly())
             .tag(BlockTags.PLANKS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.plankRecipe(NorthstarItemTags.COILER_LOGS))
+            .recipe(NorthstarDataGenRecipes.plank(NorthstarItemTags.COILER_LOGS))
             .simpleItem()
             .register();
 
@@ -1578,7 +1550,7 @@ public class NorthstarBlocks {
                     .strength(2f, 3f))
             .transform(axeOnly())
             .tag(BlockTags.WOODEN_SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("_planks"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
             .item()
             .tag(ItemTags.WOODEN_SLABS)
@@ -1592,7 +1564,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.WOOD)
                     .strength(2f, 3f))
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.stairs("_planks"))
             .simpleItem()
             .register();
 
@@ -1603,9 +1575,9 @@ public class NorthstarBlocks {
                     .randomTicks()
                     .instabreak()
                     .noCollission())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.crossCutoutMipped())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -1619,7 +1591,7 @@ public class NorthstarBlocks {
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.MINEABLE_WITH_HOE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.leaves())
             .loot((c, b) -> c.add(b, c.createLeavesDrops(b, COILER_SAPLING.get(), 1f / 20f, 1f / 16f, 1f / 12f, 1f / 10f)))
             .simpleItem()
             .register();
@@ -1636,10 +1608,10 @@ public class NorthstarBlocks {
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.CLIMBABLE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -1656,7 +1628,6 @@ public class NorthstarBlocks {
             .tag(BlockTags.SAND)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.MOON_SURFACE_REPLACEABLE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(ItemTags.SAND)
             .build()
@@ -1676,7 +1647,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_SURFACE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
             .build()
@@ -1696,7 +1666,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
             .lang("Deep Moon Stone")
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
             .build()
@@ -1714,10 +1683,10 @@ public class NorthstarBlocks {
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.multiface("translucent"))
             .loot((c, b) -> c.add(b, c.createMultifaceBlockDrops(b, RegistrateBlockLootTables.HAS_SILK_TOUCH)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -1730,7 +1699,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -1743,9 +1711,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("s"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(MOON_STONE_BRICKS))
+            .recipe(NorthstarDataGenRecipes.slab(MOON_STONE_BRICKS))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -1760,8 +1728,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .lang("Moon Stone Brick Vertical Slab")
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(MOON_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.verticalSlab("s"))
+            .recipe(NorthstarDataGenRecipes.verticalSlab(MOON_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -1773,8 +1741,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(MOON_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.stairs("s"))
+            .recipe(NorthstarDataGenRecipes.stair(MOON_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -1787,8 +1755,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.WALLS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.wallRecipe(MOON_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.wall("s"))
+            .recipe(NorthstarDataGenRecipes.wall(MOON_STONE_BRICKS))
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -1802,8 +1770,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(MOON_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(MOON_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -1816,7 +1784,6 @@ public class NorthstarBlocks {
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -1829,8 +1796,7 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.chiseledRecipe(MOON_STONE_BRICK_SLAB))
+            .recipe(NorthstarDataGenRecipes.chiseled(MOON_STONE_BRICK_SLAB))
             .simpleItem()
             .register();
 
@@ -1842,7 +1808,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -1858,7 +1823,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -1876,7 +1840,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -1894,7 +1857,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -1912,9 +1874,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -1930,7 +1892,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -1950,7 +1911,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -1968,7 +1928,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_LAPIS.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
@@ -1986,7 +1945,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -2005,7 +1963,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_GLOWSTONE.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
@@ -2024,7 +1981,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -2042,7 +1998,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -2060,7 +2015,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -2078,9 +2032,9 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -2096,7 +2050,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -2116,7 +2069,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -2134,7 +2086,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_LAPIS.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
@@ -2152,7 +2103,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -2171,7 +2121,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.C_ORES_GLOWSTONE.tag)
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
@@ -2185,9 +2134,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.AMETHYST)
                     .strength(2f, 5f)
                     .requiresCorrectToolForDrops())
-            .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
+            .transform(pickaxeOnly())
+            .tag(BlockTags.CRYSTAL_SOUND_BLOCKS)
             .register();
 
     public static final BlockEntry<ClusterBlock> LUNAR_SAPPHIRE_CLUSTER = REGISTRATE
@@ -2198,10 +2147,10 @@ public class NorthstarBlocks {
                     .strength(2f, 5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2213,10 +2162,10 @@ public class NorthstarBlocks {
                     .strength(1.5f, 5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2228,10 +2177,10 @@ public class NorthstarBlocks {
                     .strength(1.5f, 5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2242,10 +2191,10 @@ public class NorthstarBlocks {
                     .strength(1.5f, 5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2257,9 +2206,9 @@ public class NorthstarBlocks {
                     .strength(2f, 5f)
                     .randomTicks()
                     .requiresCorrectToolForDrops())
-            .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
+            .transform(pickaxeOnly())
+            .tag(BlockTags.CRYSTAL_SOUND_BLOCKS)
             .register();
 
     // endregion
@@ -2278,7 +2227,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.VENUS_STONE.tag)
             .tag(NorthstarBlockTags.VENUS_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
             .build()
@@ -2286,6 +2234,7 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<Block> VENUS_DEEP_STONE = REGISTRATE
             .block("venus_deep_stone", Block::new)
+            .lang("Deep Venus Stone")
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
                     .sound(SoundType.DEEPSLATE)
@@ -2297,7 +2246,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.VENUS_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.VENUS_STONE.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
             .build()
@@ -2312,7 +2260,6 @@ public class NorthstarBlocks {
             .tag(BlockTags.MINEABLE_WITH_SHOVEL)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .tag(NorthstarBlockTags.VENUS_STONE_REPLACEABLE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             // TODO: Flint drops?
             .simpleItem()
             .register();
@@ -2326,7 +2273,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .register();
 
@@ -2338,9 +2285,9 @@ public class NorthstarBlocks {
                     .strength(0f, 0.5f)
                     .noCollission()
                     .instabreak())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2353,9 +2300,9 @@ public class NorthstarBlocks {
                     .noCollission()
                     .instabreak()
                     .lightLevel(pState -> 7))
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.crossCutoutMipped())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2367,9 +2314,9 @@ public class NorthstarBlocks {
                     .strength(0f, 0.5f)
                     .noCollission()
                     .instabreak())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2381,7 +2328,7 @@ public class NorthstarBlocks {
                     .strength(3f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2395,7 +2342,7 @@ public class NorthstarBlocks {
                     .strength(3f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2409,7 +2356,7 @@ public class NorthstarBlocks {
                     .strength(3f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2423,7 +2370,7 @@ public class NorthstarBlocks {
                     .strength(3f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2437,7 +2384,7 @@ public class NorthstarBlocks {
                     .strength(4f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2452,9 +2399,9 @@ public class NorthstarBlocks {
                     .instabreak()
                     .noCollission())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock("_top"))
+            .model(NorthstarDataGenModels.itemGeneratedBlock("_top"))
             .build()
             .register();
 
@@ -2466,7 +2413,7 @@ public class NorthstarBlocks {
                     .strength(3f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2480,7 +2427,7 @@ public class NorthstarBlocks {
                     .strength(4f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2496,10 +2443,10 @@ public class NorthstarBlocks {
                     .noCollission()
                     .noOcclusion())
             .tag(BlockTags.CLIMBABLE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2514,7 +2461,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .lightLevel(pState -> 11))
             .tag(BlockTags.CLIMBABLE)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, RegistrateBlockLootTables.createShearsOnlyDrop(b)))
             .item()
             .model((c, p) -> p.generated(c::get, p.modLoc("block/glowing_venus_vines")))
@@ -2530,9 +2477,9 @@ public class NorthstarBlocks {
                     .instabreak()
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -2545,7 +2492,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -2558,9 +2504,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("s"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(VENUS_STONE_BRICKS))
+            .recipe(NorthstarDataGenRecipes.slab(VENUS_STONE_BRICKS))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -2575,8 +2521,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(VENUS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.verticalSlab("s"))
+            .recipe(NorthstarDataGenRecipes.verticalSlab(VENUS_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -2588,8 +2534,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(VENUS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.stairs("s"))
+            .recipe(NorthstarDataGenRecipes.stair(VENUS_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -2602,8 +2548,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.WALLS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.wallRecipe(VENUS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.wall("s"))
+            .recipe(NorthstarDataGenRecipes.wall(VENUS_STONE_BRICKS))
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -2617,8 +2563,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(VENUS_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(VENUS_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -2631,8 +2577,7 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.chiseledRecipe(VENUS_STONE_BRICK_SLAB))
+            .recipe(NorthstarDataGenRecipes.chiseled(VENUS_STONE_BRICK_SLAB))
             .simpleItem()
             .register();
 
@@ -2644,7 +2589,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -2657,7 +2601,6 @@ public class NorthstarBlocks {
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -2672,7 +2615,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -2687,7 +2629,12 @@ public class NorthstarBlocks {
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .tag(NorthstarBlockTags.C_ORES_COAL.tag)
+            .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
+            .item()
+            .tag(NorthstarItemTags.SPACE_ORE_COAL.tag)
+            .build()
             .simpleItem()
             .register();
 
@@ -2701,7 +2648,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -2718,7 +2664,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -2735,7 +2680,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -2752,9 +2696,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -2769,7 +2713,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -2788,7 +2731,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -2805,7 +2747,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_QUARTZ.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
@@ -2823,7 +2764,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GLOWSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
@@ -2841,7 +2781,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -2858,7 +2797,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -2875,7 +2813,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -2892,7 +2829,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -2909,9 +2845,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -2926,7 +2862,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -2945,7 +2880,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -2962,7 +2896,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_QUARTZ.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
@@ -2980,7 +2913,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GLOWSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
@@ -3002,7 +2934,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MERCURY_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
             .build()
@@ -3020,7 +2951,6 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MERCURY_DEEP_STONE_REPLACEABLE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .tag(NorthstarBlockTags.C_STONES.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .lang("Deep Mercury Stone")
             .item()
             .tag(NorthstarItemTags.C_STONES.tag)
@@ -3036,7 +2966,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -3049,9 +2978,9 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("s"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(MERCURY_STONE_BRICKS))
+            .recipe(NorthstarDataGenRecipes.slab(MERCURY_STONE_BRICKS))
             .item()
             .tag(ItemTags.SLABS)
             .build()
@@ -3065,8 +2994,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.verticalSlabRecipe(MERCURY_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.verticalSlab("s"))
+            .recipe(NorthstarDataGenRecipes.verticalSlab(MERCURY_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -3078,8 +3007,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(MERCURY_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.stairs("s"))
+            .recipe(NorthstarDataGenRecipes.stair(MERCURY_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -3092,8 +3021,8 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
             .tag(BlockTags.WALLS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.wallRecipe(MERCURY_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.wall("s"))
+            .recipe(NorthstarDataGenRecipes.wall(MERCURY_STONE_BRICKS))
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -3107,8 +3036,8 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.pillarRecipe(MERCURY_STONE_BRICKS))
+            .blockstate(NorthstarDataGenModels.pillar())
+            .recipe(NorthstarDataGenRecipes.pillar(MERCURY_STONE_BRICKS))
             .simpleItem()
             .register();
 
@@ -3120,7 +3049,7 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .recipe(NorthstarDataGenRecipes.chiseled(MERCURY_STONE_BRICK_SLAB))
             .simpleItem()
             .register();
 
@@ -3132,7 +3061,6 @@ public class NorthstarBlocks {
                     .strength(3.5f, 12f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -3145,7 +3073,6 @@ public class NorthstarBlocks {
                     .strength(3f, 6.5f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -3160,7 +3087,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -3177,7 +3103,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -3194,7 +3119,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -3211,9 +3135,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -3228,7 +3152,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -3247,7 +3170,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -3264,7 +3186,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_LAPIS.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
@@ -3281,7 +3202,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -3299,7 +3219,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GLOWSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
@@ -3316,7 +3235,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_TUNGSTEN.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TUNGSTEN_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
@@ -3334,7 +3252,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_TITANIUM.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
@@ -3351,7 +3268,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_IRON.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
@@ -3368,7 +3284,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_COPPER.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
@@ -3385,9 +3300,9 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GOLD.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
             .item()
+            .tag(ItemTags.PIGLIN_LOVED)
             .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
             .build()
             .register();
@@ -3402,7 +3317,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_DIAMOND.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
@@ -3421,7 +3335,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_REDSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
@@ -3438,7 +3351,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_LAPIS.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
@@ -3455,7 +3367,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_ZINC.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
@@ -3473,7 +3384,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_GLOWSTONE.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
@@ -3490,7 +3400,6 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.C_ORES_TUNGSTEN.tag)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TUNGSTEN_ORE.get())))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
@@ -3505,7 +3414,7 @@ public class NorthstarBlocks {
                     .strength(4f, 4f))
             .transform(axeOnly())
             .tag(BlockTags.LOGS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.pillar())
             .simpleItem()
             .register();
 
@@ -3517,7 +3426,6 @@ public class NorthstarBlocks {
                     .strength(4f, 4f))
             .transform(axeOnly())
             .tag(BlockTags.PLANKS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -3529,9 +3437,9 @@ public class NorthstarBlocks {
                     .strength(4f, 4f))
             .transform(axeOnly())
             .tag(BlockTags.WOODEN_SLABS)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.slab("_planks"))
             .loot((c, b) -> c.add(b, c.createSlabItemTable(b)))
-            .recipe(NorthstarDataGenHelper.slabRecipe(CALORIAN_PLANKS))
+            .recipe(NorthstarDataGenRecipes.slab(CALORIAN_PLANKS))
             .item()
             .tag(ItemTags.WOODEN_SLABS)
             .build()
@@ -3544,8 +3452,8 @@ public class NorthstarBlocks {
                     .sound(SoundType.BASALT)
                     .strength(4f, 4f))
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
-            .recipe(NorthstarDataGenHelper.stairRecipe(CALORIAN_PLANKS))
+            .blockstate(NorthstarDataGenModels.stairs("_planks"))
+            .recipe(NorthstarDataGenRecipes.stair(CALORIAN_PLANKS))
             .simpleItem()
             .register();
 
@@ -3559,7 +3467,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .isSuffocating(NorthstarBlocks::never)
                     .isViewBlocking(NorthstarBlocks::never))
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, c.applyExplosionDecay(b, LootTable.lootTable()
                     .withPool(LootPool.lootPool()
                             .setRolls(ConstantValue.exactly(1))
@@ -3583,7 +3491,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.BASALT)
                     .strength(4f, 6f)
                     .requiresCorrectToolForDrops())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockWithInventoryModel(c::get))
             .build()
@@ -3597,7 +3505,7 @@ public class NorthstarBlocks {
                     .strength(4f, 6f)
                     .requiresCorrectToolForDrops())
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .lang("Mercury Petrified Cactus")
             .item()
             .model((c, p) -> p.blockItem(c::get, "_item"))
@@ -3618,7 +3526,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.cubeAllCutoutMipped())
             .simpleItem()
             .register();
 
@@ -3645,7 +3553,6 @@ public class NorthstarBlocks {
                     .sound(SoundType.GLASS)
                     .strength(2f, 5f))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -3657,7 +3564,6 @@ public class NorthstarBlocks {
                     .strength(100f, 100f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
             .simpleItem()
             .register();
 
@@ -3672,7 +3578,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.cubeAllTranslucent())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .simpleItem()
             .register();
@@ -3687,7 +3593,7 @@ public class NorthstarBlocks {
                     .dynamicShape()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.dripstone())
             .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
             .item()
             .model((c, p) -> p.generated(c::get, p.modLoc("block/icicle_up_tip")))
@@ -3701,7 +3607,7 @@ public class NorthstarBlocks {
                     .lightLevel(value -> 5)
                     .sound(SoundType.AMETHYST_CLUSTER))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.crossCutoutMipped())
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), "minecraft:item/amethyst_bud")
                     .texture("layer0", p.modLoc("block/amethyst_crystal_block"))
@@ -3720,9 +3626,9 @@ public class NorthstarBlocks {
                     .lightLevel(value -> 7)
                     .sound(SoundType.AMETHYST_CLUSTER))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -3731,10 +3637,11 @@ public class NorthstarBlocks {
             .initialProperties(() -> Blocks.TORCH)
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
-                    .instabreak())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+                    .instabreak()
+                    .lightLevel(s -> 0))
+            .blockstate((c, p) -> p.simpleBlock(c.get(), p.models().torch(c.getName(), p.blockTexture(c.get())).renderType("cutout")))
             .item((b, p) -> new StandingAndWallBlockItem(b, NorthstarBlocks.EXTINGUISHED_TORCH_WALL.get(), p, Direction.DOWN))
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -3744,19 +3651,21 @@ public class NorthstarBlocks {
             .initialProperties(() -> WALL_TORCH)
             .properties(p -> p.sound(SoundType.WOOD)
                     .noCollission()
-                    .instabreak())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+                    .instabreak()
+                    .lightLevel(s -> 0))
+            .blockstate((c, p) -> p.horizontalBlock(c.get(), p.models().torchWall(c.getName(), p.blockTexture(EXTINGUISHED_TORCH.get())).renderType("cutout"), 90))
             .loot((c, b) -> c.dropOther(b, EXTINGUISHED_TORCH))
             .register();
 
     public static final BlockEntry<ExtinguishedLanternBlock> EXTINGUISHED_LANTERN = REGISTRATE
             .block("extinguished_lantern", ExtinguishedLanternBlock::new)
             .initialProperties(() -> Blocks.LANTERN)
-            .properties(p -> p.sound(SoundType.LANTERN))
+            .properties(p -> p.sound(SoundType.LANTERN)
+                    .lightLevel(s -> 0))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedItem())
+            .model(NorthstarDataGenModels.itemGeneratedItem())
             .build()
             .register();
 
@@ -3767,9 +3676,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.METAL)
                     .noCollission()
                     .instabreak())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate((c, p) -> p.simpleBlock(c.get(), p.models().torch(c.getName(), p.blockTexture(c.get())).renderType("cutout")))
             .item((b, p) -> new StandingAndWallBlockItem(NorthstarBlocks.GLOWSTONE_TORCH.get(), NorthstarBlocks.GLOWSTONE_TORCH_WALL.get(), p, Direction.DOWN))
-            .model(NorthstarDataGenHelper.itemGeneratedBlock())
+            .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
             .register();
 
@@ -3780,7 +3689,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.METAL)
                     .noCollission()
                     .instabreak())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate((c, p) -> p.horizontalBlock(c.get(), p.models().getExistingFile(p.blockTexture(c.get())), 0))
             .register();
 
     public static final BlockEntry<LanternBlock> GLOWSTONE_LANTERN = REGISTRATE
@@ -3790,9 +3699,9 @@ public class NorthstarBlocks {
                     .lightLevel(value -> 15)
                     .sound(SoundType.LANTERN))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.lantern())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedItem())
+            .model(NorthstarDataGenModels.itemGeneratedItem())
             .build()
             .register();
 
@@ -3811,9 +3720,9 @@ public class NorthstarBlocks {
                     .strength(8f, 8f)
                     .noOcclusion())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedItem())
+            .model(NorthstarDataGenModels.itemGeneratedItem())
             .build()
             .register();
 
@@ -3824,7 +3733,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.WOOD))
             .transform(axeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .register();
 
@@ -3834,7 +3743,7 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.METAL))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 0))
             .onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
             .item(CogwheelBlockItem::new)
@@ -3847,7 +3756,7 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.METAL))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 0))
             .onRegister(CreateRegistrate.blockModel(() -> BracketedKineticBlockModel::new))
             .lang("Large Iron Cogwheel")
@@ -3861,7 +3770,7 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.CLAY)
                     .noOcclusion())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 128.0))
             .onRegister(BlockStressValues.setGeneratorSpeed(SolarPanelBlockEntity.MAXIMUM_SPEED, true))
             .item()
@@ -3876,7 +3785,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(8, 8))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.CAPACITIES.register(b, () -> 256))
             //.onRegister(BlockStressValues.setGeneratorSpeed(CombustionEngineBlock.getSpeedRange().getSecond(), true))
             .item()
@@ -3890,7 +3799,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
             .item(AssemblyOperatorBlockItem::new)
             .transform(customItemModel())
@@ -3903,7 +3812,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .sound(SoundType.NETHERITE_BLOCK).noOcclusion())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
             .simpleItem()
             .register();
@@ -3916,7 +3825,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(6, 6))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .item()
             .transform(customItemModel())
@@ -3930,7 +3839,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(6, 6))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockItem(c::get))
             .build()
@@ -3944,7 +3853,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(8, 8))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new OxygenSealerMovingInteractionBehaviour()))
             .onRegister(MovementBehaviour.movementBehaviour(new OxygenSealerMovementBehaviour()))
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
@@ -3959,7 +3868,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .register();
 
@@ -3971,7 +3880,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(8, 8))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 16))
             .onRegister(MovementBehaviour.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new TemperatureRegulatorMovingInteractionBehaviour()))
@@ -3988,7 +3897,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(8, 8))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(b -> BlockStressValues.IMPACTS.register(b, () -> 8))
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/large_fan/block_single")))
@@ -4001,7 +3910,7 @@ public class NorthstarBlocks {
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(MovementBehaviour.movementBehaviour(new BasinMovementBehaviour()))
             .transform(DisplaySource.displaySource(NorthstarDisplaySources.TEMPERATURE))
             .simpleItem()
@@ -4014,7 +3923,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketStationBlockMovingInteraction()))
             .register();
@@ -4026,7 +3935,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(MovementBehaviour.movementBehaviour(new RocketControlsMovementBehaviour()))
             .onRegister(MovingInteractionBehaviour.interactionBehaviour(new RocketControlsInteractionBehaviour()))
             .item()
@@ -4044,7 +3953,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .register();
 
@@ -4056,7 +3965,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(MovementBehaviour.movementBehaviour(new JetEngineMovementBehaviour()))
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/jet_engine/jet_single")))
@@ -4071,7 +3980,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK))
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/computer_rack/block")))
             .build()
@@ -4084,7 +3993,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .register();
 
     public static final BlockEntry<InterplanetaryNavigatorBlock> INTERPLANETARY_NAVIGATOR = REGISTRATE
@@ -4097,10 +4006,10 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never))
             .transform(pickaxeOnly())
             .tag(AllBlockTags.BRITTLE.tag)
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .loot((c, b) -> c.add(b, c.createSinglePropConditionTable(b, InterplanetaryNavigatorBlock.HALF, DoubleBlockHalf.LOWER)))
             .item()
-            .model(NorthstarDataGenHelper.itemGeneratedItem())
+            .model(NorthstarDataGenModels.itemGeneratedItem())
             .build()
             .register();
 
@@ -4113,7 +4022,7 @@ public class NorthstarBlocks {
                     .strength(8f, 8f)
                     .requiresCorrectToolForDrops())
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
             .register();
 
@@ -4124,7 +4033,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.COPPER))
             .transform(pickaxeOnly())
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .lang("Laser Lense (WIP)")
             .simpleItem()
             .register();
@@ -4136,7 +4045,7 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .noCollission()
                     .lightLevel(state -> 15))
-            .blockstate(NorthstarDataGenHelper.manualModel())
+            .blockstate(NorthstarDataGenModels.manualModel())
             .lang("Laser (WIP)")
             .simpleItem()
             .register();*/
