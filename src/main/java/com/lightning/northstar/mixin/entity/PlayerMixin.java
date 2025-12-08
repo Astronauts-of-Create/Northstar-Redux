@@ -42,31 +42,4 @@ public class PlayerMixin implements NorthstarPlayer {
         northstar$relativeEntity = entity;
         northstar$relativeTicks = ticks;
     }
-
-    @Inject(method = "attack", at = @At("HEAD"))
-    private void attack(Entity target, CallbackInfo info) {
-        Player self = (Player) (Object) this;
-
-        float f = (float) self.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float f1;
-        if (target instanceof LivingEntity) {
-            f1 = EnchantmentHelper.getDamageBonus(self.getMainHandItem(), ((LivingEntity) target).getMobType());
-        } else {
-            f1 = EnchantmentHelper.getDamageBonus(self.getMainHandItem(), MobType.UNDEFINED);
-        }
-        float f2 = self.getAttackStrengthScale(0.5F);
-        f *= 0.2F + f2 * f2 * 0.8F;
-        f1 *= f2;
-
-        if (f > 0.0F || f1 > 0.0F) {
-            int j = EnchantmentHelper.getEnchantmentLevel(NorthstarEnchantments.FROSTBITE.get(), self);
-            if (target instanceof LivingEntity) {
-                if (j > 0) {
-                    // freezing
-                    target.setTicksFrozen((j * 80) + 150);
-                }
-            }
-        }
-    }
-
 }
