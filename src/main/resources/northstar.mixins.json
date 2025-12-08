@@ -48,6 +48,7 @@
     "compat.tfmg.ExhaustBlockMixin",
     "entity.LivingEntityMixin",
     "entity.ServerPlayerMixin",
+    "entity.PlayerMixin",
     "gravitystuff.AbstractArrowGravityMixin",
     "gravitystuff.AbstractMinecartGravityMixin",
     "gravitystuff.BoatGravityMixin",

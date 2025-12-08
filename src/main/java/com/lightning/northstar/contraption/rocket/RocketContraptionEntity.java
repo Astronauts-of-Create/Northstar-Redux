@@ -65,12 +65,6 @@ import java.util.function.Function;
 
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
     /**
-     * TODO: Rocket launch / seating bugs
-     * - non-seated entities still bug out visually
-     *      - This is a client side issue where entities arent being rendered as if they are riding the rocket (the client likely interpolates the position of the entity from the server, but doesn't keep it synchronized with the rocket's position)
-     */
-
-    /**
      * In ticks
      */
     public final static int LAUNCH_COUNTDOWN_TICKS = 10 * 20;
