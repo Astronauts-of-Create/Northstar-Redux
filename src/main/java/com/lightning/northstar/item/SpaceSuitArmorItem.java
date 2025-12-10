@@ -1,5 +1,7 @@
 package com.lightning.northstar.item;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -9,6 +11,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -42,8 +45,14 @@ public class SpaceSuitArmorItem extends ArmorItem implements GeoItem, GeoAnimata
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 if (renderer == null)
-                    renderer = new GeoArmorRenderer<>(model.get());
-                renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                    renderer = new GeoArmorRenderer<>(model.get()) {
+                        // fix for https://github.com/bernie-g/geckolib/issues/755
+                        @Override
+                        public void renderToBuffer(PoseStack poseStack, @Nullable VertexConsumer buffer, int packedLight, int packedOverlay, int colour) {
+                            if (currentEntity != null)
+                                super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, colour);
+                        }
+                    };
                 return renderer;
             }
         });
