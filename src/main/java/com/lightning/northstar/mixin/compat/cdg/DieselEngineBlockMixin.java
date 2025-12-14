@@ -4,6 +4,8 @@ import com.jesz.createdieselgenerators.content.diesel_engine.IEngine;
 import com.jesz.createdieselgenerators.content.diesel_engine.huge.HugeDieselEngineBlock;
 import com.jesz.createdieselgenerators.content.diesel_engine.modular.ModularDieselEngineBlock;
 import com.jesz.createdieselgenerators.content.diesel_engine.normal.DieselEngineBlock;
+import com.lightning.northstar.api.WhenModLoaded;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -12,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.CDG)
 @Mixin({ DieselEngineBlock.class, HugeDieselEngineBlock.class, ModularDieselEngineBlock.class })
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

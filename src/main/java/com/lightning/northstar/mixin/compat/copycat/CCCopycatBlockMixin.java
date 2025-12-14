@@ -2,7 +2,9 @@ package com.lightning.northstar.mixin.compat.copycat;
 
 import com.copycatsplus.copycats.foundation.copycat.CCCopycatBlock;
 import com.copycatsplus.copycats.foundation.copycat.ICopycatBlockEntity;
+import com.lightning.northstar.api.WhenModLoaded;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.mixin.accessor.NorthstarContraptionWorld;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -19,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.COPYCATS)
 @Mixin(CCCopycatBlock.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
