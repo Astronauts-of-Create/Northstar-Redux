@@ -59,38 +59,40 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
         Font font = Minecraft.getInstance().font;
         List<Component> tooltip = new ArrayList<>();
 
+        int baseIndents = -4;
+
         NorthstarLang.builder()
                 .add(NorthstarBlocks.COMBUSTION_ENGINE.get().getName())
                 .text(":")
-                .forGoggles(tooltip);
+                .forGoggles(tooltip, baseIndents);
 
         NorthstarLang.translate("recipe.fuel_type.consumption")
                 .add(NorthstarLang.number(recipe.combustionEngineUse())
                         .add(NorthstarLang.MB_PER_TICK)
                         .style(ChatFormatting.GOLD))
-                .forGoggles(tooltip, 1);
+                .forGoggles(tooltip, baseIndents + 1);
 
         NorthstarLang.translate("recipe.fuel_type.speed")
                 .add(NorthstarLang.number(recipe.combustionEngineRpm())
                         .text(" ")
                         .add(CreateLang.translate("generic.unit.rpm"))
                         .style(ChatFormatting.AQUA))
-                .forGoggles(tooltip, 1);
+                .forGoggles(tooltip, baseIndents + 1);
 
         NorthstarLang.builder()
                 .add(NorthstarBlocks.JET_ENGINE.get().getName())
                 .text(":")
-                .forGoggles(tooltip);
+                .forGoggles(tooltip, baseIndents);
 
         NorthstarLang.translate("recipe.fuel_type.energy")
                 .add(NorthstarLang.number(recipe.gjPerMb())
                         .add(NorthstarLang.GJ_PER_MB)
                         .style(ChatFormatting.AQUA))
-                .forGoggles(tooltip, 1);
+                .forGoggles(tooltip, baseIndents + 1);
 
         int y = 5;
         for (Component line : tooltip) {
-            graphics.drawString(font, line, 20, y, 0xFFFFFFFF);
+            graphics.drawString(font, line, 25, y, 0xFFFFFFFF);
             y += 10;
         }
     }

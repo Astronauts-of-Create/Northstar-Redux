@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -180,14 +179,13 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                     .forGoggles(tooltip);
         }
 
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.builder()
-                .add(CreateLang.number(fluidStack.getAmount())
-                        .add(mb)
+        NorthstarLang.builder()
+                .add(NorthstarLang.number(fluidStack.getAmount())
+                        .add(NorthstarLang.MB)
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
-                        .add(mb)
+                .add(NorthstarLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                        .add(NorthstarLang.MB)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
 
@@ -195,7 +193,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             NorthstarLang.translate("gui.goggles.fuel_use")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            CreateLang.number(fuelType.combustionEngineUse())
+            NorthstarLang.number(fuelType.combustionEngineUse())
                     .style(ChatFormatting.GOLD)
                     .add(NorthstarLang.MB_PER_TICK)
                     .forGoggles(tooltip, 1);
@@ -208,12 +206,14 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         generatorSpeed = compound.getFloat("GeneratorSpeed");
+        usageBuffer = compound.getFloat("UsageBuffer");
     }
 
     @Override
     protected void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.putFloat("GeneratorSpeed", generatorSpeed);
+        compound.putFloat("UsageBuffer", usageBuffer);
     }
 
 }
