@@ -10,6 +10,7 @@ import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeFactoryRegistry;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchemaRegistry;
+import dev.latvian.mods.kubejs.script.ConsoleJS;
 
 public class NorthstarKubeJsPlugin implements KubeJSPlugin {
 
@@ -20,7 +21,7 @@ public class NorthstarKubeJsPlugin implements KubeJSPlugin {
         // this could be done inside kubejs.plugins.txt but the message isn't always displayed and is less explicit
         enabled = ModCompat.KJS_CREATE.isLoaded();
         if (!enabled) {
-            Northstar.LOGGER.error("KubeJS compatibility depends on KubeJS Create which is not installed. Northstar recipes will not be available.");
+            ConsoleJS.SERVER.warn("[Northstar] KubeJS compatibility depends on KubeJS Create, which is not installed. Northstar recipes will not be available.");
         }
     }
 
