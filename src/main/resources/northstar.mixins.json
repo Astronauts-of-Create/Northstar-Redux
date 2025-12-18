@@ -41,6 +41,7 @@
     "compat.create.CopycatBlockMixin",
     "compat.create.KineticBlockEntityMixin",
     "compat.create.SequencedAssemblyRecipeBuilderMixin",
+    "compat.kubejs.DataPackEventJsAccessor",
     "compat.tfmg.AirIntakeBlockEntityMixin",
     "compat.tfmg.AirIntakeBlockMixin",
     "compat.tfmg.EngineBlockEntityMixin",
