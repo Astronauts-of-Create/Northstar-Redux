@@ -7,7 +7,7 @@ ponder = "1.0.56"
 cdg = "maven.modrinth:create-diesel-generators:1.21.1-1.3.7"
 cca = "maven.modrinth:createaddition:neoforge-1.21.1-1.5.8"
 create = "com.simibubi.create:create-1.21.1:6.0.8-169"
-copycats = "com.copycatsplus:copycats:3.0.2+mc.1.21.1-neoforge-build.259"
+copycats = "com.copycatsplus:copycats:3.0.4+mc.1.21.1-neoforge"
 embeddium = "maven.modrinth:embeddium:1.0.15+mc1.21.1"
 flywheel-neoforge-api = { module = "dev.engine-room.flywheel:flywheel-neoforge-api-1.21.1", version.ref = "flywheel" }
 flywheel-neoforge = { module = "dev.engine-room.flywheel:flywheel-neoforge-1.21.1", version.ref = "flywheel" }

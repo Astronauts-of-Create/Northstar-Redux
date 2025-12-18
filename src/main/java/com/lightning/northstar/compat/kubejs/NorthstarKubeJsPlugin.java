@@ -39,20 +39,20 @@ public class NorthstarKubeJsPlugin implements KubeJSPlugin {
     @Override
     public void registerEvents(EventGroupRegistry registry) {
         registry.register(EVENTS);
-    }
 
-    @Override
-    public void registerBindings(BindingRegistry bindings) {
-        bindings.add("FuelType", FuelType.class);
-
-        ServerEvents.GENERATE_DATA.listenJava(ScriptType.SERVER, GeneratedDataStage.REGISTRIES,e -> {
-            if (e instanceof KubeDataGenerator d) {
-                NorthstarKubeDataEvent dataEvent = new NorthstarKubeDataEvent(d);
+        ServerEvents.GENERATE_DATA.listenJava(ScriptType.SERVER, GeneratedDataStage.REGISTRIES, event -> {
+            if (event instanceof KubeDataGenerator generator) {
+                NorthstarKubeDataEvent dataEvent = new NorthstarKubeDataEvent(generator);
                 GENERATE_DATA_EVENT.post(dataEvent);
                 dataEvent.postProcess();
             }
             return null;
         });
+    }
+
+    @Override
+    public void registerBindings(BindingRegistry bindings) {
+        bindings.add("FuelType", FuelType.class);
     }
 
     @Override
