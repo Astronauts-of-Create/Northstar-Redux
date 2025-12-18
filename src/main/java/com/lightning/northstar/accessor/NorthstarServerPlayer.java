@@ -10,10 +10,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface NorthstarServerPlayer {
 
-    @Nullable
-    default Entity northstar$getRelativeEntity() {
-        return null;
-    }
 
     default void northstar$setPositionRelativeTo(Entity other) {
     }

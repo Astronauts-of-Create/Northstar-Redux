@@ -3,6 +3,7 @@
   "injected_interfaces": {
     "net/minecraft/client/gui/GuiGraphics": [ "com/lightning/northstar/accessor/NorthstarGuiGraphics" ],
     "net/minecraft/server/level/ServerPlayer": [ "com/lightning/northstar/accessor/NorthstarServerPlayer" ],
+    "net/minecraft/world/entity/player/Player": [ "com/lightning/northstar/accessor/NorthstarPlayer" ],
     "net/minecraft/world/damagesource/DamageSources": [ "com/lightning/northstar/accessor/NorthstarDamageSources" ],
     "net/minecraft/world/level/Level": [ "com/lightning/northstar/accessor/NorthstarLevel" ]
   }

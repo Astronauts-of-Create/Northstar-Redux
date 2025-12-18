@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommonConfig extends ConfigBase {
 
+    public final ConfigBool dismountRideableEntityWhenInRocket = b(true, "dismountRideableEntityWhenInRocket");
     @Override
     public @NotNull String getName() {
         return "common";
