@@ -3,7 +3,6 @@ package com.lightning.northstar.world.oxygen;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlockEntity;
 import com.lightning.northstar.config.NorthstarConfigs;
-import com.lightning.northstar.content.NorthstarTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
@@ -32,7 +31,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class NorthstarOxygen {
@@ -119,7 +119,7 @@ public class NorthstarOxygen {
 
     public static ItemStack getOxygenTank(LivingEntity entity) {
         for (ItemStack item : entity.getArmorSlots()) {
-            if (item.is(NorthstarTags.NorthstarItemTags.OXYGEN_SOURCES.tag)) {
+            if (item.is(NorthstarItemTags.OXYGEN_SOURCES.tag)) {
                 return item;
             }
         }

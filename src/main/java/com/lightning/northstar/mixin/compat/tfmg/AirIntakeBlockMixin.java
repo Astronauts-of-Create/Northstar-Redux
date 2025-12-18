@@ -2,6 +2,8 @@ package com.lightning.northstar.mixin.compat.tfmg;
 
 import com.drmangotea.tfmg.blocks.engines.intake.AirIntakeBlock;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
+import com.lightning.northstar.api.WhenModLoaded;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.TFMG)
 @Mixin(AirIntakeBlock.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

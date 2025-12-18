@@ -40,7 +40,7 @@ public class RocketControlsMovementBehaviour implements MovementBehaviour {
         if (!(context.temporaryData instanceof LerpedFloat angle))
             return;
 
-        if (context.contraption.entity instanceof RocketContraptionEntity rocket && rocket.isLaunchingOrLanding() &&
+        if (context.contraption.entity instanceof RocketContraptionEntity rocket && rocket.isInFlight() &&
                 rocket.getLaunchTime() <= 2 && angle.getChaseTarget() == 0) {
             angle.chase(1.0, 0.2, LerpedFloat.Chaser.EXP);
         }

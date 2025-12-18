@@ -1,6 +1,5 @@
-package com.lightning.northstar.item.armor;
+package com.lightning.northstar.item;
 
-import com.lightning.northstar.client.model.armor.BrokenIronSpaceSuitArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,23 +9,28 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class BrokenIronSpaceSuitArmorItem extends ArmorItem implements GeoItem {
+public class SpaceSuitArmorItem extends ArmorItem implements GeoItem, GeoAnimatable {
 
     private final AnimatableInstanceCache animatableCache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<GeoModel<SpaceSuitArmorItem>> model;
 
-    public BrokenIronSpaceSuitArmorItem(ArmorMaterial material, ArmorItem.Type type, Properties properties) {
+    public SpaceSuitArmorItem(ArmorMaterial material, Type type, Properties properties, Supplier<GeoModel<SpaceSuitArmorItem>> model) {
         super(material, type, properties);
+        this.model = model;
     }
 
     // region GeoAnimatable
@@ -41,7 +45,7 @@ public class BrokenIronSpaceSuitArmorItem extends ArmorItem implements GeoItem {
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 if (renderer == null)
-                    renderer = new GeoArmorRenderer<>(new BrokenIronSpaceSuitArmorModel());
+                    renderer = new GeoArmorRenderer<>(model.get());
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return renderer;
             }
@@ -58,11 +62,16 @@ public class BrokenIronSpaceSuitArmorItem extends ArmorItem implements GeoItem {
         return animatableCache;
     }
 
-    private PlayState predicate(AnimationState<BrokenIronSpaceSuitArmorItem> event) {
+    private PlayState predicate(AnimationState<SpaceSuitArmorItem> event) {
         event.getController().setAnimation(RawAnimation.begin().thenLoop("idle"));
         return PlayState.CONTINUE;
     }
 
     // endregion
+
+    @Override
+    public boolean canBeDepleted() {
+        return true;
+    }
 
 }

@@ -1,13 +1,15 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsClientHandler;
+import com.lightning.northstar.client.renderer.RemainingOxygenOverlay;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
 import com.lightning.northstar.client.renderer.effect.VenusEffects;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.item.armor.RemainingOxygenOverlay;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.lightning.northstar.util.NorthstarLang;
@@ -15,6 +17,7 @@ import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -29,6 +32,7 @@ import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -100,6 +104,17 @@ public class NorthstarClient {
         public static void onTick(ClientTickEvent event) {
             if (event.phase == Phase.START) {
                 RocketControlsClientHandler.tick();
+            }
+        }
+
+        @SubscribeEvent
+        public static void onMountEntity(EntityMountEvent event) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (event.getEntityMounting() == player &&
+                    NorthstarConfigs.common().dismountRideableEntityWhenInRocket.get() &&
+                    player.northstar$getRelativeEntity() instanceof RocketContraptionEntity rocket &&
+                    event.getEntityBeingMounted().getId() != rocket.getId()) {
+                event.setCanceled(true);
             }
         }
     }

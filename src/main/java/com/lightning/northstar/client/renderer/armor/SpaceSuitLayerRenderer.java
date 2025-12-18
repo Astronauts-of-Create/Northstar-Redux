@@ -1,8 +1,8 @@
 package com.lightning.northstar.client.renderer.armor;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.lightning.northstar.content.NorthstarPartialModels;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;

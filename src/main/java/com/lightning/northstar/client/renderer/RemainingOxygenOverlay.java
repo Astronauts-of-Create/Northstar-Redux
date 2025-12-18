@@ -1,4 +1,4 @@
-package com.lightning.northstar.item.armor;
+package com.lightning.northstar.client.renderer;
 
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -3,6 +3,7 @@ package com.lightning.northstar.block.tech.large_fan;
 import com.lightning.northstar.api.create.ReceivingKineticBlockEntity;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -216,16 +217,18 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         addStressImpactStats(tooltip, calculateStressApplied() * width * width);
 
         if (blades < MINIMUM_BLADES) {
-            Lang.text("Not enough blades")
+            NorthstarLang.translate("gui.goggles.large_fan.not_enough_blades")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip);
         } else {
-            Lang.text("Added volume:")
+            NorthstarLang.translate("gui.goggles.large_fan.added_volume")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             Lang.number(getExtraSealedVolume())
                     .style(ChatFormatting.BLUE)
-                    .text(ChatFormatting.GRAY, " blocks")
+                    .text(" ")
+                    .add(NorthstarLang.blocks(getExtraSealedVolume())
+                            .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 1);
         }
 

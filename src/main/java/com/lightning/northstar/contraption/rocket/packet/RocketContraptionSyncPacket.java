@@ -18,10 +18,11 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
     public boolean blasting;
     public boolean slowing;
     public boolean activeLaunch;
+    public boolean isInFlight;
 
     public RocketContraptionSyncPacket(int contraptionEntityId, Vec3 pos, float lift_vel, int launchTime,
                                        boolean launched, boolean landing, boolean blasting, boolean slowing,
-                                       boolean activeLaunch) {
+                                       boolean activeLaunch, boolean isInFlight) {
         this.contraptionEntityId = contraptionEntityId;
         this.pos = pos;
         this.lift_vel = lift_vel;
@@ -31,6 +32,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         this.blasting = blasting;
         this.slowing = slowing;
         this.activeLaunch = activeLaunch;
+        this.isInFlight = isInFlight;
     }
 
     public RocketContraptionSyncPacket(FriendlyByteBuf buffer) {
@@ -43,6 +45,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         blasting = buffer.readBoolean();
         slowing = buffer.readBoolean();
         activeLaunch = buffer.readBoolean();
+        isInFlight = buffer.readBoolean();
     }
 
     @Override
@@ -58,6 +61,7 @@ public class RocketContraptionSyncPacket extends SimplePacketBase {
         buffer.writeBoolean(blasting);
         buffer.writeBoolean(slowing);
         buffer.writeBoolean(activeLaunch);
+        buffer.writeBoolean(isInFlight);
     }
 
     @Override

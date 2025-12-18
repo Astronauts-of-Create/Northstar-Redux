@@ -2,12 +2,12 @@ package com.lightning.northstar.data.recipe;
 
 import com.lightning.northstar.accessor.NorthstarSequencedAssemblyRecipeBuilder;
 import com.lightning.northstar.block.tech.circuit_engraver.EngravingRecipe;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarPotions;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.data.ModCompat;
-import com.lightning.northstar.item.NorthstarPotions;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;

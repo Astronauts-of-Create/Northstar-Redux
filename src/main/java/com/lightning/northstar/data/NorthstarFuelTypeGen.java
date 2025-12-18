@@ -15,65 +15,65 @@ public class NorthstarFuelTypeGen {
         context.register(key("biofuel"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_BIOFUEL)
                 .gjPerMb(0.25f)
-                .combustionEngine(0.5f, 16)
+                .combustionEngine(1000f / 3200f / 2f, 32)
                 .build());
 
         context.register(key("hydrocarbon"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_HYDROCARBON)
                 .gjPerMb(1)
-                .combustionEngine(1, 16)
+                .combustionEngine(1000f / 3200f / 2f, 32)
                 .build());
 
         context.register(key("hydrogen"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_HYDROGEN)
                 .gjPerMb(0.5f)
-                .combustionEngine(1, 32)
+                .combustionEngine(1000f / 3200f / 2f, 48)
                 .build());
 
         context.register(key("liquid_hydrogen"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_LIQUID_HYDROGEN)
                 .gjPerMb(0.75f)
-                .combustionEngine(1, 48)
+                .combustionEngine(1000f / 3200f / 2f, 64)
                 .build());
 
         context.register(key("methane"), FuelType.builder()
                 .tag(NorthstarFluidTags.C_METHANE)
                 .gjPerMb(2)
-                .combustionEngine(1, 32)
+                .combustionEngine(1000f / 3200f / 2f, 64)
                 .build());
 
         context.register(key("cdg_biodiesel"), FuelType.builder()
-                .fluid(FluidRegistry.BIODIESEL.getSource())
-                .combustionEngine(1, 16)
+                .fluid(FluidRegistry.BIODIESEL)
+                .combustionEngine(0.04f, 16)
                 .build());
 
         context.register(key("cdg_diesel"), FuelType.builder()
-                .fluid(FluidRegistry.DIESEL.getSource())
-                .combustionEngine(1, 32)
+                .fluid(FluidRegistry.DIESEL)
+                .combustionEngine(0.04f, 32)
                 .build());
 
         context.register(key("cdg_gasoline"), FuelType.builder()
-                .fluid(FluidRegistry.GASOLINE.getSource())
-                .combustionEngine(1, 32)
+                .fluid(FluidRegistry.GASOLINE)
+                .combustionEngine(0.04f, 32)
                 .build());
 
         context.register(key("tfmg_diesel"), FuelType.builder()
-                .fluid(TFMGFluids.DIESEL.getSource())
+                .fluid(TFMGFluids.DIESEL)
                 .combustionEngine(1, 16)
                 .build());
 
         context.register(key("tfmg_gasoline"), FuelType.builder()
-                .fluid(TFMGFluids.GASOLINE.getSource())
+                .fluid(TFMGFluids.GASOLINE)
                 .combustionEngine(1, 16)
                 .build());
 
         context.register(key("tfmg_naphtha"), FuelType.builder()
-                .fluid(TFMGFluids.NAPHTHA.getSource())
+                .fluid(TFMGFluids.NAPHTHA)
                 .gjPerMb(0.75f)
                 .build());
 
         context.register(key("tfmg_kerosene"), FuelType.builder()
-                .fluid(TFMGFluids.KEROSENE.getSource())
+                .fluid(TFMGFluids.KEROSENE)
                 .gjPerMb(1.00f)
                 .build());
     }

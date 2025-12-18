@@ -1,7 +1,7 @@
 package com.lightning.northstar.client.model.armor;
 
 import com.lightning.northstar.content.NorthstarEntityResources;
-import com.lightning.northstar.item.armor.SpaceSuitArmorItem;
+import com.lightning.northstar.item.SpaceSuitArmorItem;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

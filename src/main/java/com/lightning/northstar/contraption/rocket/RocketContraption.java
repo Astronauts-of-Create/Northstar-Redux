@@ -4,7 +4,10 @@ import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlo
 import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.compat.copycats.CopycatsPlusHelper;
-import com.lightning.northstar.content.*;
+import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.content.NorthstarContraptionTypes;
+import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.AllBlocks;
@@ -165,18 +168,18 @@ public class RocketContraption extends TranslatingContraption {
         if (blockEntity instanceof CopycatBlockEntity cc)
             blockState = cc.getMaterial();
 
-        if (blockState.is(NorthstarTags.NorthstarBlockTags.HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR))
+        if (blockState.is(NorthstarBlockTags.HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR))
             weightCost += 5;
-        else if (blockState.is(NorthstarTags.NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR))
+        else if (blockState.is(NorthstarBlockTags.SUPER_HEAVY_BLOCKS.tag) && !blockState.is(Blocks.AIR))
             weightCost += 10;
         else if (!blockState.is(Blocks.AIR))
             weightCost += 1;
 
-        if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
+        if (blockState.is(NorthstarBlockTags.TIER_1_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
             heatShielding += 3;
-        else if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
+        else if (blockState.is(NorthstarBlockTags.TIER_2_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
             heatShielding += 8;
-        else if (blockState.is(NorthstarTags.NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
+        else if (blockState.is(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag) && !blockState.is(Blocks.AIR))
             heatShielding += 20;
         return super.capture(world, pos);
     }

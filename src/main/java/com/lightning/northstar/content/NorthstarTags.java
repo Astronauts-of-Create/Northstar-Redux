@@ -4,9 +4,9 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.data.Tags;
 import com.lightning.northstar.data.util.NorthstarDataGenTags;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +27,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.lightning.northstar.content.NorthstarTags.Namespace.*;
+import static com.lightning.northstar.content.NorthstarTags.Namespace.COMMON;
+import static com.lightning.northstar.content.NorthstarTags.Namespace.MOD;
 
 public class NorthstarTags {
 

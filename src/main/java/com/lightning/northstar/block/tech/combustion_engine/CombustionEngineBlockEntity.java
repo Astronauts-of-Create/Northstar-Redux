@@ -1,20 +1,19 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorBlock;
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -183,14 +182,13 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
                     .forGoggles(tooltip);
         }
 
-        LangBuilder mb = Lang.translate("generic.unit.millibuckets");
-        Lang.builder()
-                .add(Lang.number(fluidStack.getAmount())
-                        .add(mb)
+        NorthstarLang.builder()
+                .add(NorthstarLang.number(fluidStack.getAmount())
+                        .add(NorthstarLang.MB)
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
-                        .add(mb)
+                .add(NorthstarLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                        .add(NorthstarLang.MB)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
 
@@ -198,7 +196,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             NorthstarLang.translate("gui.goggles.fuel_use")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            Lang.number(fuelType.combustionEngineUse())
+            NorthstarLang.number(fuelType.combustionEngineUse())
                     .style(ChatFormatting.GOLD)
                     .add(NorthstarLang.MB_PER_TICK)
                     .forGoggles(tooltip, 1);
@@ -211,12 +209,14 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         generatorSpeed = compound.getFloat("GeneratorSpeed");
+        usageBuffer = compound.getFloat("UsageBuffer");
     }
 
     @Override
     protected void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.putFloat("GeneratorSpeed", generatorSpeed);
+        compound.putFloat("UsageBuffer", usageBuffer);
     }
 
 }

@@ -1,10 +1,12 @@
 package com.lightning.northstar.block.tech.telescope;
 
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -23,12 +25,19 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class TelescopeBlockEntity extends SmartBlockEntity implements MenuProvider {
 
     public TelescopeBlockEntity(BlockEntityType<TelescopeBlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
     }
 
     @Override
@@ -74,12 +83,7 @@ public class TelescopeBlockEntity extends SmartBlockEntity implements MenuProvid
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Telescope");
+        return NorthstarBlocks.TELESCOPE.get().getName();
     }
 
-
-    @Override
-    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-
-    }
 }

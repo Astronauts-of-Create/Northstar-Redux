@@ -16,6 +16,7 @@ public class NorthstarLang {
 
     public static final LangBuilder MB = Lang.translate("generic.unit.millibuckets");
     public static final LangBuilder MB_PER_TICK = translate("generic.unit.millibuckets_per_tick");
+    public static final LangBuilder GJ_PER_MB = translate("generic.unit.gigajoules_per_millibuckets");
 
     public static LangBuilder builder() {
         return new LangBuilder(Northstar.MOD_ID);
@@ -38,6 +39,10 @@ public class NorthstarLang {
         return number(unit.fromCelsius(temperature))
                 .text(ChatFormatting.GRAY, unit.symbol)
                 .style(ChatFormatting.DARK_GREEN);
+    }
+
+    public static LangBuilder blocks(int count) {
+        return translate(count == 1 ? "generic.unit.block" : "generic.unit.blocks");
     }
 
     public static void addTankTooltip(List<Component> tooltip, SmartFluidTank tank) {

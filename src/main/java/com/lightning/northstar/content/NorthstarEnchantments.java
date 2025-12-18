@@ -1,4 +1,4 @@
-package com.lightning.northstar.item;
+package com.lightning.northstar.content;
 
 import com.lightning.northstar.item.enchantments.FrostbiteEnchantment;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -11,8 +11,7 @@ import static com.lightning.northstar.Northstar.REGISTRATE;
 public class NorthstarEnchantments {
 
     public static final RegistryEntry<FrostbiteEnchantment> FROSTBITE = REGISTRATE
-            .object("frostbite")
-            .enchantment(EnchantmentCategory.WEAPON, FrostbiteEnchantment::new)
+            .enchantment("frostbite", EnchantmentCategory.WEAPON, FrostbiteEnchantment::new)
             .addSlots(EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND)
             .rarity(Rarity.VERY_RARE)
             .register();

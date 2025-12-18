@@ -21,7 +21,7 @@ Inspired by Micdoodle's Galacticraft, Northstar seeks to return players to the s
 [[dependencies.northstar]]
 modId = "forge"
 mandatory = true
-versionRange = "[47,)"
+versionRange = "[47.4,)"
 ordering = "NONE"
 side = "BOTH"
 

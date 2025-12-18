@@ -3,8 +3,10 @@ package com.lightning.northstar.mixin.compat.copycat;
 import com.copycatsplus.copycats.content.copycat.byte_panel.CopycatBytePanelBlock;
 import com.copycatsplus.copycats.foundation.copycat.multistate.IMultiStateCopycatBlockEntity;
 import com.copycatsplus.copycats.foundation.copycat.multistate.MaterialItemStorage;
+import com.lightning.northstar.api.WhenModLoaded;
 import com.lightning.northstar.compat.copycats.CopycatSealHelper;
-import com.lightning.northstar.content.NorthstarTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.mixin.accessor.NorthstarContraptionWorld;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -20,6 +22,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.COPYCATS)
 @Mixin(CopycatBytePanelBlock.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -58,7 +61,7 @@ public class CopycatBytePanelBlockMixin implements SealableBlock {
     @Unique
     private static boolean northstar$isMaterialSealed(BlockState state) {
         // special case for bytes and byte panels, default material is filled
-        return AllBlocks.COPYCAT_BASE.is(state.getBlock()) || !NorthstarTags.NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
+        return AllBlocks.COPYCAT_BASE.is(state.getBlock()) || !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(state);
     }
 
 }

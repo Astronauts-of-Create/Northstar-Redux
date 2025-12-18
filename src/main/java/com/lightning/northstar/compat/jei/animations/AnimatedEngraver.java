@@ -1,7 +1,7 @@
 package com.lightning.northstar.compat.jei.animations;
 
-import com.lightning.northstar.content.NorthstarPartialModels;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
