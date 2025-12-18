@@ -3,6 +3,8 @@ package com.lightning.northstar.mixin.compat.tfmg;
 import com.drmangotea.tfmg.content.machinery.misc.air_intake.AirIntakeBlockEntity;
 import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
+import com.lightning.northstar.api.WhenModLoaded;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -19,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.TFMG)
 @Mixin(AirIntakeBlockEntity.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

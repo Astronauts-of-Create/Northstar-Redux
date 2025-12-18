@@ -6,6 +6,7 @@ import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
 import com.lightning.northstar.contraption.ActorConfigPacket;
+import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
@@ -31,7 +32,8 @@ public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
     ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket.STREAM_CODEC),
     ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket.STREAM_CODEC),
     ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket.STREAM_CODEC),
-    RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC);
+    RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC),
+    ENTITY_LOCK(EntityLockPacket.class, EntityLockPacket.STREAM_CODEC);
 
     public static final int NETWORK_VERSION = 5;
 

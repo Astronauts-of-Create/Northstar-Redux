@@ -1,6 +1,8 @@
 package com.lightning.northstar.mixin.compat.tfmg;
 
 import com.drmangotea.tfmg.content.engines.base.AbstractEngineBlockEntity;
+import com.lightning.northstar.api.WhenModLoaded;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.TFMG)
 @Mixin(AbstractEngineBlockEntity.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

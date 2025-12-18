@@ -21,7 +21,8 @@ public record RocketContraptionSyncPacket(
         boolean landing,
         boolean blasting,
         boolean slowing,
-        boolean activeLaunch
+        boolean activeLaunch,
+        boolean isInFlight
 ) implements ClientboundPacketPayload {
 
     public static final StreamCodec<ByteBuf, RocketContraptionSyncPacket> STREAM_CODEC = new StreamCodec<>() {
@@ -32,6 +33,7 @@ public record RocketContraptionSyncPacket(
                     CatnipStreamCodecs.VEC3.decode(buf),
                     ByteBufCodecs.FLOAT.decode(buf),
                     ByteBufCodecs.INT.decode(buf),
+                    ByteBufCodecs.BOOL.decode(buf),
                     ByteBufCodecs.BOOL.decode(buf),
                     ByteBufCodecs.BOOL.decode(buf),
                     ByteBufCodecs.BOOL.decode(buf),
@@ -51,6 +53,7 @@ public record RocketContraptionSyncPacket(
             ByteBufCodecs.BOOL.encode(buf, packet.blasting);
             ByteBufCodecs.BOOL.encode(buf, packet.slowing);
             ByteBufCodecs.BOOL.encode(buf, packet.activeLaunch);
+            ByteBufCodecs.BOOL.encode(buf, packet.isInFlight);
         }
     };
 

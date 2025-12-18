@@ -5,8 +5,10 @@ public enum ModCompat implements Mod {
     CBC("createbigcannons"),
     CDG("createdieselgenerators"),
     COPYCATS("copycats"),
+    KJS("kubejs"),
     KJS_CREATE("kubejs_create"),
-    MEK("mekanism");
+    MEK("mekanism"),
+    TFMG("tfmg");
 
     public final String modId;
 

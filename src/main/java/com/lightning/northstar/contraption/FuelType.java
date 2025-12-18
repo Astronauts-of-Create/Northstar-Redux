@@ -6,6 +6,7 @@ import com.lightning.northstar.data.Mod;
 import com.lightning.northstar.data.Tags;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.tterrag.registrate.util.entry.FluidEntry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.createmod.catnip.registry.RegisteredObjectsHelper;
@@ -66,15 +67,19 @@ public record FuelType(
             return this;
         }
 
+        public Builder fluid(FluidEntry<?> fluid) {
+            return rawFluid(fluid.getKey().location());
+        }
+
         public Builder fluid(Fluid fluid) {
-            return fluid(RegisteredObjectsHelper.getKeyOrThrow(fluid));
+            return rawFluid(RegisteredObjectsHelper.getKeyOrThrow(fluid));
         }
 
         public Builder fluid(Mod mod, String tag) {
-            return fluid(mod.loc(tag));
+            return rawFluid(mod.loc(tag));
         }
 
-        public Builder fluid(ResourceLocation fluid) {
+        public Builder rawFluid(ResourceLocation fluid) {
             fluids.add(fluid.toString());
             return this;
         }

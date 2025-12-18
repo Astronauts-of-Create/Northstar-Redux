@@ -187,7 +187,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
         } else {
-            CreateLang.text("Cannot hold oxygen")
+            NorthstarLang.translate("gui.goggles.oxygen_filler.not_oxygen_tank")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip, 1);
         }

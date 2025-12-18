@@ -279,7 +279,9 @@ public class ProgressiveBlockSealer {
                     .forGoggles(tooltip);
             CreateLang.number(maximumSealed + extraVolume)
                     .style(ChatFormatting.BLUE)
-                    .text(ChatFormatting.GRAY, " blocks")
+                    .text(" ")
+                    .add(NorthstarLang.blocks(maximumSealed + extraVolume)
+                            .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 1);
         } else {
             NorthstarLang.translate("gui.goggles.sealer.blocks_filled")

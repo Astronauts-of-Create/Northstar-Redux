@@ -64,12 +64,12 @@ public class TestSaplingTrunkPlacer extends TrunkPlacer {
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, RandomSource pRandom, int pFreeTreeHeight, BlockPos pPos, TreeConfiguration treeconfiguration) {
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         this.placeLog(pLevel, pBlockSetter, pRandom, pPos, treeconfiguration, Direction.UP);
-        this.placeBranch(pLevel, pBlockSetter, pRandom, 90 + pRandom.nextInt(1, 12), pPos.relative(Direction.NORTH), treeconfiguration, pRandom.nextFloat(), Direction.NORTH);
-        this.placeBranch(pLevel, pBlockSetter, pRandom, 90 + pRandom.nextInt(1, 12), pPos.relative(Direction.SOUTH), treeconfiguration, pRandom.nextFloat(), Direction.SOUTH);
-        this.placeBranch(pLevel, pBlockSetter, pRandom, 90 + pRandom.nextInt(1, 12), pPos.relative(Direction.EAST), treeconfiguration, pRandom.nextFloat(), Direction.EAST);
-        this.placeBranch(pLevel, pBlockSetter, pRandom, 90 + pRandom.nextInt(1, 12), pPos.relative(Direction.WEST), treeconfiguration, pRandom.nextFloat(), Direction.WEST);
-        this.placeOre(pLevel, pBlockSetter, pRandom, 90 + pRandom.nextInt(1, 12), pPos, treeconfiguration);
-        this.placeCap(pLevel, pBlockSetter, pRandom, 90 + pRandom.nextInt(1, 12), pPos, treeconfiguration);
+        this.placeBranch(pLevel, pBlockSetter, pRandom, pFreeTreeHeight, pPos.relative(Direction.NORTH), treeconfiguration, pRandom.nextFloat(), Direction.NORTH);
+        this.placeBranch(pLevel, pBlockSetter, pRandom, pFreeTreeHeight, pPos.relative(Direction.SOUTH), treeconfiguration, pRandom.nextFloat(), Direction.SOUTH);
+        this.placeBranch(pLevel, pBlockSetter, pRandom, pFreeTreeHeight, pPos.relative(Direction.EAST), treeconfiguration, pRandom.nextFloat(), Direction.EAST);
+        this.placeBranch(pLevel, pBlockSetter, pRandom, pFreeTreeHeight, pPos.relative(Direction.WEST), treeconfiguration, pRandom.nextFloat(), Direction.WEST);
+        this.placeOre(pLevel, pBlockSetter, pRandom, pFreeTreeHeight, pPos, treeconfiguration);
+        this.placeCap(pLevel, pBlockSetter, pRandom, pFreeTreeHeight, pPos, treeconfiguration);
         //   }
         return list;
     }

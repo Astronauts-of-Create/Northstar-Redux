@@ -2,6 +2,8 @@ package com.lightning.northstar.mixin.compat.tfmg;
 
 import com.drmangotea.tfmg.content.machinery.misc.exhaust.ExhaustBlock;
 import com.lightning.northstar.accessor.NorthstarOxygenConsumingBlockEntity;
+import com.lightning.northstar.api.WhenModLoaded;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+@WhenModLoaded(ModCompat.TFMG)
 @Mixin(ExhaustBlock.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

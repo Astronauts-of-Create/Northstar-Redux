@@ -183,7 +183,7 @@ public class NorthstarTemperature {
             return -253;
         if (state.is(NorthstarFluids.SULFURIC_ACID.get()) || state.is(NorthstarFluids.SULFURIC_ACID.getSource().getSource()))
             return 1200;
-        return 100;
+        return Integer.MAX_VALUE;
     }
 
     public static int getFreezingPoint(FluidState state) {
@@ -200,7 +200,7 @@ public class NorthstarTemperature {
             return -259;
         if (state.is(NorthstarFluids.SULFURIC_ACID.get()) || state.is(NorthstarFluids.SULFURIC_ACID.getSource().getSource()))
             return -200;
-        return 0;
+        return Integer.MIN_VALUE;
     }
 
     public static boolean hasInsulation(LivingEntity entity) {

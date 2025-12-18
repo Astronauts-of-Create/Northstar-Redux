@@ -503,7 +503,7 @@ public class NorthstarBlocks {
             .transform(pickaxeOnly())
             .tag(NorthstarBlockTags.HEAVY_BLOCKS.tag)
             .tag(NorthstarBlockTags.TIER_3_HEAT_RESISTANCE.tag)
-            .recipe(NorthstarDataGenRecipes.plating(NorthstarItemTags.C_INGOTS_TITANIUM))
+            .recipe(NorthstarDataGenRecipes.plating(NorthstarItemTags.C_INGOTS_TUNGSTEN))
             .simpleItem()
             .register();
 

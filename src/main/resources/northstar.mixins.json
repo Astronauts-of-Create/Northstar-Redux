@@ -2,7 +2,7 @@
   "required": true,
   "priority": 1200,
   "package": "com.lightning.northstar.mixin",
-  "plugin": "com.llamalad7.mixinextras.platform.neoforge.MixinExtrasConfigPlugin",
+  "plugin": "com.lightning.northstar.mixin.NorthstarMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "DataGenMainMixin",
@@ -46,7 +46,9 @@
     "compat.tfmg.EngineBlockEntityMixin",
     "compat.tfmg.ExhaustBlockEntityMixin",
     "compat.tfmg.ExhaustBlockMixin",
+    "entity.EntityMixin",
     "entity.LivingEntityMixin",
+    "entity.PlayerMixin",
     "entity.ServerPlayerMixin",
     "gravitystuff.AbstractArrowGravityMixin",
     "gravitystuff.AbstractMinecartGravityMixin",

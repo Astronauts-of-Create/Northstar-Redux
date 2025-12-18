@@ -4,10 +4,12 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarRecipeTypes;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.lang.Lang;
@@ -49,11 +51,14 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,
                 NorthstarBlockEntityTypes.ELECTROLYSIS_MACHINE.get(),
                 (be, face) -> {
+                    if (face == null)
+                        return new CombinedTankWrapper(be.inputTank.getPrimaryHandler(), be.outputTankL.getPrimaryHandler(), be.outputTankR.getPrimaryHandler());
                     if (face == Direction.UP)
                         return be.inputTank.getCapability();
-                    if (face == be.getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getClockWise())
+                    Direction facing = be.getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING);
+                    if (face == facing.getClockWise())
                         return be.outputTankL.getCapability();
-                    if (face == be.getBlockState().getValue(ElectrolysisMachineBlock.HORIZONTAL_FACING).getCounterClockWise())
+                    if (face == facing.getCounterClockWise())
                         return be.outputTankR.getCapability();
                     return null;
                 });
@@ -116,12 +121,11 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        if (super.addToGoggleTooltip(tooltip, isPlayerSneaking)) {
-            tooltip.add(Component.empty());
-        }
-
         CreateLang.translate("gui.goggles.electrolysis_machine")
                 .forGoggles(tooltip);
+
+        if (StressImpact.isEnabled())
+            addStressImpactStats(tooltip, calculateStressApplied());
 
         addTankToolTip(tooltip, "gui.goggles.electrolysis_input", inputTank);
         addTankToolTip(tooltip, "gui.goggles.electrolysis_orange_port", outputTankL);

@@ -44,7 +44,7 @@ public class RocketControlsClientHandler {
         controlsPos = controllerLocalPos;
         displaytime = 0;
 
-        if (rce != null && rce.isLaunchingOrLanding()) {
+        if (rce != null && rce.isInFlight()) {
             Minecraft.getInstance().player.displayClientMessage(
                     CreateLang.translateDirect("contraption.controls.start_controlling", rce.getContraptionName()), true);
         } else {
@@ -139,7 +139,7 @@ public class RocketControlsClientHandler {
         if (!newKeys.isEmpty()) {
             CatnipServices.NETWORK.sendToServer(new RocketControlsInputPacket(new ArrayList<>(currentlyPressed), true, rce.getId(), controlsPos, false));
             packetCooldown = PACKET_RATE;
-    // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
+            // AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
         }
 
         // Keepalive Pressed Keys

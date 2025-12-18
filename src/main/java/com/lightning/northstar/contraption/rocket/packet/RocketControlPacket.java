@@ -13,28 +13,22 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.UUID;
 
-public class RocketControlPacket implements ClientboundPacketPayload {
+public record RocketControlPacket(
+        int rocketContraptionId,
+        UUID playerId,
+        BlockPos localControlPos
+) implements ClientboundPacketPayload {
 
     public static final StreamCodec<ByteBuf, RocketControlPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, packet -> packet.rce,
-            UUIDUtil.STREAM_CODEC, packet -> packet.playerID,
-            BlockPos.STREAM_CODEC, packet -> packet.localControlsPos,
+            ByteBufCodecs.VAR_INT, RocketControlPacket::rocketContraptionId,
+            UUIDUtil.STREAM_CODEC, RocketControlPacket::playerId,
+            BlockPos.STREAM_CODEC, RocketControlPacket::localControlPos,
             RocketControlPacket::new
     );
 
-    public int rce;
-    public UUID playerID;
-    public BlockPos localControlsPos;
-
-    public RocketControlPacket(int rce, UUID playerID, BlockPos localControlsPos) {
-        this.rce = rce;
-        this.playerID = playerID;
-        this.localControlsPos = localControlsPos;
-    }
-
     @Override
     public void handle(LocalPlayer player) {
-        RocketHandler.CONTROL_QUEUE.put(Pair.of(playerID, localControlsPos), rce);
+        RocketHandler.CONTROL_QUEUE.put(Pair.of(playerId, localControlPos), rocketContraptionId);
     }
 
     @Override
