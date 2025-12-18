@@ -37,4 +37,5 @@ public class PlayerMixin implements NorthstarPlayer {
         northstar$relativeEntity = entity;
         northstar$relativeTicks = ticks;
     }
+
 }

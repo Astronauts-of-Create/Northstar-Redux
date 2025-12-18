@@ -44,7 +44,7 @@ public enum NorthstarPackets {
     ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket::new, PLAY_TO_CLIENT),
     ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket::new, PLAY_TO_CLIENT),
     RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket::new, PLAY_TO_CLIENT),
-    SOFT_RELEASE(EntityLockPacket .class, EntityLockPacket::new, PLAY_TO_CLIENT);
+    ENTITY_LOCK(EntityLockPacket.class, EntityLockPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
     public static final int NETWORK_VERSION = 5;

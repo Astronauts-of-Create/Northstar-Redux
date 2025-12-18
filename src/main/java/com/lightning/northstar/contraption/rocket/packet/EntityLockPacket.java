@@ -6,27 +6,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityLockPacket extends SimplePacketBase {
+
     public int contraptionEntityId;
     public LockInfo info;
     public UUID playerID;
-
-    public record LockInfo(Vec3 offset, AtomicInteger ticks) {
-        public static final int FOREVER = Integer.MAX_VALUE;
-
-        public Vec3 offset() {
-            return this.offset;
-        }
-
-        public AtomicInteger ticks() {
-            return this.ticks;
-        }
-    }
 
     public EntityLockPacket(UUID playerId, int contraptionId, LockInfo info) {
         this.info = info;
@@ -37,10 +29,7 @@ public class EntityLockPacket extends SimplePacketBase {
     public EntityLockPacket(FriendlyByteBuf buffer) {
         this.playerID = buffer.readUUID();
         this.contraptionEntityId = buffer.readInt();
-
-        Vec3 offset = new Vec3(buffer.readVector3f());
-        AtomicInteger ticks = new AtomicInteger(buffer.readInt());
-        info = new LockInfo(offset, ticks);
+        this.info = new LockInfo(new Vec3(buffer.readVector3f()), new MutableInt(buffer.readInt()));
     }
 
     @Override
@@ -49,16 +38,25 @@ public class EntityLockPacket extends SimplePacketBase {
         buffer.writeInt(contraptionEntityId);
 
         buffer.writeVector3f(info.offset.toVector3f());
-        buffer.writeInt(info.ticks.get());
+        buffer.writeInt(info.ticks.intValue());
     }
 
     @Override
     public boolean handle(Context context) {
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handleClient);
+        return true;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void handleClient() {
         Entity entity = Minecraft.getInstance().level.getEntity(contraptionEntityId);
         if (entity instanceof RocketContraptionEntity rce) {
             rce.entityLockMap.put(playerID, info);
         }
-        return true;
+    }
+
+    public record LockInfo(Vec3 offset, MutableInt ticks) {
+        public static final int FOREVER = Integer.MAX_VALUE;
     }
 
 }

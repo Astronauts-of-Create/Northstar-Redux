@@ -1,6 +1,5 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
-import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -12,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.LevelAccessor;
@@ -23,7 +21,6 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RocketControlsClientHandler {
 

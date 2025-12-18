@@ -46,9 +46,10 @@
     "compat.tfmg.EngineBlockEntityMixin",
     "compat.tfmg.ExhaustBlockEntityMixin",
     "compat.tfmg.ExhaustBlockMixin",
+    "entity.EntityMixin",
     "entity.LivingEntityMixin",
-    "entity.ServerPlayerMixin",
     "entity.PlayerMixin",
+    "entity.ServerPlayerMixin",
     "gravitystuff.AbstractArrowGravityMixin",
     "gravitystuff.AbstractMinecartGravityMixin",
     "gravitystuff.BoatGravityMixin",
@@ -64,8 +65,7 @@
     "oxygen.AbstractFurnaceBlockMixin",
     "oxygen.BaseFireBlockMixin",
     "oxygen.CampfireBlockMixin",
-    "oxygen.LeavesBlockMixin",
-    "entity.EntityMixin"
+    "oxygen.LeavesBlockMixin"
   ],
   "client": [
     "client.GuiGraphicsMixin",

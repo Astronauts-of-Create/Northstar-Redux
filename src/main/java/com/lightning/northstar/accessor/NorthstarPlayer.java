@@ -10,8 +10,7 @@ public interface NorthstarPlayer {
         return null;
     }
 
-    @Nullable
-    default void northstar$setRelativeEntity(Entity entity, int ticks) {
-
+    default void northstar$setRelativeEntity(@Nullable Entity entity, int ticks) {
     }
+
 }

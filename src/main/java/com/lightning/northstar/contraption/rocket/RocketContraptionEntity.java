@@ -1,7 +1,6 @@
 package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarPackets;
@@ -32,13 +31,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,22 +51,18 @@ import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class RocketContraptionEntity extends AbstractContraptionEntity implements IEntityAdditionalSpawnData {
-    /**
-     * In ticks
-     */
+
     public final static int LAUNCH_COUNTDOWN_TICKS = 10 * 20;
     private final static int TRANSPORT_DELAY_TICKS = 40;
     private final static int DISMOUNT_SOFT_LOCK_TICKS = 10;
-    /**
-     * maximum velocity, in blocks per tick
-     */
+    /** Maximum velocity, in blocks per tick */
     private static final float MAX_SPEED = 5;
 
     private List<Entity> entitiesWithinContraption = List.of();
@@ -89,9 +82,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
     int soundTime = 0;
     int cooldown = 0;
     int cooldownLength = 100;
-    /**
-     * In ticks
-     */
+    /** In ticks */
     private int launchTime = 0;
     private boolean activeLaunch = false;
     public Player owner;
@@ -191,7 +182,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         if (level.isClientSide) {
             // this code feels really stupid but I don't care enough to clean it up
             if (Math.abs(final_lift_vel) > 0.5f && NorthstarPlanets.getPlanetAtmosphereCost(level.dimension()) != 0) {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> tickAirSound());
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::tickAirSound);
             }
         } else {
             if (this.tickCount % 40 == 0) { //Send a packet containing data from server to client every 40 ticks
@@ -308,9 +299,9 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                                 position().x + lockInfo.offset().x,
                                 position().y + lockInfo.offset().y,
                                 position().z + lockInfo.offset().z);
-                        if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {//remove soft-lock after a few ticks
-                            lockInfo.ticks().decrementAndGet();
-                            if (lockInfo.ticks().get() < 0) entityLockMap.remove(passenger.getUUID());
+                        if (lockInfo.ticks().intValue() != EntityLockPacket.LockInfo.FOREVER &&
+                                lockInfo.ticks().decrementAndGet() <= 0) {
+                            entityLockMap.remove(passenger.getUUID());
                         }
                     }
                 }
@@ -318,33 +309,30 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
         }
         slowing = false;
     }
+
     /**
      * Add a soft-release entry, to lock the player in for a few ticks (This should happen on the server side)
-     *
-     * @param passenger
      */
     public void lockEntity(Entity passenger, int ticks) {
-        EntityLockPacket.LockInfo entry = entityLockMap.get(passenger.getUUID());
-        if (entry != null) { //If there is already an entry, don't let the tick duration be less than what it already is
-            ticks = Math.max(entry.ticks().get(), ticks);
+        EntityLockPacket.LockInfo existingLock = entityLockMap.get(passenger.getUUID());
+        if (existingLock != null) {
+            ticks = Math.max(ticks, existingLock.ticks().intValue());
         }
 
         BlockPos seatPos = contraption.getSeatOf(passenger.getUUID());
+        Vec3 offset;
         if (seatPos != null) {
             Northstar.LOGGER.debug("Locking {} to seat for {} ticks", passenger, ticks);
-            Vec3 offset = VecHelper.getCenterOf(seatPos);//.add(0, passenger.getBoundingBox().getYsize(), 0);
-            entry = new EntityLockPacket.LockInfo(offset, new AtomicInteger(ticks));
-        } else {//If the player dismounts from the rocket without a seat or dismounts from a boat for instance
+            offset = VecHelper.getCenterOf(seatPos); //.add(0, passenger.getBoundingBox().getYsize(), 0);
+        } else {
+            // If the player dismounts from the rocket without a seat or dismounts from a boat for instance
             Northstar.LOGGER.debug("Locking {} to position for {} ticks", passenger, ticks);
-            Vec3 offset = passenger.position().subtract(position()).add(0, final_lift_vel, 0);
-            entry = new EntityLockPacket.LockInfo(offset, new AtomicInteger(ticks));
+            offset = passenger.position().subtract(position()).add(0, final_lift_vel, 0);
         }
 
-
-        if (entry != null) {
-            entityLockMap.put(passenger.getUUID(), entry);
-            NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new EntityLockPacket(passenger.getUUID(), getId(), entry));
-        }
+        EntityLockPacket.LockInfo lock = new EntityLockPacket.LockInfo(offset, new MutableInt(ticks));
+        entityLockMap.put(passenger.getUUID(), lock);
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new EntityLockPacket(passenger.getUUID(), getId(), lock));
     }
 
     private void writeSyncPacket() {
@@ -713,16 +701,20 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                     position().x + lockInfo.offset().x,
                     position().y + lockInfo.offset().y,
                     position().z + lockInfo.offset().z);
-            if (lockInfo.ticks().get() != EntityLockPacket.LockInfo.FOREVER) {
-                lockInfo.ticks().decrementAndGet();
-                if (lockInfo.ticks().get() < 0) entityLockMap.remove(passenger.getUUID());
+            if (lockInfo.ticks().intValue() != EntityLockPacket.LockInfo.FOREVER &&
+                    lockInfo.ticks().decrementAndGet() <= 0) {
+                entityLockMap.remove(passenger.getUUID());
             }
-        } else super.positionRider(passenger, callback);
+            return;
+        }
+
+        super.positionRider(passenger, callback);
     }
 
     @Override
     public void removePassenger(Entity passenger) {//called when the player gets out of their seat
-        if (!level().isClientSide) lockEntity(passenger, DISMOUNT_SOFT_LOCK_TICKS);
+        if (!level().isClientSide)
+            lockEntity(passenger, DISMOUNT_SOFT_LOCK_TICKS);
         super.removePassenger(passenger);
     }
 
