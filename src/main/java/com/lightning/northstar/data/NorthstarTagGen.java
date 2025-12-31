@@ -5,6 +5,7 @@ import com.drmangotea.tfmg.registry.TFMGBlocks;
 import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.jesz.createdieselgenerators.CDGBlocks;
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarDamageTypes;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
@@ -171,6 +172,77 @@ public class NorthstarTagGen {
         tags.tag(NorthstarBlockTags.VENUS_STONE_REPLACEABLE)
                 .add(AllPaletteStoneTypes.SCORCHIA.baseBlock.get())
                 .add(AllPaletteStoneTypes.OCHRUM.baseBlock.get());
+
+        tags.tag(NorthstarBlockTags.C_ORES)
+                .add(NorthstarBlocks.MERCURY_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.MERCURY_IRON_ORE.get())
+                .add(NorthstarBlocks.MERCURY_COPPER_ORE.get())
+                .add(NorthstarBlocks.MERCURY_GOLD_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.MERCURY_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.MERCURY_LAPIS_ORE.get())
+                .add(NorthstarBlocks.MERCURY_ZINC_ORE.get())
+                .add(NorthstarBlocks.MERCURY_GLOWSTONE_ORE.get())
+                .add(NorthstarBlocks.MERCURY_TUNGSTEN_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_IRON_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_COPPER_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_GOLD_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_LAPIS_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_ZINC_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_GLOWSTONE_ORE.get())
+                .add(NorthstarBlocks.MERCURY_DEEP_TUNGSTEN_ORE.get())
+
+                .add(NorthstarBlocks.VENUS_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.VENUS_IRON_ORE.get())
+                .add(NorthstarBlocks.VENUS_COPPER_ORE.get())
+                .add(NorthstarBlocks.VENUS_GOLD_ORE.get())
+                .add(NorthstarBlocks.VENUS_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.VENUS_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.VENUS_ZINC_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_IRON_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_COPPER_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_GOLD_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.VENUS_DEEP_ZINC_ORE.get())
+
+                .add(NorthstarBlocks.MOON_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.MOON_IRON_ORE.get())
+                .add(NorthstarBlocks.MOON_COPPER_ORE.get())
+                .add(NorthstarBlocks.MOON_GOLD_ORE.get())
+                .add(NorthstarBlocks.MOON_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.MOON_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.MOON_LAPIS_ORE.get())
+                .add(NorthstarBlocks.MOON_ZINC_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_IRON_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_COPPER_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_GOLD_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_LAPIS_ORE.get())
+                .add(NorthstarBlocks.MOON_DEEP_ZINC_ORE.get())
+
+                .add(NorthstarBlocks.MARS_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.MARS_IRON_ORE.get())
+                .add(NorthstarBlocks.MARS_ZINC_ORE.get())
+                .add(NorthstarBlocks.MARS_COPPER_ORE.get())
+                .add(NorthstarBlocks.MARS_GOLD_ORE.get())
+                .add(NorthstarBlocks.MARS_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.MARS_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.MARS_QUARTZ_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_TITANIUM_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_IRON_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_ZINC_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_COPPER_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_GOLD_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_DIAMOND_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_REDSTONE_ORE.get())
+                .add(NorthstarBlocks.MARS_DEEP_QUARTZ_ORE.get());
     }
 
     private static void items(RegistrateTagsProvider<Item> provider) {
