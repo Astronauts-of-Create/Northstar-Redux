@@ -154,6 +154,7 @@ public class NorthstarTags {
         C_STORAGE_BLOCKS_MARTIAN_STEEL(COMMON, "storage_blocks/martian_steel"),
         C_STORAGE_BLOCKS_TITANIUM(COMMON, "storage_blocks/titanium"),
         C_STORAGE_BLOCKS_TUNGSTEN(COMMON, "storage_blocks/tungsten"),
+        C_ORES(COMMON, "ores"),
         C_ORES_COAL(COMMON, "ores/coal"),
         C_ORES_COPPER(COMMON, "ores/copper"),
         C_ORES_DIAMOND(COMMON, "ores/diamond"),
