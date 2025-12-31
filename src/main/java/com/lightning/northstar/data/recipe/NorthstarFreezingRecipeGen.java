@@ -8,6 +8,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.Tags;
 
 public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
 
@@ -37,7 +38,7 @@ public class NorthstarFreezingRecipeGen extends FreezingRecipeGen {
     VANILLA_ICE_CREAM = create("vanilla_ice_cream",
             b -> b.withinTemperature(-25, -15)
                     .duration(100)
-                    .require(NorthstarFluidTags.C_MILK.tag, 200)
+                    .require(Tags.Fluids.MILK, 200)
                     .require(Items.SUGAR)
                     .output(NorthstarFluids.VANILLA_ICE_CREAM.get(), 200));
 
