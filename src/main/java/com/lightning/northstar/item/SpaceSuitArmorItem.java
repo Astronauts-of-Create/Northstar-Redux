@@ -1,7 +1,5 @@
 package com.lightning.northstar.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -9,11 +7,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.model.GeoModel;
@@ -36,23 +33,14 @@ public class SpaceSuitArmorItem extends ArmorItem implements GeoItem, GeoAnimata
     // region GeoAnimatable
 
     @Override
-    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-
-        consumer.accept(new IClientItemExtensions() {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
             private GeoArmorRenderer<?> renderer;
 
             @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
+            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T livingEntity, ItemStack itemStack, @Nullable EquipmentSlot equipmentSlot, @Nullable HumanoidModel<T> original) {
                 if (renderer == null)
-                    renderer = new GeoArmorRenderer<>(model.get()) {
-                        // fix for https://github.com/bernie-g/geckolib/issues/755
-                        @Override
-                        public void renderToBuffer(PoseStack poseStack, @Nullable VertexConsumer buffer, int packedLight, int packedOverlay, int colour) {
-                            if (currentEntity != null)
-                                super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, colour);
-                        }
-                    };
+                    renderer = new GeoArmorRenderer<>(model.get());
                 return renderer;
             }
         });
