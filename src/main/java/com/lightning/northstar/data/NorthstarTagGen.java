@@ -201,21 +201,28 @@ public class NorthstarTagGen {
 
         tags.tag(NorthstarEntityTags.CAN_SURVIVE_COLD)
                 .add(EntityType.SKELETON)
+                .add(EntityType.SKELETON_HORSE)
                 .add(EntityType.SNOW_GOLEM)
                 .add(EntityType.STRAY)
                 .add(EntityType.WITHER)
-                .add(EntityType.WITHER_SKELETON);
+                .add(EntityType.WITHER_SKELETON)
+                .add(EntityType.ZOMBIE)
+                .add(EntityType.ZOMBIE_HORSE);
 
         tags.tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN)
                 .add(EntityType.COD)
                 .add(EntityType.IRON_GOLEM)
                 .add(EntityType.SALMON)
+                .add(EntityType.SKELETON)
+                .add(EntityType.SKELETON_HORSE)
                 .add(EntityType.SNOW_GOLEM)
                 .add(EntityType.STRAY)
                 .add(EntityType.TADPOLE)
                 .add(EntityType.TROPICAL_FISH)
                 .add(EntityType.WITHER)
-                .add(EntityType.WITHER_SKELETON);
+                .add(EntityType.WITHER_SKELETON)
+                .add(EntityType.ZOMBIE)
+                .add(EntityType.ZOMBIE_HORSE);
     }
 
     private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
