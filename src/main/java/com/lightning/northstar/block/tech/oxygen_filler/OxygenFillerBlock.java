@@ -68,7 +68,7 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         return onBlockEntityUse(world, pos, be -> {
-            if (hand != InteractionHand.MAIN_HAND)
+            if (hand != InteractionHand.MAIN_HAND || hit.getDirection() != state.getValue(HORIZONTAL_FACING))
                 return InteractionResult.PASS;
 
             ItemStack held = player.getItemInHand(hand);
