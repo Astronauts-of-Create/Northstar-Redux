@@ -2693,7 +2693,7 @@ public class NorthstarBlocks {
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COAL, Tags.Items.ORES_COAL))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
-            .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
+            .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.COAL)))
             .item()
             .tag(NorthstarItemTags.SPACE_ORE_COAL.tag)
             .build()
