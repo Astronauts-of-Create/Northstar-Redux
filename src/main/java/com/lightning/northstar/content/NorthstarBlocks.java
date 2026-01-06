@@ -990,6 +990,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
@@ -997,9 +998,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.TITANIUM))
             .register();
 
     public static final BlockEntry<Block> MARS_IRON_ORE = REGISTRATE
@@ -1009,6 +1008,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
@@ -1016,9 +1016,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.MARTIAN_IRON))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_ZINC_ORE = REGISTRATE
@@ -1028,6 +1026,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
@@ -1035,9 +1034,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.ZINC))
             .register();
 
     public static final BlockEntry<Block> MARS_COPPER_ORE = REGISTRATE
@@ -1047,6 +1044,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
@@ -1054,9 +1052,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.COPPER))
             .register();
 
     public static final BlockEntry<Block> MARS_GOLD_ORE = REGISTRATE
@@ -1066,6 +1062,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(BlockTags.GOLD_ORES, ItemTags.GOLD_ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
@@ -1074,10 +1073,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DIAMOND_ORE = REGISTRATE
@@ -1087,6 +1083,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
@@ -1094,9 +1091,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> MARS_REDSTONE_ORE = REGISTRATE
@@ -1108,6 +1103,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
@@ -1115,9 +1111,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_QUARTZ_ORE = REGISTRATE
@@ -1127,6 +1121,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_QUARTZ, Tags.Items.ORES_QUARTZ))
@@ -1134,9 +1129,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_STONE, NorthstarDataGenRecipes.OreType.QUARTZ))
             .register();
 
     //mars deep ores
@@ -1147,6 +1140,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
@@ -1154,9 +1148,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_TITANIUM))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DEEP_ZINC_ORE = REGISTRATE
@@ -1166,6 +1158,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
@@ -1173,9 +1166,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_ZINC))
             .register();
 
     public static final BlockEntry<Block> MARS_DEEP_IRON_ORE = REGISTRATE
@@ -1185,6 +1176,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
@@ -1192,9 +1184,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_MARTIAN_IRON_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_MARTIAN_IRON))
             .register();
 
     public static final BlockEntry<Block> MARS_DEEP_COPPER_ORE = REGISTRATE
@@ -1204,6 +1194,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
@@ -1211,9 +1202,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_COPPER))
             .register();
 
     public static final BlockEntry<Block> MARS_DEEP_GOLD_ORE = REGISTRATE
@@ -1223,6 +1212,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
@@ -1230,10 +1222,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DEEP_DIAMOND_ORE = REGISTRATE
@@ -1243,6 +1232,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(7f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
@@ -1250,9 +1240,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> MARS_DEEP_REDSTONE_ORE = REGISTRATE
@@ -1264,6 +1252,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
@@ -1271,9 +1260,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MARS_DEEP_QUARTZ_ORE = REGISTRATE
@@ -1283,6 +1270,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_QUARTZ, Tags.Items.ORES_QUARTZ))
@@ -1290,9 +1278,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MARS_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MARS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_QUARTZ))
             .register();
 
     public static final BlockEntry<Block> VOLCANIC_ASH = REGISTRATE
@@ -1843,6 +1829,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
@@ -1850,9 +1837,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.TITANIUM))
             .register();
 
     public static final BlockEntry<Block> MOON_IRON_ORE = REGISTRATE
@@ -1862,6 +1847,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
@@ -1869,9 +1855,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.IRON))
             .register();
 
     public static final BlockEntry<Block> MOON_COPPER_ORE = REGISTRATE
@@ -1881,6 +1865,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
@@ -1888,9 +1873,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.COPPER))
             .register();
 
     public static final BlockEntry<Block> MOON_GOLD_ORE = REGISTRATE
@@ -1900,6 +1883,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_GOLD, Tags.Items.ORES_GOLD))
@@ -1907,10 +1893,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DIAMOND_ORE = REGISTRATE
@@ -1920,6 +1903,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
@@ -1927,9 +1911,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> MOON_REDSTONE_ORE = REGISTRATE
@@ -1941,6 +1923,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
@@ -1948,9 +1931,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_LAPIS_ORE = REGISTRATE
@@ -1960,6 +1941,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_LAPIS, Tags.Items.ORES_LAPIS))
@@ -1967,9 +1949,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.LAPIS))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_ZINC_ORE = REGISTRATE
@@ -1979,6 +1959,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
@@ -1986,9 +1967,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.ZINC))
             .register();
 
     public static final BlockEntry<Block> MOON_GLOWSTONE_ORE = REGISTRATE
@@ -1999,6 +1978,7 @@ public class NorthstarBlocks {
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops()
                     .lightLevel(pState -> 15))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_GLOWSTONE.tagBlockAndItem())
@@ -2006,9 +1986,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_STONE, NorthstarDataGenRecipes.OreType.GLOWSTONE))
             .register();
 
     //moon deep ores
@@ -2019,6 +1997,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
@@ -2026,9 +2005,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_TITANIUM))
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_IRON_ORE = REGISTRATE
@@ -2038,6 +2015,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
@@ -2045,9 +2023,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_IRON))
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_COPPER_ORE = REGISTRATE
@@ -2057,6 +2033,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
@@ -2064,9 +2041,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_COPPER))
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_GOLD_ORE = REGISTRATE
@@ -2076,6 +2051,9 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_GOLD, Tags.Items.ORES_GOLD))
@@ -2083,10 +2061,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DEEP_DIAMOND_ORE = REGISTRATE
@@ -2096,6 +2071,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(7f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
@@ -2103,9 +2079,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> MOON_DEEP_REDSTONE_ORE = REGISTRATE
@@ -2117,6 +2091,7 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
@@ -2124,9 +2099,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DEEP_LAPIS_ORE = REGISTRATE
@@ -2136,6 +2109,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_LAPIS, Tags.Items.ORES_LAPIS))
@@ -2143,9 +2117,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_LAPIS))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MOON_DEEP_ZINC_ORE = REGISTRATE
@@ -2155,6 +2127,7 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
@@ -2162,9 +2135,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_ZINC))
             .register();
 
     public static final BlockEntry<Block> MOON_DEEP_GLOWSTONE_ORE = REGISTRATE
@@ -2174,7 +2145,8 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(pState -> 15))
+                    .lightLevel(state -> 15))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_GLOWSTONE.tagBlockAndItem())
@@ -2182,9 +2154,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.MOON_BLOCKS.tag)
             .tag(NorthstarBlockTags.NATURAL_MOON_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MOON_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GLOWSTONE))
             .register();
 
     public static final BlockEntry<Block> LUNAR_SAPPHIRE_BLOCK = REGISTRATE
@@ -2670,15 +2640,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.TITANIUM))
             .register();
 
     public static final BlockEntry<Block> VENUS_COAL_ORE = REGISTRATE
@@ -2688,16 +2657,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COAL, Tags.Items.ORES_COAL))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.COAL)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COAL.tag)
-            .build()
-            .simpleItem()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.COAL))
             .register();
 
     public static final BlockEntry<Block> VENUS_IRON_ORE = REGISTRATE
@@ -2707,15 +2674,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.IRON))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_ZINC_ORE = REGISTRATE
@@ -2725,15 +2691,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.ZINC))
             .register();
 
     public static final BlockEntry<Block> VENUS_COPPER_ORE = REGISTRATE
@@ -2743,15 +2708,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.COPPER))
             .register();
 
     public static final BlockEntry<Block> VENUS_GOLD_ORE = REGISTRATE
@@ -2761,16 +2725,16 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_GOLD, Tags.Items.ORES_GOLD))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DIAMOND_ORE = REGISTRATE
@@ -2780,15 +2744,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> VENUS_REDSTONE_ORE = REGISTRATE
@@ -2800,15 +2763,14 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_QUARTZ_ORE = REGISTRATE
@@ -2818,15 +2780,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_QUARTZ, Tags.Items.ORES_QUARTZ))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.QUARTZ))
             .register();
 
     public static final BlockEntry<Block> VENUS_GLOWSTONE_ORE = REGISTRATE
@@ -2836,16 +2797,15 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops()
-                    .lightLevel(pState -> 6))
+                    .lightLevel(state -> 6))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_GLOWSTONE.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_STONE, NorthstarDataGenRecipes.OreType.GLOWSTONE))
             .register();
 
     //venus deep ores
@@ -2856,15 +2816,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_TITANIUM))
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_IRON_ORE = REGISTRATE
@@ -2874,15 +2833,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_IRON))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DEEP_ZINC_ORE = REGISTRATE
@@ -2892,15 +2850,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_ZINC))
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_COPPER_ORE = REGISTRATE
@@ -2910,15 +2867,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_COPPER))
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_GOLD_ORE = REGISTRATE
@@ -2928,16 +2884,16 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_GOLD, Tags.Items.ORES_GOLD))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DEEP_DIAMOND_ORE = REGISTRATE
@@ -2947,15 +2903,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(7f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> VENUS_DEEP_REDSTONE_ORE = REGISTRATE
@@ -2967,15 +2922,14 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> VENUS_DEEP_QUARTZ_ORE = REGISTRATE
@@ -2985,15 +2939,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_QUARTZ, Tags.Items.ORES_QUARTZ))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.QUARTZ)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_QUARTZ))
             .register();
 
     public static final BlockEntry<Block> VENUS_DEEP_GLOWSTONE_ORE = REGISTRATE
@@ -3004,15 +2957,14 @@ public class NorthstarBlocks {
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops()
                     .lightLevel(pState -> 6))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_GLOWSTONE.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(VENUS_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GLOWSTONE))
             .register();
 
     // endregion
@@ -3175,15 +3127,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.TITANIUM))
             .register();
 
     public static final BlockEntry<Block> MERCURY_IRON_ORE = REGISTRATE
@@ -3193,15 +3144,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.IRON))
             .register();
 
     public static final BlockEntry<Block> MERCURY_COPPER_ORE = REGISTRATE
@@ -3211,15 +3161,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.COPPER))
             .register();
 
     public static final BlockEntry<Block> MERCURY_GOLD_ORE = REGISTRATE
@@ -3229,16 +3178,16 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_GOLD, Tags.Items.ORES_GOLD))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DIAMOND_ORE = REGISTRATE
@@ -3248,15 +3197,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> MERCURY_REDSTONE_ORE = REGISTRATE
@@ -3268,15 +3216,14 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_LAPIS_ORE = REGISTRATE
@@ -3286,15 +3233,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_LAPIS, Tags.Items.ORES_LAPIS))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.LAPIS))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_ZINC_ORE = REGISTRATE
@@ -3304,15 +3250,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.ZINC))
             .register();
 
     public static final BlockEntry<Block> MERCURY_GLOWSTONE_ORE = REGISTRATE
@@ -3323,15 +3268,14 @@ public class NorthstarBlocks {
                     .strength(5f, 12f)
                     .requiresCorrectToolForDrops()
                     .lightLevel(pState -> 15))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_GLOWSTONE.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.GLOWSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_TUNGSTEN_ORE = REGISTRATE
@@ -3341,15 +3285,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 20f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TUNGSTEN.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TUNGSTEN_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_STONE, NorthstarDataGenRecipes.OreType.TUNGSTEN))
             .register();
 
     //mercury deep ores
@@ -3360,15 +3303,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TITANIUM.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TITANIUM_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_TITANIUM))
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_IRON_ORE = REGISTRATE
@@ -3378,15 +3320,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_IRON)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_IRON.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_IRON))
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_COPPER_ORE = REGISTRATE
@@ -3396,15 +3337,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createCopperOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_COPPER))
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_GOLD_ORE = REGISTRATE
@@ -3414,16 +3354,16 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .item()
+            .tag(ItemTags.PIGLIN_LOVED)
+            .build()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_GOLD, Tags.Items.ORES_GOLD))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.RAW_GOLD)))
-            .item()
-            .tag(ItemTags.PIGLIN_LOVED)
-            .tag(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GOLD))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_DIAMOND_ORE = REGISTRATE
@@ -3433,15 +3373,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(7f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_DIAMOND, Tags.Items.ORES_DIAMOND))
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, Items.DIAMOND)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_DIAMOND))
             .register();
 
     public static final BlockEntry<RedStoneOreBlock> MERCURY_DEEP_REDSTONE_ORE = REGISTRATE
@@ -3453,15 +3392,14 @@ public class NorthstarBlocks {
                     .requiresCorrectToolForDrops()
                     .randomTicks()
                     .lightLevel(litBlockEmission(9)))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_REDSTONE, Tags.Items.ORES_REDSTONE))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createRedstoneOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_REDSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_LAPIS_ORE = REGISTRATE
@@ -3471,15 +3409,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES_LAPIS, Tags.Items.ORES_LAPIS))
             .tag(Tags.Blocks.ORE_RATES_DENSE)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createLapisOreDrops(b)))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_LAPIS))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_ZINC_ORE = REGISTRATE
@@ -3489,15 +3426,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_ZINC.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, AllItems.RAW_ZINC.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_ZINC))
             .register();
 
     public static final BlockEntry<Block> MERCURY_DEEP_GLOWSTONE_ORE = REGISTRATE
@@ -3508,15 +3444,14 @@ public class NorthstarBlocks {
                     .strength(6f, 12f)
                     .requiresCorrectToolForDrops()
                     .lightLevel(pState -> 15))
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_GLOWSTONE.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_GLOWSTONE_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_GLOWSTONE))
             .register();
 
     public static final BlockEntry<DropExperienceBlock> MERCURY_DEEP_TUNGSTEN_ORE = REGISTRATE
@@ -3526,15 +3461,14 @@ public class NorthstarBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .strength(7f, 20f)
                     .requiresCorrectToolForDrops())
+            .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .transform(NorthstarDataGenTags.apply(Tags.Blocks.ORES, Tags.Items.ORES))
             .transform(NorthstarBlockTags.C_ORES_TUNGSTEN.tagBlockAndItem())
             .tag(Tags.Blocks.ORE_RATES_SINGULAR)
             .tag(NorthstarBlockTags.NATURAL_MERCURY_BLOCKS.tag)
             .loot((c, b) -> c.add(b, c.createOreDrop(b, NorthstarItems.RAW_TUNGSTEN_ORE.get())))
-            .item()
-            .tag(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
-            .build()
+            .recipe(NorthstarDataGenRecipes.ore(MERCURY_DEEP_STONE, NorthstarDataGenRecipes.OreType.DEEP_TUNGSTEN))
             .register();
 
     public static final BlockEntry<RotatedPillarBlock> CALORIAN_LOG = REGISTRATE
