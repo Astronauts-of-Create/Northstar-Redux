@@ -43,7 +43,9 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
     public LargeFanRenderer(BlockEntityRendererProvider.Context context) {
     }
 
+    private final static float MIN_ROTOR_WIDTH = 1.3f;
     private final static float MAX_ROTOR_WIDTH = 1.8f;
+    private final static float SINGLE_FAN_BLADE_SIZE = 0.5f - 0.5f / 16f;
 
     @Override
     protected void renderSafe(LargeFanBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
@@ -86,42 +88,38 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
                 .light(light)
                 .renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
+        float bladeSize = be.width == 1 ? SINGLE_FAN_BLADE_SIZE : (be.width - 5f / 16f) * 0.5f;
 
-        float bladeSize = be.width == 1 ? 0.5f - 0.5f / 16f : (be.width - 5f / 16f) * 0.5f;
-
+        //Draw the rotor
         if (be.width > 1) {
-//            float rotorSize = switch (be.width) {
-//                case 2 -> (3 - 5f / 16f) * 0.5f;
-//                default -> (be.width - 5f / 16f) * 0.5f;
-//            };
             if (bladeSize > MAX_ROTOR_WIDTH) {
                 switch (axis) {
                     case X -> scale2.set(bladeSize, MAX_ROTOR_WIDTH, MAX_ROTOR_WIDTH);
                     case Y -> scale2.set(MAX_ROTOR_WIDTH, bladeSize, MAX_ROTOR_WIDTH);
                     case Z -> scale2.set(MAX_ROTOR_WIDTH, MAX_ROTOR_WIDTH, bladeSize);
                 }
-                CachedBuffers.partialFacing(NorthstarPartialModels.LARGE_FAN_ROTOR, state, dir)
-                        .translate(offset)
-                        .scale(scale2)
-                        .rotate(axis, angle)
-                        .uncenter()
-                        .light(light)
-                        .renderInto(ms, buffer.getBuffer(RenderType.solid()));
+            } else if (bladeSize < MIN_ROTOR_WIDTH) {
+                switch (axis) {
+                    case X -> scale2.set(bladeSize, MIN_ROTOR_WIDTH, MIN_ROTOR_WIDTH);
+                    case Y -> scale2.set(MIN_ROTOR_WIDTH, bladeSize, MIN_ROTOR_WIDTH);
+                    case Z -> scale2.set(MIN_ROTOR_WIDTH, MIN_ROTOR_WIDTH, bladeSize);
+                }
             } else {
-                CachedBuffers.partialFacing(NorthstarPartialModels.LARGE_FAN_ROTOR, state, dir)
-                        .translate(offset)
-                        .scale(bladeSize)
-                        .rotate(axis, angle)
-                        .uncenter()
-                        .light(light)
-                        .renderInto(ms, buffer.getBuffer(RenderType.solid()));
+                scale2.set(bladeSize);
             }
-
+            CachedBuffers.partialFacing(NorthstarPartialModels.LARGE_FAN_ROTOR, state, dir)
+                    .translate(offset)
+                    .scale(scale2)
+                    .rotate(axis, angle)
+                    .uncenter()
+                    .light(light)
+                    .renderInto(ms, buffer.getBuffer(RenderType.solid()));
         }
 
         if (be.chain != null)
             renderChain(be, be.getBlockPos(), be.chain, offset, ms, buffer, light, dir, rot);
 
+        //Draw the blades
         for (int i = 0; i < blades; i++) {
             float a = angle + Mth.TWO_PI * i / blades;
             CachedBuffers.partial(NorthstarPartialModels.LARGE_FAN_BLADE, state)
