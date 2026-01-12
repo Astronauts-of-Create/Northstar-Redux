@@ -94,8 +94,8 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
             float speed = getSpeed();
             if (speed == 0) {
                 NorthstarOxygen oxygenLevel = level.northstar$oxygen();
-                if (!oxygenLevel.hasOxygen() && oxygenLevel.hasOxygen(worldPosition))
-                    speed = 32f;
+                if (chain == null && !oxygenLevel.hasOxygen() && oxygenLevel.hasOxygen(worldPosition))
+                    speed = flipChain ? -64 : 64;
             }
 
             float targetSpeed = speed * (64f / 256f);
