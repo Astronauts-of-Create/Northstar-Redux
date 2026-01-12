@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.telescope;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -71,6 +72,7 @@ public class TelescopeBlock extends BaseEntityBlock implements IBE<TelescopeBloc
                     (pLevel.isNight() || NorthstarPlanets.canSeeSkyAtDay(pLevel.dimension())) && (!pLevel.isRaining() || !NorthstarPlanets.hasWeather(pLevel.dimension()))
                     && NorthstarPlanets.planetHasSky(pLevel.dimension())) {
                 NetworkHooks.openScreen(((ServerPlayer) pPlayer), (TelescopeBlockEntity) entity, pPos);
+                pPlayer.awardStat(NorthstarStats.INTERACT_WITH_TELESCOPE);
 
             } else {
                 pPlayer.displayClientMessage(Component.translatable("northstar.gui.telescope_fail"), true);

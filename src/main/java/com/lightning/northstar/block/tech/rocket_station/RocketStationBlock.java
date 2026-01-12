@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
@@ -44,8 +45,10 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide())
+        if (!level.isClientSide()) {
             withBlockEntityDo(level, pos, be -> NetworkHooks.openScreen((ServerPlayer) player, be, pos));
+            player.awardStat(NorthstarStats.INTERACT_WITH_ROCKET_STATION);
+        }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 

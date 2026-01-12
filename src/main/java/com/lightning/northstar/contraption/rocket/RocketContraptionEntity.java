@@ -1,10 +1,7 @@
 package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarEntityTypes;
-import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.content.NorthstarSounds;
+import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
@@ -156,6 +153,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                 isInFlight = true;
             }
             if (!fuelBurned) { //We only burn the fuel once
+                if (getControllingPassenger() instanceof Player player) {
+                    player.awardStat(NorthstarStats.ROCKET_LAUNCHES);
+                }
+
                 if (contraption.fuelAmount() < contraption.fuelCost) {  //If we dont have enough fuel, disassemble
                     this.disassemble();
                 } else {
@@ -275,6 +276,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
                 //If auto-landing is disabled, explode the rocket if it hits the ground
                 if (landingMode && !auto_land_mode && Math.abs(final_lift_vel) > 3 && !hasExploded) {
+                    if (owner != null)
+                        owner.awardStat(NorthstarStats.ROCKET_CRASHES);
                     level.explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
                     hasExploded = true;
                 }
@@ -393,7 +396,13 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(destination, teleporter);
-            if (newPassenger == null) continue; // shouldn't happen unless this method is misused by another mod
+            if (newPassenger == null)
+                continue; // shouldn't happen unless this method is misused by another mod
+
+            if (newPassenger instanceof Player player) {
+                player.awardStat(NorthstarStats.ROCKET_TRAVELS);
+            }
+
             newPassenger.setPos(newRocket.position().add(data.offset));
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);
