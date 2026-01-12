@@ -287,7 +287,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
             for (Entity passenger : entitiesWithinContraption) {
-                if (passenger instanceof SuperGlueEntity) continue; //Make sure we are ignoring the super glue entity!
+                if (passenger instanceof SuperGlueEntity || passenger instanceof AbstractContraptionEntity)
+                    continue;
 
                 if (passenger.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
                     EntityLockPacket.LockInfo lockInfo = entityLockMap.get(passenger.getUUID());
