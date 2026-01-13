@@ -283,9 +283,9 @@ public class NorthstarTags {
 
     public enum NorthstarEntityTags implements Tags.Tag<EntityType<?>> {
 
-        DOESNT_REQUIRE_OXYGEN,
         CAN_SURVIVE_COLD,
-        ;
+        CAN_SURVIVE_HEAT,
+        DOESNT_REQUIRE_OXYGEN;
 
         public final TagKey<EntityType<?>> tag;
 

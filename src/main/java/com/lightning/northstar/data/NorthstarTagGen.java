@@ -209,6 +209,8 @@ public class NorthstarTagGen {
                 .add(EntityType.ZOMBIE)
                 .add(EntityType.ZOMBIE_HORSE);
 
+        tags.tag(NorthstarEntityTags.CAN_SURVIVE_HEAT);
+
         tags.tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN)
                 .add(EntityType.COD)
                 .add(EntityType.IRON_GOLEM)
