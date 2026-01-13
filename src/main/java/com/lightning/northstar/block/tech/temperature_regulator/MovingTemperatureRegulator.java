@@ -29,11 +29,8 @@ public class MovingTemperatureRegulator implements NorthstarTemperature.Provider
 
     void tick(MovementContext context) {
         ProgressiveBlockSealer sealer = regulator.sealer;
-        if (sealer.isSealInProgress()) {
-            sealer.updateSeal(context.contraption.getContraptionWorld(), NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get());
-        } else {
-            sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, null);
-        }
+        sealer.processSeal(context.contraption.getContraptionWorld(), context.localPos, null,
+                NorthstarConfigs.server().temperatureRegulatorMaxContraptionSealed.get());
 
         if (sealer.hasLeak() && regulator.showLeak)
             sealer.renderLeakPath(context.contraption.entity.level(), context.contraption.entity);
