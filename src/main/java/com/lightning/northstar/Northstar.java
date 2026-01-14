@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -79,6 +80,7 @@ public class Northstar {
         NorthstarRecipeTypes.register(modEventBus);
         NorthstarParticles.register(modEventBus);
         NorthstarSounds.register(modEventBus);
+        NorthstarStats.register(modEventBus);
         NorthstarMenuTypes.register();
         NorthstarPlanets.register();
         NorthstarDimensions.register();
@@ -112,6 +114,10 @@ public class Northstar {
 
         @SubscribeEvent
         public static void onRegister(RegisterEvent event) {
+            if (event.getRegistryKey() == Registries.CUSTOM_STAT) {
+                NorthstarStats.registerFormatters();
+            }
+
             NorthstarContraptionTypes.register();
         }
 

@@ -241,19 +241,6 @@ public class NorthstarTags {
         INSULATING,
         OXYGEN_SEALING,
         OXYGEN_SOURCES,
-        // Space ores, used for crushing recipes
-        SPACE_ORE_COAL("space_ore/coal"),
-        SPACE_ORE_COPPER("space_ore/copper"),
-        SPACE_ORE_DIAMOND("space_ore/diamond"),
-        SPACE_ORE_GLOWSTONE("space_ore/glowstone"),
-        SPACE_ORE_GOLD("space_ore/gold"),
-        SPACE_ORE_IRON("space_ore/iron"),
-        SPACE_ORE_LAPIS("space_ore/lapis"),
-        SPACE_ORE_QUARTZ("space_ore/quartz"),
-        SPACE_ORE_REDSTONE("space_ore/redstone"),
-        SPACE_ORE_TITANIUM("space_ore/titanium"),
-        SPACE_ORE_TUNGSTEN("space_ore/tungsten"),
-        SPACE_ORE_ZINC("space_ore/zinc"),
         WILTER_LOGS;
 
         public final TagKey<Item> tag;
@@ -296,9 +283,9 @@ public class NorthstarTags {
 
     public enum NorthstarEntityTags implements Tags.Tag<EntityType<?>> {
 
-        DOESNT_REQUIRE_OXYGEN,
         CAN_SURVIVE_COLD,
-        ;
+        CAN_SURVIVE_HEAT,
+        DOESNT_REQUIRE_OXYGEN;
 
         public final TagKey<EntityType<?>> tag;
 
