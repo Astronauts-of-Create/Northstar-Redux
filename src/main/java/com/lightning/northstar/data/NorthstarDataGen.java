@@ -39,6 +39,7 @@ public class NorthstarDataGen {
         Northstar.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
             provideDefaultLang("base", provider::add);
             provideDefaultLang("tooltips", provider::add);
+            provideDefaultLang("tags", provider::add);
         });
 
         RegistrySetBuilder builder = new RegistrySetBuilder()

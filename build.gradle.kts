@@ -39,8 +39,8 @@ loom {
     runs["server"].runDir = "run-server/"
     runs.create("data") {
         data()
-        property("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
-        property("forge.logging.console.level", "debug")
+        //property("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
+        //property("forge.logging.console.level", "debug")
         programArgs(
             "--all",
             "--mod", "northstar",

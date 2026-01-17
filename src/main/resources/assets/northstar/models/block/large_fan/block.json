@@ -3,6 +3,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"particle": "northstar:block/large_fan_side"
+		"particle": "northstar:block/large_fan_side_single"
 	}
 }

@@ -4,6 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.entity.goals.ChargeAtTargetGoal;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -40,13 +41,35 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumSet;
 import java.util.UUID;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
 
     private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
     private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", 0.2D, AttributeModifier.Operation.ADDITION);
+
+    public static final byte EVENT_START_CHARGING = (byte) 254;
+    public static final byte EVENT_STOP_CHARGING = (byte) 253;
+    public static final byte EVENT_PASSED_TARGET = (byte) 252;
+    public static final byte EVENT_RESET_CHARGE = (byte) 251;
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.FOLLOW_RANGE, 16)
+                .add(Attributes.MAX_HEALTH, 60)
+                .add(Attributes.ATTACK_DAMAGE, 10)
+                .add(Attributes.MOVEMENT_SPEED, 0.2);
+    }
+
+    public static boolean stoneBullSpawnRules(EntityType<VenusStoneBullEntity> entityType, LevelAccessor level,
+                                              MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+        BlockState state = level.getBlockState(pos.below());
+        return state.is(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag);
+    }
 
     private final AnimatableInstanceCache animatableCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -59,10 +82,10 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
     public int ticksSpentCharging = 0;
     public Vec3 moveDirection;
 
-    public VenusStoneBullEntity(EntityType<? extends VenusStoneBullEntity> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public VenusStoneBullEntity(EntityType<? extends VenusStoneBullEntity> entityType, Level level) {
+        super(entityType, level);
 
-        this.setMaxUpStep(1);
+        setMaxUpStep(1);
     }
 
     // region GeoAnimatable
@@ -83,8 +106,6 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
     }
 
     private PlayState predicate(AnimationState<VenusStoneBullEntity> event) {
-        AnimationController<VenusStoneBullEntity> controller = event.getController();
-
         if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F) && !charging) {
             event.getController().setAnimation(RawAnimation.begin().thenLoop("walk"));
         } else if (!(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F) && charging && !passedTarget) {
@@ -100,40 +121,24 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
 
     // endregion
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.MAX_HEALTH, 60.0D).add(Attributes.ATTACK_DAMAGE, 10).add(Attributes.MOVEMENT_SPEED, 0.2f);
-    }
-
-    public static boolean stoneBullSpawnRules(EntityType<VenusStoneBullEntity> moth, LevelAccessor level, MobSpawnType spawntype, BlockPos pos, RandomSource rando) {
-        BlockState state = level.getBlockState(pos.below());
-        return state.is(NorthstarBlockTags.NATURAL_VENUS_BLOCKS.tag);
-    }
-
-    //this handles client side stuff, and creates parity between server and client
     @Override
-    public void handleEntityEvent(byte pId) {
-        if (pId == 4) {
+    public void handleEntityEvent(byte id) {
+        switch (id) {
+            case EVENT_START_CHARGING -> charging = true;
+            case EVENT_STOP_CHARGING -> charging = false;
+            case EVENT_PASSED_TARGET -> passedTarget = true;
+            case EVENT_RESET_CHARGE -> {
+                charging = false;
+                passedTarget = false;
+            }
+            default -> super.handleEntityEvent(id);
         }
-        if (pId == 63) {
-            charging = true;
-        }
-        if (pId == 65) {
-            charging = false;
-        }
-        if (pId == 66) {
-            passedTarget = true;
-        }
-        if (pId == 67) {
-            charging = false;
-            passedTarget = false;
-        }
-        super.handleEntityEvent(pId);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide && charging && passedTarget && !level().getBlockState(blockPosition().below()).isAir()) {
+        if (level().isClientSide && charging && passedTarget && !level().getBlockState(blockPosition().below()).isAir()) {
             level().addParticle(ParticleTypes.CLOUD, getX() + random.nextFloat() * (random.nextBoolean() ? -1 : 1),
                     getY(), getZ() + random.nextFloat() * (random.nextBoolean() ? -1 : 1), 0, 0, 0);
             level().addParticle(ParticleTypes.CLOUD, getX() + random.nextFloat() * (random.nextBoolean() ? -1 : 1),
@@ -144,7 +149,7 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
                     getY(), getZ() + random.nextFloat() * (random.nextBoolean() ? -1 : 1), 0, 0, 0);
         }
 
-        if (!this.level().isClientSide && this.getTarget() != null) {
+        if (!level().isClientSide && getTarget() != null) {
             Northstar.LOGGER.debug("target: {}, charging: {}, chargeTime: {}", getTarget(), charging, chargeTimer);
         }
     }
@@ -158,8 +163,8 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
         if (chargeCooldown > 0)
             chargeCooldown = Mth.clamp(chargeCooldown, 0, chargeCooldown - 1);
 
-        AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (this.getTarget() != null) {
+        AttributeInstance attributeinstance = getAttribute(Attributes.MOVEMENT_SPEED);
+        if (getTarget() != null) {
             if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
                 attributeinstance.addTransientModifier(SPEED_MODIFIER_ATTACKING);
             }
@@ -173,12 +178,11 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        super.getAmbientSound();
         return NorthstarSounds.VENUS_STONE_BULL_IDLE.get();
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return NorthstarSounds.VENUS_STONE_BULL_HURT.get();
     }
 
@@ -189,31 +193,30 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(7, new ChargeAtTargetGoal(this, 1.5, 16));
-        this.goalSelector.addGoal(9, new VenusStoneBullEntity.StareAtTargetGoal(this));
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, ZombifiedPiglin.class, true));
+        goalSelector.addGoal(9, new VenusStoneBullEntity.StareAtTargetGoal(this));
+        goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        goalSelector.addGoal(7, new ChargeAtTargetGoal(this, 1.5, 16));
+        goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1));
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, ZombifiedPiglin.class, true));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this));
         super.registerGoals();
     }
 
     @Override
-    public boolean doHurtTarget(Entity pEntity) {
-        this.level().broadcastEntityEvent(this, (byte) 4);
-        this.playSound(NorthstarSounds.VENUS_STONE_BULL_ATTACK.get(), 1.0F, 1.0F);
-        pEntity.setDeltaMovement(pEntity.getDeltaMovement().x + (this.getDeltaMovement().x / 4), pEntity.getDeltaMovement().y + 1, pEntity.getDeltaMovement().z + (this.getDeltaMovement().z / 4));
-        return super.doHurtTarget(pEntity);
+    public boolean doHurtTarget(Entity target) {
+        playSound(NorthstarSounds.VENUS_STONE_BULL_ATTACK.get(), 1.0F, 1.0F);
+        target.setDeltaMovement(target.getDeltaMovement().add(getDeltaMovement().x / 4, 1, getDeltaMovement().z / 4));
+        return super.doHurtTarget(target);
     }
 
     static class StareAtTargetGoal extends Goal {
         private final VenusStoneBullEntity starer;
 
         public StareAtTargetGoal(VenusStoneBullEntity pShooter) {
-            this.starer = pShooter;
-            this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+            starer = pShooter;
+            setFlags(EnumSet.of(Goal.Flag.LOOK));
         }
 
         @Override
@@ -228,23 +231,23 @@ public class VenusStoneBullEntity extends Monster implements GeoAnimatable {
 
         @Override
         public void tick() {
-            if (this.starer.charging)
+            if (starer.charging)
                 return;
 
-            if (this.starer.getTarget() == null) {
-                Vec3 vec3 = this.starer.getDeltaMovement();
-                this.starer.setYRot(-((float) Mth.atan2(vec3.x, vec3.z)) * (180F / (float) Math.PI));
-                this.starer.yBodyRot = this.starer.getYRot();
+            if (starer.getTarget() == null) {
+                Vec3 vec3 = starer.getDeltaMovement();
+                starer.setYRot(-((float) Mth.atan2(vec3.x, vec3.z)) * (180F / (float) Math.PI));
+                starer.yBodyRot = starer.getYRot();
             } else {
-                LivingEntity livingentity = this.starer.getTarget();
-                if (livingentity.distanceToSqr(this.starer) < 4096.0D) {
-                    double d1 = livingentity.getX() - this.starer.getX();
-                    double d2 = livingentity.getZ() - this.starer.getZ();
-                    this.starer.setYRot(-((float) Mth.atan2(d1, d2)) * (180F / (float) Math.PI));
-                    this.starer.yBodyRot = this.starer.getYRot();
+                LivingEntity livingentity = starer.getTarget();
+                if (livingentity.distanceToSqr(starer) < 4096) {
+                    double d1 = livingentity.getX() - starer.getX();
+                    double d2 = livingentity.getZ() - starer.getZ();
+                    starer.setYRot(-((float) Mth.atan2(d1, d2)) * (180F / (float) Math.PI));
+                    starer.yBodyRot = starer.getYRot();
                 }
             }
-
         }
     }
+
 }
