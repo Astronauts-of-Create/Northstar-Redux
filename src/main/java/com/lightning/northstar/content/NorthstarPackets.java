@@ -47,7 +47,7 @@ public enum NorthstarPackets {
     ENTITY_LOCK(EntityLockPacket.class, EntityLockPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
-    public static final int NETWORK_VERSION = 5;
+    public static final int NETWORK_VERSION = 6;
     public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
     private static SimpleChannel channel;
 

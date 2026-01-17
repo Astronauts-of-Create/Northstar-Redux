@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.astronomy_table;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -74,7 +75,7 @@ public class AstronomyTableBlock extends Block implements IBE<AstronomyTableBloc
             BlockEntity entity = pLevel.getBlockEntity(pPos);
             if (entity instanceof AstronomyTableBlockEntity) {
                 NetworkHooks.openScreen(((ServerPlayer) pPlayer), (AstronomyTableBlockEntity) entity, pPos);
-
+                pPlayer.awardStat(NorthstarStats.INTERACT_WITH_ASTRONOMY_TABLE);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }

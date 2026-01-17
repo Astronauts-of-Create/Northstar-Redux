@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_controls;
 
+import com.lightning.northstar.content.NorthstarStats;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
@@ -28,6 +29,9 @@ public class RocketControlsInteractionBehaviour extends MovingInteractionBehavio
 
         if (!contraptionEntity.startControlling(localPos, player))
             return false;
+
+        if (!player.level().isClientSide())
+            player.awardStat(NorthstarStats.INTERACT_WITH_ROCKET_CONTROLS);
 
         rce.setControllingPlayer(player.getUUID());
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> RocketControlsClientHandler.startControlling(rce, localPos));

@@ -20,8 +20,11 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,12 +55,14 @@ public class Northstar {
 
     public static final String MOD_ID = "northstar";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID);
-
-    static {
-        REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, new TooltipHelper.Palette(TooltipHelper.styleFromColor(0x80AFD2), TooltipHelper.styleFromColor(0x4D98FA)))
-                .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
-    }
+    public static final TooltipHelper.Palette PALETTE = new TooltipHelper.Palette(
+            TooltipHelper.styleFromColor(0x80AFD2),
+            TooltipHelper.styleFromColor(0x4D98FA)
+    );
+    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MOD_ID)
+            .defaultCreativeTab((ResourceKey<CreativeModeTab>) null)
+            .setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, PALETTE)
+                    .andThen(TooltipModifier.mapNull(KineticStats.create(item))));
 
     public Northstar(FMLJavaModLoadingContext modContext) {
         IEventBus modEventBus = modContext.getModEventBus();
@@ -78,6 +83,7 @@ public class Northstar {
         NorthstarRecipeTypes.register(modEventBus);
         NorthstarParticles.register(modEventBus);
         NorthstarSounds.register(modEventBus);
+        NorthstarStats.register(modEventBus);
         NorthstarMenuTypes.register();
         NorthstarPlanets.register();
         NorthstarDimensions.register();
@@ -111,6 +117,10 @@ public class Northstar {
 
         @SubscribeEvent
         public static void onRegister(RegisterEvent event) {
+            if (event.getRegistryKey() == Registries.CUSTOM_STAT) {
+                NorthstarStats.registerFormatters();
+            }
+
             NorthstarContraptionTypes.register();
         }
 

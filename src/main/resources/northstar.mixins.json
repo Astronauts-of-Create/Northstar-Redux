@@ -10,6 +10,7 @@
     "OxygenAndTempEntityMixin",
     "accessor.FlowingFluidAccessor",
     "accessor.NorthstarContraptionWorld",
+    "block.AbstractFurnaceBlockEntityMixin",
     "block.BlockMixin",
     "block.CampfireBlockMixin",
     "block.CandleBlockMixin",

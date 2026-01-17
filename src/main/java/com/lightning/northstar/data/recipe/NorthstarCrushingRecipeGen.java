@@ -3,8 +3,6 @@ package com.lightning.northstar.data.recipe;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -55,83 +53,6 @@ public class NorthstarCrushingRecipeGen extends CrushingRecipeGen {
     GLOWSTONE = create(() -> NorthstarItems.ENRICHED_GLOWSTONE_ORE,
             b -> b.duration(300)
                     .output(Items.GLOWSTONE_DUST, 2)),
-
-    SPACE_COAL_ORE = create("space_coal_ore",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_COAL.tag)
-                    .output(Items.COAL, 2)
-                    .output(0.25f, Items.COAL)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_COPPER_ORE = create("space_copper_ore",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_COPPER.tag)
-                    .output(AllItems.CRUSHED_COPPER, 2)
-                    .output(0.25f, AllItems.CRUSHED_COPPER)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_GOLD_ORE = create("space_gold_ore",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_GOLD.tag)
-                    .output(AllItems.CRUSHED_GOLD, 2)
-                    .output(0.25f, AllItems.CRUSHED_GOLD)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_IRON_ORE = create("space_iron_ore",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_IRON.tag)
-                    .output(AllItems.CRUSHED_IRON, 3)
-                    .output(0.25f, AllItems.CRUSHED_IRON)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_TITANIUM_ORE = create("space_titanium_ore",
-            b -> b.duration(500)
-                    .require(NorthstarItemTags.SPACE_ORE_TITANIUM.tag)
-                    .output(NorthstarItems.RAW_TITANIUM_ORE)
-                    .output(0.75f, NorthstarItems.RAW_TITANIUM_ORE)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_TUNGSTEN_ORE = create("space_tungsten_ore",
-            b -> b.duration(500)
-                    .require(NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag)
-                    .output(NorthstarItems.CRUSHED_RAW_TUNGSTEN)
-                    .output(0.75f, NorthstarItems.CRUSHED_RAW_TUNGSTEN)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_ZINC_ORE = create("space_zinc_ore",
-            b -> b.duration(250)
-                    .require(NorthstarItemTags.SPACE_ORE_ZINC.tag)
-                    .output(AllItems.CRUSHED_ZINC)
-                    .output(0.75f, AllItems.CRUSHED_ZINC)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_DIAMOND_ORE = create("space_diamond_ore",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_DIAMOND.tag)
-                    .output(Items.DIAMOND, 2)
-                    .output(0.75f, Items.DIAMOND)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_LAPIS_ORE = create("space_lapis_ore",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_LAPIS.tag)
-                    .output(Items.LAPIS_LAZULI, 12)
-                    .output(0.5f, Items.LAPIS_LAZULI, 4)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_QUARTZ_ORE = create("space_quartz_ores",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_QUARTZ.tag)
-                    .output(Items.QUARTZ, 3)
-                    .output(0.5f, Items.QUARTZ)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
-
-    SPACE_REDSTONE_ORE = create("space_redstone_ores",
-            b -> b.duration(350)
-                    .require(NorthstarItemTags.SPACE_ORE_REDSTONE.tag)
-                    .output(Items.REDSTONE, 6)
-                    .output(0.5f, Items.REDSTONE, 2)
-                    .output(0.75f, AllItems.EXP_NUGGET)),
 
     LUNAR_SAPPHIRE = create(() -> NorthstarBlocks.LUNAR_SAPPHIRE_BLOCK,
             b -> b.duration(150)

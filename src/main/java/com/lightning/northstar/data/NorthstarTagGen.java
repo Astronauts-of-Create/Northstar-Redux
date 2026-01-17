@@ -52,11 +52,6 @@ public class NorthstarTagGen {
     private static void blocks(RegistrateTagsProvider<Block> provider) {
         Tags<Block, Block> tags = new Tags<>(provider, Block::builtInRegistryHolder, Function.identity());
 
-        for (NorthstarBlockTags tag : NorthstarBlockTags.values()) {
-            if (tag.alwaysDataGen)
-                tags.tag(tag);
-        }
-
         tags.tag(NorthstarBlockTags.AIR_PASSES_THROUGH)
                 .add(NorthstarBlockTags.BLOCKS_AIR)
                 .add(Blocks.OAK_DOOR, Blocks.OAK_TRAPDOOR, Blocks.JUNGLE_DOOR, Blocks.JUNGLE_TRAPDOOR,
@@ -174,11 +169,6 @@ public class NorthstarTagGen {
     private static void items(RegistrateTagsProvider<Item> provider) {
         Tags<Item, ItemLike> tags = new Tags<>(provider, Item::builtInRegistryHolder, ItemLike::asItem);
 
-        for (NorthstarItemTags tag : NorthstarItemTags.values()) {
-            if (tag.alwaysDataGen)
-                tags.tag(tag);
-        }
-
         tags.tag(NorthstarItemTags.IGNITION_SOURCE)
                 .add(Items.FLINT_AND_STEEL)
                 .add(Items.FIRE_CHARGE)
@@ -207,37 +197,38 @@ public class NorthstarTagGen {
     private static void entities(RegistrateTagsProvider<EntityType<?>> provider) {
         Tags<EntityType<?>, EntityType<?>> tags = new Tags<>(provider, EntityType::builtInRegistryHolder, Function.identity());
 
-        for (NorthstarEntityTags tag : NorthstarEntityTags.values()) {
-            if (tag.alwaysDataGen)
-                tags.tag(tag);
-        }
-
         tags.tag(NorthstarEntityTags.CAN_SURVIVE_COLD)
                 .add(EntityType.SKELETON)
+                .add(EntityType.SKELETON_HORSE)
                 .add(EntityType.SNOW_GOLEM)
                 .add(EntityType.STRAY)
                 .add(EntityType.WITHER)
-                .add(EntityType.WITHER_SKELETON);
+                .add(EntityType.WITHER_SKELETON)
+                .add(EntityType.ZOMBIE)
+                .add(EntityType.ZOMBIE_HORSE);
+
+        tags.tag(NorthstarEntityTags.CAN_SURVIVE_HEAT);
 
         tags.tag(NorthstarEntityTags.DOESNT_REQUIRE_OXYGEN)
                 .add(EntityType.COD)
                 .add(EntityType.IRON_GOLEM)
                 .add(EntityType.SALMON)
+                .add(EntityType.SKELETON)
+                .add(EntityType.SKELETON_HORSE)
                 .add(EntityType.SNOW_GOLEM)
                 .add(EntityType.STRAY)
                 .add(EntityType.TADPOLE)
                 .add(EntityType.TROPICAL_FISH)
                 .add(EntityType.WITHER)
-                .add(EntityType.WITHER_SKELETON);
+                .add(EntityType.WITHER_SKELETON)
+                .add(EntityType.ZOMBIE)
+                .add(EntityType.ZOMBIE_HORSE);
     }
 
     private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
         Tags<Fluid, Fluid> tags = new Tags<>(provider, Fluid::builtInRegistryHolder, Function.identity());
 
-        for (NorthstarFluidTags tag : NorthstarFluidTags.values()) {
-            if (tag.alwaysDataGen)
-                tags.tag(tag);
-        }
+        tags.tag(NorthstarFluidTags.IS_OXY);
 
         tags.tag(NorthstarFluidTags.BREATHABLE)
                 .add(NorthstarFluidTags.IS_OXY)

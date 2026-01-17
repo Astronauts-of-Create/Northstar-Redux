@@ -55,6 +55,9 @@ public class TorchBlockMixin extends Block implements LiquidBlockContainer, Seal
 
     @Override
     public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (fluidState.isEmpty())
+            return false;
+
         if (fluidState.getType() != Fluids.WATER || state.getBlock() != Blocks.TORCH) {
             if (fluidState.getType() instanceof FlowingFluidAccessor flowing)
                 flowing.northstar$beforeDestroyingBlock(level, pos, state);

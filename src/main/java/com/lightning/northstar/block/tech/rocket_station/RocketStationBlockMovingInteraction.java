@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
+import com.lightning.northstar.content.NorthstarStats;
 import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.simibubi.create.AllSoundEvents;
@@ -24,6 +25,9 @@ public class RocketStationBlockMovingInteraction extends MovingInteractionBehavi
             return false;
 
         }
+
+        if (!player.level().isClientSide())
+            player.awardStat(NorthstarStats.INTERACT_WITH_ROCKET_STATION);
         AllSoundEvents.CONTROLLER_CLICK.play(player.level(), null, BlockPos.containing(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 1)), 1, 1.2f);
         if (!contraptionEntity.level().isClientSide && contraptionEntity.level().isInWorldBounds(contraptionEntity.blockPosition()) && !((RocketContraptionEntity) contraptionEntity).landingMode)
             contraptionEntity.disassemble();

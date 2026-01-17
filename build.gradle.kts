@@ -8,7 +8,7 @@ plugins {
     id("dev.architectury.loom") version "1.11.440"
 }
 
-version = "0.5.3+1.20.1-create5" // https://semver.org/
+version = "0.5.4+1.20.1-create5" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -39,8 +39,8 @@ loom {
     runs["server"].runDir = "run-server/"
     runs.create("data") {
         data()
-        property("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
-        property("forge.logging.console.level", "debug")
+        //property("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
+        //property("forge.logging.console.level", "debug")
         programArgs(
             "--all",
             "--mod", "northstar",

@@ -44,7 +44,6 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
 
     protected final OxygenTrackingSealer sealer = new OxygenTrackingSealer(SealingMode.OXYGEN);
     protected SmartFluidTankBehaviour tank;
-    protected int sealCooldown;
     protected float drain;
     protected float pendingDrain;
     protected float activeDrain;
@@ -86,13 +85,8 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     public void tick() {
         super.tick();
 
-        if (sealer.isSealInProgress()) {
-            if (sealer.updateSeal(level, getMaximumSealedBlocks())) {
-                sealCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
-                level.northstar$oxygen().enqueueUpdates(sealer.getUpdatedBlocks());
-            }
-        } else if (sealCooldown-- <= 0) {
-            sealer.beginSeal(level, worldPosition, Direction.UP);
+        if (sealer.processSeal(level, worldPosition, Direction.UP, getMaximumSealedBlocks())) {
+            level.northstar$oxygen().enqueueUpdates(sealer.getUpdatedBlocks());
         }
 
         if (sealer.hasLeak()) {
@@ -186,7 +180,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         }
 
         if (isPlayerSneaking)
-            sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
+            sealer.addCooldownTooltip(tooltip, getMaximumSealedBlocks());
 
         return true;
     }

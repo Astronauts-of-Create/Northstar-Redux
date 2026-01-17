@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -68,11 +69,14 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         return onBlockEntityUse(world, pos, be -> {
-            if (hand != InteractionHand.MAIN_HAND)
+            if (hand != InteractionHand.MAIN_HAND || hit.getDirection() != state.getValue(HORIZONTAL_FACING))
                 return InteractionResult.PASS;
 
             ItemStack held = player.getItemInHand(hand);
             ItemStack item = be.container.getItem(0);
+
+            if (!world.isClientSide())
+                player.awardStat(NorthstarStats.INTERACT_WITH_OXYGEN_FILLER);
 
             if (held.getCount() == 1) {
                 // player holds a single item, swap them

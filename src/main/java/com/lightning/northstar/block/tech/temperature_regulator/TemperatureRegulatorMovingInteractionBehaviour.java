@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
@@ -24,6 +25,10 @@ public class TemperatureRegulatorMovingInteractionBehaviour extends MovingIntera
         MovementContext ctx = actor.right;
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingTemperatureRegulator regulator))
             return false;
+
+        if (!player.level().isClientSide()) {
+            player.awardStat(NorthstarStats.INTERACT_WITH_TEMPERATURE_REGULATOR);
+        }
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos));
         return true;

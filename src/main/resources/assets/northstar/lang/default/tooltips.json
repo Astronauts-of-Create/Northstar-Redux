@@ -20,13 +20,15 @@
 
   "block.northstar.ice_box.tooltip.summary": "When cooled to _appropriate Temperature,_ changes the state of matter of given _ingredients._",
 
-  "block.northstar.large_fan.tooltip.summary": "Increases the maximum area of _Oxygen_ _Sealers_ and _Temperature_ _Regulators_. Requires an _Encased_ _Chain_ _Drive_ adjacent to the fan to be powered.",
+  "block.northstar.large_fan.tooltip.summary": "Increases the maximum area of _Oxygen_ _Sealers_ and _Temperature_ _Regulators_. Requires an _Encased_ _Chain_ _Drive_ adjacent to the fan to be powered. Spins passively if no chain is attached and in an oxygenated environment.",
   "block.northstar.large_fan.tooltip.condition1": "When R-Clicked with a Fan Blade",
   "block.northstar.large_fan.tooltip.behaviour1": "Installs the fan blade in the fan.",
-  "block.northstar.large_fan.tooltip.condition2": "When Wrenched",
+  "block.northstar.large_fan.tooltip.condition2": "When Wrenched with a chain attached",
   "block.northstar.large_fan.tooltip.behaviour2": "Changes the side of the chain.",
-  "block.northstar.large_fan.tooltip.condition3": "When Wrenched while Sneaking",
-  "block.northstar.large_fan.tooltip.behaviour3": "Removes a fan blade, if none are installed, picks up the block.",
+  "block.northstar.large_fan.tooltip.condition3": "When Wrenched with no chain attached",
+  "block.northstar.large_fan.tooltip.behaviour3": "Changes the direction when spinning passively.",
+  "block.northstar.large_fan.tooltip.condition4": "When Wrenched while Sneaking",
+  "block.northstar.large_fan.tooltip.behaviour4": "Removes a fan blade, if none are installed, picks up the block.",
 
   "block.northstar.oxygen_detector.tooltip.summary": "Emits _redstone signal_ when block in front is oxygenated.",
 
