@@ -35,7 +35,7 @@ public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
     RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC),
     ENTITY_LOCK(EntityLockPacket.class, EntityLockPacket.STREAM_CODEC);
 
-    public static final int NETWORK_VERSION = 5;
+    public static final int NETWORK_VERSION = 6;
 
     private final CatnipPacketRegistry.PacketType<?> type;
 

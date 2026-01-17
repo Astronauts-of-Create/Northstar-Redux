@@ -3,35 +3,27 @@
 	"credit": "Made with Blockbench",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"4": "northstar:block/amethyst_crystal"
+		"0": "northstar:block/amethyst_crystal"
 	},
 	"elements": [
 		{
 			"name": "crystal",
-			"from": [8, -10, 2],
-			"to": [8, 2, 14],
+			"from": [8, -10, 1],
+			"to": [8, 2, 15],
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, -3, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 0, 12], "texture": "#4"},
-				"east": {"uv": [2, 0, 14, 12], "texture": "#4"},
-				"south": {"uv": [0, 0, 0, 12], "texture": "#4"},
-				"west": {"uv": [2, 0, 14, 12], "texture": "#4"},
-				"up": {"uv": [0, 0, 0, 8], "texture": "#4"},
-				"down": {"uv": [0, 0, 0, 8], "texture": "#4"}
+				"east": {"uv": [1, 16, 15, 4], "texture": "#0"},
+				"west": {"uv": [1, 16, 15, 4], "texture": "#0"}
 			}
 		},
 		{
 			"name": "crystal",
-			"from": [8, -10, 2],
-			"to": [8, 2, 14],
+			"from": [8, -10, 1],
+			"to": [8, 2, 15],
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, -3, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 0, 12], "texture": "#4"},
-				"east": {"uv": [2, 0, 14, 12], "texture": "#4"},
-				"south": {"uv": [0, 0, 0, 12], "texture": "#4"},
-				"west": {"uv": [2, 0, 14, 12], "texture": "#4"},
-				"up": {"uv": [0, 0, 0, 8], "texture": "#4"},
-				"down": {"uv": [0, 0, 0, 8], "texture": "#4"}
+				"east": {"uv": [1, 16, 15, 4], "texture": "#0"},
+				"west": {"uv": [1, 16, 15, 4], "texture": "#0"}
 			}
 		}
 	]

@@ -74,7 +74,7 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .output(NorthstarFluids.STRAWBERRY_ICE_CREAM.get(), 250)),
 
     // Pre electrolysis, uses sodium catalysis but has a bad ratio
-    TITANIUM1 = create("titanium1",
+    TITANIUM2 = create("titanium2",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
@@ -85,7 +85,7 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 500)),
 
     // Post electrolysis, better ratios
-    TITANIUM2 = create("titanium2",
+    TITANIUM1 = create("titanium1",
             b -> b.requiresHeat(HeatCondition.SUPERHEATED)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)
                     .require(NorthstarItems.RUTILE_CONCENTRATE)

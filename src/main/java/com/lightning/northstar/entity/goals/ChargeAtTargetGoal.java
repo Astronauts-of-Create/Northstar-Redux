@@ -43,13 +43,13 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
         } else if (this.searchForTarget()) {
             this.nextStartTick = reducedTickDelay(20);
             this.chargingMob.charging = true;
-            chargingMob.level().broadcastEntityEvent(chargingMob, (byte) 63);
+            chargingMob.level().broadcastEntityEvent(chargingMob, VenusStoneBullEntity.EVENT_START_CHARGING);
             return true;
         } else {
             this.nextStartTick = this.nextStartTick(this.mob);
             chargingMob.moveDirection = null;
-            chargingMob.level().broadcastEntityEvent(chargingMob, (byte) 65);
-            this.chargingMob.charging = false;
+            chargingMob.charging = false;
+            chargingMob.level().broadcastEntityEvent(chargingMob, VenusStoneBullEntity.EVENT_STOP_CHARGING);
             return false;
         }
     }
@@ -108,7 +108,7 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
             chargingMob.chargeTimer = 0;
             chargingMob.stopChargeTimer = 0;
             chargingMob.charging = false;
-            chargingMob.level().broadcastEntityEvent(chargingMob, (byte) 67);
+            chargingMob.level().broadcastEntityEvent(chargingMob, VenusStoneBullEntity.EVENT_RESET_CHARGE);
             chargingMob.passedTarget = false;
             chargingMob.chargeCooldown = 200;
             chargingMob.ticksSpentCharging = 0;
@@ -161,7 +161,7 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
             if (xFlag && zFlag && !chargingMob.passedTarget) {
                 if (!chargingMob.passedTarget) {
                     chargingMob.passedTarget = true;
-                    chargingMob.level().broadcastEntityEvent(chargingMob, (byte) 66);
+                    chargingMob.level().broadcastEntityEvent(chargingMob, VenusStoneBullEntity.EVENT_PASSED_TARGET);
                 }
             }
             //Northstar.LOGGER.debug("distance: {}", blockPosToVec3(chargingMob.blockPosition()).distanceTo(blockPosToVec3(this.targetPos)));
@@ -172,8 +172,8 @@ public class ChargeAtTargetGoal extends MoveToBlockGoal {
                 chargingMob.chargeTimer = 0;
                 chargingMob.stopChargeTimer = 0;
                 chargingMob.charging = false;
-                chargingMob.level().broadcastEntityEvent(chargingMob, (byte) 67);
                 chargingMob.passedTarget = false;
+                chargingMob.level().broadcastEntityEvent(chargingMob, VenusStoneBullEntity.EVENT_RESET_CHARGE);
                 chargingMob.chargeCooldown = 200;
                 chargingMob.ticksSpentCharging = 0;
                 this.stop();

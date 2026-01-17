@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -53,12 +54,14 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         withBlockEntityDo(level, pos, be -> player.openMenu(be, pos));
+        player.awardStat(NorthstarStats.INTERACT_WITH_ROCKET_STATION);
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         withBlockEntityDo(level, pos, be -> player.openMenu(be, pos));
+        player.awardStat(NorthstarStats.INTERACT_WITH_ROCKET_STATION);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 

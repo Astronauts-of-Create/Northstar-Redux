@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.astronomy_table;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -70,12 +71,14 @@ public class AstronomyTableBlock extends Block implements IBE<AstronomyTableBloc
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         withBlockEntityDo(level, pos, be -> player.openMenu(be, pos));
+        player.awardStat(NorthstarStats.INTERACT_WITH_ASTRONOMY_TABLE);
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         withBlockEntityDo(level, pos, be -> player.openMenu(be, pos));
+        player.awardStat(NorthstarStats.INTERACT_WITH_ASTRONOMY_TABLE);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 

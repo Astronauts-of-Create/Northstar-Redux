@@ -1,7 +1,7 @@
 MIT License
 
 Copyright (c) 2024 lightning2401  
-Copyright (c) 2025 Redstonneur1256
+Copyright (c) 2025-2026 Redstonneur1256
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

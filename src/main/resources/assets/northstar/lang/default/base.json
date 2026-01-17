@@ -318,5 +318,16 @@
   "planets.venus.grav": "Gravity:  8.87 m/s",
   "planets.venus.name": "Venus",
   "planets.venus.temp": "Temperature:  475 C",
-  "planets.venus.type": "Type:  Planet"
+  "planets.venus.type": "Type:  Planet",
+  "stat.northstar.interact_with_astronomy_table": "Interactions with Astronomy Table",
+  "stat.northstar.interact_with_computer_rack": "Interactions with Computer Rack",
+  "stat.northstar.interact_with_oxygen_filler": "Interactions with Oxygen Filler",
+  "stat.northstar.interact_with_oxygen_sealer": "Interactions with Oxygen Sealer",
+  "stat.northstar.interact_with_rocket_controls": "Interactions with Rocket Controls",
+  "stat.northstar.interact_with_rocket_station": "Interactions with Rocket Station",
+  "stat.northstar.interact_with_telescope": "Interactions with Telescope",
+  "stat.northstar.interact_with_temperature_regulator": "Interactions with Temperature Regulator",
+  "stat.northstar.rocket_crashes": "Rockets crashed",
+  "stat.northstar.rocket_launches": "Rockets launched",
+  "stat.northstar.rocket_travels": "Travels by Rocket"
 }

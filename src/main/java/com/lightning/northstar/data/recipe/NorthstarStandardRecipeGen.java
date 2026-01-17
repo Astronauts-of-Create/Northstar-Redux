@@ -524,18 +524,6 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
         createMaterial(null, NorthstarItems.MARTIAN_STEEL, NorthstarBlocks.MARTIAN_STEEL_BLOCK);
         createMaterial(NorthstarItems.TITANIUM_NUGGET, NorthstarItems.TITANIUM_INGOT, NorthstarBlocks.TITANIUM_BLOCK);
         createMaterial(NorthstarItems.TUNGSTEN_NUGGET, NorthstarItems.TUNGSTEN_INGOT, NorthstarBlocks.TUNGSTEN_BLOCK);
-
-        createOre(() -> NorthstarItemTags.SPACE_ORE_COPPER.tag, () -> Items.COPPER_INGOT, 0.7f, 200);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_DIAMOND.tag, () -> Items.DIAMOND, 1f, 200);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_GLOWSTONE.tag, () -> Items.GLOWSTONE_DUST, 0.7f, 100);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_GOLD.tag, () -> Items.GOLD_INGOT, 0.7f, 200);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_IRON.tag, () -> Items.IRON_INGOT, 0.7f, 200);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_LAPIS.tag, () -> Items.LAPIS_LAZULI, 0.7f, 200);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_QUARTZ.tag, () -> Items.QUARTZ, 0.7f, 200);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_REDSTONE.tag, () -> Items.REDSTONE, 0.7f, 100);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_TITANIUM.tag, () -> NorthstarItems.TITANIUM_INGOT, 0.3f, 500);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_TUNGSTEN.tag, () -> NorthstarItems.TUNGSTEN_INGOT, 0.7f, 100);
-        createOre(() -> NorthstarItemTags.SPACE_ORE_ZINC.tag, () -> AllItems.ZINC_INGOT, 0.7f, 100);
     }
 
 }

@@ -150,7 +150,7 @@ public class NorthstarTemperature {
                 entity.hurt(entity.level().damageSources().freeze(), damage);
             }
         }
-        if (temp > 300 && !entity.isOnFire() && !entity.fireImmune() && !hasHeatProtection) {
+        if (temp > 300 && !entity.fireImmune() && !hasHeatProtection && !NorthstarEntityTags.CAN_SURVIVE_HEAT.matches(entity)) {
             entity.setRemainingFireTicks(5 * 20);
         }
     }
@@ -207,15 +207,16 @@ public class NorthstarTemperature {
         return (entity.getItemBySlot(EquipmentSlot.HEAD).is(NorthstarItemTags.INSULATING.tag) &&
                 entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarItemTags.INSULATING.tag) &&
                 entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarItemTags.INSULATING.tag) &&
-                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.INSULATING.tag))
-                || NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
+                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.INSULATING.tag)) ||
+                NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
     }
 
     public static boolean hasHeatProtection(LivingEntity entity) {
         return (entity.getItemBySlot(EquipmentSlot.HEAD).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
                 entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
                 entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
-                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.HEAT_RESISTANT.tag));
+                entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.HEAT_RESISTANT.tag)) ||
+                NorthstarEntityTags.CAN_SURVIVE_HEAT.matches(entity);
     }
 
     public static double getHeatRating(ResourceKey<Level> level) {

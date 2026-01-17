@@ -2,6 +2,7 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -65,7 +66,7 @@ public class NorthstarCreativeModeTab {
                 if (item.get() instanceof SequencedAssemblyItem)
                     continue;
                 if (CreateRegistrate.isInCreativeTab(item, tab)) {
-                    output.accept(item.get(), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+                    output.accept(item.get());
 
                     Consumer<CreativeModeTab.Output> factory = builders.get(item.get());
                     if (factory != null) {

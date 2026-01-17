@@ -2,6 +2,7 @@ package com.lightning.northstar.block.tech.computer_rack;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -74,6 +75,8 @@ public class TargetingComputerRackBlock extends HorizontalKineticBlock implement
             }
 
             if (!level.isClientSide) {
+                player.awardStat(NorthstarStats.INTERACT_WITH_COMPUTER_RACK);
+
                 if (!player.addItem(computer))
                     popResourceFromFace(level, pos, dir, computer);
                 be.container.setItem(slot, ItemStack.EMPTY);

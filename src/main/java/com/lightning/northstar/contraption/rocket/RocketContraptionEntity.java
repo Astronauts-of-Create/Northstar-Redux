@@ -1,10 +1,7 @@
 package com.lightning.northstar.contraption.rocket;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.NorthstarDataComponents;
-import com.lightning.northstar.content.NorthstarEntityTypes;
-import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.content.NorthstarSounds;
+import com.lightning.northstar.content.*;
 import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
@@ -155,6 +152,10 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
                 isInFlight = true;
             }
             if (!fuelBurned) { //We only burn the fuel once
+                if (getControllingPassenger() instanceof Player player) {
+                    player.awardStat(NorthstarStats.ROCKET_LAUNCHES);
+                }
+
                 if (contraption.fuelAmount() < contraption.fuelCost) {  //If we dont have enough fuel, disassemble
                     this.disassemble();
                 } else {
@@ -273,6 +274,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
 
                 //If auto-landing is disabled, explode the rocket if it hits the ground
                 if (landingMode && !auto_land_mode && Math.abs(final_lift_vel) > 3 && !hasExploded) {
+                    if (owner != null)
+                        owner.awardStat(NorthstarStats.ROCKET_CRASHES);
                     level.explode(this, getX(), getY() - 1, getZ(), 30, NorthstarPlanets.getPlanetOxy(destination), Level.ExplosionInteraction.MOB);
                     hasExploded = true;
                 }
@@ -285,7 +288,8 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
             move(0, final_lift_vel, 0);
             // TODO: non-seated entities still bug out visually
             for (Entity passenger : entitiesWithinContraption) {
-                if (passenger instanceof SuperGlueEntity) continue; //Make sure we are ignoring the super glue entity!
+                if (passenger instanceof SuperGlueEntity || passenger instanceof AbstractContraptionEntity)
+                    continue;
 
                 if (passenger.getVehicle() != this) { //If the entity is not a passenger of this rocket (contraption.getSeatOf(entity.getUUID()) == null)
                     EntityLockPacket.LockInfo lockInfo = entityLockMap.get(passenger.getUUID());
@@ -379,7 +383,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity {
 
         for (PassengerData data : passengers) {
             Entity newPassenger = data.entity.changeDimension(new DimensionTransition(transition.newLevel(), data.entity.position(), Vec3.ZERO, data.entity.getYRot(), data.entity.getXRot(), DimensionTransition.DO_NOTHING));
-            if (newPassenger == null) continue; // shouldn't happen unless this method is misused by another mod
+            if (newPassenger == null)
+                continue; // shouldn't happen unless this method is misused by another mod
+
+            if (newPassenger instanceof Player player) {
+                player.awardStat(NorthstarStats.ROCKET_TRAVELS);
+            }
             newPassenger.setPos(newRocket.position().add(data.offset));
             if (data.seat != -1)
                 newRocket.addSittingPassenger(newPassenger, data.seat);

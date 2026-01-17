@@ -31,7 +31,6 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
     protected final BaseTemperatureRegulator regulator = new BaseTemperatureRegulator();
 
-    protected int sealCooldown;
     protected boolean active;
 
     public TemperatureRegulatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -63,14 +62,9 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
     public void tick() {
         super.tick();
 
-        var sealer = regulator.sealer;
-        if (sealer.isSealInProgress()) {
-            if (sealer.updateSeal(level, getMaximumSealedBlocks())) {
-                sealCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
-                level.northstar$temperature().enqueueUpdates(sealer.getUpdatedBlocks());
-            }
-        } else if (sealCooldown-- <= 0) {
-            sealer.beginSeal(level, worldPosition, null);
+        ProgressiveBlockSealer sealer = regulator.sealer;
+        if (sealer.processSeal(level, worldPosition, null, getMaximumSealedBlocks())) {
+            level.northstar$temperature().enqueueUpdates(sealer.getUpdatedBlocks());
         }
 
         sealer.renderLeakPath(level);
@@ -147,7 +141,7 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
         regulator.sealer.addToGoggleTooltip(tooltip, getMaximumSealedBlocks(), isPlayerSneaking);
         if (isPlayerSneaking)
-            regulator.sealer.addCooldownTooltip(tooltip, sealCooldown, getMaximumSealedBlocks());
+            regulator.sealer.addCooldownTooltip(tooltip, getMaximumSealedBlocks());
 
         return true;
     }

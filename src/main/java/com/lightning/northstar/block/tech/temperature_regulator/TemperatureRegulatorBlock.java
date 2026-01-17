@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.tterrag.registrate.util.RegistrateDistExecutor;
@@ -40,12 +41,14 @@ public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, this::openScreen));
+        player.awardStat(NorthstarStats.INTERACT_WITH_TEMPERATURE_REGULATOR);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, this::openScreen));
+        player.awardStat(NorthstarStats.INTERACT_WITH_TEMPERATURE_REGULATOR);
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 

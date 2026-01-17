@@ -35,9 +35,9 @@ public class NorthstarItems {
     }
 
     public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_TITANIUM_INGOT =
-            sequencedIngredient("incomplete_titanium_ingot",
-                    b -> b.model((c, p) -> p.generated(c::get, p.modLoc("item/titanium_incomplete")))
-                            .lang("Unforged Titanium Ingot"));
+            sequencedIngredient("incomplete_titanium_ingot", b -> b
+                    .model((c, p) -> p.generated(c::get, p.modLoc("item/titanium_incomplete")))
+                    .lang("Unforged Titanium Ingot"));
 
     public static final ItemEntry<Item> RAW_TITANIUM_ORE = REGISTRATE
             .item("raw_titanium_ore", Item::new)
@@ -50,7 +50,7 @@ public class NorthstarItems {
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
             .item("titanium_ingot", Item::new)
             .tag(ItemTags.BEACON_PAYMENT_ITEMS)
-            .tag(NorthstarItemTags.C_INGOTS.tag)
+            .tag(Tags.Items.INGOTS)
             .tag(NorthstarItemTags.C_INGOTS_TITANIUM.tag)
             .register();
 
@@ -62,7 +62,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TITANIUM_NUGGET = REGISTRATE
             .item("titanium_nugget", Item::new)
-            .tag(NorthstarItemTags.C_NUGGETS.tag)
+            .tag(Tags.Items.NUGGETS)
             .tag(NorthstarItemTags.C_NUGGETS_TITANIUM.tag)
             .register();
 
@@ -79,7 +79,7 @@ public class NorthstarItems {
     public static final ItemEntry<Item> VOLCANIC_ASH = REGISTRATE
             .item("volcanic_ash_item", Item::new)
             .lang("Volcanic Ash")
-            .tag(NorthstarItemTags.C_DUSTS.tag)
+            .tag(Tags.Items.DUSTS)
             .tag(NorthstarItemTags.C_DUSTS_VOLCANIC_ASH.tag)
             .model((c, p) -> p.generated(c::get, p.modLoc("item/volcanic_ash")))
             .register();
@@ -117,7 +117,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> TUNGSTEN_NUGGET = REGISTRATE
             .item("tungsten_nugget", Item::new)
-            .tag(NorthstarItemTags.C_NUGGETS.tag)
+            .tag(Tags.Items.NUGGETS)
             .tag(NorthstarItemTags.C_NUGGETS_TUNGSTEN.tag)
             .register();
 
@@ -134,7 +134,7 @@ public class NorthstarItems {
             .item("martian_steel", Item::new)
             .lang("Martian Steel Ingot")
             .tag(ItemTags.BEACON_PAYMENT_ITEMS)
-            .tag(NorthstarItemTags.C_INGOTS.tag)
+            .tag(Tags.Items.INGOTS)
             .tag(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL.tag)
             .register();
 
@@ -147,7 +147,7 @@ public class NorthstarItems {
     public static final ItemEntry<Item> TUNGSTEN_INGOT = REGISTRATE
             .item("tungsten_ingot", Item::new)
             .tag(ItemTags.BEACON_PAYMENT_ITEMS)
-            .tag(NorthstarItemTags.C_INGOTS.tag)
+            .tag(Tags.Items.INGOTS)
             .tag(NorthstarItemTags.C_INGOTS_TUNGSTEN.tag)
             .register();
 
@@ -193,6 +193,7 @@ public class NorthstarItems {
                     .attributes(PickaxeItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 1, -2.8f)))
             .model((c, p) -> p.handheld(c::get))
             .tag(ItemTags.PICKAXES)
+            .tag(Tags.Items.TOOLS)
             .register();
 
     public static final ItemEntry<ShovelItem> MARTIAN_SHOVEL = REGISTRATE
@@ -202,6 +203,7 @@ public class NorthstarItems {
                     .attributes(ShovelItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 1.5f, -3.0f)))
             .model((c, p) -> p.handheld(c::get))
             .tag(ItemTags.SHOVELS)
+            .tag(Tags.Items.TOOLS)
             .register();
 
     public static final ItemEntry<AxeItem> MARTIAN_AXE = REGISTRATE
@@ -211,6 +213,7 @@ public class NorthstarItems {
                     .attributes(AxeItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, 5, -3.0f)))
             .model((c, p) -> p.handheld(c::get))
             .tag(ItemTags.AXES)
+            .tag(Tags.Items.TOOLS)
             .register();
 
     public static final ItemEntry<HoeItem> MARTIAN_HOE = REGISTRATE
@@ -220,6 +223,7 @@ public class NorthstarItems {
                     .attributes(HoeItem.createAttributes(NorthstarToolTiers.MARTIAN_STEEL, -2, 0.0f)))
             .model((c, p) -> p.handheld(c::get))
             .tag(ItemTags.HOES)
+            .tag(Tags.Items.TOOLS)
             .register();
 
     public static final ItemEntry<ArmorItem> MARTIAN_STEEL_HELMET = REGISTRATE
@@ -562,7 +566,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> SALT = REGISTRATE
             .item("salt", Item::new)
-            .tag(NorthstarItemTags.C_DUSTS.tag)
+            .tag(Tags.Items.DUSTS)
             .tag(NorthstarItemTags.C_DUSTS_SALT.tag)
             .register();
 

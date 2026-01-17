@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_sealer;
 
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -24,6 +25,10 @@ public class OxygenSealerMovingInteractionBehaviour extends MovingInteractionBeh
         MovementContext ctx = actor.right;
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingOxygenSealer sealer))
             return false;
+
+        if (!player.level().isClientSide()) {
+            player.awardStat(NorthstarStats.INTERACT_WITH_OXYGEN_SEALER);
+        }
 
         RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(sealer));
         return true;

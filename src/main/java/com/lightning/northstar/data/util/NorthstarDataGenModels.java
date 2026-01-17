@@ -60,6 +60,14 @@ public class NorthstarDataGenModels {
         return (c, p) -> p.simpleBlock(c.get(), p.models().cross(c.getName(), p.blockTexture(c.get())).renderType(renderType));
     }
 
+    public static <B extends Block> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> directionalCrossCutoutMipped() {
+        return directionalCrossCutoutMipped("cutout_mipped");
+    }
+
+    public static <B extends Block> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> directionalCrossCutoutMipped(String renderType) {
+        return (c, p) -> p.directionalBlock(c.get(), p.models().cross(c.getName(), p.blockTexture(c.get())).renderType(renderType));
+    }
+
     public static <B extends LanternBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> lantern() {
         return (c, p) -> p.getVariantBuilder(c.get())
                 .partialState()
