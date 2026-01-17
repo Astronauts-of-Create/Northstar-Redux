@@ -48,7 +48,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
     }
 
     private final static float MIN_ROTOR_WIDTH = 1.3f;
-    private final static float MAX_ROTOR_WIDTH = 1.8f;
+    private final static float MAX_ROTOR_WIDTH = 1.7f;
     private final static float SINGLE_FAN_BLADE_SIZE = 0.5f - 0.5f / 16f;
     private static final float CHAIN_SIZE = 3f;
     private static final float CHAIN_LENGTH = 3f / CHAIN_SIZE;
@@ -85,15 +85,16 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         float size = be.width == 1 ?
                 0.5f - 2f / 16f : // special case as the single block casing is thicker
                 (be.width - 8f / 16f) * 0.5f;
+        float shaftScale = size < 1 ? size : size * 0.5f;
 
-        Vector3f scale = switch (axis) {
+        Vector3f scale2 = switch (axis) {
             case X -> this.scale.set(0.999f, 1, 1);
             case Y -> this.scale.set(1, 0.999f, 1);
             case Z -> this.scale.set(1, 1, 0.999f);
         };
         CachedBuffers.block(AllBlocks.SHAFT.getDefaultState().setValue(BlockStateProperties.AXIS, axis))
                 .translate(center)
-                .scale(scale)
+                .scale(scale2)
                 .rotate(axis, angle)
                 .uncenter()
                 .light(light)
@@ -119,12 +120,12 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
                 scale2.set(bladeSize);
             }
             CachedBuffers.partialFacing(NorthstarPartialModels.LARGE_FAN_ROTOR, state, dir)
-                .translate(center)
-                .scale(scale2)
-                .rotate(axis, angle)
-                .uncenter()
-                .light(light)
-                .renderInto(ms, buffer.getBuffer(RenderType.solid()));
+                    .translate(center)
+                    .scale(scale2)
+                    .rotate(axis, angle)
+                    .uncenter()
+                    .light(light)
+                    .renderInto(ms, buffer.getBuffer(RenderType.solid()));
         }
 
         if (be.chain != null)
