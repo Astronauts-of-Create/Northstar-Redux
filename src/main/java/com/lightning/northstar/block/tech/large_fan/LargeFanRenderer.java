@@ -135,7 +135,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
 
     // not the prettiest code but it works. and yes the chain is very slightly skewed to avoid computing the side vector 3 times.
     // but it shouldn't be a problem unless the fan is thousands of blocks wide (and even then it might not be noticeable)
-    private static final float CHAIN_SIZE = 2.5f;
+    private static final float CHAIN_SIZE = 3f;
     private static final float CHAIN_LENGTH = 3f / CHAIN_SIZE;
     private static final float CHAIN_WIDTH1 = (CHAIN_SIZE) / 16f;
     private static final float CHAIN_WIDTH2 = (2f * CHAIN_SIZE) / 16f;
