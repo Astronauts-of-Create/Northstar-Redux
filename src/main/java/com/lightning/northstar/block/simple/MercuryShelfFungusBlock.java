@@ -1,8 +1,8 @@
 package com.lightning.northstar.block.simple;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -23,22 +23,26 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MercuryShelfFungusBlock extends Block implements ProperWaterloggedBlock {
 
     public static final int MIN_SHELVES = 1;
     public static final int MAX_SHELVES = 6;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final IntegerProperty SHELVES = IntegerProperty.create("shelves", 1, 6);
-    public static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
+    public static final IntegerProperty SHELVES = IntegerProperty.create("shelves", MIN_SHELVES, MAX_SHELVES);
+    public static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(Map.of(
             Direction.NORTH, Block.box(2D, 3, 11, 14, 13, 16),
             Direction.SOUTH, Block.box(2D, 3, 0, 14, 13, 5),
             Direction.WEST, Block.box(11, 3, 2D, 16, 13, 14),
-            Direction.EAST, Block.box(0, 3, 2D, 5, 13, 14)));
+            Direction.EAST, Block.box(0, 3, 2D, 5, 13, 14)
+    ));
 
-    public MercuryShelfFungusBlock(BlockBehaviour.Properties pProperties) {
-        super(pProperties);
+    public MercuryShelfFungusBlock(BlockBehaviour.Properties properties) {
+        super(properties);
 
         registerDefaultState(defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
