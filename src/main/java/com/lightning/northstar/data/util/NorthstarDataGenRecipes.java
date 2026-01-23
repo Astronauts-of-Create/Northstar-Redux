@@ -176,7 +176,7 @@ public class NorthstarDataGenRecipes {
                 REDSTONE = new OreType(() -> Items.REDSTONE, 6.5f, 250, () -> Items.REDSTONE, 0.7f, 200),
                 TITANIUM = new OreType(NorthstarItems.RAW_TITANIUM_ORE::get, 1.75f, 350, NorthstarItems.TITANIUM_INGOT::get, 1.0f, 200),
                 TUNGSTEN = new OreType(NorthstarItems.CRUSHED_RAW_TUNGSTEN::get, 1.75f, 450, NorthstarItems.TUNGSTEN_INGOT::get, 1.0f, 200),
-                ZINC = new OreType(() -> Items.IRON_INGOT, 1.75f, 250),
+                ZINC = new OreType(AllItems.CRUSHED_ZINC::get, 1.75f, 250, () -> AllItems.ZINC_INGOT, 1.0f, 200),
                 DEEP_COAL = COAL.with(2.25f, 300),
                 DEEP_COPPER = COPPER.with(7.25f, 350),
                 DEEP_DIAMOND = DIAMOND.with(2.25f, 450),
