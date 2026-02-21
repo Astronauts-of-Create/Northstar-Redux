@@ -35,9 +35,9 @@ public class NorthstarItems {
     }
 
     public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_TITANIUM_INGOT =
-            sequencedIngredient("incomplete_titanium_ingot",
-                    b -> b.model((c, p) -> p.generated(c::get, p.modLoc("item/titanium_incomplete")))
-                            .lang("Unforged Titanium Ingot"));
+            sequencedIngredient("incomplete_titanium_ingot", b -> b
+                    .model((c, p) -> p.generated(c::get, p.modLoc("item/titanium_incomplete")))
+                    .lang("Unforged Titanium Ingot"));
 
     public static final ItemEntry<Item> RAW_TITANIUM_ORE = REGISTRATE
             .item("raw_titanium_ore", Item::new)

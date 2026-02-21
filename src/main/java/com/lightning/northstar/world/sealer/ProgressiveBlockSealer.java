@@ -51,6 +51,8 @@ public class ProgressiveBlockSealer {
     private boolean hasLeak;
     private int extraVolume;
 
+    private int checkCooldown;
+
     private SealerDebugVisualizer visualizer = SealerDebugVisualizer.NOOP;
 
     public ProgressiveBlockSealer(SealingMode mode) {
@@ -59,15 +61,35 @@ public class ProgressiveBlockSealer {
         visited.defaultReturnValue(START_MARKER);
     }
 
+    /** @return if the sealing process is complete and the seal has been updated */
+    public boolean processSeal(Level level, BlockPos origin, @Nullable Direction originDirection, int maximumSealed) {
+        if (isSealInProgress()) {
+            return updateSeal(level, maximumSealed);
+        }
+
+        if (--checkCooldown <= 0) {
+            checkCooldown = NorthstarConfigs.server().sealerCheckDelay.get();
+            return !beginSeal(level, origin, originDirection);
+        }
+
+        return false;
+    }
+
+    /** @return if the sealing process has started */
     public boolean beginSeal(Level level, BlockPos origin, @Nullable Direction originDirection) {
+        visited.clear();
+        queue.clear();
+        bounds.neg();
+        updatedBlocks.clear();
+
+        extraCheckedPerTick = 0;
+        extraCheckedVolume = 0;
+
         if (originDirection != null) {
             tempPos1.setWithOffset(origin, originDirection);
             if (isFaceOccluded(level, tempPos1, originDirection.getOpposite(), false, mode)) {
-                sealedBounds.zero();
-                sealedBlocks.clear();
-                hasLeak = false;
-                extraVolume = 0;
-                visualizer.complete();
+                bounds.zero();
+                onSealComplete(0, START_MARKER);
                 return false;
             }
         } else {
@@ -78,16 +100,8 @@ public class ProgressiveBlockSealer {
             visualizer = NorthstarConfigs.client().debugSealerBounds.get() ? new SealerDebugVisualizer.Client() : SealerDebugVisualizer.NOOP;
         }
 
-        visited.clear();
-        queue.clear();
-        bounds.neg();
-        updatedBlocks.clear();
-
         visited.put(tempPos1.asLong(), START_MARKER);
         queue.enqueue(tempPos1.asLong());
-
-        extraCheckedPerTick = 0;
-        extraCheckedVolume = 0;
 
         bounds.union(origin);
         bounds.union(tempPos1);
@@ -309,6 +323,10 @@ public class ProgressiveBlockSealer {
         }
     }
 
+    public void addCooldownTooltip(List<Component> tooltip, int maximumSealed) {
+        addCooldownTooltip(tooltip, checkCooldown, maximumSealed);
+    }
+
     public void addCooldownTooltip(List<Component> tooltip, int cooldown, int maximumSealed) {
         if (cooldown > 0) {
             NorthstarLang.translate("gui.goggles.sealer.cooldown")
@@ -354,4 +372,7 @@ public class ProgressiveBlockSealer {
         return sealedBlocks.size();
     }
 
+    public int getCheckCooldown() {
+        return checkCooldown;
+    }
 }

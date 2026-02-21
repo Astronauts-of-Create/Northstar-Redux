@@ -31,11 +31,8 @@ public class MovingOxygenSealer implements NorthstarOxygen.Provider {
     }
 
     void tick(MovementContext context) {
-        if (sealer.isSealInProgress()) {
-            sealer.updateSeal(context.contraption.getContraptionWorld(), NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get());
-        } else {
-            sealer.beginSeal(context.contraption.getContraptionWorld(), context.localPos, Direction.UP);
-        }
+        sealer.processSeal(context.contraption.getContraptionWorld(), context.localPos, Direction.UP,
+                NorthstarConfigs.server().oxygenSealerMaxContraptionSealed.get());
 
         if (sealer.hasLeak()) {
             if (showLeak)
