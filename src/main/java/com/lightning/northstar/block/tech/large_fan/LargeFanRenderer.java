@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.large_fan;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarPartialModels;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -44,16 +45,25 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
     private final Vector3f chainB = new Vector3f();
     private final Vector3f side = new Vector3f();
 
-    public LargeFanRenderer(BlockEntityRendererProvider.Context context) {
-    }
+    private final boolean CONSTANT_SHAFT_WIDTH;
 
     private final static float MIN_ROTOR_WIDTH = 1.3f;
     private final static float MAX_ROTOR_WIDTH = 1.7f;
     private final static float SINGLE_FAN_BLADE_SIZE = 0.5f - 0.5f / 16f;
-    private static final float CHAIN_SIZE = 3f;
-    private static final float CHAIN_LENGTH = 3f / CHAIN_SIZE;
-    private static final float CHAIN_WIDTH1 = (CHAIN_SIZE) / 16f;
-    private static final float CHAIN_WIDTH2 = (2f * CHAIN_SIZE) / 16f;
+
+    private final float CHAIN_LENGTH;
+    private final float CHAIN_WIDTH1;
+    private final float CHAIN_WIDTH2;
+
+    public LargeFanRenderer(BlockEntityRendererProvider.Context context) {
+        //Original chain size is 1
+        CHAIN_LENGTH = 3f / NorthstarConfigs.client().largeFanChainSize.getF();//3 (3/1=3)
+        CHAIN_WIDTH1 = (NorthstarConfigs.client().largeFanChainSize.getF()) / 16f;
+        CHAIN_WIDTH2 = (2f * NorthstarConfigs.client().largeFanChainSize.getF()) / 16f;
+
+        CONSTANT_SHAFT_WIDTH = NorthstarConfigs.client().largeFanConstantShaftWidth.get();
+    }
+
 
     @Override
     protected void renderSafe(LargeFanBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
@@ -81,47 +91,59 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         float rot = be.angle + be.effectiveSpeed.getValue() / (20 * 60) * partialTicks;
         float angle = rot * Mth.TWO_PI;
         int blades = be.blades;
+        float shaftScale = 1;
+        float size;
 
-        float size = be.width == 1 ?
-                0.5f - 2f / 16f : // special case as the single block casing is thicker
-                (be.width - 8f / 16f) * 0.5f;
-        float shaftScale = size < 1 ? size : size * 0.5f;
 
-        Vector3f scale2 = switch (axis) {
-            case X -> this.scale.set(0.999f, 1, 1);
-            case Y -> this.scale.set(1, 0.999f, 1);
-            case Z -> this.scale.set(1, 1, 0.999f);
+        if (CONSTANT_SHAFT_WIDTH) {
+            size = be.width == 1 ?
+                    SINGLE_FAN_BLADE_SIZE :
+                    (be.width - 5f / 16f) * 0.5f;
+        } else {
+            size = be.width == 1 ?
+                    0.5f - 2f / 16f : // special case as the single block casing is thicker
+                    (be.width - 8f / 16f) * 0.5f;
+            shaftScale = size < 1 ? size : size * 0.5f;
+        }
+
+        Vector3f scale = switch (axis) {
+            case X -> this.scale.set(0.999f, shaftScale, shaftScale);
+            case Y -> this.scale.set(shaftScale, 0.999f, shaftScale);
+            case Z -> this.scale.set(shaftScale, shaftScale, 0.999f);
         };
         CachedBuffers.block(AllBlocks.SHAFT.getDefaultState().setValue(BlockStateProperties.AXIS, axis))
                 .translate(center)
-                .scale(scale2)
+                .scale(scale)
                 .rotate(axis, angle)
                 .uncenter()
                 .light(light)
                 .renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-        float bladeSize = be.width == 1 ? SINGLE_FAN_BLADE_SIZE : (be.width - 5f / 16f) * 0.5f;
 
         //Draw the rotor
-        if (be.width > 1) {
-            if (bladeSize > MAX_ROTOR_WIDTH) {
-                switch (axis) {
-                    case X -> scale2.set(bladeSize, MAX_ROTOR_WIDTH, MAX_ROTOR_WIDTH);
-                    case Y -> scale2.set(MAX_ROTOR_WIDTH, bladeSize, MAX_ROTOR_WIDTH);
-                    case Z -> scale2.set(MAX_ROTOR_WIDTH, MAX_ROTOR_WIDTH, bladeSize);
-                }
-            } else if (bladeSize < MIN_ROTOR_WIDTH) {
-                switch (axis) {
-                    case X -> scale2.set(bladeSize, MIN_ROTOR_WIDTH, MIN_ROTOR_WIDTH);
-                    case Y -> scale2.set(MIN_ROTOR_WIDTH, bladeSize, MIN_ROTOR_WIDTH);
-                    case Z -> scale2.set(MIN_ROTOR_WIDTH, MIN_ROTOR_WIDTH, bladeSize);
+        if (be.width > 1 || !CONSTANT_SHAFT_WIDTH) {
+            if (CONSTANT_SHAFT_WIDTH) {
+                if (size < MIN_ROTOR_WIDTH) {
+                    switch (axis) {
+                        case X -> scale.set(size, MIN_ROTOR_WIDTH, MIN_ROTOR_WIDTH);
+                        case Y -> scale.set(MIN_ROTOR_WIDTH, size, MIN_ROTOR_WIDTH);
+                        case Z -> scale.set(MIN_ROTOR_WIDTH, MIN_ROTOR_WIDTH, size);
+                    }
+                } else if (size > MAX_ROTOR_WIDTH) {
+                    switch (axis) {
+                        case X -> scale.set(size, MAX_ROTOR_WIDTH, MAX_ROTOR_WIDTH);
+                        case Y -> scale.set(MAX_ROTOR_WIDTH, size, MAX_ROTOR_WIDTH);
+                        case Z -> scale.set(MAX_ROTOR_WIDTH, MAX_ROTOR_WIDTH, size);
+                    }
+                } else {
+                    scale.set(size);
                 }
             } else {
-                scale2.set(bladeSize);
+                scale.set(size);
             }
             CachedBuffers.partialFacing(NorthstarPartialModels.LARGE_FAN_ROTOR, state, dir)
                     .translate(center)
-                    .scale(scale2)
+                    .scale(scale)
                     .rotate(axis, angle)
                     .uncenter()
                     .light(light)
@@ -135,7 +157,7 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         for (int i = 0; i < blades; i++) {
             CachedBuffers.partial(NorthstarPartialModels.LARGE_FAN_BLADE, state)
                     .translate(center)
-                    .scale(bladeSize)
+                    .scale(size)
                     .rotate(axis, angle + Mth.TWO_PI * i / blades)
                     .rotateYDegrees(AngleHelper.horizontalAngle(dir))
                     .rotateXDegrees(AngleHelper.verticalAngle(dir))
@@ -151,7 +173,10 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         Vector3f step = CHAIN_STEP[(be.flipChain ? dir.getOpposite() : dir).ordinal()];
 
         Vector3f chainA = this.chainA.set(center).add(step);
-        Vector3f chainB = this.chainB.set(pos2.getX() - pos1.getX() + 0.5f, pos2.getY() - pos1.getY() + 0.5f, pos2.getZ() - pos1.getZ() + 0.5f).add(step);
+        Vector3f chainB = this.chainB.set(
+                pos2.getX() - pos1.getX() + 0.5f,
+                pos2.getY() - pos1.getY() + 0.5f,
+                pos2.getZ() - pos1.getZ() + 0.5f).add(step);
         float length = chainA.distance(chainB);
 
         Vector3f side = chainB.sub(chainA, this.side).mul(1f / length);
@@ -168,11 +193,17 @@ public class LargeFanRenderer extends SafeBlockEntityRenderer<LargeFanBlockEntit
         float spacing = shaftScale * 2f / 16f;
 
         renderChain(mm, mn, vc, chainA, chainB, side,
-                spacing - CHAIN_WIDTH1,// d1
+                spacing - CHAIN_WIDTH1, //d1
                 spacing,// d2
                 CHAIN_WIDTH2,// d3
                 CHAIN_WIDTH1,// d4
                 rot * 3, length * CHAIN_LENGTH, dir, light);
+
+        side.sub(//Prevents z-fighting
+                dir.getNormal().getX()*0.15f,
+                dir.getNormal().getY()*0.15f,
+                dir.getNormal().getZ()*0.15f);
+
         renderChain(mm, mn, vc, chainA, chainB, side,
                 -spacing + CHAIN_WIDTH1,// d1
                 -spacing,// d2
