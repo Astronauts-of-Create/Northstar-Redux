@@ -6,6 +6,7 @@ import com.lightning.northstar.data.Mod;
 import com.lightning.northstar.data.Tags;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -109,6 +110,7 @@ public record FuelType(
 
         Object2IntMap<Fluid> scores = new Object2IntOpenHashMap<>();
         TriConsumer<FuelType, Fluid, Integer> cache = (fuel, fluid, score) -> {
+            fluid = FluidHelper.convertToStill(fluid);
             if (scores.getInt(fluid) >= score)
                 return;
             scores.put(fluid, score);

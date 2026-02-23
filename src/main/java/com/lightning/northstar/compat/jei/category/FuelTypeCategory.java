@@ -5,6 +5,7 @@ import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -45,6 +46,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
         List<FluidStack> fluids = RegistryUtil.getRegistryAccess()
                 .registryOrThrow(Registries.FLUID)
                 .stream()
+                .map(FluidHelper::convertToStill)
                 .filter(recipe::supports)
                 .map(fluid -> new FluidStack(fluid, 1))
                 .toList();
