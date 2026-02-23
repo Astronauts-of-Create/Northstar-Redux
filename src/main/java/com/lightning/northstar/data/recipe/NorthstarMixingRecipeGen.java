@@ -14,7 +14,6 @@ import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
@@ -89,21 +88,6 @@ public class NorthstarMixingRecipeGen extends MixingRecipeGen {
                     .require(NorthstarFluidTags.C_CHLORINE.tag, 250)
                     .require(NorthstarFluidTags.C_CARBON.tag, 500)
                     .output(NorthstarFluids.TITANIUM_TETRACHLORIDE.get(), 1000)),
-
-    WATER_FROM_BLUE_ICE = create("water_from_blue_ice",
-            b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(Items.BLUE_ICE)
-                    .output(Fluids.WATER, 1000 * 9 * 9)),
-
-    WATER_FROM_PACKED_BLUE_ICE = create("water_from_packed_ice",
-            b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(Items.PACKED_ICE)
-                    .output(Fluids.WATER, 1000 * 9)),
-
-    WATER_FROM_ICE = create("water_from_ice",
-            b -> b.requiresHeat(HeatCondition.HEATED)
-                    .require(Items.ICE)
-                    .output(Fluids.WATER, 1000)),
 
     WATER_FROM_SNOW = create("water_from_snow",
             b -> b.requiresHeat(HeatCondition.HEATED)
