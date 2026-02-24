@@ -172,7 +172,7 @@ public class NorthstarItems {
 
     public static final ItemEntry<SequencedAssemblyItem> DORMANT_MARTIAN_SEED_SEQUENCED =
             sequencedIngredient("dormant_martian_seed_sequenced", b -> b
-                    .lang("Dormant Martian Seed")
+                    .lang("Dormant Martian Seeds")
                     .model((c, p) -> p.generated(c::get, p.modLoc("item/dormant_martian_seed"))));
 
     // region armor and tools

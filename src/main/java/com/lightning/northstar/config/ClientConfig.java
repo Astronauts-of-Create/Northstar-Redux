@@ -11,6 +11,9 @@ public class ClientConfig extends ConfigBase {
     public ConfigGroup debug = group(1, "debug");
     public ConfigBool debugSealerBounds = b(false, "debugSealerBounds");
 
+    public ConfigFloat largeFanChainSize = f(1f,1f,3f, "largeFanChainSize");
+    public ConfigBool largeFanConstantShaftWidth = b(false, "largeFanConstantShaftWidth");
+
     @Override
     public @NotNull String getName() {
         return "client";
