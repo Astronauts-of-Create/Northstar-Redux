@@ -39,7 +39,7 @@ side = "BOTH"
 modId = "create"
 type = "required"
 versionRange = "[6.0,)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.northstar]]
