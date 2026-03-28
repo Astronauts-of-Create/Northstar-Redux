@@ -21,7 +21,6 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.createmod.catnip.data.WorldAttached;
@@ -34,6 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -107,7 +107,7 @@ public class RocketStationBlockEntity extends SmartBlockEntity implements IDispl
     @Override
     public void destroy() {
         super.destroy();
-        ItemHelper.dropContents(level, worldPosition, inventory);
+        Containers.dropContents(level, worldPosition, container);
     }
 
     public void queueAssembly(Player player) {
