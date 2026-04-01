@@ -1,8 +1,0 @@
-accessWidener v2 named
-
-# Pretty sure Forge has its own system but it doesn't matter as those are only use for the datagen
-#  so it's loom taking care of it and not forge
-accessible field net/minecraft/data/loot/BlockLootSubProvider HAS_SILK_TOUCH Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition$Builder;
-accessible field net/minecraft/data/loot/BlockLootSubProvider HAS_SHEARS Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition$Builder;
-accessible method net/minecraft/data/loot/BlockLootSubProvider createSinglePropConditionTable (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
-extendable method net/minecraft/data/recipes/RecipeProvider getName ()Ljava/lang/String;
