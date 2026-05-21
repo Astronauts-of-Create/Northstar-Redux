@@ -2,6 +2,8 @@
 flywheel = "1.0.6-beta-266"
 mixinextras = "0.5.0"
 ponder = "1.0.91"
+valkyrienskies-mod = "2.5.0+171b2cfa0a"
+valkyrienskies-api = "1.1.0+4a7e0044b9"
 
 [libraries]
 architectury = "dev.architectury:architectury-forge:9.1.12"
@@ -12,6 +14,7 @@ flywheel-forge-api = { module = "dev.engine-room.flywheel:flywheel-forge-api-1.2
 flywheel-forge = { module = "dev.engine-room.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"
 jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.130"
+kotlinforforge = "maven.modrinth:kotlin-for-forge:4.11.0"
 kubejs = "dev.latvian.mods:kubejs-forge:2001.6.5-build.16"
 mixin = "org.spongepowered:mixin:0.8.7"
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
@@ -21,3 +24,7 @@ ponder-forge = { module = "net.createmod.ponder:Ponder-Forge-1.20.1", version.re
 registrate = "com.tterrag.registrate:Registrate:MC1.20-1.3.3"
 rhino = "dev.latvian.mods:rhino-forge:2001.2.3-build.10"
 tfmg = "curse.maven:create-industry-693815:7236535" # 1.2.0d, not on Modrinth nor GitHub "maven.modrinth:create-tfmg:1.0.2d"
+valkyrienskies-mod-forge = { module = "org.valkyrienskies:valkyrienskies-120-forge", version.ref = "valkyrienskies-mod" }
+valkyrienskies-api = { module = "org.valkyrienskies.core:api", version.ref = "valkyrienskies-api" }
+valkyrienskies-internal = { module = "org.valkyrienskies.core:internal", version.ref = "valkyrienskies-api" }
+valkyrienskies-util = { module = "org.valkyrienskies.core:util", version.ref = "valkyrienskies-api" }

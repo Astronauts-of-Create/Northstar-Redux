@@ -1,0 +1,7 @@
+{
+  "dimensionId": "minecraft:dimension:northstar:mars",
+  "maxYPos": 1000,
+  "seaLevel": 40,
+  "gravity": [0.0, -3.73, 0.0],
+  "priority": 1000
+}

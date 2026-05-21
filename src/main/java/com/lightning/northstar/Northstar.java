@@ -3,10 +3,12 @@ package com.lightning.northstar;
 import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
+import com.lightning.northstar.compat.vs2.NorthstarValkyrienSkies;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.content.world.NorthstarFeatures;
 import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.planet.data.PlanetDimension;
@@ -106,6 +108,8 @@ public class Northstar {
         LevelFunction.register();
         OrbitProvider.register();
         PlanetSpriteRenderer.register();
+
+        ModCompat.VS2.executeIfLoaded(() -> NorthstarValkyrienSkies::init);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.clientInit(modEventBus, forgeEventBus));
     }

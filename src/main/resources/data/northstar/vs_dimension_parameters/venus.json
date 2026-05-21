@@ -1,0 +1,7 @@
+{
+  "dimensionId": "minecraft:dimension:northstar:venus",
+  "maxYPos": 1000,
+  "seaLevel": 50,
+  "gravity": [0.0, -8.87, 0.0],
+  "priority": 1000
+}

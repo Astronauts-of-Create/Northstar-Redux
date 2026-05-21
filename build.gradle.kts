@@ -4,6 +4,7 @@ plugins {
     `maven-publish`
     id("net.neoforged.moddev.legacyforge") version "2.0.141"
     id("net.kyori.blossom") version "2.2.0"
+    kotlin("jvm") version "2.1.21"
 }
 
 version = "0.5.4+1.20.1" // https://semver.org/
@@ -119,6 +120,11 @@ repositories {
             includeGroupByRegex("dev\\.latvian\\..*")
         }
     }
+    maven("https://maven.valkyrienskies.org") {
+        content {
+            includeGroupByRegex("org\\.valkyrienskies.*")
+        }
+    }
     flatDir { dir("run/mods-obf") }
 }
 
@@ -147,6 +153,14 @@ dependencies {
     modImplementation(libs.kubejs)
     modImplementation(libs.rhino)
     modImplementation(libs.tfmg)
+
+    modImplementation(libs.valkyrienskies.mod.forge)
+    implementation(libs.valkyrienskies.api) { isTransitive = false }
+    implementation(libs.valkyrienskies.util) { isTransitive = false }
+    implementation(libs.valkyrienskies.internal) { isTransitive = false }
+    implementation(libs.kotlinforforge)
+    compileOnly("org.joml:joml:1.10.4")
+    compileOnly("org.joml:joml-primitives:1.10.0")
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
     file("run/mods-obf").listFiles()?.forEach { modRuntimeOnly("local:${it.nameWithoutExtension}") }
