@@ -9,6 +9,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.sealer.transform.TransformProviders;
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.client.Minecraft;
@@ -57,6 +58,14 @@ public class NorthstarOxygen {
     }
 
     public Provider getSealer(Vec3 pos) {
+        return getSealerDirect(TransformProviders.getToWorld().applyTransformOrIdentity(level, pos));
+    }
+
+    public Provider getSealer(Vec3i pos) {
+        Vec3 transformed = TransformProviders.getToWorld().applyTransform(level, Vec3.atCenterOf(pos));
+        if (transformed != null) {
+            return getSealerDirect(transformed);
+        }
         for (Provider sealer : providers) {
             if (sealer.isSealed(pos)) {
                 return sealer;
@@ -65,7 +74,7 @@ public class NorthstarOxygen {
         return null;
     }
 
-    public Provider getSealer(Vec3i pos) {
+    private Provider getSealerDirect(Vec3 pos) {
         for (Provider sealer : providers) {
             if (sealer.isSealed(pos)) {
                 return sealer;

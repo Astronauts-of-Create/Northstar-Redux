@@ -8,6 +8,8 @@ import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.oxygen.OxygenTrackingSealer;
 import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.sealer.transform.TransformProvider;
+import com.lightning.northstar.world.sealer.transform.TransformProviders;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
@@ -42,6 +44,7 @@ import java.util.List;
 public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, NorthstarOxygen.Provider {
 
     protected final OxygenTrackingSealer sealer = new OxygenTrackingSealer(SealingMode.OXYGEN);
+    protected TransformProvider transform = TransformProvider.IDENTITY;
     protected SmartFluidTankBehaviour tank;
     protected float drain;
     protected float pendingDrain;
@@ -62,6 +65,8 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     @Override
     public void initialize() {
         super.initialize();
+
+        transform = TransformProviders.createFromWorld(level, worldPosition);
 
         level.northstar$oxygen().registerSealer(this);
     }
@@ -131,11 +136,16 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
 
     @Override
     public boolean isSealed(Vec3 pos) {
+        pos = transform.applyTransformOrIdentity(level, pos);
         return isSealed(Mth.floor(pos.x), Mth.floor(pos.y), Mth.floor(pos.z));
     }
 
     @Override
     public boolean isSealed(Vec3i pos) {
+        Vec3 transformed = transform.applyTransform(level, Vec3.atCenterOf(pos));
+        if (transformed != null) {
+            return isSealed(Mth.floor(transformed.x), Mth.floor(transformed.y), Mth.floor(transformed.z));
+        }
         return isSealed(pos.getX(), pos.getY(), pos.getZ());
     }
 
