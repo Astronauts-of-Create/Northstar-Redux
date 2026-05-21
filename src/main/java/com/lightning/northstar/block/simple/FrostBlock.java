@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FrostBlock extends MultifaceBlock {
+
     public static final BooleanProperty UP = PipeBlock.UP;
     public static final BooleanProperty DOWN = PipeBlock.DOWN;
     public static final BooleanProperty NORTH = PipeBlock.NORTH;
@@ -34,13 +35,14 @@ public class FrostBlock extends MultifaceBlock {
     public static final BooleanProperty SOUTH = PipeBlock.SOUTH;
     public static final BooleanProperty WEST = PipeBlock.WEST;
     public static final Map<Direction, BooleanProperty> PROPERTY_BY_DIRECTION = PipeBlock.PROPERTY_BY_DIRECTION.entrySet().stream().collect(Util.toMap());
-    protected static final float AABB_OFFSET = 1.0F;
-    private static final VoxelShape UP_AABB = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    private static final VoxelShape DOWN_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    private static final VoxelShape WEST_AABB = Block.box(0.0D, 0.0D, 0.0D, 1.0D, 16.0D, 16.0D);
-    private static final VoxelShape EAST_AABB = Block.box(15.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    private static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 1.0D);
-    private static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
+
+    private static final VoxelShape UP_AABB = Block.box(0, 15, 0, 16, 16, 16);
+    private static final VoxelShape DOWN_AABB = Block.box(0, 0, 0, 16, 1, 16);
+    private static final VoxelShape WEST_AABB = Block.box(0, 0, 0, 1, 16, 16);
+    private static final VoxelShape EAST_AABB = Block.box(15, 0, 0, 16, 16, 16);
+    private static final VoxelShape NORTH_AABB = Block.box(0, 0, 0, 16, 16, 1);
+    private static final VoxelShape SOUTH_AABB = Block.box(0, 0, 15, 16, 16, 16);
+
     public final MultifaceSpreader spreader = new MultifaceSpreader(this);
 
     private final Map<BlockState, VoxelShape> shapesCache;

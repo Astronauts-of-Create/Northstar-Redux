@@ -29,7 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class OxygenSealerBlock extends HorizontalKineticBlock implements IBE<OxygenSealerBlockEntity> {
 
-    protected static final VoxelShape SHAPE = Shapes.or(
+    public static final VoxelShape SHAPE = Shapes.or(
             box(0, 0, 0, 16, 12, 16),
             box(1, 12, 1, 15, 16, 15)
     );

@@ -29,10 +29,10 @@ import java.util.Optional;
 
 public class VenusMushroomBlock extends BushBlock implements BonemealableBlock {
 
-    protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
+    public static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
 
-    protected static final VoxelShape GROUND_SHAPE = box(5, 0, 5, 11, 6, 11);
-    protected static final VoxelShape CEILING_SHAPE = box(5, 10, 5, 11, 16, 11);
+    public static final VoxelShape GROUND_SHAPE = box(5, 0, 5, 11, 6, 11);
+    public static final VoxelShape CEILING_SHAPE = box(5, 10, 5, 11, 16, 11);
 
     private final ResourceKey<ConfiguredFeature<?, ?>> ground;
     private final ResourceKey<ConfiguredFeature<?, ?>> ceiling;
