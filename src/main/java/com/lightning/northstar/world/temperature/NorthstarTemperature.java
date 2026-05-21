@@ -9,6 +9,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
+import com.lightning.northstar.world.sealer.transform.TransformProviders;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
 import it.unimi.dsi.fastutil.longs.LongCollection;
@@ -59,9 +60,12 @@ public class NorthstarTemperature {
     }
 
     public float getTemperatureAt(Vec3 pos) {
+        return getTemperatureDirect(TransformProviders.getToWorld().applyTransformOrIdentity(level, pos));
+    }
+
+    private float getTemperatureDirect(Vec3 pos) {
         float temperature = 0;
         int count = 0;
-
         for (Provider provider : providers) {
             if (provider.isSealed(pos)) {
                 temperature += provider.getTemperature();
@@ -73,6 +77,11 @@ public class NorthstarTemperature {
     }
 
     public float getTemperatureAt(Vec3i pos) {
+        Vec3 transformed = TransformProviders.getToWorld().applyTransform(level, Vec3.atCenterOf(pos));
+        if (transformed != null) {
+            return getTemperatureDirect(transformed);
+        }
+
         float temperature = 0;
         int count = 0;
 
