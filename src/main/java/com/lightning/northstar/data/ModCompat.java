@@ -11,7 +11,8 @@ public enum ModCompat implements Mod {
     KJS("kubejs"),
     MEK("mekanism"),
     OCULUS("oculus"),
-    TFMG("tfmg");
+    TFMG("tfmg"),
+    VS2("valkyrienskies");
 
     @ApiStatus.Internal
     public static boolean HAS_JEI_RUNTIME;
