@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class TallFungusBlock extends TallFlowerBlock {
 
-    protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
+    public static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
 
     private final ResourceKey<ConfiguredFeature<?, ?>> ground;
     private final ResourceKey<ConfiguredFeature<?, ?>> ceiling;

@@ -17,10 +17,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class VenusTallMyceliumBlock extends BushBlock {
 
-    protected static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
+    public static final BooleanProperty IS_ON_CEILING = BooleanProperty.create("is_on_ceiling");
 
-    protected static final VoxelShape GROUND_SHAPE = box(2, 0, 2, 14, 13, 14);
-    protected static final VoxelShape CEILING_SHAPE = box(2, 3, 2, 14, 16, 14);
+    public static final VoxelShape GROUND_SHAPE = box(2, 0, 2, 14, 13, 14);
+    public static final VoxelShape CEILING_SHAPE = box(2, 3, 2, 14, 16, 14);
 
     public VenusTallMyceliumBlock(Properties properties) {
         super(properties);

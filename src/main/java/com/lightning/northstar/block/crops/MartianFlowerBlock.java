@@ -30,7 +30,7 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
 
     public static final int MAX_AGE = 2;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
-    protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D);
+    public static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 10.0D, 11.0D);
 
     public MartianFlowerBlock(BlockBehaviour.Properties properties) {
         super(properties);

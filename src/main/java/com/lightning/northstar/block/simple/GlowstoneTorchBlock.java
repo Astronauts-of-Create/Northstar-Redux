@@ -27,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class GlowstoneTorchBlock extends Block implements ProperWaterloggedBlock {
 
-    protected static final VoxelShape SHAPE = Block.box(6, 0, 6, 10, 10, 10);
+    public static final VoxelShape SHAPE = Block.box(6, 0, 6, 10, 10, 10);
 
     public GlowstoneTorchBlock(BlockBehaviour.Properties properties) {
         super(properties);

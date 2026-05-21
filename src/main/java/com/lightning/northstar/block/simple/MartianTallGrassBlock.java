@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.simple;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -9,17 +10,22 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class MartianTallGrassBlock extends BushBlock{
-    protected static final float AABB_OFFSET = 6.0F;
-    protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
-    
-    public MartianTallGrassBlock(Properties pProperties) {
-        super(pProperties);
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class MartianTallGrassBlock extends BushBlock {
+
+    public static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 13, 14);
+
+    public MartianTallGrassBlock(Properties properties) {
+        super(properties);
     }
-    
+
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        Vec3 vec3 = pState.getOffset(pLevel, pPos);
-        return SHAPE.move(vec3.x, vec3.y, vec3.z);
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        Vec3 offset = state.getOffset(level, pos);
+        return SHAPE.move(offset.x, offset.y, offset.z);
     }
+
 }

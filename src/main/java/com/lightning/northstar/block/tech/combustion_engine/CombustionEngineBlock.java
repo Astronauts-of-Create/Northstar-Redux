@@ -24,8 +24,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE<CombustionEngineBlockEntity>, OxygenConsumer {
 
-    protected static final VoxelShape SHAPE_AXIS_X = Block.box(0, 0, 2, 16, 13, 14);
-    protected static final VoxelShape SHAPE_AXIS_Z = Block.box(2, 0, 0, 14, 13, 16);
+    public static final VoxelShape SHAPE_AXIS_X = Block.box(0, 0, 2, 16, 13, 14);
+    public static final VoxelShape SHAPE_AXIS_Z = Block.box(2, 0, 0, 14, 13, 16);
 
     public CombustionEngineBlock(Properties properties) {
         super(properties);

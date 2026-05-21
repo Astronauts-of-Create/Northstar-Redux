@@ -24,8 +24,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class VenusVinesBlock extends Block implements BonemealableBlock {
-    protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
-    protected static final VoxelShape TIP_SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 16.0D, 12.0D);
+    public static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
+    public static final VoxelShape TIP_SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 16.0D, 12.0D);
     public static final BooleanProperty IS_TIP = BooleanProperty.create("is_tip");
     public static final IntegerProperty AGE = BlockStateProperties.AGE_25;
     public static final int MAX_AGE = 25;
