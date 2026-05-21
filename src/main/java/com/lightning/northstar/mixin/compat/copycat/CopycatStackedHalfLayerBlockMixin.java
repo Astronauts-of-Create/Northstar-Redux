@@ -32,8 +32,8 @@ public class CopycatStackedHalfLayerBlockMixin implements SealableBlock {
         SlabType testType = direction.getAxis() != Direction.Axis.Y ?
                 SlabType.DOUBLE :
                 direction.getAxisDirection() == Direction.AxisDirection.NEGATIVE ?
-                        SlabType.BOTTOM :
-                        SlabType.TOP;
+                SlabType.BOTTOM :
+                SlabType.TOP;
 
         return CopycatSealHelper.isSlabSealed(level, pos, testType, CopycatHalfLayerBlock.NEGATIVE_LAYERS.getName(), CopycatHalfLayerBlock.POSITIVE_LAYERS.getName());
     }

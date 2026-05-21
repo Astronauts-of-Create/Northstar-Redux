@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface Mod {
+
     String getModId();
 
     default ResourceLocation loc(String path) {
@@ -37,4 +38,5 @@ public interface Mod {
     default Item getItem(String id) {
         return BuiltInRegistries.ITEM.get(loc(id));
     }
+
 }

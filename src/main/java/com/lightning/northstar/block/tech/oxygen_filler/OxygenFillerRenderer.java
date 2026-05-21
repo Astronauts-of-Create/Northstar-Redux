@@ -19,26 +19,30 @@ public class OxygenFillerRenderer extends SafeBlockEntityRenderer<OxygenFillerBl
 
     @Override
     protected void renderSafe(OxygenFillerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-        ItemStack item = be.container.getItem(0);
-        if (!item.isEmpty()) {
-            ms.pushPose();
-            Direction direction = be.getBlockState().getValue(OxygenFillerBlock.HORIZONTAL_FACING);
+        render(be.container.getItem(0), ms, be.getBlockState().getValue(OxygenFillerBlock.HORIZONTAL_FACING), buffer, light, overlay);
+    }
 
-            switch (direction) {
-                case NORTH -> ms.translate(0.5f, 0.35f, 0.25f);
-                case SOUTH -> ms.translate(0.5f, 0.35f, 0.75f);
-                case EAST -> ms.translate(0.75f, 0.35f, 0.5f);
-                case WEST -> ms.translate(0.25f, 0.35f, 0.5f);
-            }
-
-            TransformStack.of(ms).rotateY(AngleHelper.horizontalAngle(direction) * Mth.DEG_TO_RAD);
-
-            Minecraft.getInstance()
-                    .getItemRenderer()
-                    .renderStatic(item, ItemDisplayContext.GROUND, light, overlay, ms, buffer, null, 0);
-
-            ms.popPose();
+    public static void render(ItemStack item, PoseStack ms, Direction direction, MultiBufferSource buffer, int light, int overlay) {
+        if (item.isEmpty()) {
+            return;
         }
+
+        ms.pushPose();
+
+        switch (direction) {
+            case NORTH -> ms.translate(0.5f, 0.35f, 0.25f);
+            case SOUTH -> ms.translate(0.5f, 0.35f, 0.75f);
+            case EAST -> ms.translate(0.75f, 0.35f, 0.5f);
+            case WEST -> ms.translate(0.25f, 0.35f, 0.5f);
+        }
+
+        TransformStack.of(ms).rotateY(AngleHelper.horizontalAngle(direction) * Mth.DEG_TO_RAD);
+
+        Minecraft.getInstance()
+                .getItemRenderer()
+                .renderStatic(item, ItemDisplayContext.GROUND, light, overlay, ms, buffer, null, 0);
+
+        ms.popPose();
     }
 
 }

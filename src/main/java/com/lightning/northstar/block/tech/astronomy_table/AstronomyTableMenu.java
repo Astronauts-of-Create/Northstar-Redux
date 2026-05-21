@@ -2,14 +2,20 @@ package com.lightning.northstar.block.tech.astronomy_table;
 
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarMenuTypes;
+import com.lightning.northstar.item.atlas.SpaceAtlasContent;
+import com.lightning.northstar.planet.Planet;
+import com.lightning.northstar.planet.PlanetTracker;
+import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -19,11 +25,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
 
-    public Component errorMessage;
+    public boolean hasError = false;
+    public List<Component> messages = List.of();
 
     protected SimpleContainer inputSlots;
     protected ResultContainer resultSlots;
@@ -41,16 +57,14 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
     }
 
     @Override
+    @Nullable
     protected AstronomyTableBlockEntity createOnClient(FriendlyByteBuf extraData) {
-        if (Minecraft.getInstance().level.getBlockEntity(extraData.readBlockPos()) instanceof AstronomyTableBlockEntity be) {
-            return be;
-        }
-        return null;
+        return Minecraft.getInstance().level.getBlockEntity(extraData.readBlockPos()) instanceof AstronomyTableBlockEntity be ? be : null;
     }
 
     @Override
     protected void initAndReadInventory(AstronomyTableBlockEntity contentHolder) {
-        inputSlots = new SimpleContainer(3);
+        inputSlots = new SimpleContainer(2);
         resultSlots = new ResultContainer();
 
         inputSlots.addListener(container -> updateResult());
@@ -58,21 +72,24 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
 
     @Override
     protected void addSlots() {
-        class InputSlot extends Slot {
-            public InputSlot(Container container, int slot, int x, int y) {
+        class FilteredSlot extends Slot {
+            private final ItemLike allowed;
+
+            public FilteredSlot(Container container, int slot, int x, int y, ItemLike allowed) {
                 super(container, slot, x, y);
+                this.allowed = allowed;
             }
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(NorthstarItems.ASTRONOMICAL_READING.get());
+                return stack.is(allowed.asItem());
             }
         }
+        class ResultSlot extends Slot {
+            public ResultSlot(Container container, int slot, int x, int y) {
+                super(container, slot, x, y);
+            }
 
-        addSlot(new InputSlot(inputSlots, 0, 24, 47));
-        addSlot(new InputSlot(inputSlots, 1, 80, 47));
-        addSlot(new InputSlot(inputSlots, 2, 52, 27));
-        addSlot(new Slot(resultSlots, 3, 134, 47) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -80,12 +97,17 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
 
             @Override
             public void onTake(Player player, ItemStack stack) {
-                for (int i = 0; i < 3; i++) {
-                    inputSlots.getItem(i).setCount(inputSlots.getItem(i).getCount() - 1);
+                for (int i = 0; i < 2; i++) {
+                    inputSlots.getItem(i).shrink(1);
                 }
                 player.level().playSound(player, contentHolder.getBlockPos(), SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 1.0F, 1.0F);
+                updateResult();
             }
-        });
+        }
+
+        addSlot(new FilteredSlot(inputSlots, 0, 26, 56, NorthstarItems.SPACE_ATLAS));
+        addSlot(new FilteredSlot(inputSlots, 1, 80, 56, NorthstarItems.ASTRONOMICAL_READING));
+        addSlot(new ResultSlot(resultSlots, 0, 134, 56));
 
         addPlayerSlots(8, 84);
     }
@@ -103,105 +125,111 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
     }
 
     public void updateResult() {
-        errorMessage = null;
+        hasError = true;
+        messages = List.of();
         resultSlots.clearContent();
 
-        ItemStack item1 = inputSlots.getItem(0);
-        ItemStack item2 = inputSlots.getItem(1);
-        ItemStack item3 = inputSlots.getItem(2);
-        CompoundTag compound1 = item1.getTagElement("Planet");
-        CompoundTag compound2 = item2.getTagElement("Planet");
-        CompoundTag compound3 = item3.getTagElement("Planet");
-        if (compound1 == null || compound2 == null || compound3 == null ||
-                !compound1.contains("name", Tag.TAG_STRING) || !compound2.contains("name", Tag.TAG_STRING) || !compound3.contains("name", Tag.TAG_STRING)) {
+        ItemStack atlasItem = inputSlots.getItem(0);
+        ItemStack readingItem = inputSlots.getItem(1);
+
+        boolean hasAtlas = NorthstarItems.SPACE_ATLAS.isIn(atlasItem);
+        boolean hasReading = NorthstarItems.ASTRONOMICAL_READING.isIn(readingItem);
+        if (!hasAtlas || !hasReading) {
+            List<Component> messages = new ArrayList<>();
+            if (!hasAtlas)
+                messages.add(Component.translatable("northstar.gui.astronomy_table.missing_atlas").withStyle(ChatFormatting.RED));
+            if (!hasReading)
+                messages.add(Component.translatable("northstar.gui.astronomy_table.missing_reading").withStyle(ChatFormatting.RED));
+            this.messages = messages;
             return;
         }
 
-        String planet1 = compound1.getString("name");
-        String planet2 = compound2.getString("name");
-        String planet3 = compound3.getString("name");
+        PlanetTracker tracker = contentHolder.getLevel().northstar$getPlanetTracker();
+        CompoundTag readingData = readingItem.getOrCreateTag();
+        Planet originPlanet = readingData.contains("Origin", Tag.TAG_STRING) ? tracker.getPlanetById(ResourceLocation.tryParse(readingData.getString("Origin"))) : null;
+        Planet targetPlanet = readingData.contains("Planet", Tag.TAG_STRING) ? tracker.getPlanetById(ResourceLocation.tryParse(readingData.getString("Planet"))) : null;
+        float science = readingData.getFloat("Science");
+        int day = readingData.getInt("Day");
 
-        if (!planet1.equals(planet2) || !planet1.equals(planet3)) {
-            errorMessage = Component.translatable("northstar.gui.astronomy_table.different_planets");
+        if (originPlanet == null || targetPlanet == null) {
+            messages = List.of(
+                    Component.translatable("northstar.gui.astronomy_table.invalid_reading").withStyle(ChatFormatting.RED)
+            );
             return;
         }
 
-        if (!arePlanetsFarEnough(item1, item2, item3)) {
-            errorMessage = Component.translatable("northstar.gui.astronomy_table.close_data");
+        SpaceAtlasContent atlas = SpaceAtlasContent.fromTag(atlasItem.getOrCreateTag());
+        SpaceAtlasContent.AtlasPlanet planet = atlas.planets.computeIfAbsent(targetPlanet.key.location(), SpaceAtlasContent.AtlasPlanet::new);
+
+        if (planet.readings.stream().anyMatch(r -> r.origin.equals(originPlanet.key.location()) && r.day == day)) {
+            messages = List.of(
+                    Component.translatable("northstar.gui.astronomy_table.duplicate_reading").withStyle(ChatFormatting.RED),
+                    Component.translatable("northstar.gui.astronomy_table.duplicate_reading.tip")
+            );
             return;
         }
 
-        ItemStack result = new ItemStack(NorthstarItems.STAR_MAP.get());
-        result.setHoverName(Component.translatable("item.northstar.star_map" + "_" + planet1).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-        CompoundTag tag = result.getOrCreateTagElement("Planet");
-        tag.putString("name", planet1);
+        float oldScience = planet.science;
 
+        planet.readings.add(new SpaceAtlasContent.AtlasReading(originPlanet.key.location(), science, day));
+        planet.recalculateScience(targetPlanet.properties.scienceWeightExp());
+
+        float newScience = planet.science;
+        float addedScience = newScience - oldScience;
+
+        ItemStack result = atlasItem.copy();
+        atlas.toTag(result.getOrCreateTag());
         resultSlots.setItem(0, result);
-    }
 
-    private boolean arePlanetsFarEnough(ItemStack item1, ItemStack item2, ItemStack item3) {
-        int x1 = item1.getTagElement("planetX").getInt("value");
-        int y1 = item1.getTagElement("planetY").getInt("value");
-        int x2 = item2.getTagElement("planetX").getInt("value");
-        int y2 = item2.getTagElement("planetY").getInt("value");
-        int x3 = item3.getTagElement("planetX").getInt("value");
-        int y3 = item3.getTagElement("planetY").getInt("value");
-        double r1 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)); // 1 - 2
-        double r2 = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2)); // 2 - 3
-        double r3 = Math.sqrt(Math.pow(x1 - x3, 2) + Math.pow(y1 - y3, 2)); // 1 - 3
-        double averageDistance = (r1 + r2 + r3) / 3;
-        return Math.abs(averageDistance) > 30;
+        List<Component> message = new ArrayList<>();
+
+        Component lowScienceTip = Component.literal(" (?)")
+                .withStyle(ChatFormatting.GRAY)
+                .northstar$onHover(HoverEvent.Action.SHOW_TEXT, Component.translatable("northstar.gui.astronomy_table.low_science_tip"));
+
+        message.add(Component.translatable("northstar.gui.astronomy_table.planet", targetPlanet.getName().withStyle(ChatFormatting.AQUA)));
+        message.add(Component.translatable("northstar.gui.astronomy_table.added_science", NorthstarLang.number(addedScience)
+                .style(ChatFormatting.AQUA)
+                .add(addedScience <= 0.8 ? lowScienceTip : Component.empty())
+                .component()));
+
+        if (targetPlanet.properties.requiredScience() >= 0) {
+            message.add(Component.translatable("northstar.gui.astronomy_table.total_science", NorthstarLang.builder()
+                    .add(NorthstarLang.number(newScience).style(ChatFormatting.AQUA))
+                    .text(ChatFormatting.GRAY, " / ")
+                    .add(NorthstarLang.number(targetPlanet.properties.requiredScience()).style(ChatFormatting.AQUA))
+                    .component()
+            ));
+
+            if (newScience >= targetPlanet.properties.requiredScience()) {
+                message.add(Component.translatable("northstar.gui.astronomy_table.planet_unlocked").withStyle(ChatFormatting.GREEN));
+            }
+        } else {
+            message.add(Component.translatable("northstar.gui.astronomy_table.total_science", NorthstarLang.numberDirect(newScience).withStyle(ChatFormatting.AQUA)));
+        }
+
+        hasError = false;
+        messages = message;
     }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
-        if (slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
-            if (index == 3) {
-                if (!this.moveItemStackTo(itemstack1, 4, 40, true)) {
-                    return ItemStack.EMPTY;
-                }
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack movedItem = slot.getItem();
 
-                slot.onQuickCraft(itemstack1, itemstack);
-            } else if (index != 0 && index != 1 && index != 2) {
-                if (index >= 4 && index < 40) {
-                    int i = -1;
-                    if (this.slots.get(0).getItem() == ItemStack.EMPTY && i == -1) {
-                        i = 0;
-                    }
-                    if (this.slots.get(2).getItem() == ItemStack.EMPTY && i == -1) {
-                        i = 2;
-                    }
-                    if (this.slots.get(1).getItem() == ItemStack.EMPTY && i == -1) {
-                        i = 1;
-                    }
-                    if (i != -1) {
-                        if (!this.moveItemStackTo(itemstack1, i, 3, false)) {
-                            return ItemStack.EMPTY;
-                        }
-                    }
-                }
-            } else if (!this.moveItemStackTo(itemstack1, 4, 40, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemstack1.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
-            } else {
-                slot.setChanged();
-            }
-
-            if (itemstack1.getCount() == itemstack.getCount()) {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(player, itemstack1);
+        // from container to inventory
+        if (index <= 2) {
+            moveItemStackTo(movedItem, 4, slots.size(), true);
+            slot.onTake(player, movedItem);
+            return ItemStack.EMPTY;
         }
 
-        return itemstack;
+        // from inventory to container
+        moveItemStackTo(movedItem, 0, 3, false);
+        return ItemStack.EMPTY;
     }
 
 }

@@ -2,8 +2,8 @@ package com.lightning.northstar.entity;
 
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
+import com.lightning.northstar.content.world.NorthstarDimensions;
 import com.lightning.northstar.entity.goals.PushRedstoneComponentsGoal;
-import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -43,7 +43,6 @@ public class MercuryRaptorEntity extends Monster implements GeoAnimatable {
     public int timeSpentAttacking;
     public int disruptTimer;
 
-    @SuppressWarnings("deprecation")
     public MercuryRaptorEntity(EntityType<? extends MercuryRaptorEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.setMaxUpStep(1f);
@@ -112,7 +111,7 @@ public class MercuryRaptorEntity extends Monster implements GeoAnimatable {
     public void aiStep() {
         super.aiStep();
         boolean flag = this.isSunBurnTick();
-        if (flag && (level().dimension() == NorthstarDimensions.MERCURY_DIM_KEY || level().dimension() == Level.OVERWORLD)) {
+        if (flag && (level().dimension() == NorthstarDimensions.MERCURY || level().dimension() == Level.OVERWORLD)) {
             this.setSecondsOnFire(8);
         }
     }

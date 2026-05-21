@@ -60,7 +60,7 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
         MountedFluidStorageWrapper fluids = sealer.contraption.getStorage().getFluids();
         for (int i = 0; i < fluids.getTanks(); i++) {
             FluidStack stack = fluids.getFluidInTank(i);
-            if (NorthstarOxygen.isOxygen(stack.getFluid())) {
+            if (NorthstarOxygen.isBreathable(stack.getFluid())) {
                 totalOxygen += stack.getAmount();
                 totalCapacity += fluids.getTankCapacity(i);
             } else if (stack.isEmpty()) {
@@ -86,15 +86,15 @@ public class OxygenSealerScreen extends AbstractSimiScreen {
                         Component.translatable("northstar.gui.oxygen_sealer.no_oxygen").withStyle(ChatFormatting.GOLD));
         MutableComponent line2 = sealer.sealer.hasLeak() ?
                 NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
-                        .add(CreateLang.number(maximumSealed)
-                                .style(ChatFormatting.BLUE))
-                        .text(" ")
-                        .add(NorthstarLang.blocks(maximumSealed))
-                        .component() :
+                .add(CreateLang.number(maximumSealed)
+                     .style(ChatFormatting.BLUE))
+                .text(" ")
+                .add(NorthstarLang.blocks(maximumSealed))
+                .component() :
                 NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
-                        .add(CreateLang.number(sealer.sealer.getSealedBlockCount())
-                                .style(ChatFormatting.BLUE))
-                        .component();
+                .add(CreateLang.number(sealer.sealer.getSealedBlockCount())
+                     .style(ChatFormatting.BLUE))
+                .component();
         MutableComponent line3 = NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
                 .text(" ")
                 .add(CreateLang.number(usagePerTick)

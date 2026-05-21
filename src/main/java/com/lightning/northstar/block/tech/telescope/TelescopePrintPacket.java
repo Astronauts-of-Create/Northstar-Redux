@@ -1,55 +1,47 @@
 package com.lightning.northstar.block.tech.telescope;
 
-import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import com.lightning.northstar.content.NorthstarBlocks;
+import com.simibubi.create.foundation.networking.SimplePacketBase;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.NetworkEvent;
 
-public class TelescopePrintPacket extends BlockEntityConfigurationPacket<TelescopeBlockEntity> {
+import javax.annotation.ParametersAreNonnullByDefault;
 
-    private String planetName;
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class TelescopePrintPacket extends SimplePacketBase {
 
+    public final BlockPos pos;
+    public final ResourceLocation planetId;
 
     public TelescopePrintPacket(FriendlyByteBuf buffer) {
-        super(buffer);
+        this(buffer.readBlockPos(), buffer.readResourceLocation());
     }
 
-    public TelescopePrintPacket(BlockPos pos) {
-        super(pos);
-    }
-
-    public static TelescopePrintPacket print(BlockPos pos, String strin) {
-        TelescopePrintPacket packet = new TelescopePrintPacket(pos);
-        packet.planetName = strin;
-        return packet;
+    public TelescopePrintPacket(BlockPos pos, ResourceLocation planetId) {
+        this.pos = pos;
+        this.planetId = planetId;
     }
 
     @Override
-    protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeUtf(planetName);
+    public void write(FriendlyByteBuf buffer) {
+        buffer.writeBlockPos(pos);
+        buffer.writeResourceLocation(planetId);
     }
 
     @Override
-    protected void readSettings(FriendlyByteBuf buffer) {
-        planetName = buffer.readUtf();
-    }
-
-    @Override
-    protected void applySettings(ServerPlayer player, TelescopeBlockEntity be) {
-        Level level = be.getLevel();
-        BlockPos blockPos = be.getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
-
-        if (!(blockState.getBlock() instanceof TelescopeBlock))
-            return;
-
-        be.print(planetName, player);
-    }
-
-    @Override
-    protected void applySettings(TelescopeBlockEntity be) {
+    public boolean handle(NetworkEvent.Context context) {
+        context.enqueueWork(() -> {
+            ServerPlayer player = context.getSender();
+            if (player.level().getBlockState(pos).is(NorthstarBlocks.TELESCOPE.get())) {
+                TelescopeBlock.handlePrintRequest(player, pos, planetId);
+            }
+        });
+        return true;
     }
 
 }

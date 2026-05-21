@@ -1,7 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.TagHelper;
 import com.lightning.northstar.data.util.NorthstarDataGenTags;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
@@ -25,6 +25,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -34,6 +35,7 @@ import static com.lightning.northstar.content.NorthstarTags.Namespace.MOD;
 
 public class NorthstarTags {
 
+    @ApiStatus.Internal
     public static void register() {
         NorthstarFluidTags.init();
         NorthstarBlockTags.init();
@@ -59,7 +61,7 @@ public class NorthstarTags {
         }
     }
 
-    public enum NorthstarFluidTags implements Tags.Tag<Fluid> {
+    public enum NorthstarFluidTags implements TagHelper.Tag<Fluid> {
 
         BREATHABLE,
         COMPAT_CBC_MOLTEN_CAST_IRON,
@@ -121,7 +123,7 @@ public class NorthstarTags {
 
     }
 
-    public enum NorthstarBlockTags implements Tags.Tag<Block> {
+    public enum NorthstarBlockTags implements TagHelper.Tag<Block> {
 
         AIR_PASSES_THROUGH,
         ARGYRE_REPLACEABLE,
@@ -133,13 +135,14 @@ public class NorthstarTags {
         /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
         @Deprecated
         BLOCKS_AIR,
-        C_STORAGE_BLOCKS_MARTIAN_STEEL(COMMON, "storage_blocks/martian_steel"),
-        C_STORAGE_BLOCKS_TITANIUM(COMMON, "storage_blocks/titanium"),
-        C_STORAGE_BLOCKS_TUNGSTEN(COMMON, "storage_blocks/tungsten"),
-        C_ORES_GLOWSTONE(COMMON, "ores/glowstone"), // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
+        C_ORES_GLOWSTONE(COMMON, "ores/glowstone"),
+        // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
         C_ORES_TITANIUM(COMMON, "ores/titanium"),
         C_ORES_TUNGSTEN(COMMON, "ores/tungsten"),
         C_ORES_ZINC(COMMON, "ores/zinc"),
+        C_STORAGE_BLOCKS_MARTIAN_STEEL(COMMON, "storage_blocks/martian_steel"),
+        C_STORAGE_BLOCKS_TITANIUM(COMMON, "storage_blocks/titanium"),
+        C_STORAGE_BLOCKS_TUNGSTEN(COMMON, "storage_blocks/tungsten"),
         HEAVY_BLOCKS,
         MARS_BLOCKS,
         MARS_DEEP_STONE_REPLACEABLE,
@@ -154,6 +157,7 @@ public class NorthstarTags {
         NATURAL_MERCURY_BLOCKS,
         NATURAL_MOON_BLOCKS,
         NATURAL_VENUS_BLOCKS,
+        ROCKET_ALWAYS_ACTIVE_ACTORS,
         SUPER_HEAVY_BLOCKS,
         TIER_1_HEAT_RESISTANCE,
         TIER_2_HEAT_RESISTANCE,
@@ -207,7 +211,7 @@ public class NorthstarTags {
 
     }
 
-    public enum NorthstarItemTags implements Tags.Tag<Item> {
+    public enum NorthstarItemTags implements TagHelper.Tag<Item> {
 
         COILER_LOGS,
         CALORIAN_LOGS,
@@ -281,11 +285,13 @@ public class NorthstarTags {
 
     }
 
-    public enum NorthstarEntityTags implements Tags.Tag<EntityType<?>> {
+    public enum NorthstarEntityTags implements TagHelper.Tag<EntityType<?>> {
 
         CAN_SURVIVE_COLD,
         CAN_SURVIVE_HEAT,
-        DOESNT_REQUIRE_OXYGEN;
+        DOESNT_REQUIRE_OXYGEN,
+        IGNORE_WORLD_BOUNDS_TELEPORT,
+        IGNORE_ZERO_GRAVITY_AI;
 
         public final TagKey<EntityType<?>> tag;
 
@@ -317,11 +323,15 @@ public class NorthstarTags {
 
     public enum NorthstarBiomeTags {
 
-        @Deprecated(since = "0.5.4", forRemoval = true)
-        IS_DUSTY,
-        @Deprecated(since = "0.5.4", forRemoval = true)
-        HAS_AMBIENT_GLOWSTONE_PARTICLE,
-        ;
+        C_IS_CAVE_MARS(COMMON, "is_cave/mars"),
+        C_IS_CAVE_MERCURY(COMMON, "is_cave/mercury"),
+        C_IS_CAVE_MOON(COMMON, "is_cave/moon"),
+        C_IS_CAVE_VENUS(COMMON, "is_cave/venus"),
+        HAS_MARS_BASE(MOD, "has_mars_base"),
+        MARS_BIOMES(MOD, "mars_biomes"),
+        MERCURY_BIOMES(MOD, "mercury_biomes"),
+        MOON_BIOMES(MOD, "moon_biomes"),
+        VENUS_BIOMES(MOD, "venus_biomes");
 
         public final TagKey<Biome> tag;
 

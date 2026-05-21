@@ -1,77 +1,105 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
-import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import com.lightning.northstar.accessor.NorthstarLevel;
+import com.lightning.northstar.content.NorthstarPackets;
+import com.lightning.northstar.contraption.rocket.LaunchStatus;
+import com.lightning.northstar.contraption.rocket.RocketContraption;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketDestination;
+import com.lightning.northstar.contraption.rocket.packet.RocketDestinationPacket;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.foundation.networking.SimplePacketBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.lang3.tuple.MutablePair;
 
-public class RocketStationEditPacket extends BlockEntityConfigurationPacket<RocketStationBlockEntity> {
+import java.util.Optional;
 
-    private Boolean tryAssemble;
+public class RocketStationEditPacket extends SimplePacketBase {
 
-    public static RocketStationEditPacket dropSchedule(BlockPos pos) {
-        return new RocketStationEditPacket(pos);
-    }
-
-    public static RocketStationEditPacket tryAssemble(BlockPos pos) {
-        RocketStationEditPacket packet = new RocketStationEditPacket(pos);
-        packet.tryAssemble = true;
-        return packet;
-    }
-
-    public static RocketStationEditPacket tryDisassemble(BlockPos pos) {
-        RocketStationEditPacket packet = new RocketStationEditPacket(pos);
-        packet.tryAssemble = false;
-        return packet;
-    }
-
-    public static RocketStationEditPacket configure(BlockPos pos, boolean assemble) {
-        RocketStationEditPacket packet = new RocketStationEditPacket(pos);
-        packet.tryAssemble = assemble;
-        return packet;
-    }
+    public final BlockPos pos;
+    public final int rocketId;
+    public final boolean flag;
+    public final RocketDestination destination;
 
     public RocketStationEditPacket(FriendlyByteBuf buffer) {
-        super(buffer);
+        this(buffer.readBlockPos(), buffer.readInt(), buffer.readBoolean(), buffer.readOptional(RocketDestination::new).orElse(null));
     }
 
-    public RocketStationEditPacket(BlockPos pos) {
-        super(pos);
+    public RocketStationEditPacket(BlockPos pos, int rocketId, boolean flag, RocketDestination destination) {
+        this.pos = pos;
+        this.rocketId = rocketId;
+        this.flag = flag;
+        this.destination = destination;
     }
 
     @Override
-    protected void writeSettings(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(tryAssemble != null);
-        if (tryAssemble != null) {
-            buffer.writeBoolean(tryAssemble);
+    public void write(FriendlyByteBuf buffer) {
+        buffer.writeBlockPos(pos);
+        buffer.writeInt(rocketId);
+        buffer.writeBoolean(flag);
+        buffer.writeOptional(Optional.ofNullable(destination), (buf, value) -> value.writeBuffer(buf));
+    }
+
+    @Override
+    public boolean handle(NetworkEvent.Context context) {
+        context.enqueueWork(() -> {
+            ServerPlayer player = context.getSender();
+            if (rocketId >= 0) {
+                handleEntity(player);
+            } else {
+                handleWorld(player);
+            }
+        });
+        return true;
+    }
+
+    private void handleEntity(ServerPlayer player) {
+        if (!(player.level().getEntity(rocketId) instanceof RocketContraptionEntity rocket) || rocket.getStatus() != LaunchStatus.WAITING) {
             return;
+        }
+        if (!pos.equals(BlockPos.ZERO)) {
+            return; // only the main rocket station can be accessed
+        }
+
+        RocketContraption contraption = rocket.getContraption();
+        MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> actor = contraption.getActorAt(BlockPos.ZERO);
+        if (actor == null || !RocketStationMenu.validateDestination(NorthstarLevel.SERVER_TRACKER, RocketStationActor.get(actor.right).container.getItem(0), destination))
+            return;
+
+        contraption.destination = destination;
+        if (destination != null) {
+            actor.right.blockEntityData.put("Destination", destination.toTag());
+        } else {
+            actor.right.blockEntityData.remove("Destination");
+        }
+
+        if (flag && !rocket.isOutOfWorld()) {
+            rocket.disassemble();
+        } else {
+            NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> rocket), new RocketDestinationPacket(rocket.getId(), destination));
         }
     }
 
-    @Override
-    protected void readSettings(FriendlyByteBuf buffer) {
-        if (buffer.readBoolean()) {
-            tryAssemble = buffer.readBoolean();
+    private void handleWorld(ServerPlayer player) {
+        if (!(player.level().getBlockEntity(pos) instanceof RocketStationBlockEntity be)) {
             return;
         }
-    }
-
-    @Override
-    protected void applySettings(ServerPlayer player, RocketStationBlockEntity be) {
-        Level level = be.getLevel();
-        BlockPos blockPos = be.getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
-
-        if (!(blockState.getBlock() instanceof RocketStationBlock))
+        if (!RocketStationMenu.validateDestination(NorthstarLevel.SERVER_TRACKER, be.container.getItem(0), destination)) {
             return;
+        }
 
-        if (tryAssemble)
-            be.queueAssembly(player);
+        be.destination = destination;
+        be.sendData();
+        be.setChanged();
+
+        if (flag) {
+            be.assemble();
+        }
     }
-
-    @Override
-    protected void applySettings(RocketStationBlockEntity be) {}
 
 }

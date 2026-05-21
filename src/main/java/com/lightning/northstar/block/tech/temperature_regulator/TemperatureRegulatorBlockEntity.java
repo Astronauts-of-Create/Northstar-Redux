@@ -7,10 +7,12 @@ import com.lightning.northstar.world.sealer.ProgressiveBlockSealer;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.api.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,13 +20,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, NorthstarTemperature.Provider {
+public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation, IHaveHoveringInformation, ClipboardCloneable, NorthstarTemperature.Provider {
 
     public static final int MAX_LIMIT_SIZE = 5;
 
@@ -160,6 +163,28 @@ public class TemperatureRegulatorBlockEntity extends KineticBlockEntity implemen
 
         if (!Mth.equal(previousTemperature, regulator.temperature))
             onTemperatureChanged(); // in case of /data merge, update blocks, if it was just loaded in there is no effect
+    }
+
+    @Override
+    public String getClipboardKey() {
+        return "Block";
+    }
+
+    @Override
+    public boolean writeToClipboard(CompoundTag tag, Direction side) {
+        regulator.write(tag);
+        return true;
+    }
+
+    @Override
+    public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+        if (!tag.contains("temperature")) {
+            return false;
+        }
+        if (!simulate) {
+            regulator.read(tag, worldPosition);
+        }
+        return true;
     }
 
     public ProgressiveBlockSealer getSealer() {

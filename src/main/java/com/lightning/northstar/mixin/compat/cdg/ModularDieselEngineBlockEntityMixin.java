@@ -26,11 +26,15 @@ public abstract class ModularDieselEngineBlockEntityMixin extends GeneratingKine
         super(type, pos, state);
     }
 
-    @Redirect(method = { "getGeneratedSpeed", "tick", "tickClient" },
-            at = @At(value = "INVOKE",
+    @Redirect(
+            method = { "getGeneratedSpeed", "tick", "tickClient" },
+            at = @At(
+                    value = "INVOKE",
                     target = "Lcom/jesz/createdieselgenerators/content/diesel_engine/modular/ModularDieselEngineBlockEntity;enabled()Z",
-                    remap = false),
-            remap = false)
+                    remap = false
+            ),
+            remap = false
+    )
     private boolean northstar$addOxygenCheck(ModularDieselEngineBlockEntity instance) {
         return northstar$hasOxygen && instance.enabled();
     }

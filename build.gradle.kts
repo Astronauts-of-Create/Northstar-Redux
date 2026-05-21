@@ -3,6 +3,7 @@ import java.time.Instant
 plugins {
     `maven-publish`
     id("net.neoforged.moddev.legacyforge") version "2.0.141"
+    id("net.kyori.blossom") version "2.2.0"
 }
 
 version = "0.5.4+1.20.1" // https://semver.org/
@@ -20,6 +21,10 @@ val generatedResources = file("src/generated")
 
 sourceSets.main {
     resources.srcDir(generatedResources)
+
+    blossom.javaSources {
+        property("version", version.toString())
+    }
 }
 
 legacyForge {
@@ -35,6 +40,7 @@ legacyForge {
 
     runs {
         configureEach {
+            systemProperty("geckolib.disable_examples", "true")
             systemProperty("mixin.debug.export", "true")
             //systemProperty("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
             //systemProperty("forge.logging.console.level", "debug")
@@ -131,6 +137,8 @@ dependencies {
     modRuntimeOnly(libs.flywheel.forge)
 
     modImplementation(libs.geckolib.forge)
+
+    modCompileOnly(libs.oculus)
 
     modImplementation(libs.architectury)
     modImplementation(libs.jei.forge)

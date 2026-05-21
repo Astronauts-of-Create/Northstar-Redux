@@ -1,6 +1,5 @@
 package com.lightning.northstar.block.tech.temperature_regulator;
 
-import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.contraption.ActorConfigPacket;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 public class TemperatureRegulatorEditPacket extends SimplePacketBase {
@@ -89,13 +87,17 @@ public class TemperatureRegulatorEditPacket extends SimplePacketBase {
         regulator.regulator.temperature = temperature;
         regulator.regulator.setBounds(localPos, limit, sizeX, sizeY, sizeZ);
 
+        if (actor.left.nbt() == null) {
+            actor.left = new StructureTemplate.StructureBlockInfo(localPos, actor.left.state(), new CompoundTag());
+            entity.setBlock(localPos, actor.left);
+        }
 
-        CompoundTag nbt = actor.left.nbt() == null ? new CompoundTag() : actor.left.nbt().copy(); // needed copy?
+        CompoundTag nbt = actor.left.nbt();
+        assert nbt != null;
+
         regulator.regulator.write(nbt);
-        actor.left = new StructureTemplate.StructureBlockInfo(localPos, actor.left.state(), nbt);
-        entity.setBlock(localPos, actor.left);
 
-        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new ActorConfigPacket(entity.getId(), localPos, nbt));
+        ActorConfigPacket.update(entity, localPos, nbt);
     }
 
     private void handleWorld(ServerPlayer player, Level world) {

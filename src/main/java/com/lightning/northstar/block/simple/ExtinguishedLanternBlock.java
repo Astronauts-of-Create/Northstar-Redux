@@ -28,8 +28,8 @@ public class ExtinguishedLanternBlock extends LanternBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!player.getAbilities().mayBuild ||
-                !player.getItemInHand(hand).is(NorthstarItemTags.IGNITION_SOURCE.tag) ||
-                !NorthstarOxygen.hasOxygen(level, pos)) {
+            !player.getItemInHand(hand).is(NorthstarItemTags.IGNITION_SOURCE.tag) ||
+            !NorthstarOxygen.hasOxygen(level, pos)) {
             return InteractionResult.PASS;
         }
 

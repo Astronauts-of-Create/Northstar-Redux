@@ -283,7 +283,7 @@
         "type": "minecraft:condition",
         "if_true": {
           "type": "minecraft:vertical_gradient",
-          "random_name": "northstar:mars_deep_stone",
+          "random_name": "northstar:moon_deep_stone",
           "true_at_and_below": {
             "above_bottom": 52
           },

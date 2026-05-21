@@ -69,9 +69,4 @@ public class SpaceSuitArmorItem extends ArmorItem implements GeoItem, GeoAnimata
 
     // endregion
 
-    @Override
-    public boolean canBeDepleted() {
-        return true;
-    }
-
 }

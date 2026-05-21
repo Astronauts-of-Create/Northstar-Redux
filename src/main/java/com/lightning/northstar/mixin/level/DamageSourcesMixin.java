@@ -16,8 +16,18 @@ public abstract class DamageSourcesMixin implements NorthstarDamageSources {
     protected abstract DamageSource source(ResourceKey<DamageType> damageTypeKey);
 
     @Override
-    public DamageSource northstar$suffocation() {
-        return source(NorthstarDamageTypes.SUFFOCATION);
+    public DamageSource northstar$suffocationNoOxygen() {
+        return source(NorthstarDamageTypes.SUFFOCATION_NO_OXYGEN);
+    }
+
+    @Override
+    public DamageSource northstar$suffocationNoSuit() {
+        return source(NorthstarDamageTypes.SUFFOCATION_NO_SPACESUIT);
+    }
+
+    @Override
+    public DamageSource northstar$acid() {
+        return source(NorthstarDamageTypes.ACID);
     }
 
 }

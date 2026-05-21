@@ -31,7 +31,6 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsRenderer
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockEntity;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelRenderer;
-import com.lightning.northstar.block.tech.telescope.TelescopeBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorBlockEntity;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorRenderer;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorVisual;
@@ -49,11 +48,6 @@ import net.minecraft.core.Direction;
 import static com.lightning.northstar.Northstar.REGISTRATE;
 
 public class NorthstarBlockEntityTypes {
-
-    public static final BlockEntityEntry<TelescopeBlockEntity> TELESCOPE = REGISTRATE
-            .blockEntity("telescope", TelescopeBlockEntity::new)
-            .validBlocks(NorthstarBlocks.TELESCOPE)
-            .register();
 
     /*public static final BlockEntityEntry<OxygenBubbleGeneratorBlockEntity> OXYGEN_BUBBLE_GENERATOR = REGISTRATE
             .blockEntity("oxygen_bubble_generator", OxygenBubbleGeneratorBlockEntity::new)

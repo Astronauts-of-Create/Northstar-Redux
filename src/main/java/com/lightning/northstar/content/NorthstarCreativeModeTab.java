@@ -1,6 +1,9 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.accessor.NorthstarLevel;
+import com.lightning.northstar.item.atlas.SpaceAtlasContent;
+import com.lightning.northstar.planet.Planet;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -9,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -50,12 +52,22 @@ public class NorthstarCreativeModeTab {
     private static CreativeModeTab.DisplayItemsGenerator createItemDisplay(RegistryObject<CreativeModeTab> tab) {
         return (parameters, output) -> {
             Map<Item, Consumer<CreativeModeTab.Output>> builders = Map.of(
-                    NorthstarItems.STAR_MAP.get(), out -> {
-                        registerStarMap(out, "earth");
-                        registerStarMap(out, "moon");
-                        registerStarMap(out, "mars");
-                        registerStarMap(out, "mercury");
-                        registerStarMap(out, "venus");
+                    NorthstarItems.SPACE_ATLAS.get(), out -> {
+                        SpaceAtlasContent atlas = new SpaceAtlasContent();
+
+                        for (Planet planet : NorthstarLevel.CLIENT_TRACKER.getPlanets().values()) {
+                            SpaceAtlasContent.AtlasPlanet planetInfo = new SpaceAtlasContent.AtlasPlanet(planet.key.location());
+
+                            planetInfo.science = Float.POSITIVE_INFINITY;
+                            planetInfo.readings.add(new SpaceAtlasContent.AtlasReading(Northstar.asResource("creative_menu"), Float.POSITIVE_INFINITY, 0));
+
+                            atlas.planets.put(planet.key.location(), planetInfo);
+                        }
+
+                        ItemStack item = NorthstarItems.SPACE_ATLAS.asStack();
+                        item.setHoverName(Component.translatable("item.northstar.space_atlas.creative").withStyle(ChatFormatting.LIGHT_PURPLE));
+                        atlas.toTag(item.getOrCreateTag());
+                        out.accept(item);
                     },
                     NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get()),
                     NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get())
@@ -75,13 +87,6 @@ public class NorthstarCreativeModeTab {
                 }
             }
         };
-    }
-
-    private static void registerStarMap(CreativeModeTab.Output event, String planet) {
-        ItemStack item = new ItemStack(NorthstarItems.STAR_MAP.get());
-        item.setHoverName(Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-        item.getOrCreateTagElement("Planet").putString("name", planet);
-        event.accept(item);
     }
 
     private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {

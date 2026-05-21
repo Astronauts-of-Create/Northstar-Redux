@@ -1,8 +1,7 @@
 package com.lightning.northstar.block.tech.atmospheric_concentrator;
 
-import com.lightning.northstar.content.NorthstarFluids;
+import com.lightning.northstar.planet.data.Atmosphere;
 import com.lightning.northstar.util.NorthstarLang;
-import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -14,17 +13,12 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,29 +47,20 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
     public void tick() {
         super.tick();
 
-        Fluid fluid = getCollectedFluid();
+        Atmosphere atmosphere = level.northstar$dimension().atmosphere();
         float speed = getCollectionSpeed();
-        if (fluid == Fluids.EMPTY || Mth.equal(speed, 0))
+        if (atmosphere.isVacuum() || Mth.equal(speed, 0)) {
             return;
+        }
 
         float newBuffer = buffer + speed;
         int filled = Mth.floor(newBuffer);
         buffer = newBuffer - filled;
-        tank.getPrimaryHandler().fill(new FluidStack(fluid, filled), FluidAction.EXECUTE);
-    }
-
-    public Fluid getCollectedFluid() {
-        ResourceKey<Level> dimension = level.dimension();
-        if (dimension.equals(Level.OVERWORLD))
-            return NorthstarFluids.OXYGEN.getSource();
-        if (dimension.equals(NorthstarDimensions.MARS_DIM_KEY) || dimension.equals(NorthstarDimensions.VENUS_DIM_KEY))
-            return NorthstarFluids.CARBON.getSource();
-        return Fluids.EMPTY;
+        tank.getPrimaryHandler().fill(atmosphere.asFluidStack(filled), FluidAction.EXECUTE);
     }
 
     public float getCollectionSpeed() {
-        // 10 mB/t at 256 RPM
-        return Math.abs(speed) / 25.6f;
+        return level.northstar$dimension().atmosphere().collectionRate() * Math.abs(speed) / 256f;
     }
 
     @Override
@@ -86,15 +71,15 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
         if (IRotate.StressImpact.isEnabled())
             addStressImpactStats(tooltip, calculateStressApplied());
 
-        Fluid fluid = getCollectedFluid();
-        if (fluid == Fluids.EMPTY) {
+        Atmosphere atmosphere = level.northstar$dimension().atmosphere();
+        if (atmosphere.isVacuum()) {
             NorthstarLang.translate("gui.goggles.atmospheric_concentrator.no_atmosphere")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip);
         } else {
             NorthstarLang.translate("gui.goggles.atmospheric_concentrator.collected_fluid")
                     .style(ChatFormatting.GRAY)
-                    .add(CreateLang.fluidName(new FluidStack(fluid, 1)))
+                    .add(CreateLang.fluidName(atmosphere.asFluidStack(1)))
                     .forGoggles(tooltip);
 
             CreateLang.builder()

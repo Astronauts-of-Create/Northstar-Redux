@@ -1,91 +1,257 @@
 package com.lightning.northstar.block.tech.rocket_station;
 
+import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarMenuTypes;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.contraption.rocket.LaunchStatus;
+import com.lightning.northstar.contraption.rocket.RocketContraption;
+import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
+import com.lightning.northstar.contraption.rocket.RocketDestination;
+import com.lightning.northstar.item.atlas.SpaceAtlasContent;
+import com.lightning.northstar.planet.Planet;
+import com.lightning.northstar.planet.PlanetTracker;
+import com.lightning.northstar.planet.data.PlanetDimension;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
+import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkHooks;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
-public class RocketStationMenu extends MenuBase<RocketStationBlockEntity> {
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-    public int fuelCost;
-    public ResourceKey<Level> target;
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class RocketStationMenu extends MenuBase<RocketStationHolder> {
+
+    @Contract("_, _, _, _, null, null -> fail")
+    public static void open(ServerPlayer player, SimpleContainer container, BlockPos pos, RocketContraption contraption,
+                            @Nullable RocketStationBlockEntity be, @Nullable RocketContraptionEntity entity) {
+        if (be == null && entity == null) {
+            throw new IllegalArgumentException("Either a rocket station or rocket contraption is required");
+        }
+        MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> new RocketStationMenu(
+                NorthstarMenuTypes.ROCKET_STATION.get(),
+                id,
+                inventory,
+                new RocketStationHolder(container, pos, contraption, be, entity)
+        ), Component.translatable("block.northstar.rocket_station"));
+
+        NetworkHooks.openScreen(player, provider, buffer -> {
+            buffer.writeBlockPos(pos);
+            buffer.writeInt(entity == null ? -1 : entity.getId());
+        });
+    }
+
+    private boolean isClient;
 
     public RocketStationMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
     }
 
-    public RocketStationMenu(MenuType<?> type, int id, Inventory inv, RocketStationBlockEntity contentHolder) {
-        super(type, id, inv, contentHolder);
+    public RocketStationMenu(MenuType<?> type, int id, Inventory inv, RocketStationHolder holder) {
+        super(type, id, inv, holder);
     }
 
-    public static AbstractContainerMenu create(int id, Inventory inv, RocketStationBlockEntity be) {
-        return new RocketStationMenu(NorthstarMenuTypes.ROCKET_STATION.get(), id, inv, be);
-    }
-
+    @Nullable
+    @OnlyIn(Dist.CLIENT)
     @Override
-    protected RocketStationBlockEntity createOnClient(FriendlyByteBuf extraData) {
-        if (Minecraft.getInstance().level.getBlockEntity(extraData.readBlockPos()) instanceof RocketStationBlockEntity be) {
-            return be;
+    protected RocketStationHolder createOnClient(FriendlyByteBuf extraData) {
+        isClient = true;
+
+        ClientLevel level = Minecraft.getInstance().level;
+
+        BlockPos pos = extraData.readBlockPos();
+        int entityId = extraData.readInt();
+
+        if (entityId == -1) {
+            if (!(level.getBlockEntity(pos) instanceof RocketStationBlockEntity station)) {
+                return null;
+            }
+            RocketContraption contraption = station.assembleContraption();
+            if (contraption == null) {
+                return null;
+            }
+            return new RocketStationHolder(station.container, pos, contraption, station, null);
         }
-        return null;
+
+        if (!(level.getEntity(entityId) instanceof RocketContraptionEntity rocket)) {
+            return null;
+        }
+        MutablePair<StructureTemplate.StructureBlockInfo, MovementContext> pair = rocket.getContraption().getActorAt(pos);
+        if (pair == null) {
+            return null;
+        }
+        return new RocketStationHolder(RocketStationActor.get(pair.right).container, pos, rocket.getContraption(), null, rocket);
     }
 
     @Override
-    protected void initAndReadInventory(RocketStationBlockEntity contentHolder) {
+    protected void initAndReadInventory(RocketStationHolder holder) {
     }
 
     @Override
     protected void addSlots() {
-        addSlot(new Slot(contentHolder.container, 0, 24, 47));
-        addPlayerSlots(8, 84);
+        addSlot(new Slot(contentHolder.container(), 0, 8, 8) {
+            private boolean mayInteract() {
+                return contentHolder.entity() == null || contentHolder.entity().getStatus() == LaunchStatus.WAITING;
+            }
+
+            @Override
+            public boolean mayPickup(Player player) {
+                return mayInteract() && super.mayPickup(player);
+            }
+
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return mayInteract() && (NorthstarItems.SPACE_ATLAS.isIn(stack) || NorthstarItems.RETURN_TICKET.isIn(stack)) && super.mayPlace(stack);
+            }
+
+            @Override
+            public void setChanged() {
+                super.setChanged();
+
+                PlanetTracker planets = isClient ? NorthstarLevel.CLIENT_TRACKER : NorthstarLevel.SERVER_TRACKER;
+                if (contentHolder.be() != null) {
+                    if (!validateDestination(planets, container.getItem(0), contentHolder.be().destination)) {
+                        contentHolder.be().destination = null;
+                    }
+                } else {
+                    if (!validateDestination(planets, container.getItem(0), contentHolder.contraption().destination)) {
+                        contentHolder.contraption().destination = null;
+                    }
+                }
+            }
+        });
+
+        addPlayerSlots(8, 128);
     }
 
     @Override
-    protected void saveData(RocketStationBlockEntity contentHolder) {
-
-    }
-
-    public int fuelCalc() {
-        String home = NorthstarPlanets.getPlanetName(contentHolder.getLevel().dimension());
-        String targ = NorthstarPlanets.getPlanetName(target);
-
-        int home_x = (int) NorthstarPlanets.getPlanetX(home);
-        int home_y = (int) NorthstarPlanets.getPlanetY(home);
-
-        int targ_x = (int) NorthstarPlanets.getPlanetX(targ);
-        int targ_y = (int) NorthstarPlanets.getPlanetY(targ);
-
-        int dif = (int) (Math.pow(home_x - targ_x, 2) + Math.pow(home_y - targ_y, 2));
-        dif = Mth.roundToward(dif, 100) / 20;
-        int cost = dif + NorthstarPlanets.getPlanetAtmosphereCost(contentHolder.getLevel().dimension()) + 1000;
-        return cost * 8;
-    }
-
-    @Override
-    public void slotsChanged(Container inventory) {
-        ItemStack item = contentHolder.container.getItem(0);
-        if (contentHolder.container.getItem(0).getItem() == NorthstarItems.STAR_MAP.get() || contentHolder.container.getItem(0).getItem() == NorthstarItems.RETURN_TICKET.get()) {
-            if (item.getTagElement("Planet") != null)
-                target = NorthstarPlanets.getPlanetDimension(item.getTagElement("Planet").getString("name"));
-        }
-        fuelCost = fuelCalc();
+    protected void saveData(RocketStationHolder holder) {
     }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
+        Slot slot = slots.get(index);
+        if (!slot.hasItem()) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack movedItem = slot.getItem();
+
+        // from container to inventory
+        if (index == 0) {
+            moveItemStackTo(movedItem, 1, slots.size(), true);
+            slot.onTake(player, movedItem);
+            return ItemStack.EMPTY;
+        }
+
+        // from inventory to container
+        moveItemStackTo(movedItem, 0, 1, false);
         return ItemStack.EMPTY;
+    }
+
+    public static List<DimensionEntry> getPossibleDestinations(PlanetTracker planets, ItemStack item) {
+        CompoundTag tag = item.getTag();
+
+        if (NorthstarItems.SPACE_ATLAS.isIn(item) && tag != null) {
+            List<DimensionEntry> dimensions = new ArrayList<>();
+            SpaceAtlasContent atlas = SpaceAtlasContent.fromTag(tag);
+
+            for (var entry : atlas.planets.entrySet()) {
+                Planet planet = planets.getPlanetById(entry.getKey());
+                if (planet == null || entry.getValue().science < planet.properties.requiredScience()) {
+                    continue;
+                }
+                for (PlanetDimension dimension : planet.dimensions) {
+                    MutableComponent text = planet.getDimensionName(dimension);
+                    ResourceLocation dimensionId = dimension.dimensionId().location();
+
+                    List<Pair<RocketDestination, Component>> destinations = new ArrayList<>();
+                    destinations.add(Pair.of(new RocketDestination(dimensionId, null, null), Component.translatable("northstar.gui.rocket_station.hold_position")));
+                    atlas.destinations.entrySet()
+                            .stream()
+                            .filter(e -> e.getKey().dim().equals(dimensionId))
+                            .forEach(e -> destinations.add(Pair.of(e.getKey(), e.getValue())));
+
+                    dimensions.add(new DimensionEntry(planet, dimension, destinations, text));
+                }
+            }
+
+            return dimensions;
+        }
+
+        RocketDestination destination;
+        PlanetDimension dimension;
+        Planet planet;
+        if (NorthstarItems.RETURN_TICKET.isIn(item) &&
+            tag != null &&
+            tag.contains("Destination", Tag.TAG_COMPOUND) &&
+            (destination = RocketDestination.fromTag(tag.getCompound("Destination"))) != null &&
+            (dimension = planets.getDimensionByLevel(destination.dim())) != null &&
+            (planet = planets.getPlanetById(dimension.planet())) != null) {
+            return List.of(
+                    new DimensionEntry(
+                            planet,
+                            dimension,
+                            List.of(
+                                    Pair.of(destination, Component.translatable("northstar.gui.rocket_station.takeoff_origin")),
+                                    Pair.of(new RocketDestination(destination.dim(), null, null), Component.translatable("northstar.gui.rocket_station.hold_position"))
+                            ),
+                            planet.getDimensionName(dimension)
+                    )
+            );
+        }
+
+        return List.of();
+    }
+
+    public static boolean validateDestination(PlanetTracker planets, ItemStack item, @Nullable RocketDestination destination) {
+        return destination == null ||
+               getPossibleDestinations(planets, item)
+                       .stream()
+                       .anyMatch(entry -> entry.destinations()
+                               .stream()
+                               .anyMatch(pair -> destination.equals(pair.first())));
+    }
+
+    public record DimensionEntry(
+            @Nullable Planet planet,
+            @Nullable PlanetDimension dimension,
+            List<Pair<RocketDestination, Component>> destinations,
+            Component text
+    ) {
+        @Nullable
+        public ResourceLocation dimensionId() {
+            return dimension == null ? null : dimension.dimensionId().location();
+        }
     }
 
 }

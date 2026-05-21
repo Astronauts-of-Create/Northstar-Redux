@@ -40,10 +40,16 @@ public abstract class BucketItemMixin extends Item {
         super(pProperties);
     }
 
+    // FIXME: This whole mixin is a copy pasted mess
     @SuppressWarnings("deprecation")
-    @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
-            at = @At(value = "HEAD", target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"),
-            cancellable = true)
+    @Inject(
+            method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
+            at = @At(
+                    value = "HEAD",
+                    target = "Lnet/minecraft/world/item/BucketItem;emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;)Z"
+            ),
+            cancellable = true
+    )
     private void emptyContentsReal(@Nullable Player pPlayer, Level pLevel, BlockPos pPos, @Nullable BlockHitResult blockHitResult, ItemStack container, CallbackInfoReturnable<Boolean> info) {
         Northstar.LOGGER.debug("YOooo buckets are real");
         BucketItem item = (BucketItem) (Object) this;
@@ -93,7 +99,6 @@ public abstract class BucketItemMixin extends Item {
         }
     }
 
-
     @SuppressWarnings("deprecation")
     protected void playEmptySound(@Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos, Fluid content) {
         SoundEvent soundevent = content.getFluidType().getSound(pPlayer, pLevel, pPos, net.minecraftforge.common.SoundActions.BUCKET_EMPTY);
@@ -102,4 +107,5 @@ public abstract class BucketItemMixin extends Item {
         pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
         pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
     }
+
 }

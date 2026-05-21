@@ -4,10 +4,15 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.tterrag.registrate.providers.RegistrateLangProvider;
 import net.createmod.catnip.lang.LangBuilder;
 import net.createmod.catnip.lang.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -16,6 +21,7 @@ public class NorthstarLang {
 
     public static final LangBuilder MB = CreateLang.translate("generic.unit.millibuckets");
     public static final LangBuilder MB_PER_TICK = translate("generic.unit.millibuckets_per_tick");
+    public static final LangBuilder GJ = translate("generic.unit.gigajoules");
     public static final LangBuilder GJ_PER_MB = translate("generic.unit.gigajoules_per_millibuckets");
 
     public static LangBuilder builder() {
@@ -59,15 +65,32 @@ public class NorthstarLang {
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }
-        CreateLang.builder()
-                .add(CreateLang.number(fluid.getAmount())
+        builder()
+                .add(number(fluid.getAmount())
                         .add(NorthstarLang.MB)
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(CreateLang.number(capacity)
+                .add(number(capacity)
                         .add(NorthstarLang.MB)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
+    }
+
+    public static MutableComponent numberDirect(double d) {
+        return Component.literal(LangNumberFormat.format(d));
+    }
+
+    public static MutableComponent getDimensionName(ResourceKey<Level> key) {
+        ResourceLocation loc = key.location();
+        return Component.translatableWithFallback("dimension." + loc.getNamespace() + "." + loc.getPath(), getFallbackName(loc));
+    }
+
+    public static String getFallbackName(ResourceKey<?> key) {
+        return getFallbackName(key.location());
+    }
+
+    public static String getFallbackName(ResourceLocation loc) {
+        return RegistrateLangProvider.toEnglishName(loc.getPath().replace('/', '_'));
     }
 
 }

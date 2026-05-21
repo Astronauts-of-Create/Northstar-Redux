@@ -19,7 +19,7 @@ public class LogBlock extends RotatedPillarBlock {
 
     @Override
     public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
-        if (toolAction.equals(ToolActions.AXE_STRIP) ) {
+        if (toolAction.equals(ToolActions.AXE_STRIP)) {
             return strippedVariant.defaultBlockState().setValue(AXIS, state.getValue(AXIS));
         }
         return null;

@@ -38,7 +38,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
     public static final int HEIGHT = 60;
 
     public FuelTypeCategory(IGuiHelper guiHelper) {
-        super(RECIPE_TYPE, Component.translatable("northstar.recipe.fuel_type"), guiHelper.createDrawableItemLike(NorthstarBlocks.JET_ENGINE), WIDTH, HEIGHT);
+        super(RECIPE_TYPE, Component.translatable("northstar.recipe.fuel_type"), guiHelper.createDrawableItemLike(NorthstarBlocks.ROCKET_THRUSTER), WIDTH, HEIGHT);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
                 .stream()
                 .map(FluidHelper::convertToStill)
                 .filter(recipe::supports)
-                .map(fluid -> new FluidStack(fluid, 1))
+                .map(fluid -> new FluidStack(fluid, 1000))
                 .toList();
 
         CreateRecipeCategory.addFluidSlot(builder, 5, 5, RecipeIngredientRole.INPUT)
@@ -82,7 +82,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
                 .forGoggles(tooltip, baseIndents + 1);
 
         NorthstarLang.builder()
-                .add(NorthstarBlocks.JET_ENGINE.get().getName())
+                .add(NorthstarBlocks.ROCKET_THRUSTER.get().getName())
                 .text(":")
                 .forGoggles(tooltip, baseIndents);
 

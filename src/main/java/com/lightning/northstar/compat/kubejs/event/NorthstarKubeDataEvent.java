@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.planet.data.PlanetDimension;
+import com.lightning.northstar.planet.data.PlanetProperties;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import dev.latvian.mods.kubejs.script.data.DataPackEventJS;
@@ -18,8 +20,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,8 @@ public class NorthstarKubeDataEvent extends DataPackEventJS {
     public NorthstarKubeDataEvent(VirtualKubeJSDataPack d, MultiPackResourceManager rm) {
         super(d, rm);
     }
+
+    // region Fuel
 
     public FuelType.Builder fuel() {
         return fuel((ResourceLocation) null);
@@ -72,6 +77,58 @@ public class NorthstarKubeDataEvent extends DataPackEventJS {
         add(path, fuel, FuelType.CODEC, NorthstarRegistries.FUEL);
     }
 
+    // endregion
+    // region Planet
+
+    public PlanetProperties.Builder planet() {
+        return planet((ResourceLocation) null);
+    }
+
+    public PlanetProperties.Builder planet(@Nullable ResourceLocation path) {
+        PlanetProperties.Builder builder = PlanetProperties.builder();
+        actions.add(() -> planet(builder.build(), path));
+        return builder;
+    }
+
+    public void planet(PlanetProperties.Builder planet, @Nullable ResourceLocation path) {
+        planet(planet.build(), path);
+    }
+
+    public void planet(PlanetProperties planet) {
+        planet(planet, null);
+    }
+
+    public void planet(PlanetProperties planet, @Nullable ResourceLocation path) {
+        add(path, planet, PlanetProperties.CODEC, NorthstarRegistries.PLANET);
+    }
+
+    // endregion
+    // region Dimension
+
+    public PlanetDimension.Builder dimension() {
+        return dimension((ResourceLocation) null);
+    }
+
+    public PlanetDimension.Builder dimension(@Nullable ResourceLocation path) {
+        PlanetDimension.Builder builder = PlanetDimension.builder();
+        actions.add(() -> dimension(builder.build(), path));
+        return builder;
+    }
+
+    public void dimension(PlanetDimension.Builder dimension, @Nullable ResourceLocation path) {
+        dimension(dimension.build(), path);
+    }
+
+    public void dimension(PlanetDimension dimension) {
+        dimension(dimension, null);
+    }
+
+    public void dimension(PlanetDimension dimension, @Nullable ResourceLocation path) {
+        add(path, dimension, PlanetDimension.CODEC, NorthstarRegistries.PLANET_DIMENSION);
+    }
+
+    // endregion
+
     private <T> void add(@Nullable ResourceLocation path, T value, Codec<T> codec, ResourceKey<? extends Registry<T>> registry) {
         JsonElement encoded = codec.encodeStart(JsonOps.INSTANCE, value).getOrThrow(false, error -> {
         });
@@ -88,6 +145,7 @@ public class NorthstarKubeDataEvent extends DataPackEventJS {
     }
 
     @HideFromJS
+    @ApiStatus.Internal
     public void postProcess() {
         actions.forEach(Runnable::run);
     }

@@ -14,7 +14,6 @@ import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -96,7 +95,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
         }
 
         FluidStack fluid = tank.getPrimaryHandler().getFluid();
-        if (!NorthstarOxygen.isOxygen(fluid.getFluid()) || fluid.isEmpty() || isOverStressed() || speed == 0f) {
+        if (!NorthstarOxygen.isBreathable(fluid.getFluid()) || fluid.isEmpty() || isOverStressed() || speed == 0f) {
             active = false;
             return;
         }
@@ -166,7 +165,7 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
             NorthstarLang.translate("gui.oxygen_sealer.oxygen_usage")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            CreateLang.number(drain)
+            NorthstarLang.number(drain)
                     .style(ChatFormatting.GOLD)
                     .add(NorthstarLang.MB_PER_TICK)
                     .forGoggles(tooltip, 1);

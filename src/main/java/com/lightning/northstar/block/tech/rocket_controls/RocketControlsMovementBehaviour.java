@@ -26,11 +26,8 @@ public class RocketControlsMovementBehaviour implements MovementBehaviour {
 
     @Override
     public void tick(MovementContext context) {
-        if (context.world.isClientSide) {
-            if (!(context.temporaryData instanceof LerpedFloat))
-                context.temporaryData = LerpedFloat.linear();
-
-            ((LerpedFloat) context.temporaryData).tickChaser();
+        if (context.world.isClientSide()) {
+            get(context).tickChaser();
         }
     }
 
@@ -42,15 +39,29 @@ public class RocketControlsMovementBehaviour implements MovementBehaviour {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
-        if (!(context.temporaryData instanceof LerpedFloat angle))
-            return;
+        LerpedFloat angle = get(context);
 
-        if (context.contraption.entity instanceof RocketContraptionEntity rocket && rocket.isInFlight() &&
-                rocket.getLaunchTime() <= 2 && angle.getChaseTarget() == 0) {
-            angle.chase(1.0, 0.2, LerpedFloat.Chaser.EXP);
+        if (context.contraption.entity instanceof RocketContraptionEntity rocket) {
+            double targetAngle = switch (rocket.getStatus()) {
+                case WAITING -> 0f;
+                case COUNTDOWN -> rocket.getCountdown() <= 2 ? 1 : 0.5;
+                case ASCENDING -> 1;
+                case DESCENDING -> rocket.areThrustersEnabled() ? 1 : 0;
+            };
+            angle.chase(targetAngle, 0.2, LerpedFloat.Chaser.EXP);
         }
 
         RocketControlsRenderer.render(context, renderWorld, matrices, buffer, angle.getValue(AnimationTickHolder.getPartialTicks(renderWorld)));
+    }
+
+    private static LerpedFloat get(MovementContext context) {
+        if (context.temporaryData instanceof LerpedFloat f) {
+            return f;
+        }
+
+        LerpedFloat f = LerpedFloat.linear();
+        context.temporaryData = f;
+        return f;
     }
 
 }

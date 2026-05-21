@@ -1,40 +1,31 @@
 package com.lightning.northstar.mixin.entity;
 
 import com.lightning.northstar.accessor.NorthstarPlayer;
-import com.lightning.northstar.accessor.NorthstarServerPlayer;
-import com.lightning.northstar.content.NorthstarPackets;
-import com.lightning.northstar.network.packet.RelativeTeleportPacket;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @Mixin(ServerPlayer.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ServerPlayerMixin implements NorthstarServerPlayer, NorthstarPlayer {
+public abstract class ServerPlayerMixin implements NorthstarPlayer {
 
-    @Inject(method = "dismountTo", at = @At("TAIL"))
-    private void northstar$dismountRelative(double x, double y, double z, CallbackInfo ci) {
-        ServerPlayer self = (ServerPlayer) (Object) this;
-
-        Entity relativeEntity = northstar$getRelativeEntity();
-        if (relativeEntity != null) {
-            Vec3 relativePosition = relativeEntity.position().subtract(x, y, z);
-            NorthstarPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> self), new RelativeTeleportPacket(relativeEntity.getId(), relativePosition));
-        }
-    }
+    @Shadow
+    public ServerGamePacketListenerImpl connection;
 
     @Override
-    public void northstar$setPositionRelativeTo(Entity other) {
-        northstar$setRelativeEntity(other, 2);
+    public void northstar$showTitle(Component title, Component subtitle, int fadeInTime, int displayTime, int fadeOutTime) {
+        connection.send(new ClientboundSetTitlesAnimationPacket(fadeInTime, displayTime, fadeOutTime));
+        connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
+        connection.send(new ClientboundSetTitleTextPacket(title));
     }
 
 }

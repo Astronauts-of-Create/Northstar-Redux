@@ -7,8 +7,6 @@ import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.SealingProvider;
-import com.lightning.northstar.world.dimension.NorthstarDimensions;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -48,6 +45,8 @@ public class NorthstarTemperature {
 
     public static final int MINIMUM_TEMPERATURE = -273;
     public static final int MAXIMUM_TEMPERATURE = 1500;
+    public static final int SPACE = -270;
+    public static final int DEFAULT = 20;
 
     private final Level level;
     private final Set<Provider> providers;
@@ -121,11 +120,7 @@ public class NorthstarTemperature {
     }
 
     public static float getBaseTemperature(Level level, BlockPos pos) {
-        if (level.dimension() == NorthstarDimensions.MERCURY_DIM_KEY) {
-            return level.canSeeSky(pos) && !level.isNight() ? 434 : -200;
-        }
-
-        return NorthstarPlanets.getPlanetTemp(level.dimension());
+        return level.northstar$dimension().temperature().get(level, pos);
     }
 
     @ApiStatus.Internal
@@ -209,7 +204,7 @@ public class NorthstarTemperature {
                 entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarItemTags.INSULATING.tag) &&
                 entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarItemTags.INSULATING.tag) &&
                 entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.INSULATING.tag)) ||
-                NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
+               NorthstarEntityTags.CAN_SURVIVE_COLD.matches(entity);
     }
 
     public static boolean hasHeatProtection(LivingEntity entity) {
@@ -217,27 +212,7 @@ public class NorthstarTemperature {
                 entity.getItemBySlot(EquipmentSlot.CHEST).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
                 entity.getItemBySlot(EquipmentSlot.LEGS).is(NorthstarItemTags.HEAT_RESISTANT.tag) &&
                 entity.getItemBySlot(EquipmentSlot.FEET).is(NorthstarItemTags.HEAT_RESISTANT.tag)) ||
-                NorthstarEntityTags.CAN_SURVIVE_HEAT.matches(entity);
-    }
-
-    public static double getHeatRating(ResourceKey<Level> level) {
-        // I love spaghetti (2)
-        if (level == NorthstarDimensions.MOON_DIM_KEY) return 0;
-        if (level == NorthstarDimensions.MARS_DIM_KEY) return 0.05;
-        if (level == NorthstarDimensions.MERCURY_DIM_KEY) return 0;
-        if (level == NorthstarDimensions.VENUS_DIM_KEY) return 5;
-        if (level == Level.OVERWORLD) return 0.4;
-        return 1;
-    }
-
-    public static double getHeatConstant(ResourceKey<Level> level) {
-        // I love spaghetti (2)
-        if (level == NorthstarDimensions.MOON_DIM_KEY) return 0;
-        if (level == NorthstarDimensions.MARS_DIM_KEY) return 50;
-        if (level == NorthstarDimensions.MERCURY_DIM_KEY) return 0;
-        if (level == NorthstarDimensions.VENUS_DIM_KEY) return 1000;
-        if (level == Level.OVERWORLD) return 100;
-        return 1;
+               NorthstarEntityTags.CAN_SURVIVE_HEAT.matches(entity);
     }
 
     public static void evaporate(Level level, BlockPos pos) {

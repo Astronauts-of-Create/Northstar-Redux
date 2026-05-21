@@ -16,6 +16,7 @@ public class NorthstarEnchantments {
             .rarity(Rarity.VERY_RARE)
             .register();
 
-    public static void register() {}
+    public static void register() {
+    }
 
 }

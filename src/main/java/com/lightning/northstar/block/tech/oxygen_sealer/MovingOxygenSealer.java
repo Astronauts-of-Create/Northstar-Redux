@@ -80,7 +80,7 @@ public class MovingOxygenSealer implements NorthstarOxygen.Provider {
     private static Fluid findOxygenIn(MountedFluidStorageWrapper fluids) {
         for (int i = 0; i < fluids.getTanks(); i++) {
             Fluid fluid = fluids.getFluidInTank(i).getFluid();
-            if (NorthstarOxygen.isOxygen(fluid)) {
+            if (NorthstarOxygen.isBreathable(fluid)) {
                 return fluid;
             }
         }

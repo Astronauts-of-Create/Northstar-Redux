@@ -35,10 +35,12 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         super(type, pos, state);
     }
 
-    @ModifyVariable(method = "produceAir",
+    @ModifyVariable(
+            method = "produceAir",
             at = @At("STORE"),
             ordinal = 0,
-            remap = false)
+            remap = false
+    )
     private int northstar$addOxygenRequirement(int production) {
         NorthstarOxygen oxygen = level.northstar$oxygen();
         northstar$lastConsumed = 0;
@@ -52,11 +54,15 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         return production;
     }
 
-    @Redirect(method = "produceAir",
-            at = @At(value = "INVOKE",
+    @Redirect(
+            method = "produceAir",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lcom/tterrag/registrate/util/entry/FluidEntry;getSource()Lnet/minecraftforge/fluids/ForgeFlowingFluid;",
-                    remap = false),
-            remap = false)
+                    remap = false
+            ),
+            remap = false
+    )
     private ForgeFlowingFluid northstar$convertToHotAir(FluidEntry<?> instance) {
         // Only handle air for now, other gases will be implemented with the new planet system.
         return NorthstarTemperature.getTemperatureAt(level, worldPosition) >= 1000 ? TFMGFluids.HOT_AIR.getSource() : TFMGFluids.AIR.getSource();

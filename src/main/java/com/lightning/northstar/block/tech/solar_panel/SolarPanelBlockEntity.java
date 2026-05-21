@@ -1,11 +1,9 @@
 package com.lightning.northstar.block.tech.solar_panel;
 
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -16,7 +14,6 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
 
     public final LerpedFloat targetAngle = LerpedFloat.angular();
 
-    private int lastLight = -1;
     private float generatedSpeed;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -30,10 +27,9 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
         if (level.isClientSide()) {
             targetAngle.tickChaser();
         } else {
-            int light = Math.max(0, level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken());
-            if (light != lastLight && getFlickerScore() <= 64) {
-                lastLight = light;
-                generatedSpeed = MAXIMUM_SPEED * light / 15f * NorthstarPlanets.getSunMultiplier(level.dimension());
+            int rpm = (int) (MAXIMUM_SPEED * level.northstar$dimension().sun().get(level, worldPosition));
+            if (rpm != generatedSpeed && getFlickerScore() <= 64) {
+                generatedSpeed = rpm;
                 updateGeneratedRotation();
             }
         }
@@ -43,7 +39,6 @@ public class SolarPanelBlockEntity extends GeneratingKineticBlockEntity {
     protected void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         generatedSpeed = compound.getFloat("GeneratorSpeed");
-        lastLight = -1;
     }
 
     @Override

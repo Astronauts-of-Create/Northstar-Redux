@@ -1,17 +1,20 @@
 package com.lightning.northstar;
 
+import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
 import com.lightning.northstar.advancements.NorthstarTriggers;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
+import com.lightning.northstar.content.world.NorthstarFeatures;
 import com.lightning.northstar.contraption.FuelType;
-import com.lightning.northstar.contraption.rocket.RocketHandler;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.particle.NorthstarParticles;
-import com.lightning.northstar.world.dimension.NorthstarDimensions;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
-import com.lightning.northstar.world.features.NorthstarFeatures;
-import com.lightning.northstar.world.features.trunkplacers.NorthstarTrunkPlacerTypes;
+import com.lightning.northstar.planet.data.PlanetDimension;
+import com.lightning.northstar.planet.data.PlanetProperties;
+import com.lightning.northstar.planet.data.func.LevelFunction;
+import com.lightning.northstar.planet.data.orbit.OrbitProvider;
+import com.lightning.northstar.planet.data.render.PlanetSpriteRenderer;
+import com.lightning.northstar.world.gen.feature.trunkplacers.NorthstarTrunkPlacerTypes;
 import com.lightning.northstar.world.oxygen.DefaultOxygenConsumers;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -20,15 +23,21 @@ import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,17 +50,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
 
+import java.util.Iterator;
+
 @Mod(Northstar.MOD_ID)
 public class Northstar {
-
-    // Define mod id in a common place for everything to reference
-    public static final double GRAV_CONSTANT = 0.08;
-    public static final double EARTH_GRAV = 1;
-    public static final double MARS_GRAV = 0.37;
-    public static final double VENUS_GRAV = 0.89;
 
     public static final String MOD_ID = "northstar";
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -71,37 +77,38 @@ public class Northstar {
         REGISTRATE.registerEventListeners(modEventBus);
         GeckoLib.initialize();
 
-        NorthstarTags.register();
-        NorthstarCreativeModeTab.register(modEventBus);
-        NorthstarItems.register();
-        NorthstarBlocks.register();
-        NorthstarBlockEntityTypes.register();
-        NorthstarPotions.register(modEventBus);
-        NorthstarEnchantments.register();
-        NorthstarBlocks.register();
-        NorthstarFeatures.register(modEventBus);
-        NorthstarRecipeTypes.register(modEventBus);
-        NorthstarParticles.register(modEventBus);
-        NorthstarSounds.register(modEventBus);
-        NorthstarStats.register(modEventBus);
-        NorthstarMenuTypes.register();
-        NorthstarPlanets.register();
-        NorthstarDimensions.register();
-        NorthstarEntityTypes.register();
-        NorthstarFluids.register();
-        DefaultOxygenConsumers.register();
-        NorthstarPotatoProjectileEntityHitActions.register(modEventBus);
-
-        NorthstarTrunkPlacerTypes.register(modEventBus);
-        NorthstarPartialModels.register();
-
-        RocketHandler.register();
-
         NorthstarConfigs.register(modContext::registerConfig);
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.onCtorClient(modEventBus, forgeEventBus));
-    }
+        NorthstarBlockEntityTypes.register();
+        NorthstarBlocks.register();
+        NorthstarContraptionTypes.register(modEventBus);
+        NorthstarCreativeModeTab.register(modEventBus);
+        NorthstarEnchantments.register();
+        NorthstarEntityTypes.register();
+        NorthstarFluids.register();
+        NorthstarItems.register();
+        NorthstarMenuTypes.register();
+        NorthstarPartialModels.register();
+        NorthstarParticles.register(modEventBus);
+        NorthstarPois.register(modEventBus);
+        NorthstarPotatoProjectileEntityHitActions.register(modEventBus);
+        NorthstarPotions.register(modEventBus);
+        NorthstarRecipeTypes.register(modEventBus);
+        NorthstarSounds.register(modEventBus);
+        NorthstarStats.register(modEventBus);
+        NorthstarTags.register();
 
+        NorthstarFeatures.register(modEventBus);
+        NorthstarTrunkPlacerTypes.register(modEventBus);
+
+        DefaultOxygenConsumers.register();
+
+        LevelFunction.register();
+        OrbitProvider.register();
+        PlanetSpriteRenderer.register();
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.clientInit(modEventBus, forgeEventBus));
+    }
 
     @EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD)
     public static class ModEventListeners {
@@ -120,13 +127,13 @@ public class Northstar {
             if (event.getRegistryKey() == Registries.CUSTOM_STAT) {
                 NorthstarStats.registerFormatters();
             }
-
-            NorthstarContraptionTypes.register();
         }
 
         @SubscribeEvent
         public static void onNewRegistry(DataPackRegistryEvent.NewRegistry event) {
             event.dataPackRegistry(NorthstarRegistries.FUEL, FuelType.CODEC, FuelType.CODEC);
+            event.dataPackRegistry(NorthstarRegistries.PLANET, PlanetProperties.CODEC, PlanetProperties.CODEC);
+            event.dataPackRegistry(NorthstarRegistries.PLANET_DIMENSION, PlanetDimension.CODEC, PlanetDimension.CODEC);
         }
 
         @SubscribeEvent
@@ -180,6 +187,30 @@ public class Northstar {
         @SubscribeEvent
         public static void onRegistrySync(TagsUpdatedEvent event) {
             FuelType.recacheFuels(event.getRegistryAccess());
+
+            if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+                NorthstarLevel.SERVER_TRACKER.reloadPlanets(event.getRegistryAccess());
+                MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+                if (server != null)
+                    server.getAllLevels().forEach(Level::northstar$onResourceReload);
+            } else if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED) {
+                NorthstarLevel.CLIENT_TRACKER.reloadPlanets(event.getRegistryAccess());
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                    ClientLevel level = Minecraft.getInstance().level;
+                    if (level != null)
+                        level.northstar$onResourceReload();
+                });
+            } else {
+                throw new RuntimeException("Unknown update cause " + event.getUpdateCause());
+            }
+        }
+
+        @SubscribeEvent
+        public static void onServerTick(TickEvent.ServerTickEvent event) {
+            Iterator<ServerLevel> levels = event.getServer().getAllLevels().iterator();
+            if (levels.hasNext()) {
+                NorthstarLevel.SERVER_TRACKER.tick(levels.next(), 0);
+            }
         }
     }
 

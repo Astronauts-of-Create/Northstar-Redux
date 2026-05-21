@@ -1,21 +1,22 @@
 [versions]
 flywheel = "1.0.6-beta-266"
-mixinextras = "0.4.1"
+mixinextras = "0.5.0"
 ponder = "1.0.91"
 
 [libraries]
 architectury = "dev.architectury:architectury-forge:9.1.12"
 cdg = "maven.modrinth:create-diesel-generators:1.20.1-1.3.5"
 create = "com.simibubi.create:create-1.20.1:6.0.8-290"
-copycats = "com.copycatsplus:copycats:3.0.2+mc.1.20.1-forge-build.258"
+copycats = "com.copycatsplus:copycats:3.0.7+mc.1.20.1-forge"
 flywheel-forge-api = { module = "dev.engine-room.flywheel:flywheel-forge-api-1.20.1", version.ref = "flywheel" }
 flywheel-forge = { module = "dev.engine-room.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"
-jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.112"
+jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.130"
 kubejs = "dev.latvian.mods:kubejs-forge:2001.6.5-build.16"
 mixin = "org.spongepowered:mixin:0.8.7"
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
 mixinextras-forge = { module = "io.github.llamalad7:mixinextras-forge", version.ref = "mixinextras" }
+oculus = "maven.modrinth:oculus:1.20.1-1.8.0"
 ponder-forge = { module = "net.createmod.ponder:Ponder-Forge-1.20.1", version.ref = "ponder" }
 registrate = "com.tterrag.registrate:Registrate:MC1.20-1.3.3"
 rhino = "dev.latvian.mods:rhino-forge:2001.2.3-build.10"

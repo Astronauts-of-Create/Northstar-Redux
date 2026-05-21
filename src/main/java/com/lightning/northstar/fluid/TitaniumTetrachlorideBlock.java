@@ -1,6 +1,7 @@
 package com.lightning.northstar.fluid;
 
 import net.createmod.catnip.data.Iterate;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -18,8 +19,11 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class TitaniumTetrachlorideBlock extends LiquidBlock {
 
     public TitaniumTetrachlorideBlock(Supplier<? extends FlowingFluid> fluid, Properties properties) {

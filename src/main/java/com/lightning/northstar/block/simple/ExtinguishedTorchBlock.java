@@ -66,9 +66,9 @@ public class ExtinguishedTorchBlock extends TorchBlock implements ProperWaterlog
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!player.getAbilities().mayBuild ||
-                !player.getItemInHand(hand).is(NorthstarItemTags.IGNITION_SOURCE.tag) ||
-                !NorthstarOxygen.hasOxygen(level, pos) ||
-                state.getValue(WATERLOGGED)) {
+            !player.getItemInHand(hand).is(NorthstarItemTags.IGNITION_SOURCE.tag) ||
+            !NorthstarOxygen.hasOxygen(level, pos) ||
+            state.getValue(WATERLOGGED)) {
             return InteractionResult.PASS;
         }
 

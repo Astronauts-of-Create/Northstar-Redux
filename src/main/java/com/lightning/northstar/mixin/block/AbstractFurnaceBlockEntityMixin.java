@@ -29,8 +29,10 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
         super(type, pos, blockState);
     }
 
-    @ModifyReturnValue(method = "canBurn",
-            at = @At("RETURN"))
+    @ModifyReturnValue(
+            method = "canBurn",
+            at = @At("RETURN")
+    )
     private boolean northstar$preventBurningWithoutOxygen(boolean original) {
         return original && NorthstarOxygen.hasOxygen(level, worldPosition);
     }

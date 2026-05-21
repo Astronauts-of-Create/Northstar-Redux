@@ -2,6 +2,7 @@ package com.lightning.northstar;
 
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
+import com.lightning.northstar.content.world.NorthstarDimensionTypes;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +21,7 @@ import java.util.Map;
 @EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class NorthstarContentRemapper {
 
+    private static final Map<ResourceLocation, Map<ResourceLocation, ResourceLocation>> mappings = new HashMap<>();
     private static final Map<ResourceLocation, ResourceLocation> remapped = new HashMap<>();
 
     static {
@@ -41,6 +43,9 @@ public class NorthstarContentRemapper {
         remap("oxygen_concentrator", NorthstarBlocks.ATMOSPHERIC_CONCENTRATOR);
         // 0.6.0
         remap("martian_steel", NorthstarItems.MARTIAN_STEEL_INGOT);
+        remap("jet_engine", NorthstarBlocks.ROCKET_THRUSTER);
+
+        remap(Registries.DIMENSION_TYPE, Northstar.asResource("earth_orbit"), NorthstarDimensionTypes.ORBIT.location());
     }
 
     public static void remap(String oldValue, RegistryEntry<?> newValue) {
@@ -49,6 +54,11 @@ public class NorthstarContentRemapper {
 
     public static void remap(ResourceLocation oldValue, RegistryEntry<?> newValue) {
         remapped.put(oldValue, newValue.getId());
+    }
+
+    /** Remaps a datapack registry entry */
+    public static void remap(ResourceKey<? extends Registry<?>> registry, ResourceLocation oldValue, ResourceLocation newValue) {
+        mappings.computeIfAbsent(registry.location(), l -> new HashMap<>()).put(oldValue, newValue);
     }
 
     @SubscribeEvent
@@ -62,10 +72,19 @@ public class NorthstarContentRemapper {
         for (MissingMappingsEvent.Mapping<T> mapping : event.getAllMappings(registry)) {
             ResourceLocation remappedId = remapped.get(mapping.getKey());
             if (remappedId != null) {
-                Northstar.LOGGER.warn("Remapping '{}' to '{}'", mapping.getKey(), remappedId);
+                Northstar.LOGGER.warn("Remapping '{}' to '{}' for registry '{}'", mapping.getKey(), remappedId, registry.location());
                 mapping.remap(forgeRegistry.getValue(remappedId));
             }
         }
+    }
+
+    public static <T> ResourceKey<T> remap(ResourceKey<T> original) {
+        Map<ResourceLocation, ResourceLocation> mapping = mappings.get(original.registry());
+        if (mapping == null) {
+            return original;
+        }
+        ResourceLocation mapped = mapping.get(original.location());
+        return mapped == null ? original : ResourceKey.create(ResourceKey.createRegistryKey(original.registry()), mapped);
     }
 
 }

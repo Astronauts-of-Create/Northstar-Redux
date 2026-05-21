@@ -16,9 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GuiGraphicsMixin implements NorthstarGuiGraphics {
 
     // Unfortunately can't make use of RegisterItemDecorationsEvent as it's only called ONCE on startup before anything useful is loaded
-    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
-            at = @At(value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"))
+    @Inject(
+            method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"
+            )
+    )
     public void northstar$onRenderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
         if (NorthstarItemTags.OXYGEN_SOURCES.matches(stack)) {
             GuiGraphics self = (GuiGraphics) (Object) this;

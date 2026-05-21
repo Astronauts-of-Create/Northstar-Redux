@@ -6,10 +6,12 @@ import com.drmangotea.tfmg.registry.TFMGFluids;
 import com.jesz.createdieselgenerators.CDGBlocks;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarDamageTypes;
-import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
-import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
-import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
-import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
+import com.lightning.northstar.content.NorthstarTags.*;
+import com.lightning.northstar.content.world.planet.core.NorthstarBiomes;
+import com.lightning.northstar.content.world.planet.mars.MarsBiomes;
+import com.lightning.northstar.content.world.planet.mercury.MercuryBiomes;
+import com.lightning.northstar.content.world.planet.moon.MoonBiomes;
+import com.lightning.northstar.content.world.planet.venus.VenusBiomes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
@@ -27,9 +29,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +55,7 @@ public class NorthstarTagGen {
     }
 
     private static void blocks(RegistrateTagsProvider<Block> provider) {
-        Tags<Block, Block> tags = new Tags<>(provider, Block::builtInRegistryHolder, Function.identity());
+        TagHelper<Block, Block> tags = new TagHelper<>(provider, Block::builtInRegistryHolder, Function.identity());
 
         tags.tag(NorthstarBlockTags.AIR_PASSES_THROUGH)
                 .add(NorthstarBlockTags.BLOCKS_AIR)
@@ -149,6 +153,8 @@ public class NorthstarTagGen {
                 .add(Blocks.BASALT, Blocks.TUFF)
                 .add(AllPaletteStoneTypes.SCORCHIA.baseBlock.get());
 
+        tags.tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS);
+
         tags.tag(NorthstarBlockTags.TIER_1_HEAT_RESISTANCE)
                 .add(Blocks.IRON_BLOCK)
                 .add(AllBlocks.INDUSTRIAL_IRON_BLOCK.get());
@@ -169,7 +175,7 @@ public class NorthstarTagGen {
     }
 
     private static void items(RegistrateTagsProvider<Item> provider) {
-        Tags<Item, ItemLike> tags = new Tags<>(provider, Item::builtInRegistryHolder, ItemLike::asItem);
+        TagHelper<Item, ItemLike> tags = new TagHelper<>(provider, Item::builtInRegistryHolder, ItemLike::asItem);
 
         tags.tag(NorthstarItemTags.IGNITION_SOURCE)
                 .add(Items.FLINT_AND_STEEL)
@@ -197,7 +203,7 @@ public class NorthstarTagGen {
     }
 
     private static void entities(RegistrateTagsProvider<EntityType<?>> provider) {
-        Tags<EntityType<?>, EntityType<?>> tags = new Tags<>(provider, EntityType::builtInRegistryHolder, Function.identity());
+        TagHelper<EntityType<?>, EntityType<?>> tags = new TagHelper<>(provider, EntityType::builtInRegistryHolder, Function.identity());
 
         tags.tag(NorthstarEntityTags.CAN_SURVIVE_COLD)
                 .add(EntityType.SKELETON)
@@ -228,11 +234,12 @@ public class NorthstarTagGen {
     }
 
     private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
-        Tags<Fluid, Fluid> tags = new Tags<>(provider, Fluid::builtInRegistryHolder, Function.identity());
+        TagHelper<Fluid, Fluid> tags = new TagHelper<>(provider, Fluid::builtInRegistryHolder, Function.identity());
 
         tags.tag(NorthstarFluidTags.IS_OXY);
 
         tags.tag(NorthstarFluidTags.BREATHABLE)
+                .add(NorthstarFluidTags.C_OXYGEN)
                 .add(NorthstarFluidTags.IS_OXY)
                 .opt(TFMGFluids.AIR.get());
 
@@ -243,17 +250,100 @@ public class NorthstarTagGen {
                 .opt(ModCompat.CDG, "biodiesel");
     }
 
-    public static class Damage extends TagsProvider<DamageType> {
-        public Damage(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+    public static class BiomeTag extends TagsProvider<Biome> {
+        public BiomeTag(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.BIOME, lookupProvider, Northstar.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            tag(NorthstarBiomeTags.C_IS_CAVE_MARS.tag)
+                    .add(MarsBiomes.CRIMSITE_CAVERNS)
+                    .add(MarsBiomes.MAGMATIC_CAVES)
+                    .add(MarsBiomes.OVERGROWN_CAVERNS);
+
+            tag(NorthstarBiomeTags.C_IS_CAVE_MERCURY.tag)
+                    .add(MercuryBiomes.ICY_CAVERNS)
+                    .add(MercuryBiomes.MAGMATIC_CAVERNS);
+
+            tag(NorthstarBiomeTags.C_IS_CAVE_MOON.tag)
+                    .add(MoonBiomes.ASURINE_CAVES)
+                    .add(MoonBiomes.COOLED_LAVA_CAVE)
+                    .add(MoonBiomes.GLOWSTONE_CAVERN)
+                    .add(MoonBiomes.ICE_CAVES);
+
+            tag(NorthstarBiomeTags.C_IS_CAVE_VENUS.tag)
+                    .add(VenusBiomes.FUNGAL_CAVERNS)
+                    .add(VenusBiomes.LAVA_CAVES)
+                    .add(VenusBiomes.SULFURIC_CAVERNS);
+
+            // is_underground automatically includes is_caves
+            tag(Tags.Biomes.IS_CAVE)
+                    .addTag(NorthstarBiomeTags.C_IS_CAVE_MARS.tag)
+                    .addTag(NorthstarBiomeTags.C_IS_CAVE_MERCURY.tag)
+                    .addTag(NorthstarBiomeTags.C_IS_CAVE_MOON.tag)
+                    .addTag(NorthstarBiomeTags.C_IS_CAVE_VENUS.tag);
+
+            tag(Tags.Biomes.IS_PEAK)
+                    .add(MarsBiomes.PEAKS);
+
+            tag(Tags.Biomes.IS_SNOWY)
+                    .add(MarsBiomes.PEAKS);
+
+            tag(Tags.Biomes.IS_VOID)
+                    .add(NorthstarBiomes.VOID);
+
+            tag(NorthstarBiomeTags.HAS_MARS_BASE.tag)
+                    .add(MarsBiomes.DUNES)
+                    .add(MarsBiomes.HIGHLANDS);
+
+            tag(NorthstarBiomeTags.MARS_BIOMES.tag)
+                    .add(MarsBiomes.CRIMSITE_CAVERNS)
+                    .add(MarsBiomes.DUNES)
+                    .add(MarsBiomes.HIGHLANDS)
+                    .add(MarsBiomes.MAGMATIC_CAVES)
+                    .add(MarsBiomes.OVERGROWN_CAVERNS)
+                    .add(MarsBiomes.PEAKS);
+
+            tag(NorthstarBiomeTags.MERCURY_BIOMES.tag)
+                    .add(MercuryBiomes.BASINS)
+                    .add(MercuryBiomes.HILLS)
+                    .add(MercuryBiomes.ICY_CAVERNS)
+                    .add(MercuryBiomes.MAGMATIC_CAVERNS);
+
+            tag(NorthstarBiomeTags.MOON_BIOMES.tag)
+                    .add(MoonBiomes.ASURINE_CAVES)
+                    .add(MoonBiomes.COOLED_LAVA_CAVE)
+                    .add(MoonBiomes.CRATER_FIELDS)
+                    .add(MoonBiomes.GLOWSTONE_CAVERN)
+                    .add(MoonBiomes.HILLS)
+                    .add(MoonBiomes.ICE_CAVES)
+                    .add(MoonBiomes.PLAINS);
+
+            tag(NorthstarBiomeTags.VENUS_BIOMES.tag)
+                    .add(VenusBiomes.FUNGAL_CAVERNS)
+                    .add(VenusBiomes.FUNGAL_FOREST)
+                    .add(VenusBiomes.LAVA_CAVES)
+                    .add(VenusBiomes.SULFURIC_CAVERNS)
+                    .add(VenusBiomes.PLAINS)
+                    .add(VenusBiomes.WASTES);
+        }
+    }
+
+    public static class DamageTypeTag extends TagsProvider<DamageType> {
+        public DamageTypeTag(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, Registries.DAMAGE_TYPE, lookupProvider, Northstar.MOD_ID, existingFileHelper);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider provider) {
             tag(DamageTypeTags.BYPASSES_ARMOR)
-                    .add(NorthstarDamageTypes.SUFFOCATION);
+                    .add(NorthstarDamageTypes.SUFFOCATION_NO_OXYGEN)
+                    .add(NorthstarDamageTypes.SUFFOCATION_NO_SPACESUIT);
+
             tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
-                    .add(NorthstarDamageTypes.SUFFOCATION);
+                    .add(NorthstarDamageTypes.SUFFOCATION_NO_OXYGEN)
+                    .add(NorthstarDamageTypes.SUFFOCATION_NO_SPACESUIT);
         }
     }
 
