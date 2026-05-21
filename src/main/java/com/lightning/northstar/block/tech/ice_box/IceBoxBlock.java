@@ -67,11 +67,11 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
                     return InteractionResult.SUCCESS;
 
                 if (GenericItemEmptying.canItemBeEmptied(level, heldItem)
-                        || GenericItemFilling.canItemBeFilled(level, heldItem))
+                    || GenericItemFilling.canItemBeFilled(level, heldItem))
                     return InteractionResult.SUCCESS;
                 if (heldItem.getItem()
-                        .equals(Items.SPONGE)
-                        && !be.getCapability(ForgeCapabilities.FLUID_HANDLER)
+                            .equals(Items.SPONGE)
+                    && !be.getCapability(ForgeCapabilities.FLUID_HANDLER)
                         .map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
                         .orElse(FluidStack.EMPTY)
                         .isEmpty()) {

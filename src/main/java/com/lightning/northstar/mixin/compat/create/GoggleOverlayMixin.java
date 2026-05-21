@@ -25,12 +25,16 @@ import java.util.List;
 @Mixin(GoggleOverlayRenderer.class)
 public class GoggleOverlayMixin {
 
-    @Inject(method = "renderOverlay",
-            at = @At(value = "INVOKE",
+    @Inject(
+            method = "renderOverlay",
+            at = @At(
+                    value = "INVOKE",
                     target = "Ljava/util/List;isEmpty()Z",
                     shift = At.Shift.BEFORE,
-                    ordinal = 2),
-            remap = false)
+                    ordinal = 2
+            ),
+            remap = false
+    )
     private static void northstar$addOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height, CallbackInfo ci,
                                              @Local ClientLevel level,
                                              @Local BlockPos pos,

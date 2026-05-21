@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class NorthstarEntityResources {
 
-    // armors
+    // Armors
 
     public static final ResourceLocation IRON_SPACESUIT_ARMOR_MODEL = Northstar.asResource("geo/armor/iron_space_suit.geo.json");
     public static final ResourceLocation IRON_SPACESUIT_ARMOR_TEXTURE = Northstar.asResource("textures/armor/iron_space_suit.png");
@@ -22,7 +22,7 @@ public class NorthstarEntityResources {
     public static final ResourceLocation MARTIAN_STEEL_SPACESUIT_ARMOR_ANIMATIONS = IRON_SPACESUIT_ARMOR_ANIMATIONS;
     public static final ResourceLocation MARTIAN_STEEL_SPACESUIT_ARMOR_ARM = Northstar.asResource("textures/armor/martian_steel_space_suit_arm.png");
 
-    // martian creatures
+    // Martian creatures
 
     public static final ResourceLocation WORM_MODEL = Northstar.asResource("mars_worm");
     public static final ResourceLocation WORM_TEXTURE = Northstar.asResource("textures/entity/mars_worm");
@@ -40,7 +40,7 @@ public class NorthstarEntityResources {
     public static final ResourceLocation MOTH_TEXTURE = Northstar.asResource("textures/entity/mars_moth");
     public static final ResourceLocation MOTH_ANIMATIONS = Northstar.asResource("animations/mars_moth");
 
-    // venusian creatures
+    // Venusian creatures
 
     public static final ResourceLocation MIMIC_MODEL = Northstar.asResource("venus_mimic");
     public static final ResourceLocation MIMIC_TEXTURE = Northstar.asResource("textures/entity/venus_mimic");
@@ -59,7 +59,7 @@ public class NorthstarEntityResources {
     public static final ResourceLocation VULTURE_TEXTURE = Northstar.asResource("textures/entity/venus_bird");
     public static final ResourceLocation VULTURE_ANIMATIONS = Northstar.asResource("animations/venus_bird");
 
-    // moon creatures
+    // Moon creatures
 
     public static final ResourceLocation SNAIL_MODEL = Northstar.asResource("moon_snail");
     public static final ResourceLocation SNAIL_TEXTURE = Northstar.asResource("textures/entity/moon_snail");
@@ -73,7 +73,8 @@ public class NorthstarEntityResources {
     public static final ResourceLocation EEL_TEXTURE = Northstar.asResource("textures/entity/moon_lunar_hydra");
     public static final ResourceLocation EEL_ANIMATIONS = Northstar.asResource("animations/moon_lunar_hydra");
 
-    //mercury creatures
+    // Mercury creatures
+
     public static final ResourceLocation RAPTOR_MODEL = Northstar.asResource("mercury_raptor");
     public static final ResourceLocation RAPTOR_TEXTURE = Northstar.asResource("textures/entity/mercury_raptor");
     public static final ResourceLocation RAPTOR_ANIMATIONS = Northstar.asResource("animations/mercury_raptor");

@@ -1,7 +1,7 @@
 package com.lightning.northstar.block.tech.electrolysis_machine;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarRecipeTypes;
+import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -101,7 +101,7 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        Lang.translate("gui.goggles.electrolysis_machine")
+        NorthstarLang.translate("gui.goggles.electrolysis_machine")
                 .forGoggles(tooltip);
 
         if (StressImpact.isEnabled())
@@ -117,24 +117,24 @@ public class ElectrolysisMachineBlockEntity extends KineticBlockEntity implement
         FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
 
         if (!fluidStack.getFluid().getFluidType().isAir()) {
-            Lang.translate(color)
+            NorthstarLang.translate(color)
                     .add(Lang.fluidName(fluidStack))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         } else {
-            Lang.translate(color)
-                    .add(Lang.translate("gui.goggles.empty"))
+            NorthstarLang.translate(color)
+                    .add(NorthstarLang.translate("gui.goggles.empty"))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }
 
-        Lang.builder(Northstar.MOD_ID)
-                .add(Lang.number(fluidStack.getAmount())
-                        .add(Lang.translate("generic.unit.millibuckets"))
+        NorthstarLang.builder()
+                .add(NorthstarLang.number(fluidStack.getAmount())
+                        .add(NorthstarLang.MB)
                         .style(ChatFormatting.GOLD))
                 .text(ChatFormatting.GRAY, " / ")
-                .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
-                        .add(Lang.translate("generic.unit.millibuckets"))
+                .add(NorthstarLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                        .add(NorthstarLang.MB)
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
     }

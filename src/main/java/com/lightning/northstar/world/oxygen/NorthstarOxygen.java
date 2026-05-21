@@ -7,7 +7,6 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.SealingProvider;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +51,7 @@ public class NorthstarOxygen {
     }
 
     public boolean hasOxygen() {
-        return NorthstarPlanets.getPlanetOxy(level.dimension());
+        return isBreathable(level.northstar$dimension().atmosphere().fluid());
     }
 
     public Provider getSealer(Vec3 pos) {
@@ -73,11 +73,11 @@ public class NorthstarOxygen {
     }
 
     public boolean hasOxygen(Vec3 pos) {
-        return NorthstarPlanets.getPlanetOxy(level.dimension()) || getSealer(pos) != null;
+        return hasOxygen() || getSealer(pos) != null;
     }
 
     public boolean hasOxygen(Vec3i pos) {
-        return NorthstarPlanets.getPlanetOxy(level.dimension()) || getSealer(pos) != null;
+        return hasOxygen() || getSealer(pos) != null;
     }
 
     public void registerSealer(Provider provider) {
@@ -101,8 +101,8 @@ public class NorthstarOxygen {
         void drainOxygen(float oxygen);
     }
 
-    public static boolean isOxygen(Fluid fluid) {
-        return NorthstarFluidTags.C_OXYGEN.matches(fluid) || NorthstarFluidTags.BREATHABLE.matches(fluid);
+    public static boolean isBreathable(Fluid fluid) {
+        return NorthstarFluidTags.BREATHABLE.matches(fluid);
     }
 
     public static boolean hasOxygen(Level level, Vec3 pos) {
@@ -156,7 +156,7 @@ public class NorthstarOxygen {
         boolean isFullyCovered = true;
         ItemStack oxygenSource = ItemStack.EMPTY;
         for (ItemStack armor : entity.getArmorSlots()) {
-            if (armor.isEmpty()) {
+            if (armor.isEmpty() || !NorthstarItemTags.OXYGEN_SEALING.matches(armor)) {
                 isFullyCovered = false;
                 break;
             }
@@ -169,7 +169,10 @@ public class NorthstarOxygen {
             event.setCanBreathe(true);
             event.setCanRefillAir(true);
         } else if (!atmosphereBreathable && world.getGameTime() % 10 != entity.getId() % 10) {
-            entity.hurt(world.damageSources().northstar$suffocation(), 1);
+            DamageSource source = isFullyCovered ?
+                    world.damageSources().northstar$suffocationNoOxygen() :
+                    world.damageSources().northstar$suffocationNoSuit();
+            entity.hurt(source, 1);
         }
     }
 

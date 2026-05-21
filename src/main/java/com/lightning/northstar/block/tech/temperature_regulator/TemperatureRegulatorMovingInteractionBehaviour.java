@@ -26,11 +26,11 @@ public class TemperatureRegulatorMovingInteractionBehaviour extends MovingIntera
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingTemperatureRegulator regulator))
             return false;
 
-        if (!player.level().isClientSide()) {
-            player.awardStat(NorthstarStats.INTERACT_WITH_TEMPERATURE_REGULATOR);
+        player.awardStat(NorthstarStats.INTERACT_WITH_TEMPERATURE_REGULATOR);
+        if (player.level().isClientSide()) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos));
         }
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(regulator.regulator, ctx.contraption.entity.getId(), ctx.localPos));
         return true;
     }
 

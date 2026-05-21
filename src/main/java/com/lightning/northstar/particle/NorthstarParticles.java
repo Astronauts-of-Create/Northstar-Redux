@@ -12,6 +12,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class NorthstarParticles {
 
     private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, Northstar.MOD_ID);
@@ -32,10 +35,7 @@ public class NorthstarParticles {
             GLOWSTONE = simpleSprite("glowstone", () -> GlowstoneParticle::new),
             LEAK = simpleSprite("leak", () -> LeakParticle::new),
             OXY_FLOW = simpleSprite("oxy_flow", () -> OxyFlowParticle::new),
-            ROCKET_FLAME = simpleSprite("rocket_flame", () -> RocketFlameParticle::new),
-            ROCKET_FLAME_LANDING = simpleSprite("rocket_flame_landing", () -> RocketFlameLandingParticle::new),
-            ROCKET_SMOKE = simpleSprite("rocket_smoke", () -> RocketSmokeParticle::new),
-            ROCKET_SMOKE_LANDING = simpleSprite("rocket_smoke_landing", () -> RocketSmokeLandingParticle::new),
+            ROCKET_PLUME = simpleSprite("rocket_plume", () -> RocketPlumeParticle::new),
             SNAIL_SLIME = simpleSprite("snail_slime", () -> SnailSlimeParticle::new),
             SNOWFLAKE = simpleSprite("snowflake", () -> SnowflakeParticle::new),
             SULFUR_POOF = simpleSprite("sulfur_poof", () -> SulfurPoofParticle::new);
@@ -44,6 +44,7 @@ public class NorthstarParticles {
         REGISTER.register(modEventBus);
     }
 
+    @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void registerFactories(RegisterParticleProvidersEvent event) {
         for (Consumer<RegisterParticleProvidersEvent> factory : FACTORIES) {
@@ -62,15 +63,14 @@ public class NorthstarParticles {
     }
 
     public static int getLight(int lightColor, float partialTick, int age, int lifetime) {
-        // TODO: cleanup, this seems to reuse PortalParticle#getLightColor
         float f = Mth.clamp((age + partialTick) / lifetime, 0.0F, 1.0F);
-        int j = lightColor & 255;
-        int k = lightColor >> 16 & 255;
-        j += (int) (f * 15.0F * 16.0F);
-        if (j > 240) {
-            j = 240;
+        int block = lightColor & 255;
+        int sky = lightColor >> 16 & 255;
+        block += (int) (f * 15 * 16);
+        if (block > 240) {
+            block = 240;
         }
-        return j | k << 16;
+        return block | sky << 16;
     }
 
     public interface SpriteParticleProvider<T extends ParticleOptions> {

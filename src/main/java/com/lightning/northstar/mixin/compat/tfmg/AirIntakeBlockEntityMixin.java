@@ -30,10 +30,12 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         super(type, pos, state);
     }
 
-    @ModifyVariable(method = "tick",
+    @ModifyVariable(
+            method = "tick",
             at = @At("STORE"),
             ordinal = 0,
-            remap = false)
+            remap = false
+    )
     private int northstar$addOxygenRequirement(int production) {
         NorthstarOxygen oxygen = level.northstar$oxygen();
         northstar$lastConsumed = 0;

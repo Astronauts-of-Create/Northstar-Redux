@@ -4,8 +4,16 @@ import net.minecraft.world.damagesource.DamageSource;
 
 public interface NorthstarDamageSources {
 
-    default DamageSource northstar$suffocation() {
-        throw new RuntimeException("This should be implemented by a mixin!");
+    default DamageSource northstar$suffocationNoSuit() {
+        throw new MissingMixinException();
+    }
+
+    default DamageSource northstar$suffocationNoOxygen() {
+        throw new MissingMixinException();
+    }
+
+    default DamageSource northstar$acid() {
+        throw new MissingMixinException();
     }
 
 }

@@ -4,7 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.simple.GrateBlock;
 import com.lightning.northstar.block.simple.VerticalSlabBlock;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.TagHelper;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 public class NorthstarDataGenRecipes {
 
-    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plank(Tags.Tag<Item> log) {
+    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plank(TagHelper.Tag<Item> log) {
         return plank(log.tag());
     }
 
@@ -76,7 +76,7 @@ public class NorthstarDataGenRecipes {
         };
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> sheetmetal(Tags.Tag<Item> sheet) {
+    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> sheetmetal(TagHelper.Tag<Item> sheet) {
         return sheetmetal(sheet.tag());
     }
 
@@ -84,7 +84,7 @@ public class NorthstarDataGenRecipes {
         return commonFourToFour(sheet);
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plating(Tags.Tag<Item> ingot) {
+    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plating(TagHelper.Tag<Item> ingot) {
         return plating(ingot.tag());
     }
 
@@ -104,7 +104,7 @@ public class NorthstarDataGenRecipes {
         };
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, RotatedPillarBlock>, RegistrateRecipeProvider> pillar(Tags.Tag<Item> material) {
+    public static NonNullBiConsumer<DataGenContext<Block, RotatedPillarBlock>, RegistrateRecipeProvider> pillar(TagHelper.Tag<Item> material) {
         return pillar(material.tag());
     }
 
@@ -141,7 +141,7 @@ public class NorthstarDataGenRecipes {
                 .save(p);
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, GrateBlock>, RegistrateRecipeProvider> grate(Tags.Tag<Item> material) {
+    public static NonNullBiConsumer<DataGenContext<Block, GrateBlock>, RegistrateRecipeProvider> grate(TagHelper.Tag<Item> material) {
         return (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
                 .unlockedBy("has_item", RegistrateRecipeProvider.has(material.tag()))
                 .define('#', material.tag())

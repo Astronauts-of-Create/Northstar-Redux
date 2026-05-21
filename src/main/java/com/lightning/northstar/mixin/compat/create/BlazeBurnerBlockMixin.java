@@ -11,8 +11,10 @@ import org.spongepowered.asm.mixin.Pseudo;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @Pseudo
-@Mixin(value = BlazeBurnerBlock.class,
-        targets = "com.mrh0.createaddition.blocks.liquid_blaze_burner.LiquidBlazeBurnerBlock")
+@Mixin(
+        value = BlazeBurnerBlock.class,
+        targets = "com.mrh0.createaddition.blocks.liquid_blaze_burner.LiquidBlazeBurnerBlock"
+)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class BlazeBurnerBlockMixin implements OxygenConsumer {

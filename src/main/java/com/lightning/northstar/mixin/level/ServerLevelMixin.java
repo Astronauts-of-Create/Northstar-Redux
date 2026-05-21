@@ -1,11 +1,12 @@
 package com.lightning.northstar.mixin.level;
 
 import com.lightning.northstar.accessor.NorthstarLevel;
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
+import com.lightning.northstar.content.world.NorthstarDimensions;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import it.unimi.dsi.fastutil.longs.LongCollection;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
@@ -20,10 +21,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class ServerLevelMixin extends Level implements NorthstarLevel {
 
     @Unique
@@ -55,7 +59,16 @@ public abstract class ServerLevelMixin extends Level implements NorthstarLevel {
     //yay :]
     @ModifyReturnValue(method = "getSeed", at = @At("RETURN"))
     private long northstar$modifySeed(long seed) {
-        return seed + NorthstarPlanets.getSeedOffset(dimension());
+        return seed + northstar$getSeedOffset(dimension());
+    }
+
+    @Unique
+    private static long northstar$getSeedOffset(ResourceKey<Level> level) {
+        if (level == NorthstarDimensions.MARS) return 1;
+        if (level == NorthstarDimensions.MERCURY) return 2;
+        if (level == NorthstarDimensions.THE_MOON) return 3;
+        if (level == NorthstarDimensions.VENUS) return 4;
+        return 0;
     }
 
 }

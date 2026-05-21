@@ -1,16 +1,16 @@
 package com.lightning.northstar.accessor;
 
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.network.chat.Component;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public interface NorthstarPlayer {
 
-    @Nullable
-    default Entity northstar$getRelativeEntity() {
-        return null;
-    }
-
-    default void northstar$setRelativeEntity(@Nullable Entity entity, int ticks) {
+    default void northstar$showTitle(Component title, Component subtitle, int fadeInTime, int displayTime, int fadeOutTime) {
+        throw new MissingMixinException();
     }
 
 }

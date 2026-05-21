@@ -291,7 +291,7 @@ public class ProgressiveBlockSealer {
             NorthstarLang.translate("gui.goggles.sealer.max_sealed")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            Lang.number(maximumSealed + extraVolume)
+            NorthstarLang.number(maximumSealed + extraVolume)
                     .style(ChatFormatting.BLUE)
                     .text(" ")
                     .add(NorthstarLang.blocks(maximumSealed + extraVolume)
@@ -301,7 +301,7 @@ public class ProgressiveBlockSealer {
             NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
-            Lang.number(sealedBlocks.size())
+            NorthstarLang.number(sealedBlocks.size())
                     .style(ChatFormatting.BLUE)
                     .text(ChatFormatting.GRAY, " / ")
                     .add(Lang.number(maximumSealed + extraVolume)
@@ -310,12 +310,12 @@ public class ProgressiveBlockSealer {
         }
 
         if (isPlayerSneaking && extraVolume != 0) {
-            Lang.number(maximumSealed)
+            NorthstarLang.number(maximumSealed)
                     .style(ChatFormatting.BLUE)
                     .add(NorthstarLang.translate("gui.goggles.sealer.capacity_speed")
                             .style(ChatFormatting.GRAY))
                     .forGoggles(tooltip, 2);
-            Lang.number(extraVolume)
+            NorthstarLang.number(extraVolume)
                     .style(ChatFormatting.BLUE)
                     .add(NorthstarLang.translate("gui.goggles.sealer.capacity_extra")
                             .style(ChatFormatting.GRAY))
@@ -328,7 +328,7 @@ public class ProgressiveBlockSealer {
     }
 
     public void addCooldownTooltip(List<Component> tooltip, int cooldown, int maximumSealed) {
-        if (cooldown > 0) {
+        if (!isSealInProgress()) {
             NorthstarLang.translate("gui.goggles.sealer.cooldown")
                     .style(ChatFormatting.GRAY)
                     .add(Lang.number(Math.round(cooldown / 20f))

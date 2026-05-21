@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.BlockLightEngine;
 import net.minecraftforge.common.PlantType;
 
-public class MartianGrassBlock extends Block implements BonemealableBlock  {
+public class MartianGrassBlock extends Block implements BonemealableBlock {
 
     public MartianGrassBlock(Properties pProperties) {
         super(pProperties);
@@ -49,14 +49,15 @@ public class MartianGrassBlock extends Block implements BonemealableBlock  {
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         if (!canBeGrass(pState, pLevel, pPos)) {
             if (!pLevel.isAreaLoaded(pPos, 1)) return;
-            if(pRandom.nextInt(5) == 0)
-            {pLevel.setBlockAndUpdate(pPos, NorthstarBlocks.MARS_SOIL.get().defaultBlockState());}
+            if (pRandom.nextInt(5) == 0) {
+                pLevel.setBlockAndUpdate(pPos, NorthstarBlocks.MARS_SOIL.get().defaultBlockState());
+            }
         } else {
             if (!pLevel.isAreaLoaded(pPos, 3)) return;
             if (pLevel.getMaxLocalRawBrightness(pPos.above()) >= 9) {
                 BlockState blockstate = this.defaultBlockState();
 
-                for(int i = 0; i < 4; ++i) {
+                for (int i = 0; i < 4; ++i) {
                     BlockPos blockpos = pPos.offset(pRandom.nextInt(3) - 1, pRandom.nextInt(5) - 3, pRandom.nextInt(3) - 1);
                     if (pLevel.getBlockState(blockpos).is(NorthstarBlocks.MARS_SOIL.get()) && canPropagate(blockstate, pLevel, blockpos)) {
                         pLevel.setBlockAndUpdate(blockpos, blockstate);
@@ -79,15 +80,15 @@ public class MartianGrassBlock extends Block implements BonemealableBlock  {
     @Override
     public void performBonemeal(ServerLevel level, RandomSource pRandom, BlockPos pPos, BlockState pState) {
         BlockState blockstate = NorthstarBlocks.MARTIAN_TALL_GRASS.get().defaultBlockState();
-        if(pRandom.nextBoolean() && level.getBlockState(pPos.above()).isAir()) {
+        if (pRandom.nextBoolean() && level.getBlockState(pPos.above()).isAir()) {
             level.setBlock(pPos.above(), blockstate, 2);
         }
-        for(int x = -2; x <= 2; x++) {
-            for(int y = -2; y <= 2; y++) {
-                for(int z = -2; z <= 2; z++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int y = -2; y <= 2; y++) {
+                for (int z = -2; z <= 2; z++) {
                     BlockPos pos = new BlockPos(pPos.getX() + x, pPos.getY() + y, pPos.getZ() + z);
                     BlockState state = level.getBlockState(pos.below());
-                    if(level.getBlockState(pos).isAir() && (pState.is(NorthstarBlocks.MARTIAN_GRASS.get()) || state.is(NorthstarBlocks.MARS_SOIL.get())) && pRandom.nextInt(2) == 0) {
+                    if (level.getBlockState(pos).isAir() && (pState.is(NorthstarBlocks.MARTIAN_GRASS.get()) || state.is(NorthstarBlocks.MARS_SOIL.get())) && pRandom.nextInt(2) == 0) {
                         level.setBlock(pos, blockstate, 2);
                     }
                 }

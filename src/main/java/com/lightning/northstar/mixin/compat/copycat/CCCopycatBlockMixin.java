@@ -38,8 +38,8 @@ public class CCCopycatBlockMixin implements SealableBlock {
                 material = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), block.nbt().getCompound("Material"));
         }
         return material != null &&
-                !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(material) &&
-                Block.isFaceFull(state.getShape(level, pos), direction);
+               !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(material) &&
+               Block.isFaceFull(state.getShape(level, pos), direction);
     }
 
 }

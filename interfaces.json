@@ -1,7 +1,13 @@
 {
+  "net/minecraft/client/Minecraft": [ "com/lightning/northstar/accessor/NorthstarMinecraft" ],
   "net/minecraft/client/gui/GuiGraphics": [ "com/lightning/northstar/accessor/NorthstarGuiGraphics" ],
-  "net/minecraft/server/level/ServerPlayer": [ "com/lightning/northstar/accessor/NorthstarServerPlayer" ],
+  "net/minecraft/client/renderer/chunk/RenderChunkRegion": [ "com/lightning/northstar/accessor/NorthstarRenderChunkRegion" ],
+  "net/minecraft/network/chat/MutableComponent": [ "com/lightning/northstar/accessor/NorthstarMutableComponent" ],
   "net/minecraft/world/damagesource/DamageSources": [ "com/lightning/northstar/accessor/NorthstarDamageSources" ],
+  "net/minecraft/world/entity/Entity": [ "com/lightning/northstar/accessor/NorthstarEntity" ],
+  "net/minecraft/world/entity/ai/navigation/GroundPathNavigation": [ "com/lightning/northstar/accessor/NorthstarGroundPathNavigation" ],
   "net/minecraft/world/entity/player/Player": [ "com/lightning/northstar/accessor/NorthstarPlayer" ],
-  "net/minecraft/world/level/Level": [ "com/lightning/northstar/accessor/NorthstarLevel" ]
+  "net/minecraft/world/level/Level": [ "com/lightning/northstar/accessor/NorthstarLevel" ],
+  "net/minecraft/world/level/biome/BiomeGenerationSettings$Builder": [ "com/lightning/northstar/accessor/NorthstarBuilder$BiomeGenerationSettingsBuilder" ],
+  "net/minecraft/world/level/biome/MobSpawnSettings$Builder": [ "com/lightning/northstar/accessor/NorthstarBuilder$MobSpawnSettingsBuilder" ]
 }

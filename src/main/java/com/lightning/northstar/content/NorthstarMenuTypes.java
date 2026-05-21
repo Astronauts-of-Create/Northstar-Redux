@@ -1,31 +1,28 @@
 package com.lightning.northstar.content;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableMenu;
 import com.lightning.northstar.block.tech.astronomy_table.AstronomyTableScreen;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationMenu;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationScreen;
-import com.lightning.northstar.block.tech.telescope.TelescopeMenu;
-import com.lightning.northstar.block.tech.telescope.TelescopeScreen;
-import com.tterrag.registrate.builders.MenuBuilder;
+import com.lightning.northstar.item.atlas.SpaceAtlasMenu;
+import com.lightning.northstar.item.atlas.SpaceAtlasScreen;
 import com.tterrag.registrate.util.entry.MenuEntry;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+
+import static com.lightning.northstar.Northstar.REGISTRATE;
 
 public class NorthstarMenuTypes {
 
-    public static final MenuEntry<TelescopeMenu> TELESCOPE_MENU = register("telescope", TelescopeMenu::new, () -> TelescopeScreen::new);
-    public static final MenuEntry<AstronomyTableMenu> ASTRONOMY_TABLE_MENU = register("astronomy_table_menu", AstronomyTableMenu::new, () -> AstronomyTableScreen::new);
-    public static final MenuEntry<RocketStationMenu> ROCKET_STATION = register("rocket_station", RocketStationMenu::new, () -> RocketStationScreen::new);
+    public static final MenuEntry<AstronomyTableMenu> ASTRONOMY_TABLE_MENU = REGISTRATE
+            .menu("astronomy_table_menu", AstronomyTableMenu::new, () -> AstronomyTableScreen::new)
+            .register();
 
-    private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
-            String name, MenuBuilder.ForgeMenuFactory<C> factory, NonNullSupplier<MenuBuilder.ScreenFactory<C, S>> screenFactory) {
-        return Northstar.REGISTRATE
-                .menu(name, factory, screenFactory)
-                .register();
-    }
+    public static final MenuEntry<RocketStationMenu> ROCKET_STATION = REGISTRATE
+            .menu("rocket_station", RocketStationMenu::new, () -> RocketStationScreen::new)
+            .register();
+
+    public static final MenuEntry<SpaceAtlasMenu> SPACE_ATLAS = REGISTRATE
+            .menu("space_atlas", SpaceAtlasMenu::new, () -> SpaceAtlasScreen::new)
+            .register();
 
     public static void register() {
     }

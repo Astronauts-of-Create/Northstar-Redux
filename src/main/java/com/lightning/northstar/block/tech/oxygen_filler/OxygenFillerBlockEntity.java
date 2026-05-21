@@ -60,7 +60,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         @Override
         public boolean isFluidValid(int tank, FluidStack stack) {
-            return tank == 0 && NorthstarOxygen.isOxygen(stack.getFluid());
+            return tank == 0 && NorthstarOxygen.isBreathable(stack.getFluid());
         }
 
         @Override

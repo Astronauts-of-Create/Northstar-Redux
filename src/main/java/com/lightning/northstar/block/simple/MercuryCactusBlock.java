@@ -48,7 +48,7 @@ public class MercuryCactusBlock extends PipeBlock {
     @Override
     public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         BlockState newState = this.defaultBlockState();
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BlockPos blockpos = pCurrentPos.relative(direction);
             BlockState blockstate1 = pLevel.getBlockState(blockpos);
             if (blockstate1.is(this) || blockstate1.isSolidRender(pLevel, blockpos)) {
@@ -62,9 +62,9 @@ public class MercuryCactusBlock extends PipeBlock {
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         BlockState newState = this.updateShape(pState, Direction.UP, pState, pLevel, pPos, pPos);
-        if (! pState.canSurvive(pLevel, pPos)) {
-        // kind of debating whether i should keep this or not
-        // pLevel.destroyBlock(pPos, true);
+        if (!pState.canSurvive(pLevel, pPos)) {
+            // kind of debating whether i should keep this or not
+            // pLevel.destroyBlock(pPos, true);
         }
         pLevel.setBlock(pPos, newState, 3);
     }
@@ -77,7 +77,7 @@ public class MercuryCactusBlock extends PipeBlock {
     @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         BlockState blockstate = pLevel.getBlockState(pPos.below());
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             BlockPos blockpos = pPos.relative(direction);
             BlockState blockstate1 = pLevel.getBlockState(blockpos);
             if (blockstate1.is(this) || blockstate1.isSolidRender(pLevel, blockpos)) {

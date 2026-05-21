@@ -16,6 +16,8 @@ public interface NorthstarFluidState {
      * @deprecated see {@link ProgressiveBlockUpdater}
      */
     @Deprecated
-    void northstar$onSealUpdated(Level level, BlockPos pos, SealingMode mode);
+    default void northstar$onSealUpdated(Level level, BlockPos pos, SealingMode mode) {
+        throw new MissingMixinException();
+    }
 
 }

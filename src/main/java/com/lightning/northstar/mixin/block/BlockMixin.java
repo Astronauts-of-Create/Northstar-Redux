@@ -12,10 +12,14 @@ public class BlockMixin {
     // Sealers make pretty extensive use of this cache through Block#isFaceFull(VoxelShape, Direction), making the cache
     // unbounded ensures better performance as recomputing the values can be way more expensive than keeping them cached
     // forever both CPU and memory wise.
-    @Redirect(method = "<clinit>",
-            at = @At(value = "INVOKE",
+    @Redirect(
+            method = "<clinit>",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lcom/google/common/cache/CacheBuilder;maximumSize(J)Lcom/google/common/cache/CacheBuilder;",
-                    remap = false))
+                    remap = false
+            )
+    )
     private static <K, V> CacheBuilder<K, V> northstar$removeShapeCacheSize(CacheBuilder<K, V> instance, long maximumSize) {
         return instance;
     }

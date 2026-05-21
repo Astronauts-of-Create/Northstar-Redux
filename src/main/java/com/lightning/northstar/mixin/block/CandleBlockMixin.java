@@ -44,7 +44,7 @@ public abstract class CandleBlockMixin extends AbstractCandleBlock implements Se
                                             @Local(argsOnly = true) LevelAccessor level,
                                             @Local(argsOnly = true, ordinal = 0) BlockPos pos) {
         if (state.getBlock() instanceof CandleBlock && state.getValue(LIT) &&
-                level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
+            level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
             return state.setValue(LIT, false);
         }

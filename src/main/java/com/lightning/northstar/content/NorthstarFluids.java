@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.fluid.SulfuricAcidFluidBlock;
 import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -84,9 +85,10 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE = REGISTRATE
             .standardFluid("titanium_tetrachloride",
-                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
-                            () -> 1f / 8f * 0.8f))
-            .properties(b -> b.viscosity(4000).density(1400))
+                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff, () -> 1f / 8f * 0.8f))
+            .properties(b -> b
+                    .viscosity(4000)
+                    .density(1400))
             .fluidProperties(p -> p.levelDecreasePerBlock(1)
                     .tickRate(8)
                     .slopeFindDistance(3)
@@ -99,10 +101,12 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> BRINE = REGISTRATE
             .standardFluid("brine",
-                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
-                            () -> 1f / 8f * 0.8f))
-            .properties(b -> b.viscosity(2000).density(1400))
-            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff, () -> 1f / 8f * 0.8f))
+            .properties(b -> b
+                    .viscosity(2000)
+                    .density(1400))
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(1)
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
@@ -115,11 +119,12 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_HYDROGEN = REGISTRATE
             .standardFluid("liquid_hydrogen",
-                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff,
-                            () -> 1f / 8f * 0.8f))
-            .properties(b -> b.viscosity(2000)
+                    SolidRenderedPlaceableFluidType.create(0xa59999, 0xdeffffff, () -> 1f / 8f * 0.8f))
+            .properties(b -> b
+                    .viscosity(2000)
                     .density(1400))
-            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(1)
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
@@ -132,11 +137,12 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> LIQUID_OXYGEN = REGISTRATE
             .standardFluid("liquid_oxygen",
-                    SolidRenderedPlaceableFluidType.create(0x96AFAF, 0xdeffffff,
-                            () -> 1f / 8f * 0.8f))
-            .properties(b -> b.viscosity(2000)
+                    SolidRenderedPlaceableFluidType.create(0x96AFAF, 0xdeffffff, () -> 1f / 8f * 0.8f))
+            .properties(b -> b
+                    .viscosity(2000)
                     .density(1400))
-            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(1)
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
@@ -148,11 +154,12 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> METHANE = REGISTRATE
             .standardFluid("methane",
-                    SolidRenderedPlaceableFluidType.create(0x41E08E, 0xf8ffffff,
-                            () -> 1f / 8f * 0.8f))
-            .properties(b -> b.viscosity(2000)
+                    SolidRenderedPlaceableFluidType.create(0x41E08E, 0xf8ffffff, () -> 1f / 8f * 0.8f))
+            .properties(b -> b
+                    .viscosity(2000)
                     .density(1400))
-            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(1)
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
@@ -165,28 +172,32 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> SULFURIC_ACID = REGISTRATE
             .standardFluid("sulfuric_acid",
-                    SolidRenderedPlaceableFluidType.create(0xA5EC00, 0xffffffff,
-                            () -> 1f / 8f * 0.8f))
-            .properties(b -> b.viscosity(2000)
+                    SolidRenderedPlaceableFluidType.create(0xA5EC00, 0xffffffff, () -> 1f / 8f * 0.8f))
+            .properties(b -> b
+                    .viscosity(2000)
                     .density(700))
-            .fluidProperties(p -> p.levelDecreasePerBlock(1)
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(1)
                     .tickRate(5)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
             .tag(NorthstarFluidTags.C_SULFURIC_ACID.tag)
             .source(ForgeFlowingFluid.Source::new)
+            .block(SulfuricAcidFluidBlock::new)
+            .build()
             .bucket()
             .build()
             .register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> HYDROCARBON = REGISTRATE
             .standardFluid("hydrocarbon",
-                    SolidRenderedPlaceableFluidType.create(0x070505, 0xffffffff,
-                            () -> 1f / 8f * 0.25f))
+                    SolidRenderedPlaceableFluidType.create(0x070505, 0xffffffff, () -> 1f / 8f * 0.25f))
             .lang("Liquid Hydrocarbons")
-            .properties(b -> b.viscosity(1000)
+            .properties(b -> b
+                    .viscosity(1000)
                     .density(1400))
-            .fluidProperties(p -> p.levelDecreasePerBlock(2)
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(2)
                     .tickRate(25)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))
@@ -199,11 +210,12 @@ public class NorthstarFluids {
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> BIOFUEL = REGISTRATE
             .standardFluid("biofuel",
-                    SolidRenderedPlaceableFluidType.create(0x9ac846, 0xffffffff,
-                            () -> 1f / 8f * 0.25f))
-            .properties(b -> b.viscosity(1000)
+                    SolidRenderedPlaceableFluidType.create(0x9ac846, 0xffffffff, () -> 1f / 8f * 0.25f))
+            .properties(b -> b
+                    .viscosity(1000)
                     .density(1400))
-            .fluidProperties(p -> p.levelDecreasePerBlock(2)
+            .fluidProperties(p -> p
+                    .levelDecreasePerBlock(2)
                     .tickRate(25)
                     .slopeFindDistance(3)
                     .explosionResistance(100f))

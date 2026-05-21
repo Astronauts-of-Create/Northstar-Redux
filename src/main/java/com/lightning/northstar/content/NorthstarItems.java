@@ -7,6 +7,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.item.MartianFlowerItem;
 import com.lightning.northstar.item.SeedItem;
 import com.lightning.northstar.item.SpaceSuitArmorItem;
+import com.lightning.northstar.item.atlas.SpaceAtlasItem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
@@ -474,11 +475,13 @@ public class NorthstarItems {
 
     public static final ItemEntry<Item> ASTRONOMICAL_READING = REGISTRATE
             .item("astronomical_reading", Item::new)
+            .properties(p -> p.stacksTo(1))
             .register();
 
-    public static final ItemEntry<Item> STAR_MAP = REGISTRATE
-            .item("star_map", Item::new)
-            .properties(p -> p.stacksTo(1))
+    public static final ItemEntry<SpaceAtlasItem> SPACE_ATLAS = REGISTRATE
+            .item("space_atlas", SpaceAtlasItem::new)
+            .properties(p -> p.stacksTo(1)
+                    .rarity(Rarity.RARE))
             .tag(ItemTags.BOOKSHELF_BOOKS)
             .register();
 

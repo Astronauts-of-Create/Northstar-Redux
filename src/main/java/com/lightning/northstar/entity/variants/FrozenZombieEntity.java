@@ -1,5 +1,6 @@
 package com.lightning.northstar.entity.variants;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -10,9 +11,14 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class FrozenZombieEntity extends Zombie {
-    public FrozenZombieEntity(EntityType<? extends FrozenZombieEntity> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+
+    public FrozenZombieEntity(EntityType<? extends FrozenZombieEntity> type, Level level) {
+        super(type, level);
     }
 
     @Override
@@ -26,7 +32,7 @@ public class FrozenZombieEntity extends Zombie {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.HUSK_HURT;
     }
 
@@ -41,11 +47,11 @@ public class FrozenZombieEntity extends Zombie {
     }
 
     @Override
-    public boolean doHurtTarget(Entity pEntity) {
-        boolean flag = super.doHurtTarget(pEntity);
-        if (flag && pEntity instanceof LivingEntity) {
-            float f = this.level().getCurrentDifficultyAt(this.blockPosition()).getEffectiveDifficulty();
-            ((LivingEntity)pEntity).setTicksFrozen((int) (140 + (50 * f)));
+    public boolean doHurtTarget(Entity entity) {
+        boolean flag = super.doHurtTarget(entity);
+        if (flag && entity instanceof LivingEntity) {
+            float f = level().getCurrentDifficultyAt(blockPosition()).getEffectiveDifficulty();
+            entity.setTicksFrozen((int) (140 + (50 * f)));
         }
         return flag;
     }
@@ -59,4 +65,5 @@ public class FrozenZombieEntity extends Zombie {
     protected ItemStack getSkull() {
         return ItemStack.EMPTY;
     }
+
 }

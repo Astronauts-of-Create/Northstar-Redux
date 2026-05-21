@@ -26,11 +26,10 @@ public class OxygenSealerMovingInteractionBehaviour extends MovingInteractionBeh
         if (ctx == null || !ctx.world.isClientSide || !(ctx.temporaryData instanceof MovingOxygenSealer sealer))
             return false;
 
-        if (!player.level().isClientSide()) {
-            player.awardStat(NorthstarStats.INTERACT_WITH_OXYGEN_SEALER);
+        player.awardStat(NorthstarStats.INTERACT_WITH_OXYGEN_SEALER);
+        if (player.level().isClientSide()) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(sealer));
         }
-
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(sealer));
         return true;
     }
 

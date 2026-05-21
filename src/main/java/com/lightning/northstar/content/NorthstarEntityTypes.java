@@ -187,11 +187,12 @@ public class NorthstarEntityTypes {
     public static final EntityEntry<RocketContraptionEntity> ROCKET_CONTRAPTION = REGISTRATE
             .entity("rocket_contraption", RocketContraptionEntity::new, MobCategory.MISC)
             .lang("Rocket")
-            .properties(b -> b.setTrackingRange(200)
-                    .setUpdateInterval(40)
-                    .setShouldReceiveVelocityUpdates(false))
+            .properties(b -> b
+                    .setTrackingRange(200)
+                    .setUpdateInterval(1))
             .properties(AbstractContraptionEntity::build)
             .properties(EntityType.Builder::fireImmune)
+            .tag(NorthstarEntityTags.IGNORE_WORLD_BOUNDS_TELEPORT.tag)
             .renderer(() -> ContraptionEntityRenderer::new)
             .register();
 

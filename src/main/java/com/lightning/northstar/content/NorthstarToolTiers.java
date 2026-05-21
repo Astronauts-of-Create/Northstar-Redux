@@ -25,7 +25,8 @@ public class NorthstarToolTiers {
                         () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL_INGOT.get())),
                 Northstar.asResource("martian_steel"),
                 List.of(Tiers.DIAMOND),
-                List.of(Tiers.NETHERITE));
+                List.of(Tiers.NETHERITE)
+        );
     }
 
 }

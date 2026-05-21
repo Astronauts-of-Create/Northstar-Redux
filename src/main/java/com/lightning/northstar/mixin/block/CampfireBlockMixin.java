@@ -44,7 +44,7 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock implements Seal
                                             @Local(argsOnly = true) LevelAccessor level,
                                             @Local(argsOnly = true, ordinal = 0) BlockPos pos) {
         if (state.getBlock() instanceof CampfireBlock && state.getValue(CampfireBlock.LIT) &&
-                level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
+            level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1, 1);
             return state.setValue(CampfireBlock.LIT, false);
         }

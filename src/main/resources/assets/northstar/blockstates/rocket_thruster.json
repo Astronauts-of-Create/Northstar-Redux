@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "bottom=false,top=false": {
+      "model": "northstar:block/rocket_thruster/single"
+    },
+    "bottom=true,top=false": {
+      "model": "northstar:block/rocket_thruster/top"
+    },
+    "bottom=true,top=true": {
+      "model": "northstar:block/rocket_thruster/middle"
+    },
+    "bottom=false,top=true": {
+      "model": "northstar:block/rocket_thruster/bottom"
+    }
+  }
+}

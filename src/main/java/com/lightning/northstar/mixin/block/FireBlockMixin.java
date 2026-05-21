@@ -23,14 +23,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class FireBlockMixin implements SealReactiveBlock {
 
-    // TODO: temperature behaviour isn't consistent with other blocks
-    //  only fire extinguishes below a certain temperature
-
     @ModifyReturnValue(method = "canSurvive", at = @At("RETURN"))
     public boolean northstar$canSurvive(boolean value,
                                         @Local(argsOnly = true) LevelReader level,
                                         @Local(argsOnly = true) BlockPos pos) {
-        if (value && level instanceof Level l && (NorthstarTemperature.getTemperatureAt(l, pos) < -100 || !NorthstarOxygen.hasOxygen(l, pos)))
+        if (value && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos))
             return false;
         return value;
     }

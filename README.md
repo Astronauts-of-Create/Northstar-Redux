@@ -16,12 +16,6 @@ Make sure that no existing issue matches the bug or feature and that it isn't pl
 - Do not add mods as dependencies unless absolutely required. For testing in the development environment, mods should go in the `run/mods-obf/` folder
 - Always test your changes. Make sure that the code compiles and that the change works as expected.
 
-## Known issues:
-- Not all entities might be affected by custom gravity (e.g. falling blocks).
-
 ## Planned:
-- Fabric (waiting for Create-Fabric to be updated to 6.0)
-- Data-driven planets (datapack defined solar system) (next major update)
-- [Orrery](https://en.wikipedia.org/wiki/Orrery#/media/File:Orrery_small.jpg) that uses kinetic force to show a live view of the planets. With a menu to change the base planet (in case of multiple systems) and the time mode between real time (synced with world), accelerated time or frozen at a specific time.
-- Space stations
+- ~~Fabric~~
 - Distant Horizons integration for takeoffs and space stations

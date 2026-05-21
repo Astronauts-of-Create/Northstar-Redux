@@ -50,7 +50,7 @@ public class NorthstarConfigs {
 
     public static void register(BiConsumer<ModConfig.Type, ForgeConfigSpec> register) {
         client = register(ClientConfig::new, ModConfig.Type.CLIENT);
-        common = register(CommonConfig::new, ModConfig.Type.COMMON);
+        //common = register(CommonConfig::new, ModConfig.Type.COMMON);
         server = register(ServerConfig::new, ModConfig.Type.SERVER);
 
         for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())

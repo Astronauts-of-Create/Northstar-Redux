@@ -12,8 +12,6 @@ import com.lightning.northstar.block.tech.combustion_engine.CombustionEngineBloc
 import com.lightning.northstar.block.tech.computer_rack.TargetingComputerRackBlock;
 import com.lightning.northstar.block.tech.electrolysis_machine.ElectrolysisMachineBlock;
 import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
-import com.lightning.northstar.block.tech.jet_engine.JetEngineBlock;
-import com.lightning.northstar.block.tech.jet_engine.JetEngineMovementBehaviour;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
@@ -24,7 +22,11 @@ import com.lightning.northstar.block.tech.rocket_controls.RocketControlsBlock;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInteractionBehaviour;
 import com.lightning.northstar.block.tech.rocket_controls.RocketControlsMovementBehaviour;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlock;
+import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockMovementBehaviour;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationBlockMovingInteraction;
+import com.lightning.northstar.block.tech.rocket_thruster.RocketThrusterBlock;
+import com.lightning.northstar.block.tech.rocket_thruster.RocketThrusterMovementBehaviour;
+import com.lightning.northstar.block.tech.rocket_waypoint.RocketWaypointBlock;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlock;
 import com.lightning.northstar.block.tech.solar_panel.SolarPanelBlockEntity;
 import com.lightning.northstar.block.tech.telescope.TelescopeBlock;
@@ -33,14 +35,14 @@ import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegul
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorMovingInteractionBehaviour;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
-import com.lightning.northstar.data.NorthstarConfiguredFeatures;
+import com.lightning.northstar.content.world.planet.core.NorthstarVegetationConfiguredFeatures;
 import com.lightning.northstar.data.util.NorthstarDataGenLoot;
 import com.lightning.northstar.data.util.NorthstarDataGenModels;
 import com.lightning.northstar.data.util.NorthstarDataGenRecipes;
 import com.lightning.northstar.data.util.NorthstarDataGenTags;
-import com.lightning.northstar.world.features.grower.ArgyreSaplingTreeGrower;
-import com.lightning.northstar.world.features.grower.CoilerTreeGrower;
-import com.lightning.northstar.world.features.grower.WilterTreeGrower;
+import com.lightning.northstar.world.gen.feature.grower.ArgyreSaplingTreeGrower;
+import com.lightning.northstar.world.gen.feature.grower.CoilerTreeGrower;
+import com.lightning.northstar.world.gen.feature.grower.WilterTreeGrower;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMovementBehaviours;
@@ -2309,7 +2311,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<VenusMushroomBlock> SPIKE_FUNGUS = REGISTRATE
-            .block("spike_fungus", p -> new VenusMushroomBlock(p, NorthstarConfiguredFeatures.SPIKE_FUNGUS, null))
+            .block("spike_fungus", p -> new VenusMushroomBlock(p, NorthstarVegetationConfiguredFeatures.SPIKE_FUNGUS, null))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .sound(SoundType.FUNGUS)
@@ -2323,7 +2325,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<VenusMushroomBlock> BLOOM_FUNGUS = REGISTRATE
-            .block("bloom_fungus", p -> new VenusMushroomBlock(p, NorthstarConfiguredFeatures.BLOOM_FUNGUS, NorthstarConfiguredFeatures.ROOF_BLOOM_FUNGUS))
+            .block("bloom_fungus", p -> new VenusMushroomBlock(p, NorthstarVegetationConfiguredFeatures.BLOOM_FUNGUS, NorthstarVegetationConfiguredFeatures.BLOOM_FUNGUS_ROOF))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
                     .sound(SoundType.FUNGUS)
@@ -2338,7 +2340,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<VenusMushroomBlock> PLATE_FUNGUS = REGISTRATE
-            .block("plate_fungus", p -> new VenusMushroomBlock(p, NorthstarConfiguredFeatures.PLATE_FUNGUS, NorthstarConfiguredFeatures.ROOF_PLATE_FUNGUS))
+            .block("plate_fungus", p -> new VenusMushroomBlock(p, NorthstarVegetationConfiguredFeatures.PLATE_FUNGUS, NorthstarVegetationConfiguredFeatures.PLATE_FUNGUS_ROOF))
             .initialProperties(() -> STONE)
             .properties(p -> p.mapColor(MapColor.COLOR_GREEN)
                     .sound(SoundType.FUNGUS)
@@ -2422,7 +2424,7 @@ public class NorthstarBlocks {
             .register();
 
     public static final BlockEntry<TallFungusBlock> TOWER_FUNGUS = REGISTRATE
-            .block("tower_fungus", p -> new TallFungusBlock(p, NorthstarConfiguredFeatures.TOWER_FUNGUS, NorthstarConfiguredFeatures.ROOF_TOWER_FUNGUS))
+            .block("tower_fungus", p -> new TallFungusBlock(p, NorthstarVegetationConfiguredFeatures.TOWER_FUNGUS, NorthstarVegetationConfiguredFeatures.TOWER_FUNGUS_ROOF))
             /*.initialProperties(SharedProperties::PLANT)*/
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .sound(SoundType.FUNGUS)
@@ -3910,6 +3912,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(6, 6))
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
             .item()
             .model((c, p) -> p.blockItem(c::get))
@@ -3924,6 +3927,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(8, 8))
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(AllInteractionBehaviours.interactionBehaviour(new OxygenSealerMovingInteractionBehaviour()))
             .onRegister(AllMovementBehaviours.movementBehaviour(new OxygenSealerMovementBehaviour()))
@@ -3951,6 +3955,7 @@ public class NorthstarBlocks {
                     .isViewBlocking(NorthstarBlocks::never)
                     .strength(8, 8))
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
             .transform(BlockStressDefaults.setImpact(16))
             .onRegister(AllMovementBehaviours.movementBehaviour(new TemperatureRegulatorMovementBehaviour()))
@@ -3996,6 +4001,7 @@ public class NorthstarBlocks {
             .tag(NorthstarBlockTags.AIR_PASSES_THROUGH.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
             .simpleItem()
+            .onRegister(AllMovementBehaviours.movementBehaviour(new RocketStationBlockMovementBehaviour()))
             .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketStationBlockMovingInteraction()))
             .register();
 
@@ -4006,11 +4012,24 @@ public class NorthstarBlocks {
                     .noOcclusion()
                     .sound(SoundType.NETHERITE_BLOCK))
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
             .onRegister(AllMovementBehaviours.movementBehaviour(new RocketControlsMovementBehaviour()))
             .onRegister(AllInteractionBehaviours.interactionBehaviour(new RocketControlsInteractionBehaviour()))
             .item()
             .transform(customItemModel())
+            .register();
+
+    public static final BlockEntry<RocketWaypointBlock> ROCKET_WAYPOINT = REGISTRATE
+            .block("rocket_waypoint", RocketWaypointBlock::new)
+            .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.NETHERITE_BLOCK))
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .blockstate(NorthstarDataGenModels.manualModel())
+            .item()
+            .model((c, p) -> p.blockItem(c::get, "_inactive"))
+            .build()
             .register();
 
     public static final BlockEntry<AutoLanderBlock> AUTO_LANDER = REGISTRATE
@@ -4028,18 +4047,18 @@ public class NorthstarBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<JetEngineBlock> JET_ENGINE = REGISTRATE
-            .block("jet_engine", JetEngineBlock::new)
-            .lang("Rocket Engine")
+    public static final BlockEntry<RocketThrusterBlock> ROCKET_THRUSTER = REGISTRATE
+            .block("rocket_thruster", RocketThrusterBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
                     .noOcclusion()
                     .isViewBlocking(NorthstarBlocks::never))
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
-            .onRegister(AllMovementBehaviours.movementBehaviour(new JetEngineMovementBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new RocketThrusterMovementBehaviour()))
             .item()
-            .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/jet_engine/jet_single")))
+            .model((c, p) -> p.withExistingParent(p.name(c), p.modLoc("block/rocket_thruster/single")))
             .build()
             .register();
 

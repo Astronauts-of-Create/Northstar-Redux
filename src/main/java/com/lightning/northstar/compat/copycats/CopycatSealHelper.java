@@ -53,14 +53,14 @@ public class CopycatSealHelper {
             CompoundTag compound = getBlockNbt(cw, pos);
             if (compound == null)
                 return true;
-            
+
             if (testType != SlabType.DOUBLE) {
                 String property = testType == SlabType.BOTTOM ? negativeProperty : positiveProperty;
                 return isMaterialSealed(getMultistateMaterial(compound, property));
             }
 
             return isMaterialSealed(getMultistateMaterial(compound, negativeProperty)) &&
-                    isMaterialSealed(getMultistateMaterial(compound, positiveProperty));
+                   isMaterialSealed(getMultistateMaterial(compound, positiveProperty));
         }
 
         if (level.getBlockEntity(pos) instanceof IMultiStateCopycatBlockEntity be) {
@@ -72,7 +72,7 @@ public class CopycatSealHelper {
             }
 
             return isMaterialSealed(getMultistateMaterial(storage, negativeProperty)) &&
-                    isMaterialSealed(getMultistateMaterial(storage, positiveProperty));
+                   isMaterialSealed(getMultistateMaterial(storage, positiveProperty));
         }
 
         return false;

@@ -1,5 +1,6 @@
 package com.lightning.northstar.contraption;
 
+import com.lightning.northstar.content.NorthstarPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -10,10 +11,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 // Create devs, please make setBlock() sync the NBT :(
 public class ActorConfigPacket extends SimplePacketBase {
+
+    public static void update(AbstractContraptionEntity entity, BlockPos localPos) {
+        update(entity, localPos, entity.getContraption().getBlocks().get(localPos).nbt());
+    }
+
+    public static void update(AbstractContraptionEntity entity, BlockPos localPos, CompoundTag nbt) {
+        NorthstarPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new ActorConfigPacket(entity.getId(), localPos, nbt));
+    }
 
     private final int contraptionId;
     private final BlockPos localPos;

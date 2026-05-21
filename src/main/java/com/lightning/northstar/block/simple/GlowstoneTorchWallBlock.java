@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class GlowstoneTorchWallBlock extends Block implements ProperWaterloggedBlock {
-    
+
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
             Direction.NORTH, Block.box(5.5, 3, 11, 10.5, 13, 16),
@@ -38,12 +38,12 @@ public class GlowstoneTorchWallBlock extends Block implements ProperWaterloggedB
 
     public GlowstoneTorchWallBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        
+
         registerDefaultState(defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, false));
     }
-    
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(FACING, WATERLOGGED));

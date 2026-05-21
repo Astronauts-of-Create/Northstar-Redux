@@ -1,6 +1,6 @@
 package com.lightning.northstar.mixin.level;
 
-import com.lightning.northstar.world.dimension.NorthstarDimensions;
+import com.lightning.northstar.content.world.NorthstarDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -24,7 +24,7 @@ public abstract class VenusServerLevelMixin {
     @Inject(method = "tickChunk", at = @At("HEAD"))
     public void northstar$venusTickChunk(LevelChunk chunk, int randomTickSpeed, CallbackInfo info) {
         ServerLevel level = (ServerLevel) (Object) this;
-        if (level.dimension() == NorthstarDimensions.VENUS_DIM_KEY) {
+        if (level.dimension() == NorthstarDimensions.VENUS) {
             ChunkPos chunkpos = chunk.getPos();
             boolean flag = level.isRaining();
             int i = chunkpos.getMinBlockX();

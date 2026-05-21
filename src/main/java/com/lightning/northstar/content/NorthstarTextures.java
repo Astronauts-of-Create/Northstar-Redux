@@ -5,25 +5,80 @@ import net.minecraft.resources.ResourceLocation;
 
 public class NorthstarTextures {
 
-    public static final ResourceLocation EMPTY = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/block/empty.png");
-    public static final ResourceLocation EARTH_CLOSE = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/earth_close.png");
-    public static final ResourceLocation EARTH_FAR = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/earth_far.png");
-    public static final ResourceLocation MOON_CLOSE = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/moon_close.png");
-    public static final ResourceLocation MOON_FAR = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/moon_far.png");
-    public static final ResourceLocation VENUS_FAR = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/venus_far_sky.png");
-    public static final ResourceLocation VENUS_CLOSE = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/venus_close.png");
-    public static final ResourceLocation BARE_SUN = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/baresun.png");
-    public static final ResourceLocation BLURRED_SUN = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/sun_blurry.png");
-    public static final ResourceLocation MARS_CLOSE = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/mars_close.png");
-    public static final ResourceLocation MARS_FAR = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID,"textures/environment/mars_far.png");
-    public static final ResourceLocation MARS_VERY_FAR = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/mars_very_far_sky.png");
-    public static final ResourceLocation MERCURY_CLOSE = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/mercury_close.png");
-    public static final ResourceLocation PHOBOS_DEIMOS = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/phobos_and_deimos.png");
-    public static final ResourceLocation NORTHERN_STAR = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/northernstar_sky.png");
-    public static final ResourceLocation MARS_DUST = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/mars_dust.png");
-    public static final ResourceLocation ACID_RAIN = ResourceLocation.fromNamespaceAndPath(Northstar.MOD_ID, "textures/environment/acid_rain.png");
-    public static final ResourceLocation MOON_LOC = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/environment/moon_phases.png");
-    public static final ResourceLocation CLOUDS_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/environment/clouds.png");
-    public static final ResourceLocation SNOW_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/environment/snow.png");
-    
+    // @formatter:off
+    /** Direct texture to be used in a shader. */
+    public static final ResourceLocation
+            EMPTY             = texture("block/empty"),
+            ACID_RAIN         = texture("environment/acid_rain"),
+            MARS_DUST         = texture("environment/mars_dust"),
+            SUN               = texture("planet/solar_system/sun");
+
+    /** The dynamic texture for the planet atlas */
+    public static final ResourceLocation
+            PLANET_ATLAS      = key("textures/atlas/planets.png");
+
+    /** Packed inside {@link NorthstarTextures#PLANET_ATLAS}. */
+    public static final ResourceLocation
+            POLARIS           = key("polaris"),
+            SOL               = planet("sun"),
+            CERES_SKY         = planet("ceres_sky"),
+            EARTH             = planet("earth"),
+            EARTH_CLOUDS      = planet("earth_clouds"),
+            EARTH_SKY         = planet("earth_sky"),
+                MOON          = planet("earth/moon"),
+                MOON_PHASES   = planet("earth/moon_phases"),
+                MOON_SKY      = planet("earth/moon_sky"),
+            ERIS_SKY          = planet("eris_sky"),
+            JUPITER_SKY       = planet("jupiter_sky"),
+                CALLISTO_SKY  = planet("jupiter/callisto_sky"),
+                EUROPA_SKY    = planet("jupiter/europa_sky"),
+                GANYMEDE_SKY  = planet("jupiter/ganymede_sky"),
+                IO_SKY        = planet("jupiter/io_sky"),
+            MARS              = planet("mars"),
+            MARS_SKY          = planet("mars_sky"),
+                DEIMOS_SKY    = planet("mars/deimos_sky"),
+                PHOBOS_SKY    = planet("mars/phobos_sky"),
+            MERCURY           = planet("mercury"),
+            MERCURY_SKY       = planet("mercury_sky"),
+            NEPTUNE_SKY       = planet("neptune_sky"),
+                NEREID_SKY    = planet("neptune/nereid_sky"),
+                PROTEUS_SKY   = planet("neptune/proteus_sky"),
+                TRITON_SKY    = planet("neptune/triton_sky"),
+            PLUTO_SKY         = planet("pluto_sky"),
+                CHARON_SKY    = planet("pluto/charon_sky"),
+            SATURN_SKY        = planet("saturn_sky"),
+                DIONE_SKY     = planet("saturn/dione_sky"),
+                ENCELADUS_SKY = planet("saturn/enceladus_sky"),
+                HYPERION_SKY  = planet("saturn/hyperion_sky"),
+                IAPETUS_SKY   = planet("saturn/iapetus_sky"),
+                MIMAS_SKY     = planet("saturn/mimas_sky"),
+                PHOEBE_SKY    = planet("saturn/phoebe_sky"),
+                RHEA_SKY      = planet("saturn/rhea_sky"),
+                TITAN_SKY     = planet("saturn/titan_sky"),
+            URANUS_SKY        = planet("uranus_sky"),
+                ARIEL_SKY     = planet("uranus/ariel_sky"),
+                OBERON_SKY    = planet("uranus/oberon_sky"),
+                UMBRIEL_SKY   = planet("uranus/umbriel_sky"),
+                TITANIA_SKY   = planet("uranus/titania_sky"),
+            VENUS             = planet("venus"),
+            VENUS_SKY         = planet("venus_sky");
+    // @formatter:on
+
+    /** Key for a planet texture stored in the {@linkplain NorthstarTextures#PLANET_ATLAS planet atlas} */
+    private static ResourceLocation planet(String path) {
+        return key("solar_system/" + path);
+    }
+
+    private static ResourceLocation environment(String path) {
+        return texture("environment/" + path);
+    }
+
+    private static ResourceLocation texture(String path) {
+        return key("textures/" + path + ".png");
+    }
+
+    private static ResourceLocation key(String path) {
+        return Northstar.asResource(path);
+    }
+
 }
