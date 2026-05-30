@@ -1,6 +1,7 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.content.NorthstarItems;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -38,6 +39,8 @@ public class NorthstarContentRemapper {
         // 0.5.0
         remap("vent_block", NorthstarBlocks.VENT);
         remap("oxygen_concentrator", NorthstarBlocks.ATMOSPHERIC_CONCENTRATOR);
+        // 0.6.0
+        remap("martian_steel", NorthstarItems.MARTIAN_STEEL_INGOT);
     }
 
     public static void remap(String oldValue, RegistryEntry<?> newValue) {

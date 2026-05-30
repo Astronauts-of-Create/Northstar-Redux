@@ -14,7 +14,7 @@ public class NorthstarPressingRecipeGen extends PressingRecipeGen {
     FLATTENED_DOUGH = create(() -> AllItems.DOUGH,
             b -> b.output(NorthstarItems.FLATTENED_DOUGH)),
 
-    MARTIAN_STEEL_SHEET = create(() -> NorthstarItems.MARTIAN_STEEL,
+    MARTIAN_STEEL_SHEET = create(() -> NorthstarItems.MARTIAN_STEEL_INGOT,
             b -> b.output(NorthstarItems.MARTIAN_STEEL_SHEET)),
 
     TITANIUM_SHEET = create(() -> NorthstarItems.TITANIUM_INGOT,

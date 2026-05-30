@@ -2,7 +2,6 @@ package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -30,7 +29,7 @@ public class NorthstarCreativeModeTab {
     public static final RegistryObject<CreativeModeTab> ITEMS = CREATIVE_TABS
             .register("northstar_items", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.northstar.items"))
-                    .icon(() -> new ItemStack(NorthstarItems.MARTIAN_STEEL.get()))
+                    .icon(() -> new ItemStack(NorthstarItems.MARTIAN_STEEL_INGOT.get()))
                     .displayItems(createItemDisplay(NorthstarCreativeModeTab.ITEMS))
                     .build());
 
