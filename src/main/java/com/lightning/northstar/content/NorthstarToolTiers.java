@@ -22,7 +22,7 @@ public class NorthstarToolTiers {
                         5f,
                         30,
                         Tags.Blocks.NEEDS_NETHERITE_TOOL,
-                        () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL.get())),
+                        () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL_INGOT.get())),
                 Northstar.asResource("martian_steel"),
                 List.of(Tiers.DIAMOND),
                 List.of(Tiers.NETHERITE));

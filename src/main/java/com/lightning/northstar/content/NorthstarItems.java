@@ -129,10 +129,8 @@ public class NorthstarItems {
             .item("enriched_glowstone_ore", Item::new)
             .register();
 
-    // TODO: rename to ingot
-    public static final ItemEntry<Item> MARTIAN_STEEL = REGISTRATE
-            .item("martian_steel", Item::new)
-            .lang("Martian Steel Ingot")
+    public static final ItemEntry<Item> MARTIAN_STEEL_INGOT = REGISTRATE
+            .item("martian_steel_ingot", Item::new)
             .tag(ItemTags.BEACON_PAYMENT_ITEMS)
             .tag(Tags.Items.INGOTS)
             .tag(NorthstarItemTags.C_INGOTS_MARTIAN_STEEL.tag)

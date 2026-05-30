@@ -213,68 +213,68 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
 
     // TODO: do those need mirrored recipes or does it work out of the box?
     MARTIAN_AXE = create(NorthstarItems.MARTIAN_AXE)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .define('Z', AllItems.ZINC_INGOT)
                     .pattern("SS")
                     .pattern("SZ")
                     .pattern(" Z")),
 
     MARTIAN_HOE = create(NorthstarItems.MARTIAN_HOE)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .define('Z', AllItems.ZINC_INGOT)
                     .pattern("SS")
                     .pattern(" Z")
                     .pattern(" Z")),
 
     MARTIAN_PICKAXE = create(NorthstarItems.MARTIAN_PICKAXE)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .define('Z', AllItems.ZINC_INGOT)
                     .pattern("SSS")
                     .pattern(" Z ")
                     .pattern(" Z ")),
 
     MARTIAN_SWORD = create(NorthstarItems.MARTIAN_SWORD)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .define('Z', AllItems.ZINC_INGOT)
                     .pattern("S")
                     .pattern("S")
                     .pattern("Z")),
 
     MARTIAN_SHOVEL = create(NorthstarItems.MARTIAN_SHOVEL)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('S', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .define('Z', AllItems.ZINC_INGOT)
                     .pattern("S")
                     .pattern("Z")
                     .pattern("Z")),
 
     MARTIAN_STEEL_HELMET = create(NorthstarItems.MARTIAN_STEEL_HELMET)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .pattern("###")
                     .pattern("# #")),
 
     MARTIAN_STEEL_CHESTPLATE = create(NorthstarItems.MARTIAN_STEEL_CHESTPLATE)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .pattern("# #")
                     .pattern("###")
                     .pattern("###")),
 
     MARTIAN_STEEL_LEGGINGS = create(NorthstarItems.MARTIAN_STEEL_LEGGINGS)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .pattern("###")
                     .pattern("# #")
                     .pattern("# #")),
 
     MARTIAN_STEEL_BOOTS = create(NorthstarItems.MARTIAN_STEEL_BOOTS)
-            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL)
-            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL)
+            .unlockedBy(() -> NorthstarItems.MARTIAN_STEEL_INGOT)
+            .viaShaped(b -> b.define('#', NorthstarItems.MARTIAN_STEEL_INGOT)
                     .pattern("# #")
                     .pattern("# #")),
 
@@ -527,7 +527,7 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
 
         interchangeable(NorthstarBlocks.MARTIAN_STEEL_PLATING, NorthstarBlocks.MARTIAN_STEEL_LARGE_PLATING);
 
-        createMaterial(null, NorthstarItems.MARTIAN_STEEL, NorthstarBlocks.MARTIAN_STEEL_BLOCK);
+        createMaterial(null, NorthstarItems.MARTIAN_STEEL_INGOT, NorthstarBlocks.MARTIAN_STEEL_BLOCK);
         createMaterial(NorthstarItems.TITANIUM_NUGGET, NorthstarItems.TITANIUM_INGOT, NorthstarBlocks.TITANIUM_BLOCK);
         createMaterial(NorthstarItems.TUNGSTEN_NUGGET, NorthstarItems.TUNGSTEN_INGOT, NorthstarBlocks.TUNGSTEN_BLOCK);
     }
