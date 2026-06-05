@@ -15,6 +15,8 @@ import com.lightning.northstar.block.tech.ice_box.IceBoxBlock;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlock;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlock;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlock;
+import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerMovementBehaviour;
+import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerMovingInteractionBehaviour;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerBlock;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerMovementBehaviour;
 import com.lightning.northstar.block.tech.oxygen_sealer.OxygenSealerMovingInteractionBehaviour;
@@ -3914,6 +3916,8 @@ public class NorthstarBlocks {
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .tag(NorthstarBlockTags.ROCKET_ALWAYS_ACTIVE_ACTORS.tag)
             .blockstate(NorthstarDataGenModels.manualModel())
+            .onRegister(AllInteractionBehaviours.interactionBehaviour(new OxygenFillerMovingInteractionBehaviour()))
+            .onRegister(AllMovementBehaviours.movementBehaviour(new OxygenFillerMovementBehaviour()))
             .item()
             .model((c, p) -> p.blockItem(c::get))
             .build()

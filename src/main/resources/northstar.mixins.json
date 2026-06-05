@@ -46,6 +46,7 @@
     "compat.create.BeltInventoryMixin",
     "compat.create.BlazeBurnerBlockMixin",
     "compat.create.ChuteBlockEntityMixin",
+    "compat.create.ContraptionMixin",
     "compat.create.CopycatBlockMixin",
     "compat.create.EncasedFanBlockMixin",
     "compat.create.GoggleOverlayMixin",
