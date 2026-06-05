@@ -54,6 +54,7 @@ public class ServerConfig extends ConfigBase {
     public final ConfigFloat oxygenSealerPassiveDrain = f(0.0001f, 0, "passiveDrain", "Passive oxygen drain in mB per block per tick");
     public final ConfigFloat oxygenSealerBlockActiveDrain = f(0.01f, 0, "blockActiveDrain", "Active drain scaling in mB per block per tick. Applies to block with dynamic consumption like fire, torches, leaves, etc...");
     public final ConfigFloat oxygenSealerEntityActiveDrain = f(0.05f, 0, "entityActiveDrain", "Active drain for entity in mB per entity per tick.");
+    public final ConfigInt mountedOxygenFillerSpeed = i(5, 0, "mountedOxygenFillerSpeed", "The speed of oxygen fillers mounted on contraptions, in mB/t. Set to 0 to disable.");
 
     public final ConfigGroup temperature = group(2, "temperature");
 

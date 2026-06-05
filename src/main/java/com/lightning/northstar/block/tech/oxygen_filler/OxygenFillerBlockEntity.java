@@ -132,25 +132,6 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        /*if (level.isClientSide) {
-            if (audioTick++ % 13 == 0) {
-                level.playLocalSound(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.5f, 0, false);
-            }
-
-            if (level.random.nextBoolean()) {
-                Vec3 c = VecHelper.getCenterOf(worldPosition);
-                Vec3 v = VecHelper.offsetRandomly(c, level.random, .65f);
-                Vec3 m = c.subtract(v);
-                level.addParticle(new AirParticleData(1, .05f), v.x, v.y, v.z, m.x, m.y, m.z);
-            }
-        }*/
-    }
-
-
-    @Override
     protected void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
 

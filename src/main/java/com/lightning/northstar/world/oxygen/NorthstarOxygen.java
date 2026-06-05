@@ -27,9 +27,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -103,6 +105,17 @@ public class NorthstarOxygen {
 
     public static boolean isBreathable(Fluid fluid) {
         return NorthstarFluidTags.BREATHABLE.matches(fluid);
+    }
+
+    @Nullable
+    public static Fluid findOxygenInStorage(IFluidHandler handler) {
+        for (int i = 0; i < handler.getTanks(); i++) {
+            Fluid fluid = handler.getFluidInTank(i).getFluid();
+            if (isBreathable(fluid)) {
+                return fluid;
+            }
+        }
+        return null;
     }
 
     public static boolean hasOxygen(Level level, Vec3 pos) {
