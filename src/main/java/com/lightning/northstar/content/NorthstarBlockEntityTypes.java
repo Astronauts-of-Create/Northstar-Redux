@@ -20,6 +20,7 @@ import com.lightning.northstar.block.tech.ice_box.IceBoxBlockEntity;
 import com.lightning.northstar.block.tech.ice_box.IceBoxRenderer;
 import com.lightning.northstar.block.tech.large_fan.LargeFanBlockEntity;
 import com.lightning.northstar.block.tech.large_fan.LargeFanRenderer;
+import com.lightning.northstar.block.tech.large_fan.LargeFanVisual;
 import com.lightning.northstar.block.tech.oxygen_detector.OxygenDetectorBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerBlockEntity;
 import com.lightning.northstar.block.tech.oxygen_filler.OxygenFillerRenderer;
@@ -75,6 +76,7 @@ public class NorthstarBlockEntityTypes {
 
     public static final BlockEntityEntry<LargeFanBlockEntity> LARGE_FAN = REGISTRATE
             .blockEntity("large_fan", LargeFanBlockEntity::new)
+            .visual(() -> LargeFanVisual::new)
             .validBlocks(NorthstarBlocks.LARGE_FAN)
             .renderer(() -> LargeFanRenderer::new)
             .register();
