@@ -11,6 +11,7 @@ import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.lightning.northstar.world.sealer.transform.TransformProviders;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllEnchantments;
 import it.unimi.dsi.fastutil.longs.LongCollection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Vec3i;
@@ -39,9 +40,6 @@ import java.util.Set;
 
 @EventBusSubscriber(modid = Northstar.MOD_ID, bus = Bus.FORGE)
 public class NorthstarOxygen {
-
-    /** Maximum oxygen for spacesuits, in mB; use is 1 mB/s, defaults to 30 minutes so 1.5 minecraft days */
-    public static final int MAXIMUM_OXYGEN = 1800;
 
     private final Level level;
     private final Set<Provider> providers;
@@ -148,6 +146,11 @@ public class NorthstarOxygen {
         return ItemStack.EMPTY;
     }
 
+    public static int getTankCapacity(ItemStack item) {
+        return NorthstarConfigs.server().spacesuitBaseOxygen.get() +
+               NorthstarConfigs.server().spacesuitAdditionalOxygen.get() * item.getEnchantmentLevel(AllEnchantments.CAPACITY.get());
+    }
+
     @SubscribeEvent
     public static void onBreathe(LivingBreatheEvent event) {
         LivingEntity entity = event.getEntity();
@@ -208,7 +211,7 @@ public class NorthstarOxygen {
             return false;
 
         if (deplete)
-            tag.putInt("Oxygen", Math.min(oxygen - 1, MAXIMUM_OXYGEN));
+            tag.putInt("Oxygen", Math.min(oxygen - 1, getTankCapacity(stack)));
         return true;
     }
 

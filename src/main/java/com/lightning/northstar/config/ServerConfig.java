@@ -36,6 +36,9 @@ public class ServerConfig extends ConfigBase {
 
     public final ConfigGroup gameplay = group(1, "gameplay");
 
+    public final ConfigInt spacesuitBaseOxygen = i(1800, 0, "spacesuitBaseOxygen", "The amount of oxygen that can be stored in spacesuits, uses 1 mB/second");
+    public final ConfigInt spacesuitAdditionalOxygen = i(600, 0, "spacesuitAdditionalOxygen", "The added oxygen capacity for each level of capacity");
+
     public final ConfigBool doDripstoneDripWithoutGravity = b(false, "doDripstoneDripWithoutGravity", "Wether to allow dripstones to drip in places with no gravity");
     public final ConfigBool doDripstoneGrowWithoutGravity = b(false, "doDripstoneGrowWithoutGravity", "Wether to allow dripstones to grow in places with no gravity");
     public final ConfigFloat zeroGravityJumpStrength = f(0.2f, 0.0f, "zeroGravityJumpStrength", "The jump strength scale applied in zero gravity worlds");

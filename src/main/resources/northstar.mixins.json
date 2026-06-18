@@ -49,6 +49,7 @@
     "compat.create.BackTankBlockMixin",
     "compat.create.BeltInventoryMixin",
     "compat.create.BlazeBurnerBlockMixin",
+    "compat.create.CapacityEnchantmentMixin",
     "compat.create.ChuteBlockEntityMixin",
     "compat.create.CopycatBlockMixin",
     "compat.create.EncasedFanBlockMixin",

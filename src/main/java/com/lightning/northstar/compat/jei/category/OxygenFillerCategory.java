@@ -46,7 +46,7 @@ public class OxygenFillerCategory extends AbstractRecipeCategory<ItemLike> {
 
         ItemStack filled = new ItemStack(recipe);
         CompoundTag tag = filled.getOrCreateTag();
-        tag.putInt("Oxygen", NorthstarOxygen.MAXIMUM_OXYGEN);
+        tag.putInt("Oxygen", NorthstarOxygen.getTankCapacity(filled));
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 42 + 16)
                 .setBackground(CreateRecipeCategory.getRenderedSlot(), -1, -1)

@@ -92,7 +92,7 @@ public class NorthstarCreativeModeTab {
     private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
         ItemStack stack = new ItemStack(item);
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt("Oxygen", NorthstarOxygen.MAXIMUM_OXYGEN);
+        tag.putInt("Oxygen", NorthstarOxygen.getTankCapacity(stack));
         event.accept(stack);
     }
 

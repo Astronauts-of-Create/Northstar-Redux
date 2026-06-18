@@ -55,7 +55,8 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         @Override
         public int getTankCapacity(int tank) {
-            return getContainedItem() == null ? 0 : NorthstarOxygen.MAXIMUM_OXYGEN;
+            ItemStack stack = getContainedItem();
+            return stack == null ? 0 : NorthstarOxygen.getTankCapacity(stack);
         }
 
         @Override
@@ -70,11 +71,12 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                 return 0;
             CompoundTag tag = item.getOrCreateTag();
             int oxygen = tag.getInt("Oxygen");
-            int fillable = Mth.clamp(NorthstarOxygen.MAXIMUM_OXYGEN - oxygen, 0, stack.getAmount());
+            int capacity = NorthstarOxygen.getTankCapacity(item);
+            int fillable = Mth.clamp(capacity - oxygen, 0, stack.getAmount());
             if (action.execute() && fillable != 0) {
                 tag.putInt("Oxygen", oxygen + fillable);
                 sendData();
-                if (oxygen + fillable >= NorthstarOxygen.MAXIMUM_OXYGEN) {
+                if (oxygen + fillable >= capacity) {
                     AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 0.4f, 0);
                 }
             }
@@ -164,7 +166,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(NorthstarOxygen.MAXIMUM_OXYGEN)
+                    .add(CreateLang.number(NorthstarOxygen.getTankCapacity(item))
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);

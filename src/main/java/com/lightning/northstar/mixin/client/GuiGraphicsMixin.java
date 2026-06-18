@@ -28,7 +28,7 @@ public class GuiGraphicsMixin implements NorthstarGuiGraphics {
             GuiGraphics self = (GuiGraphics) (Object) this;
 
             int oxygen = stack.getOrCreateTag().getInt("Oxygen");
-            float fraction = (float) oxygen / (float) NorthstarOxygen.MAXIMUM_OXYGEN;
+            float fraction = (float) oxygen / (float) NorthstarOxygen.getTankCapacity(stack);
 
             int width = (int) (13 * fraction);
             int barX = x + 2;

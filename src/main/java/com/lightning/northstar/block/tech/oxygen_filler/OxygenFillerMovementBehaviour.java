@@ -37,7 +37,8 @@ public class OxygenFillerMovementBehaviour implements MovementBehaviour {
         }
 
         CompoundTag compound = item.getOrCreateTag();
-        int fillable = Math.min(NorthstarOxygen.MAXIMUM_OXYGEN - compound.getInt("Oxygen"), NorthstarConfigs.server().mountedOxygenFillerSpeed.get());
+        int capacity = NorthstarOxygen.getTankCapacity(item);
+        int fillable = Math.min(capacity - compound.getInt("Oxygen"), NorthstarConfigs.server().mountedOxygenFillerSpeed.get());
         if (fillable <= 0) {
             return;
         }
@@ -47,7 +48,7 @@ public class OxygenFillerMovementBehaviour implements MovementBehaviour {
             return;
         }
 
-        if (compound.getInt("Oxygen") + consumed >= NorthstarOxygen.MAXIMUM_OXYGEN) {
+        if (compound.getInt("Oxygen") + consumed >= capacity) {
             BlockPos pos = BlockPos.containing(context.contraption.entity.toGlobalVector(Vec3.atCenterOf(context.localPos), 0));
             AllSoundEvents.CONFIRM.playOnServer(context.world, pos, 0.4f, 0);
         }
