@@ -50,6 +50,7 @@ import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockMo
 import com.simibubi.create.content.kinetics.simpleRelays.CogwheelBlockItem;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
+import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -4063,6 +4064,23 @@ public class NorthstarBlocks {
                     .noOcclusion())
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .blockstate(NorthstarDataGenModels.manualModel())
+            .register();
+
+    public static final BlockEntry<TitaniumTrapdoorBlock> TITANIUM_SPACE_TRAPDOOR = REGISTRATE
+            //Iron sets this to an iron trapdoor
+            .block("titanium_space_trapdoor", p -> new TitaniumTrapdoorBlock(p, BlockSetType.STONE))
+            .properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .noOcclusion())
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .blockstate(NorthstarDataGenModels.manualModel())
+            .item()
+            .model((ctx, prov) ->
+                    prov.withExistingParent(
+                            ctx.getName(),
+                            prov.modLoc("block/titanium_space_trapdoor_bottom")
+                    )
+            ).build()
             .register();
 
     public static final BlockEntry<InterplanetaryNavigatorBlock> INTERPLANETARY_NAVIGATOR = REGISTRATE
