@@ -1,6 +1,7 @@
 {
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:cutout",
 	"textures": {
 		"0": "northstar:block/mercury_shelf_fungus",
 		"particle": "northstar:block/mercury_shelf_fungus"
@@ -12,10 +13,6 @@
 			"to": [15, 6, 6],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [4, 6, 0]},
 			"faces": {
-				"north": {"uv": [0, 0, 11, 0], "texture": "#missing"},
-				"east": {"uv": [0, 0, 6, 0], "texture": "#missing"},
-				"south": {"uv": [0, 0, 11, 0], "texture": "#missing"},
-				"west": {"uv": [0, 0, 6, 0], "texture": "#missing"},
 				"up": {"uv": [5, 6, 16, 12], "texture": "#0"},
 				"down": {"uv": [5, 12, 16, 6], "texture": "#0"}
 			}

@@ -402,14 +402,13 @@ public class NorthstarStandardRecipeGen extends StandardRecipeGen {
                     .pattern("TTC")
                     .pattern("TT ")),
 
-    TITANIUM_SPACE_TRAPDOOR = create(NorthstarBlocks.TITANIUM_SPACE_TRAPDOOR)
+    TITANIUM_TRAPDOOR = create(NorthstarBlocks.TITANIUM_TRAPDOOR)
             .unlockedByTag(() -> NorthstarItemTags.C_SHEETS_TITANIUM.tag)
             .returns(2)
-            .viaShaped(b ->
-                    b.define('G', Items.GLASS)
-                            .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
-                            .pattern("TGT")
-                            .pattern("TGT")),
+            .viaShaped(b -> b.define('G', Items.GLASS)
+                    .define('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .pattern("TGT")
+                    .pattern("TGT")),
 
     VENT = create(NorthstarBlocks.VENT)
             .unlockedBy(() -> NorthstarItems.TITANIUM_INGOT)

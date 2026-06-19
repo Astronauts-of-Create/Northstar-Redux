@@ -50,7 +50,6 @@ import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockMo
 import com.simibubi.create.content.kinetics.simpleRelays.CogwheelBlockItem;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.processing.basin.BasinMovementBehaviour;
-import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -4066,21 +4065,16 @@ public class NorthstarBlocks {
             .blockstate(NorthstarDataGenModels.manualModel())
             .register();
 
-    public static final BlockEntry<TitaniumTrapdoorBlock> TITANIUM_SPACE_TRAPDOOR = REGISTRATE
-            //Iron sets this to an iron trapdoor
-            .block("titanium_space_trapdoor", p -> new TitaniumTrapdoorBlock(p, BlockSetType.STONE))
+    public static final BlockEntry<TrapDoorBlock> TITANIUM_TRAPDOOR = REGISTRATE
+            .block("titanium_trapdoor", p -> new TrapDoorBlock(p, BlockSetType.STONE))
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion())
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .blockstate(NorthstarDataGenModels.manualModel())
+            .blockstate((c, p) -> p.trapdoorBlockWithRenderType(c.get(), p.modLoc("block/titanium_trapdoor"), true, "minecraft:cutout_mipped"))
             .item()
-            .model((ctx, prov) ->
-                    prov.withExistingParent(
-                            ctx.getName(),
-                            prov.modLoc("block/titanium_space_trapdoor_bottom")
-                    )
-            ).build()
+            .model((c, p) -> p.trapdoorBottom(c.getName(), p.modLoc("block/titanium_trapdoor")).renderType("minecraft:cutout_mipped"))
+            .build()
             .register();
 
     public static final BlockEntry<InterplanetaryNavigatorBlock> INTERPLANETARY_NAVIGATOR = REGISTRATE
