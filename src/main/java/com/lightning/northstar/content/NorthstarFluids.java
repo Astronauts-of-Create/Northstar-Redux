@@ -1,12 +1,13 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
+import com.lightning.northstar.fluid.GasFluid;
 import com.lightning.northstar.fluid.SulfuricAcidFluidBlock;
 import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
+import com.lightning.northstar.item.DrinkableBucket;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.content.fluids.VirtualFluid;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import net.createmod.catnip.theme.Color;
@@ -15,6 +16,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -37,50 +41,84 @@ public class NorthstarFluids {
 
     // thanks, create, for making this simple :]
 
-    public static final FluidEntry<VirtualFluid> OXYGEN = REGISTRATE
-            .virtualFluid("oxygen")
+    public static final FluidEntry<GasFluid> OXYGEN = REGISTRATE
+            .gasFluid("oxygen")
             .properties(p -> p.density(0))
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_OXYGEN.tag)
+            .bucket()
+            .lang("Oxygen Tank")
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> HYDROGEN = REGISTRATE
-            .virtualFluid("hydrogen")
+    public static final FluidEntry<GasFluid> HYDROGEN = REGISTRATE
+            .gasFluid("hydrogen")
             .properties(p -> p.density(0))
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_HYDROGEN.tag)
+            .bucket()
+            .lang("Hydrogen Tank")
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> CHLORINE = REGISTRATE
-            .virtualFluid("chlorine")
+    public static final FluidEntry<GasFluid> CHLORINE = REGISTRATE
+            .gasFluid("chlorine")
             .properties(p -> p.density(0))
             .tag(NorthstarFluidTags.C_GASEOUS.tag)
             .tag(NorthstarFluidTags.C_CHLORINE.tag)
+            .bucket()
+            .lang("Chlorine Tank")
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> CHOCOLATE_ICE_CREAM = REGISTRATE
-            .virtualFluid("chocolate_ice_cream")
+    public static final FluidEntry<GasFluid> CHOCOLATE_ICE_CREAM = REGISTRATE
+            .gasFluid("chocolate_ice_cream")
             .tag(NorthstarFluidTags.C_CHOCOLATE_ICE_CREAM.tag)
+            .bucket(DrinkableBucket::new)
+            .properties(p -> p.food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(0.8F)
+                    .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 280, 0, false, false, true), 1.0F)
+                    .build()))
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> VANILLA_ICE_CREAM = REGISTRATE
-            .virtualFluid("vanilla_ice_cream")
+    public static final FluidEntry<GasFluid> VANILLA_ICE_CREAM = REGISTRATE
+            .gasFluid("vanilla_ice_cream")
             .tag(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag)
+            .bucket(DrinkableBucket::new)
+            .properties(p -> p.food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(0.7F)
+                    .build()))
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> STRAWBERRY_ICE_CREAM = REGISTRATE
-            .virtualFluid("strawberry_ice_cream")
+    public static final FluidEntry<GasFluid> STRAWBERRY_ICE_CREAM = REGISTRATE
+            .gasFluid("strawberry_ice_cream")
             .tag(NorthstarFluidTags.C_STRAWBERRY_ICE_CREAM.tag)
+            .bucket(DrinkableBucket::new)
+            .properties(p -> p.food(new FoodProperties.Builder()
+                    .nutrition(5)
+                    .saturationMod(0.7F)
+                    .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 280, 0, false, false, true), 1.0F)
+                    .build()))
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> SODIUM = REGISTRATE
-            .virtualFluid("sodium")
+    public static final FluidEntry<GasFluid> SODIUM = REGISTRATE
+            .gasFluid("sodium")
             .tag(NorthstarFluidTags.C_SODIUM.tag)
+            .bucket()
+            .build()
             .register();
 
-    public static final FluidEntry<VirtualFluid> CARBON = REGISTRATE
-            .virtualFluid("carbon")
+    public static final FluidEntry<GasFluid> CARBON = REGISTRATE
+            .gasFluid("carbon")
             .tag(NorthstarFluidTags.C_CARBON.tag)
+            .bucket()
+            .lang("Carbon Tank")
+            .build()
             .register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> TITANIUM_TETRACHLORIDE = REGISTRATE
