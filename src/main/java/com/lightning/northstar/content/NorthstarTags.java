@@ -213,14 +213,14 @@ public class NorthstarTags {
 
     public enum NorthstarItemTags implements TagHelper.Tag<Item> {
 
-        COILER_LOGS,
-        CALORIAN_LOGS,
         ARGYRE_LOGS,
+        CALORIAN_LOGS,
+        COILER_LOGS,
         C_DUSTS_SALT(COMMON, "dusts/salt"),
         C_DUSTS_VOLCANIC_ASH(COMMON, "dusts/volcanic_ash"),
-        C_GEMS_SAPPHIRE(COMMON, "gems/sapphire"),
         C_FABRICS(COMMON, "fabrics"),
         C_FIBERS(COMMON, "fibers"),
+        C_GEMS_SAPPHIRE(COMMON, "gems/sapphire"),
         C_INGOTS_BRASS(COMMON, "ingots/brass"),
         C_INGOTS_MARTIAN_STEEL(COMMON, "ingots/martian_steel"),
         C_INGOTS_TITANIUM(COMMON, "ingots/titanium"),
