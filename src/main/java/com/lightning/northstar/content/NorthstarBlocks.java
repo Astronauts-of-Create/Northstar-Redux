@@ -4065,6 +4065,18 @@ public class NorthstarBlocks {
             .blockstate(NorthstarDataGenModels.manualModel())
             .register();
 
+    public static final BlockEntry<TrapDoorBlock> TITANIUM_TRAPDOOR = REGISTRATE
+            .block("titanium_trapdoor", p -> new TrapDoorBlock(p, BlockSetType.STONE))
+            .properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .noOcclusion())
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .blockstate((c, p) -> p.trapdoorBlockWithRenderType(c.get(), p.modLoc("block/titanium_trapdoor"), true, "minecraft:cutout_mipped"))
+            .item()
+            .model((c, p) -> p.trapdoorBottom(c.getName(), p.modLoc("block/titanium_trapdoor")).renderType("minecraft:cutout_mipped"))
+            .build()
+            .register();
+
     public static final BlockEntry<InterplanetaryNavigatorBlock> INTERPLANETARY_NAVIGATOR = REGISTRATE
             .block("interplanetary_navigator", InterplanetaryNavigatorBlock::new)
             .initialProperties(SharedProperties::netheriteMetal)
