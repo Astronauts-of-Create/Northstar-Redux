@@ -35,6 +35,10 @@ public class LayEggInNestGoal extends MoveToBlockGoal {
         return 2;
     }
 
+    /**
+     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+     * method as well.
+     */
     @Override
     public boolean canUse() {
         if (!EventHooks.canEntityGrief(this.removerMob.level(), this.removerMob)) {

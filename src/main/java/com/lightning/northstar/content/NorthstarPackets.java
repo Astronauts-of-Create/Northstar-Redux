@@ -1,16 +1,16 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.block.tech.rocket_controls.RocketControlsInputPacket;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket;
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
 import com.lightning.northstar.contraption.ActorConfigPacket;
-import com.lightning.northstar.contraption.rocket.packet.EntityLockPacket;
-import com.lightning.northstar.contraption.rocket.packet.RocketContraptionQuickSyncPacket;
-import com.lightning.northstar.contraption.rocket.packet.RocketContraptionSyncPacket;
-import com.lightning.northstar.contraption.rocket.packet.RocketControlPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketDestinationPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketSeatsPacket;
+import com.lightning.northstar.contraption.rocket.packet.RocketSyncPacket;
+import com.lightning.northstar.network.packet.ForceContraptionControlPacket;
 import com.lightning.northstar.network.packet.RelativeTeleportPacket;
+import com.lightning.northstar.network.packet.SpaceAtlasEditPacket;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -23,17 +23,17 @@ public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
 
     // client to server
     UPDATE_ROCKET_STATION(RocketStationEditPacket.class, RocketStationEditPacket.STREAM_CODEC),
+    UPDATE_SPACE_ATLAS(SpaceAtlasEditPacket.class, SpaceAtlasEditPacket.STREAM_CODEC),
     UPDATE_TEMPERATURE_REGULATOR(TemperatureRegulatorEditPacket.class, TemperatureRegulatorEditPacket.STREAM_CODEC),
     TELESCOPE_PRINT(TelescopePrintPacket.class, TelescopePrintPacket.STREAM_CODEC),
-    ROCKET_CONTROLS_INPUT(RocketControlsInputPacket.class, RocketControlsInputPacket.STREAM_CODEC),
 
     // server to client
-    ROCKET_SYNC(RocketContraptionSyncPacket.class, RocketContraptionSyncPacket.STREAM_CODEC),
-    ROCKET_QUICK_SYNC(RocketContraptionQuickSyncPacket.class, RocketContraptionQuickSyncPacket.STREAM_CODEC),
-    ROCKET_CONTROL(RocketControlPacket.class, RocketControlPacket.STREAM_CODEC),
+    FORCE_CONTRAPTION_CONTROL(ForceContraptionControlPacket.class, ForceContraptionControlPacket.STREAM_CODEC),
+    ROCKET_DESTINATION(RocketDestinationPacket.class, RocketDestinationPacket.STREAM_CODEC),
+    ROCKET_SEATS(RocketSeatsPacket.class, RocketSeatsPacket.STREAM_CODEC),
+    ROCKET_SYNC(RocketSyncPacket.class, RocketSyncPacket.STREAM_CODEC),
     ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket.STREAM_CODEC),
-    RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC),
-    ENTITY_LOCK(EntityLockPacket.class, EntityLockPacket.STREAM_CODEC);
+    RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC);
 
     public static final int NETWORK_VERSION = 6;
 

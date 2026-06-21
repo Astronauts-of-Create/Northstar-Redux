@@ -67,7 +67,7 @@ public class IceBoxRenderer extends SmartBlockEntityRenderer<IceBoxBlockEntity> 
                 ms.translate(0,
                         (Mth.sin(
                                 AnimationTickHolder.getRenderTime(icebox.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
-                                * 1 / 32f,
+                        * 1 / 32f,
                         0);
             }
 

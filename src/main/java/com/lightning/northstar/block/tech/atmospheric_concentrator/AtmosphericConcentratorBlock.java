@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class AtmosphericConcentratorBlock extends HorizontalKineticBlock implements IBE<AtmosphericConcentratorBlockEntity> {
 
-    protected static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 13, 16);
+    public static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 13, 16);
 
     public AtmosphericConcentratorBlock(Properties properties) {
         super(properties);

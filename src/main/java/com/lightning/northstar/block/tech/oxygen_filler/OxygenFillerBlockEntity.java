@@ -56,12 +56,13 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         @Override
         public int getTankCapacity(int tank) {
-            return getContainedItem() == null ? 0 : NorthstarOxygen.MAXIMUM_OXYGEN;
+            ItemStack stack = getContainedItem();
+            return stack == null ? 0 : NorthstarOxygen.getTankCapacity(level, stack);
         }
 
         @Override
         public boolean isFluidValid(int tank, FluidStack stack) {
-            return tank == 0 && NorthstarOxygen.isOxygen(stack.getFluid());
+            return tank == 0 && NorthstarOxygen.isBreathable(stack.getFluid());
         }
 
         @Override
@@ -70,11 +71,12 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             if (!isFluidValid(0, stack) || item == null)
                 return 0;
             int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
-            int fillable = Mth.clamp(NorthstarOxygen.MAXIMUM_OXYGEN - oxygen, 0, stack.getAmount());
+            int capacity = NorthstarOxygen.getTankCapacity(level, item);
+            int fillable = Mth.clamp(capacity - oxygen, 0, stack.getAmount());
             if (action.execute() && fillable != 0) {
                 item.set(NorthstarDataComponents.OXYGEN, oxygen + fillable);
                 sendData();
-                if (oxygen + fillable >= NorthstarOxygen.MAXIMUM_OXYGEN) {
+                if (oxygen + fillable >= capacity) {
                     AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 0.4f, 0);
                 }
             }
@@ -132,24 +134,6 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        /*if (level.isClientSide) {
-            if (audioTick++ % 13 == 0) {
-                level.playLocalSound(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.5f, 0, false);
-            }
-
-            if (level.random.nextBoolean()) {
-                Vec3 c = VecHelper.getCenterOf(worldPosition);
-                Vec3 v = VecHelper.offsetRandomly(c, level.random, .65f);
-                Vec3 m = c.subtract(v);
-                level.addParticle(new AirParticleData(1, .05f), v.x, v.y, v.z, m.x, m.y, m.z);
-            }
-        }*/
-    }
-
-    @Override
     protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(compound, registries, clientPacket);
 
@@ -182,7 +166,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(NorthstarOxygen.MAXIMUM_OXYGEN)
+                    .add(CreateLang.number(NorthstarOxygen.getTankCapacity(level, item))
                             .add(NorthstarLang.MB)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);

@@ -22,11 +22,15 @@ public class BackTankBlockEntityMixin extends KineticBlockEntity {
         super(type, pos, state);
     }
 
-    @ModifyVariable(method = "tick",
-            at = @At(value = "STORE",
-                    ordinal = 0),
+    @ModifyVariable(
+            method = "tick",
+            at = @At(
+                    value = "STORE",
+                    ordinal = 0
+            ),
             ordinal = 2,
-            remap = false)
+            remap = false
+    )
     private int northstar$modifyIncrement(int used) {
         NorthstarOxygen oxygen = level.northstar$oxygen();
         if (oxygen.hasOxygen())

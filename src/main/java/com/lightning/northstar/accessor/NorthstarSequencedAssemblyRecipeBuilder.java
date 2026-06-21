@@ -9,7 +9,7 @@ public interface NorthstarSequencedAssemblyRecipeBuilder {
 
     // Create, didn't you forget something by any chance?
     default SequencedAssemblyRecipeBuilder northstar$withCondition(ICondition condition) {
-        throw new RuntimeException("This should be implemented by a mixin!");
+        throw new MissingMixinException();
     }
 
     default SequencedAssemblyRecipeBuilder northstar$whenModLoaded(Mod mod) {

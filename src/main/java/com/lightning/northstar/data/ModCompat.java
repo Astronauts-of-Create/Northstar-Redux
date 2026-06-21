@@ -1,14 +1,21 @@
 package com.lightning.northstar.data;
 
+import org.jetbrains.annotations.ApiStatus;
+
 public enum ModCompat implements Mod {
 
     CBC("createbigcannons"),
     CDG("createdieselgenerators"),
     COPYCATS("copycats"),
+    JEI("justenoughitems"),
     KJS("kubejs"),
     KJS_CREATE("kubejs_create"),
     MEK("mekanism"),
+    OCULUS("iris"),
     TFMG("tfmg");
+
+    @ApiStatus.Internal
+    public static boolean HAS_JEI_RUNTIME;
 
     public final String modId;
 
@@ -19,6 +26,11 @@ public enum ModCompat implements Mod {
     @Override
     public String getModId() {
         return modId;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return Mod.super.isLoaded() || (this == JEI && HAS_JEI_RUNTIME);
     }
 
 }

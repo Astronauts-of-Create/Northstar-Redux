@@ -2,8 +2,10 @@ package com.lightning.northstar.mixin.client;
 
 import com.lightning.northstar.accessor.NorthstarGuiGraphics;
 import com.lightning.northstar.content.NorthstarDataComponents;
+import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
@@ -17,15 +19,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GuiGraphicsMixin implements NorthstarGuiGraphics {
 
     // Unfortunately can't make use of RegisterItemDecorationsEvent as it's only called ONCE on startup before anything useful is loaded
-    @Inject(method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
-            at = @At(value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"))
+    @Inject(
+            method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"
+            )
+    )
     public void northstar$onRenderItemDecorations(Font font, ItemStack stack, int x, int y, String text, CallbackInfo ci) {
         if (NorthstarItemTags.OXYGEN_SOURCES.matches(stack)) {
             GuiGraphics self = (GuiGraphics) (Object) this;
 
             int oxygen = stack.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
-            float fraction = (float) oxygen / (float) NorthstarOxygen.MAXIMUM_OXYGEN;
+            float fraction = (float) oxygen / (float) NorthstarOxygen.getTankCapacity(Minecraft.getInstance().level, stack);
 
             int width = (int) (13 * fraction);
             int barX = x + 2;

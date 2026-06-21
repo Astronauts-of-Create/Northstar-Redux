@@ -36,9 +36,9 @@ public class CopycatBlockMixin implements SealableBlock {
                 material = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), block.nbt().getCompound("Material"));
         }
         return material != null &&
-                material != AllBlocks.COPYCAT_BASE.getDefaultState() &&
-                !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(material) &&
-                Block.isFaceFull(state.getShape(level, pos), direction);
+               material != AllBlocks.COPYCAT_BASE.getDefaultState() &&
+               !NorthstarBlockTags.AIR_PASSES_THROUGH.matches(material) &&
+               Block.isFaceFull(state.getShape(level, pos), direction);
     }
 
 }

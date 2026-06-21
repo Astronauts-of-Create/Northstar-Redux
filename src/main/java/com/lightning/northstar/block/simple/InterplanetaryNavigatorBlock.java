@@ -1,6 +1,8 @@
 package com.lightning.northstar.block.simple;
 
+import com.simibubi.create.api.contraption.BlockMovementChecks;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,11 +27,25 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class InterplanetaryNavigatorBlock extends Block implements ProperWaterloggedBlock {
 
-    public static final VoxelShape AABB = Block.box(4, 0, 4, 12, 16, 12);
+    public static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 16, 13);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+
+    static {
+        // I feel like Create should already handle that property like it does for doors, but it doesn't???
+        BlockMovementChecks.registerAttachedCheck((state, level, pos, direction) -> {
+            if (state.getBlock() instanceof InterplanetaryNavigatorBlock && direction.getAxis() == Direction.Axis.Y) {
+                return BlockMovementChecks.CheckResult.of(direction != Direction.UP || state.getValue(HALF) == DoubleBlockHalf.LOWER);
+            }
+            return BlockMovementChecks.CheckResult.PASS;
+        });
+    }
 
     public InterplanetaryNavigatorBlock(Properties properties) {
         super(properties);
@@ -46,8 +62,8 @@ public class InterplanetaryNavigatorBlock extends Block implements ProperWaterlo
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return AABB;
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override

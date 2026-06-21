@@ -31,10 +31,10 @@ public class CopycatBytePanelBlockMixin implements SealableBlock {
     @Override
     public boolean northstar$isFaceSealed(BlockGetter level, BlockPos pos, BlockState state, Direction direction, boolean source, SealingMode mode) {
         if (direction != state.getValue(CopycatBytePanelBlock.FACING) ||
-                !state.getValue(CopycatBytePanelBlock.BOTTOM_LEFT) ||
-                !state.getValue(CopycatBytePanelBlock.BOTTOM_RIGHT) ||
-                !state.getValue(CopycatBytePanelBlock.TOP_LEFT) ||
-                !state.getValue(CopycatBytePanelBlock.TOP_RIGHT))
+            !state.getValue(CopycatBytePanelBlock.BOTTOM_LEFT) ||
+            !state.getValue(CopycatBytePanelBlock.BOTTOM_RIGHT) ||
+            !state.getValue(CopycatBytePanelBlock.TOP_LEFT) ||
+            !state.getValue(CopycatBytePanelBlock.TOP_RIGHT))
             return false;
 
         if (level instanceof NorthstarContraptionWorld cw) {
@@ -42,17 +42,17 @@ public class CopycatBytePanelBlockMixin implements SealableBlock {
             if (compound == null)
                 return true;
             return northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.BOTTOM_LEFT)) &&
-                    northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.BOTTOM_RIGHT)) &&
-                    northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.TOP_LEFT)) &&
-                    northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.TOP_RIGHT));
+                   northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.BOTTOM_RIGHT)) &&
+                   northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.TOP_LEFT)) &&
+                   northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(compound, CopycatBytePanelBlock.TOP_RIGHT));
         }
 
         if (level.getBlockEntity(pos) instanceof IMultiStateCopycatBlockEntity be) {
             MaterialItemStorage storage = be.getMaterialItemStorage();
             return northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.BOTTOM_LEFT)) &&
-                    northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.BOTTOM_RIGHT)) &&
-                    northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.TOP_LEFT)) &&
-                    northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.TOP_RIGHT));
+                   northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.BOTTOM_RIGHT)) &&
+                   northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.TOP_LEFT)) &&
+                   northstar$isMaterialSealed(CopycatSealHelper.getMultistateMaterial(storage, CopycatBytePanelBlock.TOP_RIGHT));
         }
 
         return false;

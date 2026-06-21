@@ -30,10 +30,14 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
         super(type, pos, blockState);
     }
 
-    @ModifyReturnValue(method = "canBurn",
-            at = @At("RETURN"))
-    private static boolean northstar$preventBurningWithoutOxygen(boolean original,
-                                                                 @Local(argsOnly = true) AbstractFurnaceBlockEntity furnace) {
+    @ModifyReturnValue(
+            method = "canBurn",
+            at = @At("RETURN")
+    )
+    private static boolean northstar$preventBurningWithoutOxygen(
+            boolean original,
+            @Local(argsOnly = true) AbstractFurnaceBlockEntity furnace
+    ) {
         return original && NorthstarOxygen.hasOxygen(furnace.getLevel(), furnace.getBlockPos());
     }
 

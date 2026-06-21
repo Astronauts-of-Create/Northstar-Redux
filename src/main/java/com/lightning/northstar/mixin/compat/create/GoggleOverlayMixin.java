@@ -1,6 +1,7 @@
 package com.lightning.northstar.mixin.compat.create;
 
 import com.lightning.northstar.config.NorthstarConfigs;
+import net.minecraft.client.DeltaTracker;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.OxygenConsumer;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -8,7 +9,6 @@ import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -25,16 +25,22 @@ import java.util.List;
 @Mixin(GoggleOverlayRenderer.class)
 public class GoggleOverlayMixin {
 
-    @Inject(method = "renderOverlay",
-            at = @At(value = "INVOKE",
+    @Inject(
+            method = "renderOverlay",
+            at = @At(
+                    value = "INVOKE",
                     target = "Ljava/util/List;isEmpty()Z",
                     shift = At.Shift.BEFORE,
-                    ordinal = 2),
-            remap = false)
-    private static void northstar$addOverlay(GuiGraphics graphics, DeltaTracker tracker, CallbackInfo ci,
-                                             @Local ClientLevel level,
-                                             @Local BlockPos pos,
-                                             @Local List<Component> tooltip) {
+                    ordinal = 2
+            ),
+            remap = false
+    )
+    private static void northstar$addOverlay(
+            GuiGraphics graphics, DeltaTracker tracker, CallbackInfo ci,
+            @Local ClientLevel level,
+            @Local BlockPos pos,
+            @Local List<Component> tooltip
+    ) {
         if (!GogglesItem.isWearingGoggles(Minecraft.getInstance().player))
             return;
         Block block = level.getBlockState(pos).getBlock();

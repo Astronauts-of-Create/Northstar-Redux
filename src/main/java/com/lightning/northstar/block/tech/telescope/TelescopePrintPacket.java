@@ -1,40 +1,35 @@
 package com.lightning.northstar.block.tech.telescope;
 
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarPackets;
-import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import io.netty.buffer.ByteBuf;
+import net.createmod.catnip.net.base.ServerboundPacketPayload;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
-public class TelescopePrintPacket extends BlockEntityConfigurationPacket<TelescopeBlockEntity> {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public record TelescopePrintPacket(
+        BlockPos pos,
+        ResourceLocation planetId
+) implements ServerboundPacketPayload {
 
     public static final StreamCodec<ByteBuf, TelescopePrintPacket> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, packet -> packet.pos,
-            ByteBufCodecs.STRING_UTF8, packet -> packet.planetName,
+            BlockPos.STREAM_CODEC, TelescopePrintPacket::pos,
+            ResourceLocation.STREAM_CODEC, TelescopePrintPacket::planetId,
             TelescopePrintPacket::new
     );
 
-    private String planetName;
-
-    public TelescopePrintPacket(BlockPos pos, String planetName) {
-        super(pos);
-        this.planetName = planetName;
-    }
-
     @Override
-    protected void applySettings(ServerPlayer player, TelescopeBlockEntity be) {
-        Level level = be.getLevel();
-        BlockPos blockPos = be.getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
-
-        if (!(blockState.getBlock() instanceof TelescopeBlock))
-            return;
-
-        be.print(planetName, player);
+    public void handle(ServerPlayer player) {
+        if (player.level().getBlockState(pos).is(NorthstarBlocks.TELESCOPE.get())) {
+            TelescopeBlock.handlePrintRequest(player, pos, planetId);
+        }
     }
 
     @Override

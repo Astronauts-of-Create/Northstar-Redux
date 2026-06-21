@@ -43,7 +43,7 @@ public class RunToGroupGoal<T extends LivingEntity> extends Goal {
         this.predicateOnAvoidEntity = pPredicateOnAvoidEntity;
         this.pathNav = pMob.getNavigation();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        this.avoidEntityTargeting = TargetingConditions.forCombat().range((double)pMaxDistance).selector(pPredicateOnAvoidEntity.and(pAvoidPredicate));
+        this.avoidEntityTargeting = TargetingConditions.forCombat().range((double) pMaxDistance).selector(pPredicateOnAvoidEntity.and(pAvoidPredicate));
     }
 
     public RunToGroupGoal(PathfinderMob pMob, Class<T> pEntityClassToAvoid, float pMaxDistance, double pWalkSpeedModifier, double pSprintSpeedModifier, Predicate<LivingEntity> pPredicateOnAvoidEntity) {
@@ -52,7 +52,7 @@ public class RunToGroupGoal<T extends LivingEntity> extends Goal {
 
     @Override
     public boolean canUse() {
-        this.toAvoid = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.avoidClass, this.mob.getBoundingBox().inflate((double)this.maxDist, 3.0D, (double)this.maxDist), (p_148078_) -> true), this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ());
+        this.toAvoid = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.avoidClass, this.mob.getBoundingBox().inflate((double) this.maxDist, 3.0D, (double) this.maxDist), (p_148078_) -> true), this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ());
         if (this.toAvoid == null || this.mob.level().getEntitiesOfClass(this.mob.getClass(), this.mob.getBoundingBox().inflate(this.maxDist)).size() > 3) {
             this.toAvoid = null;
             return false;
@@ -69,33 +69,33 @@ public class RunToGroupGoal<T extends LivingEntity> extends Goal {
         }
     }
 
-       /**
-        * Returns whether an in-progress EntityAIBase should continue executing
-        */
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
     @Override
     public boolean canContinueToUse() {
         return !this.pathNav.isDone();
     }
 
-       /**
-        * Execute a one shot task or start executing a continuous task
-        */
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
     @Override
     public void start() {
         this.pathNav.moveTo(this.path, this.walkSpeedModifier);
     }
 
-       /**
-        * Reset the task's internal state. Called when this task is interrupted by another one
-        */
+    /**
+     * Reset the task's internal state. Called when this task is interrupted by another one
+     */
     @Override
     public void stop() {
         this.toAvoid = null;
     }
 
-       /**
-        * Keep ticking a continuous task that has already been started
-        */
+    /**
+     * Keep ticking a continuous task that has already been started
+     */
     @Override
     public void tick() {
         if (this.mob.distanceToSqr(this.toAvoid) < 72.0D && this.mob.level().getEntitiesOfClass(this.mob.getClass(), this.mob.getBoundingBox().inflate(this.maxDist)).size() < 3) {

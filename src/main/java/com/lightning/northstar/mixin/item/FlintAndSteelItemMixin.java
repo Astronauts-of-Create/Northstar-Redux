@@ -12,7 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FlintAndSteelItem.class)
 public class FlintAndSteelItemMixin {
 
-    @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "useOn",
+            at = @At("HEAD"),
+            cancellable = true
+    )
     private void northstar$testOxygen(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
         if (!NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos().relative(context.getClickedFace()))) {
             cir.setReturnValue(InteractionResult.PASS);

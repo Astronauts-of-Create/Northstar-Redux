@@ -78,7 +78,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "northstar:martian_steel",
+          "name": "northstar:martian_steel_ingot",
           "weight": 60,
           "functions": [
             {

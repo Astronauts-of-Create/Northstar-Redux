@@ -26,11 +26,15 @@ public abstract class HugeDieselEngineBlockEntityMixin extends SmartBlockEntity 
         super(type, pos, state);
     }
 
-    @Redirect(method = { "tick", "tickClient", "addToGoggleTooltip" },
-            at = @At(value = "INVOKE",
+    @Redirect(
+            method = { "tick", "tickClient", "addToGoggleTooltip" },
+            at = @At(
+                    value = "INVOKE",
                     target = "Lcom/jesz/createdieselgenerators/content/diesel_engine/huge/HugeDieselEngineBlockEntity;enabled()Z",
-                    remap = false),
-            remap = false)
+                    remap = false
+            ),
+            remap = false
+    )
     private boolean northstar$addOxygenCheck(HugeDieselEngineBlockEntity instance) {
         return northstar$hasOxygen && instance.enabled();
     }

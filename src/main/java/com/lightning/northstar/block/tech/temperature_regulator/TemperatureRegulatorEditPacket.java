@@ -7,7 +7,6 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.AdventureUtil;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -95,13 +94,17 @@ public class TemperatureRegulatorEditPacket implements ServerboundPacketPayload 
         regulator.regulator.temperature = temperature;
         regulator.regulator.setBounds(localPos, limit, sizeX, sizeY, sizeZ);
 
+        if (actor.left.nbt() == null) {
+            actor.left = new StructureTemplate.StructureBlockInfo(localPos, actor.left.state(), new CompoundTag());
+            entity.setBlock(localPos, actor.left);
+        }
 
-        CompoundTag nbt = actor.left.nbt() == null ? new CompoundTag() : actor.left.nbt().copy(); // needed copy?
+        CompoundTag nbt = actor.left.nbt();
+        assert nbt != null;
+
         regulator.regulator.write(nbt);
-        actor.left = new StructureTemplate.StructureBlockInfo(localPos, actor.left.state(), nbt);
-        entity.setBlock(localPos, actor.left);
 
-        CatnipServices.NETWORK.sendToClientsTrackingEntity(entity, new ActorConfigPacket(entity.getId(), localPos, nbt));
+        ActorConfigPacket.update(entity, localPos, nbt);
     }
 
     private void handleWorld(ServerPlayer player, Level world) {

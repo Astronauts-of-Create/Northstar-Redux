@@ -1,0 +1,14 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "northstar:block/rocket_waypoint_active"
+      }
+    },
+    {
+      "apply": {
+        "model": "northstar:block/rocket_waypoint_beam"
+      }
+    }
+  ]
+}

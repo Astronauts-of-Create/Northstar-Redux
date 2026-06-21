@@ -3,9 +3,11 @@ package com.lightning.northstar.contraption;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.data.Mod;
-import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.TagHelper;
+import com.lightning.northstar.util.NorthstarCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -32,7 +34,7 @@ public record FuelType(
         float combustionEngineRpm) {
 
     public static final Codec<FuelType> CODEC = RecordCodecBuilder.create(i -> i.group(
-            Codec.STRING.listOf().optionalFieldOf("fluids", List.of()).forGetter(FuelType::fluids),
+            NorthstarCodecs.listOrSingle(Codec.STRING).optionalFieldOf("fluids", List.of()).forGetter(FuelType::fluids),
             Codec.FLOAT.optionalFieldOf("gj_per_mb", 0f).forGetter(FuelType::gjPerMb),
             Codec.FLOAT.optionalFieldOf("combustion_engine_use", 0f).forGetter(FuelType::combustionEngineUse),
             Codec.FLOAT.optionalFieldOf("combustion_engine_rpm", 0f).forGetter(FuelType::combustionEngineRpm)
@@ -50,7 +52,7 @@ public record FuelType(
         private float combustionEngineUse;
         private float combustionEngineRpm;
 
-        public Builder tag(Tags.Tag<Fluid> tag) {
+        public Builder tag(TagHelper.Tag<Fluid> tag) {
             return tag(tag.tag());
         }
 
@@ -109,6 +111,7 @@ public record FuelType(
 
         Object2IntMap<Fluid> scores = new Object2IntOpenHashMap<>();
         TriConsumer<FuelType, Fluid, Integer> cache = (fuel, fluid, score) -> {
+            fluid = FluidHelper.convertToStill(fluid);
             if (scores.getInt(fluid) >= score)
                 return;
             scores.put(fluid, score);

@@ -1,28 +1,21 @@
 package com.lightning.northstar.content;
 
+import com.lightning.northstar.Northstar;
 import com.lightning.northstar.contraption.rocket.RocketContraption;
 import com.simibubi.create.api.contraption.ContraptionType;
-import com.simibubi.create.api.registry.CreateBuiltInRegistries;
-import com.simibubi.create.content.contraptions.Contraption;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.function.Supplier;
-
-import static com.simibubi.create.AllContraptionTypes.BY_LEGACY_NAME;
+import com.simibubi.create.api.registry.CreateRegistries;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class NorthstarContraptionTypes {
 
-    public static final ContraptionType ROCKET = register("northstar:rocket", RocketContraption::new).value();
+    private static final DeferredRegister<ContraptionType> REGISTER = DeferredRegister.create(CreateRegistries.CONTRAPTION_TYPE, Northstar.MOD_ID);
 
-    private static Holder.Reference<ContraptionType> register(String name, Supplier<? extends Contraption> factory) {
-        ContraptionType type = new ContraptionType(factory);
-        BY_LEGACY_NAME.put(name, type);
-        return Registry.registerForHolder(CreateBuiltInRegistries.CONTRAPTION_TYPE, ResourceLocation.parse(name), type);
-    }
+    public static final DeferredHolder<ContraptionType, ContraptionType> ROCKET = REGISTER.register("rocket", () -> new ContraptionType(RocketContraption::new));
 
-    public static void register() {
+    public static void register(IEventBus eventBus) {
+        REGISTER.register(eventBus);
     }
 
 }

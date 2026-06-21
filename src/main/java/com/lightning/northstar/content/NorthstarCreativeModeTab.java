@@ -1,8 +1,10 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.world.oxygen.NorthstarOxygen;
-import com.simibubi.create.AllCreativeModeTabs;
+import com.lightning.northstar.accessor.NorthstarLevel;
+import com.lightning.northstar.config.NorthstarConfigs;
+import com.lightning.northstar.item.atlas.SpaceAtlasContent;
+import com.lightning.northstar.planet.Planet;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -10,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class NorthstarCreativeModeTab {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ITEMS = CREATIVE_TABS
             .register("items", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.northstar.items"))
-                    .icon(() -> new ItemStack(NorthstarItems.MARTIAN_STEEL.get()))
+                    .icon(() -> new ItemStack(NorthstarItems.MARTIAN_STEEL_INGOT.get()))
                     .displayItems(createItemDisplay(NorthstarCreativeModeTab.ITEMS))
                     .build());
 
@@ -51,12 +52,21 @@ public class NorthstarCreativeModeTab {
     private static CreativeModeTab.DisplayItemsGenerator createItemDisplay(DeferredHolder<CreativeModeTab, CreativeModeTab> tab) {
         return (parameters, output) -> {
             Map<Item, Consumer<CreativeModeTab.Output>> builders = Map.of(
-                    NorthstarItems.STAR_MAP.get(), out -> {
-                        registerStarMap(out, "earth");
-                        registerStarMap(out, "moon");
-                        registerStarMap(out, "mars");
-                        registerStarMap(out, "mercury");
-                        registerStarMap(out, "venus");
+                    NorthstarItems.SPACE_ATLAS.get(), out -> {
+                        SpaceAtlasContent.Builder atlas = SpaceAtlasContent.builder();
+
+                        for (Planet planet : NorthstarLevel.CLIENT_TRACKER.getPlanets().values()) {
+                            atlas.addPlanet(SpaceAtlasContent.Planet.builder()
+                                    .planetId(planet.key.location())
+                                    .addReading(new SpaceAtlasContent.AtlasReading(Northstar.asResource("creative_menu"), Float.POSITIVE_INFINITY, 0))
+                                    .science(Float.POSITIVE_INFINITY)
+                                    .build());
+                        }
+
+                        ItemStack item = NorthstarItems.SPACE_ATLAS.asStack();
+                        item.set(DataComponents.ITEM_NAME, Component.translatable("item.northstar.space_atlas.creative").withStyle(ChatFormatting.LIGHT_PURPLE));
+                        item.set(NorthstarDataComponents.SPACE_ATLAS_CONTENT, atlas.build());
+                        out.accept(item);
                     },
                     NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get()),
                     NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.MARTIAN_STEEL_SPACE_SUIT_CHESTPIECE.get())
@@ -77,16 +87,9 @@ public class NorthstarCreativeModeTab {
         };
     }
 
-    private static void registerStarMap(CreativeModeTab.Output event, String planet) {
-        ItemStack item = new ItemStack(NorthstarItems.STAR_MAP.get());
-        item.set(DataComponents.CUSTOM_NAME, Component.translatable("item.northstar.star_map_" + planet).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA).withItalic(false)));
-        item.set(NorthstarDataComponents.PLANET, planet);
-        event.accept(item);
-    }
-
     private static void registerSpaceSuit(CreativeModeTab.Output event, Item item) {
         ItemStack stack = new ItemStack(item);
-        stack.set(NorthstarDataComponents.OXYGEN, NorthstarOxygen.MAXIMUM_OXYGEN);
+        stack.set(NorthstarDataComponents.OXYGEN, NorthstarConfigs.server().spacesuitBaseOxygen.get());
         event.accept(stack);
     }
 

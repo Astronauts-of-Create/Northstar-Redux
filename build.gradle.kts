@@ -1,11 +1,10 @@
-import net.fabricmc.loom.task.RenderDocRunTask
-import net.fabricmc.loom.task.RenderDocRunUITask
 import java.time.Instant
 
 plugins {
     `maven-publish`
-    id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.11.440"
+    id("net.neoforged.moddev") version "2.0.141"
+    id("net.kyori.blossom") version "2.2.0"
+    kotlin("jvm") version "2.1.21"
 }
 
 version = "0.5.4+1.21.1" // https://semver.org/
@@ -19,39 +18,61 @@ java {
     withJavadocJar()
 }
 
-architectury {
-    platformSetupLoomIde()
-    forge()
-}
-
 val generatedResources = file("src/generated")
 
 sourceSets.main {
     resources.srcDir(generatedResources)
-}
 
-loom {
-    accessWidenerPath = rootProject.file("src/main/resources/northstar.accessWidener")
-    neoForge {
-    }
-    runs["client"].property("mixin.debug.export", "true")
-    runs["server"].runDir = "run-server/"
-    runs.create("data") {
-        data()
-        //property("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
-        //property("forge.logging.console.level", "debug")
-        programArgs(
-            "--all",
-            "--mod", "northstar",
-            "--output", generatedResources.absolutePath,
-            "--existing", file("src/main/resources").absolutePath
-        )
+    blossom.javaSources {
+        property("version", version.toString())
     }
 }
 
-project.findProperty("renderdoc")?.let { path ->
-    tasks.withType<RenderDocRunTask>().configureEach { renderDocExecutable = file("$path/bin/renderdoccmd") }
-    tasks.withType<RenderDocRunUITask>().configureEach { renderDocExecutable = file("$path/bin/qrenderdoc") }
+neoForge {
+    version = "21.1.230"
+
+    parchment {
+        minecraftVersion = "1.21.1"
+        mappingsVersion = "2024.11.17"
+    }
+
+    validateAccessTransformers = true
+    interfaceInjectionData.from("interfaces.json")
+
+    runs {
+        configureEach {
+            systemProperty("geckolib.disable_examples", "true")
+            systemProperty("mixin.debug.export", "true")
+            //systemProperty("forge.logging.markers", "REGISTRIES,REGISTRYDUMP")
+            //systemProperty("forge.logging.console.level", "debug")
+        }
+
+        create("client") {
+            client()
+            gameDirectory = file("run")
+            jvmArgument("-Xmx6G")
+        }
+        create("data") {
+            data()
+            gameDirectory = file("run")
+            programArguments.addAll(
+                "--all",
+                "--mod", "northstar",
+                "--output", generatedResources.absolutePath,
+                "--existing", file("src/main/resources").absolutePath
+            )
+        }
+        create("server") {
+            server()
+            gameDirectory = file("run-server")
+        }
+    }
+
+    mods {
+        create("northstar") {
+            sourceSet(sourceSets.main.get())
+        }
+    }
 }
 
 repositories {
@@ -59,16 +80,16 @@ repositories {
     maven("https://modmaven.dev/")
     maven("https://maven.tterrag.com/")
     maven("https://maven.createmod.net")
-    maven("https://maven.neoforged.net/releases")
+    maven("https://maven.architectury.dev/")
     maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") // Ponder
+    maven("https://maven.blamejared.com/") // JEI
+    maven("https://maven.ithundxr.dev/snapshots") // Registrate
     maven("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/") { // GeckoLib
         content {
             includeGroupByRegex("software\\.bernie.*")
             includeGroup("com.eliotlash.mclib")
         }
     }
-    maven("https://maven.blamejared.com/") // JEI
-    maven("https://mvn.devos.one/snapshots")
     maven("https://maven.pkg.github.com/copycats-plus/copycats") {
         credentials {
             username = project.property("github.packages.username") as? String
@@ -96,56 +117,39 @@ repositories {
             includeGroupByRegex("dev\\.latvian\\..*")
         }
     }
-    maven("https://jitpack.io") {
-        content {
-            includeGroupByRegex("com\\.github\\..*")
-        }
-    }
+    flatDir { dir("run/mods-obf-1.21.1") }
 }
 
 dependencies {
-    minecraft(libs.minecraft)
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.17@zip")
-    })
-    "neoForge"(libs.neoforge)
-
-    annotationProcessor(libs.mixinextras.common)
+    //annotationProcessor(variantOf(libs.mixin) { classifier("processor") })
+    compileOnly(libs.mixin)
+    //annotationProcessor(libs.mixinextras.common)
     implementation(libs.mixinextras.common)
     implementation(libs.mixinextras.neoforge)
-    include(libs.mixinextras.neoforge)
+    jarJar(libs.mixinextras.neoforge)
 
-    modImplementation(variantOf(libs.create) { classifier("slim") }) {
-        exclude(group = "maven.modrinth", module = "journeymap")
-        exclude(group = "cc.tweaked")
-    }
-    modImplementation(libs.ponder.neoforge)
-    modImplementation(libs.registrate)
-    modCompileOnly(libs.flywheel.neoforge.api)
-    modRuntimeOnly(libs.flywheel.neoforge)
+    implementation(variantOf(libs.create) { classifier("slim") }) { isTransitive = false }
+    implementation(libs.ponder.neoforge)
+    implementation(libs.registrate)
+    compileOnly(libs.flywheel.neoforge.api)
+    runtimeOnly(libs.flywheel.neoforge)
 
-    modImplementation(libs.geckolib.neoforge)
-    forgeRuntimeLibrary(libs.mclib) // required by GeckoLib
+    implementation(libs.geckolib.neoforge)
 
-    modImplementation(libs.jei.neoforge)
-    // should be modImplementation but loom said otherwise https://github.com/architectury/architectury-loom/issues/223, actually caused by
-    // invalid config from copycats. exclude everything since it won't get remapped
-    implementation(libs.copycats) {
-        exclude(module = "*")
-    }
-    modImplementation(libs.cdg)
-    modImplementation(libs.cca)
-    modImplementation(libs.kubejs)
-    modImplementation(libs.kubejs.create)
-    forgeRuntimeLibrary("dev.latvian.apps:tiny-java-server:1.0.0-build.26")
-    modImplementation(libs.tfmg)
+    compileOnly(libs.iris)
 
-    // Embeddium and Oculus have to be installed manually on the client as not to crash the server. keep jCPP as oculus crashes without it.
-    modRuntimeOnly(libs.jcpp)
+    //implementation(libs.architectury)
+    implementation(libs.jei.neoforge)
+    implementation(libs.copycats)
+    implementation(libs.cdg)
+    implementation(libs.cca)
+    implementation(libs.kubejs) { isTransitive = false }
+    implementation(libs.kubejs.create)
+    implementation(libs.rhino)
+    implementation(libs.tfmg)
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
-    modLocalRuntime(files(file("run/mods-obf-1.21.1").listFiles() ?: emptyArray<File>()))
+    file("run/mods-obf-1.21.1").listFiles()?.forEach { runtimeOnly("local:${it.nameWithoutExtension}") }
 }
 
 tasks.jar {
@@ -157,7 +161,8 @@ tasks.jar {
             "Implementation-Title" to project.name,
             "Implementation-Version" to version,
             "Implementation-Vendor" to "Redstonneur1256",
-            "Implementation-Timestamp" to Instant.now().toString()
+            "Implementation-Timestamp" to Instant.now().toString(),
+            "MixinConfigs" to "northstar.mixins.json"
         ))
     }
 }

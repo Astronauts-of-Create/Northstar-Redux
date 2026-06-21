@@ -4,7 +4,7 @@ import com.lightning.northstar.Northstar;
 import com.lightning.northstar.block.simple.GrateBlock;
 import com.lightning.northstar.block.simple.VerticalSlabBlock;
 import com.lightning.northstar.content.NorthstarItems;
-import com.lightning.northstar.data.Tags;
+import com.lightning.northstar.data.TagHelper;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 public class NorthstarDataGenRecipes {
 
-    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plank(Tags.Tag<Item> log) {
+    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plank(TagHelper.Tag<Item> log) {
         return plank(log.tag());
     }
 
@@ -76,7 +76,7 @@ public class NorthstarDataGenRecipes {
         };
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> sheetmetal(Tags.Tag<Item> sheet) {
+    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> sheetmetal(TagHelper.Tag<Item> sheet) {
         return sheetmetal(sheet.tag());
     }
 
@@ -84,7 +84,7 @@ public class NorthstarDataGenRecipes {
         return commonFourToFour(sheet);
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plating(Tags.Tag<Item> ingot) {
+    public static NonNullBiConsumer<DataGenContext<Block, Block>, RegistrateRecipeProvider> plating(TagHelper.Tag<Item> ingot) {
         return plating(ingot.tag());
     }
 
@@ -104,7 +104,7 @@ public class NorthstarDataGenRecipes {
         };
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, RotatedPillarBlock>, RegistrateRecipeProvider> pillar(Tags.Tag<Item> material) {
+    public static NonNullBiConsumer<DataGenContext<Block, RotatedPillarBlock>, RegistrateRecipeProvider> pillar(TagHelper.Tag<Item> material) {
         return pillar(material.tag());
     }
 
@@ -141,7 +141,7 @@ public class NorthstarDataGenRecipes {
                 .save(p);
     }
 
-    public static NonNullBiConsumer<DataGenContext<Block, GrateBlock>, RegistrateRecipeProvider> grate(Tags.Tag<Item> material) {
+    public static NonNullBiConsumer<DataGenContext<Block, GrateBlock>, RegistrateRecipeProvider> grate(TagHelper.Tag<Item> material) {
         return (c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
                 .unlockedBy("has_item", RegistrateRecipeProvider.has(material.tag()))
                 .define('#', material.tag())
@@ -164,19 +164,19 @@ public class NorthstarDataGenRecipes {
         // Create/Vanilla values are used for existing ores
         public static final OreType
                 COAL = new OreType(() -> Items.COAL, 1.75f, 150, () -> Items.COAL, 0.1f, 200),
-                COPPER = new OreType(AllItems.CRUSHED_COPPER::get, 5.25f, 250, () -> Items.COPPER_INGOT, 0.7f, 200),
+                COPPER = new OreType(() -> AllItems.CRUSHED_COPPER, 5.25f, 250, () -> Items.COPPER_INGOT, 0.7f, 200),
                 DIAMOND = new OreType(() -> Items.DIAMOND, 1.75f, 350, () -> Items.DIAMOND, 1.0f, 200),
                 EMERALD = new OreType(() -> Items.EMERALD, 1.75f, 350, () -> Items.EMERALD, 1.0f, 200),
                 GLOWSTONE = new OreType(NorthstarItems.RAW_GLOWSTONE_ORE::get, 1.75f, 250, () -> Items.GLOWSTONE_DUST, 1.0f, 200),
-                GOLD = new OreType(AllItems.CRUSHED_GOLD::get, 1.75f, 250, () -> Items.GOLD_INGOT, 1.0f, 200),
-                IRON = new OreType(AllItems.CRUSHED_IRON::get, 1.75f, 250, () -> Items.IRON_INGOT, 0.7f, 200),
+                GOLD = new OreType(() -> AllItems.CRUSHED_GOLD, 1.75f, 250, () -> Items.GOLD_INGOT, 1.0f, 200),
+                IRON = new OreType(() -> AllItems.CRUSHED_IRON, 1.75f, 250, () -> Items.IRON_INGOT, 0.7f, 200),
                 LAPIS = new OreType(() -> Items.LAPIS_LAZULI, 10.5f, 250, () -> Items.LAPIS_LAZULI, 0.2f, 200),
                 MARTIAN_IRON = new OreType(NorthstarItems.RAW_MARTIAN_IRON_ORE::get, 1.75f, 250, () -> Items.IRON_INGOT, 0.7f, 200),
                 QUARTZ = new OreType(() -> Items.QUARTZ, 2.25f, 350, () -> Items.QUARTZ, 0.2f, 200),
                 REDSTONE = new OreType(() -> Items.REDSTONE, 6.5f, 250, () -> Items.REDSTONE, 0.7f, 200),
                 TITANIUM = new OreType(NorthstarItems.RAW_TITANIUM_ORE::get, 1.75f, 350, NorthstarItems.TITANIUM_INGOT::get, 1.0f, 200),
                 TUNGSTEN = new OreType(NorthstarItems.CRUSHED_RAW_TUNGSTEN::get, 1.75f, 450, NorthstarItems.TUNGSTEN_INGOT::get, 1.0f, 200),
-                ZINC = new OreType(() -> Items.IRON_INGOT, 1.75f, 250),
+                ZINC = new OreType(() -> AllItems.CRUSHED_ZINC, 1.75f, 250, () -> AllItems.ZINC_INGOT, 1.0f, 200),
                 DEEP_COAL = COAL.with(2.25f, 300),
                 DEEP_COPPER = COPPER.with(7.25f, 350),
                 DEEP_DIAMOND = DIAMOND.with(2.25f, 450),

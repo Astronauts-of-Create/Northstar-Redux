@@ -57,8 +57,8 @@ public class MovingTemperatureRegulator implements NorthstarTemperature.Provider
     }
 
     @Override
-    public void handleServerConfig(CompoundTag nbt) {
-        regulator.read(nbt, context.localPos);
+    public void handleServerConfig(MovementContext context, CompoundTag nbt) {
+        regulator.read(nbt, this.context.localPos);
     }
 
 }

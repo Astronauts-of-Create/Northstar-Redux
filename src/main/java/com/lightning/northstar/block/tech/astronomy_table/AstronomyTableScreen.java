@@ -1,76 +1,75 @@
 package com.lightning.northstar.block.tech.astronomy_table;
 
 import com.lightning.northstar.Northstar;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerListener;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class AstronomyTableScreen extends AbstractContainerScreen<AstronomyTableMenu> implements ContainerListener {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class AstronomyTableScreen extends AbstractSimiContainerScreen<AstronomyTableMenu> {
+
     private static final ResourceLocation TABLE_LOCATION = Northstar.asResource("textures/gui/astronomy_table.png");
 
-    public AstronomyTableScreen(AstronomyTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
-    }
+    private int lastMessages = 0;
+    private List<FormattedCharSequence> splitMessages = new ArrayList<>();
 
-    @Override
-    protected void init() {
-        super.init();
-        this.menu.addSlotListener(this);
-    }
-
-    @Override
-    public void removed() {
-        super.removed();
-        this.menu.removeSlotListener(this);
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
-        super.render(graphics, pMouseX, pMouseY, pPartialTick);
-        RenderSystem.disableBlend();
-        this.renderTooltip(graphics, pMouseX, pMouseY);
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        super.renderLabels(graphics, mouseX, mouseY);
-
-        Component component = menu.errorMessage;
-        if (component != null) {
-            graphics.drawString(font, component, 5, 15, 0xff6060, true);
-        }
+    public AstronomyTableScreen(AstronomyTableMenu container, Inventory inv, Component title) {
+        super(container, inv, title);
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        graphics.blit(TABLE_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
-        graphics.blit(TABLE_LOCATION, i + 59, j + 20, 0, this.imageHeight + (this.menu.getSlot(0).hasItem() ? 0 : 16), 110, 16);
-        if ((this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem() || this.menu.getSlot(2).hasItem()) && !this.menu.getSlot(3).hasItem()) {
-            graphics.blit(TABLE_LOCATION, i + 99, j + 45, this.imageWidth, 0, 28, 21);
+        graphics.blit(TABLE_LOCATION, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        if (menu.hasError) {
+            graphics.blit(TABLE_LOCATION, leftPos + 101, topPos + 54, 176, 0, 28, 21);
+        }
+
+        int hashCode = menu.messages.hashCode();
+        if (hashCode != lastMessages) {
+            lastMessages = hashCode;
+
+            splitMessages.clear();
+            for (Component message : menu.messages) {
+                splitMessages.addAll(font.split(message, imageWidth - 2 * 6));
+            }
+        }
+
+        int y = topPos + 7;
+        for (FormattedCharSequence message : splitMessages) {
+            graphics.drawString(font, message, leftPos + 6, y, 0xFFFFFF, true);
+            y += 10;
         }
     }
 
     @Override
-    public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue) {
+    protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.renderForeground(graphics, mouseX, mouseY, partialTicks);
+
+        graphics.renderComponentHoverEffect(font, getComponentStyleAt(mouseX, mouseY), mouseX, mouseY);
     }
 
-    /**
-     * Sends the contents of an inventory slot to the client-side Container. This doesn't have to match the actual
-     * contents of that slot.
-     */
-    @Override
-    public void slotChanged(AbstractContainerMenu pContainerToSend, int pSlotInd, ItemStack pStack) {
+    @Nullable
+    private Style getComponentStyleAt(int mouseX, int mouseY) {
+        int line = (mouseY - topPos - 7) / 10;
+        int x = mouseX - leftPos - 6;
+        if (line < 0 || line >= splitMessages.size() || x < 0) {
+            return null;
+        }
+        return font.getSplitter().componentStyleAtWidth(splitMessages.get(line), x);
     }
+
 }

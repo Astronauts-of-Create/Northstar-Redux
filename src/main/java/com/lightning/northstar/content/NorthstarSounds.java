@@ -81,8 +81,8 @@ public class NorthstarSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> LASER_AMBIENT = registerSound("laser_ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> LASER_BURN = registerSound("laser_burn");
     public static final DeferredHolder<SoundEvent, SoundEvent> ROCKET_TAKEOFF = registerSound("rocket_takeoff");
-    public static final DeferredHolder<SoundEvent, SoundEvent> ROCKET_BLAST = registerRangedSound("rocket_blast", 32f);
-    public static final DeferredHolder<SoundEvent, SoundEvent> ROCKET_LANDING = registerRangedSound("rocket_landing", 32f);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ROCKET_BLAST = registerRangedSound("rocket_blast", 256f);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ROCKET_LANDING = registerRangedSound("rocket_landing", 256f);
     public static final DeferredHolder<SoundEvent, SoundEvent> AIRFLOW = registerSound("airflow");
     public static final DeferredHolder<SoundEvent, SoundEvent> COMBUSTION_ENGINE = registerSound("combustion_engine");
 

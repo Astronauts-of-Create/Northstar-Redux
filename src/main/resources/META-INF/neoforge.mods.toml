@@ -13,7 +13,7 @@ displayName = "Northstar Redux"
 displayURL = "https://modrinth.com/project/northstar-redux"
 logoFile = "logo.png"
 credits = "Original mod by lightning2401."
-authors = "Redstonneur1256"
+authors = "Redstonneur1256, lightning2401"
 description = '''
 Inspired by Micdoodle's Galacticraft, Northstar seeks to return players to the stars with the power of the Create mod. 
 '''
@@ -25,26 +25,26 @@ config = "northstar.mixins.json"
 modId = "neoforge"
 type = "required"
 versionRange = "[19,)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.northstar]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1]"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.northstar]]
 modId = "create"
 type = "required"
 versionRange = "[6.0,)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.northstar]]
 modId = "geckolib"
 type = "required"
 versionRange = "[4.7,5.0)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"

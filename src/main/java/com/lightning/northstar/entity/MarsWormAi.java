@@ -16,10 +16,10 @@ public class MarsWormAi {
 
     public static void setDisturbanceLocation(MarsWormEntity worm, BlockPos pDisturbanceLocation) {
         if (worm.level().getWorldBorder().isWithinBounds(pDisturbanceLocation)) {
-                worm.getBrain().setMemoryWithExpiry(MemoryModuleType.SNIFF_COOLDOWN, Unit.INSTANCE, 100L);
-                worm.getBrain().setMemoryWithExpiry(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(pDisturbanceLocation), 100L);
-                worm.getBrain().setMemoryWithExpiry(MemoryModuleType.DISTURBANCE_LOCATION, pDisturbanceLocation, 100L);
-                worm.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
+            worm.getBrain().setMemoryWithExpiry(MemoryModuleType.SNIFF_COOLDOWN, Unit.INSTANCE, 100L);
+            worm.getBrain().setMemoryWithExpiry(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(pDisturbanceLocation), 100L);
+            worm.getBrain().setMemoryWithExpiry(MemoryModuleType.DISTURBANCE_LOCATION, pDisturbanceLocation, 100L);
+            worm.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
         }
     }
 }

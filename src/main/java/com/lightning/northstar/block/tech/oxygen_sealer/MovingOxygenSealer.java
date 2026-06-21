@@ -42,7 +42,7 @@ public class MovingOxygenSealer implements NorthstarOxygen.Provider {
         }
 
         MountedFluidStorageWrapper fluids = context.contraption.getStorage().getFluids();
-        Fluid oxygen = findOxygenIn(fluids);
+        Fluid oxygen = NorthstarOxygen.findOxygenInStorage(fluids);
         if (oxygen == null) {
             active = false;
             return;
@@ -75,16 +75,6 @@ public class MovingOxygenSealer implements NorthstarOxygen.Provider {
     @Override
     public void drainOxygen(float oxygen) {
         activeDrain += oxygen;
-    }
-
-    private static Fluid findOxygenIn(MountedFluidStorageWrapper fluids) {
-        for (int i = 0; i < fluids.getTanks(); i++) {
-            Fluid fluid = fluids.getFluidInTank(i).getFluid();
-            if (NorthstarOxygen.isOxygen(fluid)) {
-                return fluid;
-            }
-        }
-        return null;
     }
 
 }

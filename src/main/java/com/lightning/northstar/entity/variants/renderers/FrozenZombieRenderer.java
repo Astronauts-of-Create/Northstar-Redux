@@ -12,22 +12,22 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class FrozenZombieRenderer extends ZombieRenderer {
-   private static final ResourceLocation TEXTURE_LOCATION = Northstar.asResource("textures/entity/frozen_zombie.png");
+    private static final ResourceLocation TEXTURE_LOCATION = Northstar.asResource("textures/entity/frozen_zombie.png");
 
-   public FrozenZombieRenderer(EntityRendererProvider.Context p_174180_) {
-      super(p_174180_, ModelLayers.ZOMBIE, ModelLayers.ZOMBIE_INNER_ARMOR, ModelLayers.ZOMBIE_OUTER_ARMOR);
-   }
+    public FrozenZombieRenderer(EntityRendererProvider.Context p_174180_) {
+        super(p_174180_, ModelLayers.ZOMBIE, ModelLayers.ZOMBIE_INNER_ARMOR, ModelLayers.ZOMBIE_OUTER_ARMOR);
+    }
 
-   @Override
-   protected void scale(Zombie pLivingEntity, PoseStack pMatrixStack, float pPartialTickTime) {
-      super.scale(pLivingEntity, pMatrixStack, pPartialTickTime);
-   }
+    @Override
+    protected void scale(Zombie pLivingEntity, PoseStack pMatrixStack, float pPartialTickTime) {
+        super.scale(pLivingEntity, pMatrixStack, pPartialTickTime);
+    }
 
-   /**
-    * Returns the location of an entity's texture.
-    */
-   @Override
-   public ResourceLocation getTextureLocation(Zombie pEntity) {
-      return TEXTURE_LOCATION;
-   }
+    /**
+     * Returns the location of an entity's texture.
+     */
+    @Override
+    public ResourceLocation getTextureLocation(Zombie pEntity) {
+        return TEXTURE_LOCATION;
+    }
 }

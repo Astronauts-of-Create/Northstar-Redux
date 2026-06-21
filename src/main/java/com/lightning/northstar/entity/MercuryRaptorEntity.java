@@ -3,8 +3,8 @@ package com.lightning.northstar.entity;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
+import com.lightning.northstar.content.world.NorthstarDimensions;
 import com.lightning.northstar.entity.goals.PushRedstoneComponentsGoal;
-import com.lightning.northstar.world.dimension.NorthstarDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -111,7 +111,7 @@ public class MercuryRaptorEntity extends Monster implements GeoAnimatable {
     public void aiStep() {
         super.aiStep();
         boolean flag = this.isSunBurnTick();
-        if (flag && (level().dimension() == NorthstarDimensions.MERCURY_DIM_KEY || level().dimension() == Level.OVERWORLD)) {
+        if (flag && (level().dimension() == NorthstarDimensions.MERCURY || level().dimension() == Level.OVERWORLD)) {
             setRemainingFireTicks(0);
         }
     }

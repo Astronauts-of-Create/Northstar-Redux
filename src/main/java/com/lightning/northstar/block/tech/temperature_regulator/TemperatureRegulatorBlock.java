@@ -32,7 +32,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class TemperatureRegulatorBlock extends HorizontalKineticBlock implements IBE<TemperatureRegulatorBlockEntity> {
 
-    protected static final VoxelShape SHAPE = box(0, 0, 0, 16, 13, 16);
+    public static final VoxelShape SHAPE = box(0, 0, 0, 16, 13, 16);
 
     public TemperatureRegulatorBlock(Properties properties) {
         super(properties);

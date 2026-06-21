@@ -26,20 +26,21 @@ public class EatRootsGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
 
-       @Override
-       public boolean canUse() {
-          if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 50 : 1000) != 0) {
-             return false;
-          } else {
-             BlockPos blockpos = this.mob.blockPosition();
-             if (IS_EDIBLE.test(this.level.getBlockState(blockpos))) {
+    @Override
+    public boolean canUse() {
+        if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 50 : 1000) != 0) {
+            return false;
+        } else {
+            BlockPos blockpos = this.mob.blockPosition();
+            if (IS_EDIBLE.test(this.level.getBlockState(blockpos))) {
                 return true;
-             }else
-                 return false;
-          }
-       }
-       @Override
-       public void start() {
+            } else
+                return false;
+        }
+    }
+
+    @Override
+    public void start() {
 
         this.eatAnimationTick = this.adjustedTickDelay(40);
         if (this.mob instanceof MarsToadEntity toad) {
@@ -49,42 +50,42 @@ public class EatRootsGoal extends Goal {
         this.mob.getNavigation().stop();
     }
 
-       @Override
-       public void stop() {
-          this.eatAnimationTick = 0;
-       }
+    @Override
+    public void stop() {
+        this.eatAnimationTick = 0;
+    }
 
 
-       @Override
-       public boolean canContinueToUse() {
-          return this.eatAnimationTick > 0;
-       }
+    @Override
+    public boolean canContinueToUse() {
+        return this.eatAnimationTick > 0;
+    }
 
     public int getEatAnimationTick() {
         return this.eatAnimationTick;
     }
 
-       @Override
-       public void tick() {
-           if(!performedCheck) {
-               int rootnumber = 0;
-               for(BlockState state : this.level.getBlockStates(this.mob.getBoundingBox().inflate(15)).toList()) {
-                   if(state.is(NorthstarBlocks.MARS_ROOTS.get())) {
-                       rootnumber++;
-                   }
-               }
-               if(rootnumber < 10) {
-                   this.stop();
-                   return;
-               }
-               performedCheck = true;
-           }
-          this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
-          if (this.eatAnimationTick == this.adjustedTickDelay(4)) {
-             BlockPos blockpos = this.mob.blockPosition();
-             if (IS_EDIBLE.test(this.level.getBlockState(blockpos))) {
+    @Override
+    public void tick() {
+        if (!performedCheck) {
+            int rootnumber = 0;
+            for (BlockState state : this.level.getBlockStates(this.mob.getBoundingBox().inflate(15)).toList()) {
+                if (state.is(NorthstarBlocks.MARS_ROOTS.get())) {
+                    rootnumber++;
+                }
+            }
+            if (rootnumber < 10) {
+                this.stop();
+                return;
+            }
+            performedCheck = true;
+        }
+        this.eatAnimationTick = Math.max(0, this.eatAnimationTick - 1);
+        if (this.eatAnimationTick == this.adjustedTickDelay(4)) {
+            BlockPos blockpos = this.mob.blockPosition();
+            if (IS_EDIBLE.test(this.level.getBlockState(blockpos))) {
                 if (EventHooks.canEntityGrief(this.level, this.mob)) {
-                   this.level.destroyBlock(blockpos, false);
+                    this.level.destroyBlock(blockpos, false);
                 }
 
                 this.mob.ate();

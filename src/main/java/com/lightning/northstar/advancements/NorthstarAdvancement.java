@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -107,9 +108,9 @@ public class NorthstarAdvancement {
                 .toString());
     }
 
-    void appendToLang(JsonObject object) {
-        object.addProperty(titleKey(), title);
-        object.addProperty(descriptionKey(), description);
+    void appendToLang(BiConsumer<String, String> consumer) {
+        consumer.accept(titleKey(), title);
+        consumer.accept(descriptionKey(), description);
     }
 
     enum TaskType {
@@ -134,7 +135,7 @@ public class NorthstarAdvancement {
         }
     }
 
-    class Builder {
+    public class Builder {
 
         private TaskType type = TaskType.NORMAL;
         private boolean externalTrigger;

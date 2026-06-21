@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -18,12 +19,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumMap;
@@ -38,7 +42,8 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
     static {
         VoxelShape base = Shapes.or(
                 box(0, 0, 0, 16, 2, 16),
-                box(1, 1, 1, 15, 15, 15));
+                box(1, 1, 1, 15, 15, 15)
+        );
 
         SHAPES = new EnumMap<>(Direction.class);
         SHAPES.put(Direction.NORTH, Shapes.or(base, box(0, 0, 14, 16, 16, 16)));
@@ -77,41 +82,50 @@ public class OxygenFillerBlock extends HorizontalKineticBlock implements IBE<Oxy
         return use(state, level, pos, player, hand, hitResult);
     }
 
-    public ItemInteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        return onBlockEntityUseItemOn(world, pos, be -> {
-            if (hand != InteractionHand.MAIN_HAND || hit.getDirection() != state.getValue(HORIZONTAL_FACING))
+    public ItemInteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return onBlockEntityUseItemOn(level, pos, be -> {
+            if (hand != InteractionHand.MAIN_HAND || hit.getDirection() != state.getValue(HORIZONTAL_FACING)) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
-            ItemStack held = player.getItemInHand(hand);
-            ItemStack item = be.container.getItem(0);
-
-            if (!world.isClientSide())
-                player.awardStat(NorthstarStats.INTERACT_WITH_OXYGEN_FILLER);
-
-            if (held.getCount() == 1) {
-                // player holds a single item, swap them
-                be.container.setItem(0, held);
-                player.setItemInHand(hand, item);
-            } else {
-                // place one item from the hand in the filler and give back the item that was stored
-                be.container.setItem(0, held.copyWithCount(1));
-                player.setItemInHand(hand, held.copyWithCount(held.getCount() - 1));
-                if (!item.isEmpty())
-                    player.getInventory().placeItemBackInInventory(item);
             }
-
-            if (!item.isEmpty()) {
-                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + world.random.nextFloat());
-            }
-
+            handlePlayerInteraction(level, pos, player, hand, be.container);
             be.notifyUpdate();
             return ItemInteractionResult.SUCCESS;
         });
     }
 
+    public static void handlePlayerInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, Container container) {
+        ItemStack held = player.getItemInHand(hand);
+        ItemStack item = container.getItem(0);
+
+        player.awardStat(NorthstarStats.INTERACT_WITH_OXYGEN_FILLER);
+
+        if (held.getCount() == 1) {
+            // player holds a single item, swap them
+            container.setItem(0, held);
+            player.setItemInHand(hand, item);
+        } else {
+            // place one item from the hand in the filler and give back the item that was stored
+            container.setItem(0, held.copyWithCount(1));
+            player.setItemInHand(hand, held.copyWithCount(held.getCount() - 1));
+            if (!item.isEmpty()) {
+                player.getInventory().placeItemBackInInventory(item);
+            }
+        }
+
+        if (!item.isEmpty()) {
+            level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + level.random.nextFloat());
+        }
+    }
+
     @Override
     public Axis getRotationAxis(BlockState state) {
         return Axis.Y;
+    }
+
+    @Override
+    @Nullable
+    public <S extends BlockEntity> BlockEntityTicker<S> getTicker(Level level, BlockState state, BlockEntityType<S> type) {
+        return null;
     }
 
     @Override

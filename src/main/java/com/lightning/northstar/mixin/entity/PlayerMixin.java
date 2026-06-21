@@ -1,41 +1,42 @@
 package com.lightning.northstar.mixin.entity;
 
 import com.lightning.northstar.accessor.NorthstarPlayer;
-import net.minecraft.world.entity.Entity;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @Mixin(Player.class)
-public class PlayerMixin implements NorthstarPlayer {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public abstract class PlayerMixin extends LivingEntity implements NorthstarPlayer {
 
-    @Unique
-    private Entity northstar$relativeEntity;
-    @Unique
-    private int northstar$relativeTicks;
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void northstar$tick(CallbackInfo ci) {
-        if (northstar$relativeEntity != null && --northstar$relativeTicks <= 0) {
-            northstar$relativeEntity = null;
-        }
+    protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
-    @Nullable
-    public Entity northstar$getRelativeEntity() {
-        return northstar$relativeEntity;
+    public void northstar$showTitle(Component title, Component subtitle, int fadeInTime, int displayTime, int fadeOutTime) {
     }
 
-    @Override
-    public void northstar$setRelativeEntity(@Nullable Entity entity, int ticks) {
-        northstar$relativeEntity = entity;
-        northstar$relativeTicks = ticks;
+    @ModifyExpressionValue(
+            method = "tryToStartFallFlying",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/item/ItemStack;canElytraFly(Lnet/minecraft/world/entity/LivingEntity;)Z",
+                    remap = false
+            )
+    )
+    private boolean northstar$updateElytraFlight(boolean original) {
+        return original && NorthstarOxygen.hasOxygen(level(), position());
     }
 
 }

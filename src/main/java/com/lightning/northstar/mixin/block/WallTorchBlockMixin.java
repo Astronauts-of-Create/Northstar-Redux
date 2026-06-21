@@ -3,7 +3,7 @@ package com.lightning.northstar.mixin.block;
 import com.lightning.northstar.block.simple.ExtinguishedTorchBlock;
 import com.lightning.northstar.block.simple.ExtinguishedTorchWallBlock;
 import com.lightning.northstar.content.NorthstarBlocks;
-import com.lightning.northstar.mixin.accessor.FlowingFluidAccessor;
+import com.lightning.northstar.mixin.accessor.NorthstarFlowingFluid;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.sealer.SealReactiveBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -95,7 +95,7 @@ public class WallTorchBlockMixin extends Block implements LiquidBlockContainer, 
             return false;
 
         if (fluidState.getType() != Fluids.WATER || state.getBlock() != Blocks.WALL_TORCH) {
-            if (fluidState.getType() instanceof FlowingFluidAccessor flowing)
+            if (fluidState.getType() instanceof NorthstarFlowingFluid flowing)
                 flowing.northstar$beforeDestroyingBlock(level, pos, state);
             level.setBlock(pos, fluidState.createLegacyBlock(), 3);
             return true;

@@ -129,15 +129,15 @@ public class TemperatureRegulatorScreen extends AbstractSimiScreen {
             MutableComponent line1 = Component.translatable("northstar.generic.status").append(status);
             MutableComponent line2 = regulator.sealer.hasLeak() ?
                     NorthstarLang.translate("gui.goggles.sealer.max_sealed_contraption")
-                            .add(CreateLang.number(maximumSealed)
-                                    .style(ChatFormatting.BLUE))
-                            .text(" ")
-                            .add(NorthstarLang.blocks(maximumSealed))
-                            .component() :
+                    .add(CreateLang.number(maximumSealed)
+                         .style(ChatFormatting.BLUE))
+                    .text(" ")
+                    .add(NorthstarLang.blocks(maximumSealed))
+                    .component() :
                     NorthstarLang.translate("gui.goggles.sealer.blocks_filled")
-                            .add(CreateLang.number(regulator.sealer.getSealedBlockCount())
-                                    .style(ChatFormatting.BLUE))
-                            .component();
+                    .add(CreateLang.number(regulator.sealer.getSealedBlockCount())
+                         .style(ChatFormatting.BLUE))
+                    .component();
 
             graphics.drawString(font, line1, guiLeft + 5, guiTop + 34, 0xFFFFFFFF);
             graphics.drawString(font, line2, guiLeft + 5, guiTop + 44, 0xFFFFFFFF);

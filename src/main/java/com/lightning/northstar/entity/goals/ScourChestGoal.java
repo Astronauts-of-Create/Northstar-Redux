@@ -155,5 +155,4 @@ public class ScourChestGoal extends MoveToBlockGoal {
             }
         }
     }
-
 }

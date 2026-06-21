@@ -47,7 +47,7 @@ public class NorthstarCommonListener {
 
 
         event.put(NorthstarEntityTypes.FROZEN_ZOMBIE.get(),
-                Monster.createMobAttributes().add(Attributes.FOLLOW_RANGE, 35.0D).add(Attributes.MOVEMENT_SPEED, (double)0.23F).add(Attributes.ATTACK_DAMAGE, 3.0D).add(Attributes.ARMOR, 2.0D)
-                .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE).build());
+                Monster.createMobAttributes().add(Attributes.FOLLOW_RANGE, 35.0D).add(Attributes.MOVEMENT_SPEED, (double) 0.23F).add(Attributes.ATTACK_DAMAGE, 3.0D).add(Attributes.ARMOR, 2.0D)
+                        .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE).build());
     }
 }

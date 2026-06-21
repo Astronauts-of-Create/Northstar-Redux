@@ -28,8 +28,9 @@ public class NorthstarArmorMaterials {
             SoundEvents.ARMOR_EQUIP_IRON,
             2.5f,
             0.05f,
-            () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL.get()),
-            List.of(new ArmorMaterial.Layer(Northstar.asResource("martian_steel_armor"))));
+            () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL_INGOT.get()),
+            List.of(new ArmorMaterial.Layer(Northstar.asResource("martian_steel_armor")))
+    );
 
     public static final Holder<ArmorMaterial> IRON_SPACE_SUIT = register(
             "iron_space_suit",
@@ -39,7 +40,8 @@ public class NorthstarArmorMaterials {
             0.5f,
             0.0f,
             () -> Ingredient.of(Items.IRON_INGOT),
-            List.of(new ArmorMaterial.Layer(Northstar.asResource("iron_space_suit"))));
+            List.of(new ArmorMaterial.Layer(Northstar.asResource("iron_space_suit")))
+    );
 
     public static final Holder<ArmorMaterial> MARTIAN_STEEL_SPACE_SUIT = register(
             "martian_steel_space_suit",
@@ -48,8 +50,9 @@ public class NorthstarArmorMaterials {
             SoundEvents.ARMOR_EQUIP_IRON,
             2.5f,
             0.05f,
-            () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL.get()),
-            List.of(new ArmorMaterial.Layer(Northstar.asResource("martian_steel_space_suit"))));
+            () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL_INGOT.get()),
+            List.of(new ArmorMaterial.Layer(Northstar.asResource("martian_steel_space_suit")))
+    );
 
     private static Holder<ArmorMaterial> register(
             String name,

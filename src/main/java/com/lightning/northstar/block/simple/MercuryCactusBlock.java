@@ -70,9 +70,9 @@ public class MercuryCactusBlock extends PipeBlock {
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         BlockState newState = this.updateShape(pState, Direction.UP, pState, pLevel, pPos, pPos);
-        if (! pState.canSurvive(pLevel, pPos)) {
-        // kind of debating whether i should keep this or not
-        // pLevel.destroyBlock(pPos, true);
+        if (!pState.canSurvive(pLevel, pPos)) {
+            // kind of debating whether i should keep this or not
+            // pLevel.destroyBlock(pPos, true);
         }
         pLevel.setBlock(pPos, newState, 3);
     }

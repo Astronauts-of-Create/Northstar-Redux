@@ -16,7 +16,12 @@ public class KineticBlockEntityMixin {
     //  but we want to propagate from others to ourselves.
     // There might be a way to do it without this mixin but if this is the case, I couldn't find it. If anyone does however
     //  feel free to update this code.
-    @Inject(method = "propagateRotationTo", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(
+            method = "propagateRotationTo",
+            at = @At("HEAD"),
+            cancellable = true,
+            remap = false
+    )
     private void northstar$injectFanPropagation(KineticBlockEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff, boolean connectedViaAxes, boolean connectedViaCogs, CallbackInfoReturnable<Float> cir) {
         if (target instanceof ReceivingKineticBlockEntity inverse) {
             float f = inverse.propagateRotationFrom((KineticBlockEntity) (Object) this, stateTo, stateFrom, diff.multiply(-1), connectedViaAxes, connectedViaCogs);

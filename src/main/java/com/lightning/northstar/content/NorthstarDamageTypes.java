@@ -11,14 +11,18 @@ import net.minecraft.world.damagesource.DamageType;
 public class NorthstarDamageTypes {
 
     public static final ResourceKey<DamageType>
-            SUFFOCATION = key("suffocation");
+            ACID = key("acid"),
+            SUFFOCATION_NO_OXYGEN = key("suffocation_no_oxygen"),
+            SUFFOCATION_NO_SPACESUIT = key("suffocation_no_spacesuit");
 
     private static ResourceKey<DamageType> key(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, Northstar.asResource(name));
     }
 
     public static void bootstrap(BootstrapContext<DamageType> context) {
-        new DamageTypeBuilder(SUFFOCATION).scaling(DamageScaling.NEVER).register(context);
+        new DamageTypeBuilder(ACID).scaling(DamageScaling.NEVER).register(context);
+        new DamageTypeBuilder(SUFFOCATION_NO_OXYGEN).scaling(DamageScaling.NEVER).register(context);
+        new DamageTypeBuilder(SUFFOCATION_NO_SPACESUIT).scaling(DamageScaling.NEVER).register(context);
     }
 
 }

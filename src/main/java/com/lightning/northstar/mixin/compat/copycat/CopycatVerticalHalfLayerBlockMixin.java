@@ -35,8 +35,8 @@ public class CopycatVerticalHalfLayerBlockMixin implements SealableBlock {
         SlabType testType = direction.getAxis() == Axis.Y || direction.getAxis() == facing.getAxis() ?
                 SlabType.DOUBLE :
                 (direction.getAxisDirection() == Direction.AxisDirection.NEGATIVE) == (direction.getAxis() == Axis.X) ?
-                        SlabType.BOTTOM :
-                        SlabType.TOP;
+                SlabType.BOTTOM :
+                SlabType.TOP;
 
         return CopycatSealHelper.isSlabSealed(level, pos, testType, CopycatHalfLayerBlock.NEGATIVE_LAYERS.getName(), CopycatHalfLayerBlock.POSITIVE_LAYERS.getName());
     }

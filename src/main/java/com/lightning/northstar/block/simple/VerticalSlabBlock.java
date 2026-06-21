@@ -35,10 +35,10 @@ public class VerticalSlabBlock extends Block implements ProperWaterloggedBlock {
 
     public static final EnumProperty<VerticalSlabType> TYPE = EnumProperty.create("type", VerticalSlabType.class);
 
-    protected static final VoxelShape NORTH_SHAPE = Block.box(0, 0, 0, 16, 16, 8);
-    protected static final VoxelShape SOUTH_SHAPE = Block.box(0, 0, 8, 16, 16, 16);
-    protected static final VoxelShape EAST_SHAPE = Block.box(8, 0, 0, 16, 16, 16);
-    protected static final VoxelShape WEST_SHAPE = Block.box(0, 0, 0, 8, 16, 16);
+    public static final VoxelShape NORTH_SHAPE = Block.box(0, 0, 0, 16, 16, 8);
+    public static final VoxelShape SOUTH_SHAPE = Block.box(0, 0, 8, 16, 16, 16);
+    public static final VoxelShape EAST_SHAPE = Block.box(8, 0, 0, 16, 16, 16);
+    public static final VoxelShape WEST_SHAPE = Block.box(0, 0, 0, 8, 16, 16);
 
     public VerticalSlabBlock(BlockBehaviour.Properties properties) {
         super(properties);

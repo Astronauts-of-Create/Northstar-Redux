@@ -43,7 +43,7 @@ public class MarsFarmlandBlock extends FarmBlock {
     private static TriState isUnderCrops(BlockGetter level, BlockPos pos) {
         BlockState plant = level.getBlockState(pos.above());
         BlockState state = level.getBlockState(pos);
-        return state.canSustainPlant(level, pos, Direction.UP, plant);
+        return state.canSustainPlant(level, pos, Direction.UP,  plant);
     }
 
 
@@ -67,9 +67,10 @@ public class MarsFarmlandBlock extends FarmBlock {
 
     @Override
     public void fallOn(Level level, BlockState blockState, BlockPos pos, Entity entity, float p_153231_) {
-         if (!level.isClientSide && CommonHooks.onFarmlandTrample(level, pos, Blocks.DIRT.defaultBlockState(), p_153231_, entity)) { // Forge: Move logic to Entity#canTrample
-    turntoMarsSoil(blockState, level, pos);}
-                }
+        if (!level.isClientSide && CommonHooks.onFarmlandTrample(level, pos, Blocks.DIRT.defaultBlockState(), p_153231_, entity)) { // Forge: Move logic to Entity#canTrample
+            turntoMarsSoil(blockState, level, pos);
+        }
+    }
     @Override
     public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, RandomSource p_221142_) {
         int i = blockState.getValue(MOISTURE);

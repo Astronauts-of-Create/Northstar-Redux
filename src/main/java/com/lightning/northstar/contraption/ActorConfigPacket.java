@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -24,6 +25,14 @@ public class ActorConfigPacket implements ClientboundPacketPayload {
             ByteBufCodecs.COMPOUND_TAG, p -> p.nbt,
             ActorConfigPacket::new
     );
+
+    public static void update(AbstractContraptionEntity entity, BlockPos localPos) {
+        update(entity, localPos, entity.getContraption().getBlocks().get(localPos).nbt());
+    }
+
+    public static void update(AbstractContraptionEntity entity, BlockPos localPos, CompoundTag nbt) {
+        CatnipServices.NETWORK.sendToClientsTrackingEntity(entity, new ActorConfigPacket(entity.getId(), localPos, nbt));
+    }
 
     private final int contraptionId;
     private final BlockPos localPos;
@@ -50,7 +59,7 @@ public class ActorConfigPacket implements ClientboundPacketPayload {
         if (actor == null)
             return;
         if (actor.right.temporaryData instanceof ITakeConfig config) {
-            config.handleServerConfig(nbt);
+            config.handleServerConfig(actor.right, nbt);
         }
     }
 
@@ -60,7 +69,7 @@ public class ActorConfigPacket implements ClientboundPacketPayload {
     }
 
     public interface ITakeConfig {
-        void handleServerConfig(CompoundTag nbt);
+        void handleServerConfig(MovementContext context, CompoundTag nbt);
     }
 
 }

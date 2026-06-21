@@ -1,8 +1,8 @@
 package com.lightning.northstar;
 
 import com.lightning.northstar.content.NorthstarEntityTypes;
-import com.lightning.northstar.entity.projectiles.renderers.LunargradeSpitRenderer;
-import com.lightning.northstar.entity.projectiles.renderers.VenusScorpionSpitRenderer;
+import com.lightning.northstar.entity.projectiles.LunargradeSpit;
+import com.lightning.northstar.entity.projectiles.VenusScorpionSpit;
 import com.lightning.northstar.entity.renderers.*;
 import com.lightning.northstar.entity.variants.renderers.FrozenZombieRenderer;
 import net.neoforged.api.distmarker.Dist;
@@ -33,8 +33,8 @@ public class NorthstarRenderers {
         event.registerEntityRenderer(NorthstarEntityTypes.MERCURY_ROACH.get(), MercuryRoachRenderer::new);
         event.registerEntityRenderer(NorthstarEntityTypes.MERCURY_TORTOISE.get(), MercuryTortoiseRenderer::new);
 
-        event.registerEntityRenderer(NorthstarEntityTypes.LUNARGRADE_SPIT.get(), LunargradeSpitRenderer::new);
-        event.registerEntityRenderer(NorthstarEntityTypes.VENUS_SCORPION_SPIT.get(), VenusScorpionSpitRenderer::new);
+        event.registerEntityRenderer(NorthstarEntityTypes.LUNARGRADE_SPIT.get(), SpitEntityRenderer.factory(LunargradeSpit.SPIT_TEXTURE));
+        event.registerEntityRenderer(NorthstarEntityTypes.VENUS_SCORPION_SPIT.get(), SpitEntityRenderer.factory(VenusScorpionSpit.SPIT_TEXTURE));
 
         event.registerEntityRenderer(NorthstarEntityTypes.FROZEN_ZOMBIE.get(), FrozenZombieRenderer::new);
     }

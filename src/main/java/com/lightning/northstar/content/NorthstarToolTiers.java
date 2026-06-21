@@ -16,7 +16,8 @@ public class NorthstarToolTiers {
                 9f,
                 5f,
                 30,
-                () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL.get()));
+                () -> Ingredient.of(NorthstarItems.MARTIAN_STEEL_INGOT.get())
+        );
     }
 
 }

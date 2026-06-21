@@ -1,61 +1,46 @@
 {
-  "item.northstar.fan_blade.tooltip.summary": "Can be installed on large fans.",
-
-  "item.northstar.star_map.tooltip.summary": "Contains coordinates and arc of a given _Celestial Body_",
-  "item.northstar.star_map.tooltip.condition1": "When put in the Rocket Station",
-  "item.northstar.star_map.tooltip.behaviour1": "Controls the Rocket's _Destination_",
-
-
-  "block.northstar.astronomy_table.tooltip.summary": "Used to combine 3 _Astronomical Readings_ into a _Star Map_",
-
+  "block.northstar.astronomy_table.tooltip.summary": "Used to add _Astronomical Readings_ to a _Space Atlas_.",
   "block.northstar.atmospheric_concentrator.tooltip.summary": "Collects _Oxygen_ or _Carbon_ from the air.",
-
   "block.northstar.auto_lander.tooltip.summary": "Automatically lands your _Rocket_ safely.",
-
   "block.northstar.combustion_engine.tooltip.summary": "Burns _Rocket Fuel_ to produce _Kinetic Energy_",
-
   "block.northstar.computer_rack.tooltip.summary": "Can be used to store _Targeting Computers_ to reduce a rocket's _Fuel Cost_",
-
   "block.northstar.electrolysis_machine.tooltip.summary": "Converts _Liquid Water_ into _Hydrogen_ and _Oxygen_",
-
   "block.northstar.ice_box.tooltip.summary": "When cooled to _appropriate Temperature,_ changes the state of matter of given _ingredients._",
-
-  "block.northstar.large_fan.tooltip.summary": "Increases the maximum area of _Oxygen_ _Sealers_ and _Temperature_ _Regulators_. Requires an _Encased_ _Chain_ _Drive_ adjacent to the fan to be powered. Spins passively if no chain is attached and in an oxygenated environment.",
-  "block.northstar.large_fan.tooltip.condition1": "When R-Clicked with a Fan Blade",
   "block.northstar.large_fan.tooltip.behaviour1": "Installs the fan blade in the fan.",
-  "block.northstar.large_fan.tooltip.condition2": "When Wrenched with a chain attached",
   "block.northstar.large_fan.tooltip.behaviour2": "Changes the side of the chain.",
-  "block.northstar.large_fan.tooltip.condition3": "When Wrenched with no chain attached",
   "block.northstar.large_fan.tooltip.behaviour3": "Changes the direction when spinning passively.",
-  "block.northstar.large_fan.tooltip.condition4": "When Wrenched while Sneaking",
   "block.northstar.large_fan.tooltip.behaviour4": "Removes a fan blade, if none are installed, picks up the block.",
-
+  "block.northstar.large_fan.tooltip.condition1": "When R-Clicked with a Fan Blade",
+  "block.northstar.large_fan.tooltip.condition2": "When Wrenched with a chain attached",
+  "block.northstar.large_fan.tooltip.condition3": "When Wrenched with no chain attached",
+  "block.northstar.large_fan.tooltip.condition4": "When Wrenched while Sneaking",
+  "block.northstar.large_fan.tooltip.summary": "Increases the maximum area of _Oxygen_ _Sealers_ and _Temperature_ _Regulators_. Requires an _Encased_ _Chain_ _Drive_ adjacent to the fan to be powered. Spins passively if no chain is attached and in an oxygenated environment.",
   "block.northstar.oxygen_detector.tooltip.summary": "Emits _redstone signal_ when block in front is oxygenated.",
-
-  "block.northstar.oxygen_filler.tooltip.summary": "When pumped with _oxygen,_ fills inserted equipment with _oxygen_.",
-  "block.northstar.oxygen_filler.tooltip.condition1": "When R-Clicked",
   "block.northstar.oxygen_filler.tooltip.behaviour1": "Inserts held item into slot.",
-
-  "block.northstar.oxygen_sealer.tooltip.summary": "When provided with _Oxygen_ from behind and _Kinetic Energy_ from below, oxygenates the _surrounding environment_.",
-  "block.northstar.oxygen_sealer.tooltip.condition1": "When Wrenched on the side",
+  "block.northstar.oxygen_filler.tooltip.condition1": "When R-Clicked",
+  "block.northstar.oxygen_filler.tooltip.summary": "When pumped with _oxygen,_ fills inserted equipment with _oxygen_.",
   "block.northstar.oxygen_sealer.tooltip.behaviour1": "Toggles the cap making it a full block.",
-
+  "block.northstar.oxygen_sealer.tooltip.condition1": "When Wrenched on the side",
+  "block.northstar.oxygen_sealer.tooltip.summary": "When provided with _Oxygen_ from behind and _Kinetic Energy_ from below, oxygenates the _surrounding environment_.",
   "block.northstar.rocket_controls.tooltip.summary": "Used to control an assembled _Rocket_.",
-
-  "block.northstar.rocket_station.tooltip.summary": "Used to assemble a _Rocket_.",
+  "block.northstar.rocket_station.tooltip.behaviour1": "Opens a menu used to control the Rocket's _destination_.",
   "block.northstar.rocket_station.tooltip.condition1": "When R-Clicked",
-  "block.northstar.rocket_station.tooltip.behaviour1": "Opens menu with _Star Map_ slot, which controls Rocket's _Destination_.",
-
+  "block.northstar.rocket_station.tooltip.summary": "Used to assemble a _Rocket_.",
+  "block.northstar.rocket_waypoint.tooltip.behaviour1": "Adds the waypoint's coordinate to the atlas.",
+  "block.northstar.rocket_waypoint.tooltip.condition1": "When R-Clicked with a Space Atlas",
+  "block.northstar.rocket_waypoint.tooltip.summary": "Designates landing coordinates for rockets.",
   "block.northstar.solar_panel.tooltip.summary": "Converts _Solar Energy_ into _Kinetic Energy_.",
-
   "block.northstar.telescope.tooltip.summary": "Can be used to take _Astronomical Readings_ with paper.",
-
-  "block.northstar.temperature_regulator.tooltip.summary": "Can be used to manipulate _Temperature_",
-  "block.northstar.temperature_regulator.tooltip.condition1": "When R-Clicked",
   "block.northstar.temperature_regulator.tooltip.behaviour1": "Opens the _configuration interface_.",
-
-  "block.northstar.vent.tooltip.condition1": "When R-Clicked with wool",
+  "block.northstar.temperature_regulator.tooltip.condition1": "When R-Clicked",
+  "block.northstar.temperature_regulator.tooltip.summary": "Can be used to manipulate _Temperature_",
   "block.northstar.vent.tooltip.behaviour1": "Turns into an _insulated vent_. Insulated vents prevent _temperature_ from passing but still let air through.",
+  "block.northstar.vent.tooltip.behaviour2": "Removes the wool.",
+  "block.northstar.vent.tooltip.condition1": "When R-Clicked with wool",
   "block.northstar.vent.tooltip.condition2": "When R-Clicked with a wrench",
-  "block.northstar.vent.tooltip.behaviour2": "Removes the wool."
+  "block.northstar.vent.tooltip.summary": "A vent that lets air pass through and can filter effects.",
+  "item.northstar.fan_blade.tooltip.summary": "Can be installed on large fans.",
+  "item.northstar.space_atlas.tooltip.behaviour1": "Controls the Rocket's _Destination_",
+  "item.northstar.space_atlas.tooltip.condition1": "When put in the Rocket Station",
+  "item.northstar.space_atlas.tooltip.summary": "Contains coordinates and arc of _Celestial Bodies_"
 }

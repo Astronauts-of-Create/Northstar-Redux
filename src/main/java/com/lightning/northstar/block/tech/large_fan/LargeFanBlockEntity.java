@@ -14,6 +14,7 @@ import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -27,12 +28,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlockEntityContainer, ReceivingKineticBlockEntity {
 
     /** Minimum amount of blades that must be installed for the fan to spin */
@@ -134,12 +139,12 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
             updateNeighbors = true;
             sendData();
         } else if (manual &&
-                chain == null &&
-                structurePos != null &&
-                neighborState.getBlock() instanceof ChainDriveBlock &&
-                neighborState.getValue(ChainDriveBlock.AXIS) == getAxis() &&
-                getFirstAxisBetween(neighbor, structurePos) != getAxis() &&
-                level.getBlockEntity(neighbor) instanceof KineticBlockEntity be) {
+                   chain == null &&
+                   structurePos != null &&
+                   neighborState.getBlock() instanceof ChainDriveBlock &&
+                   neighborState.getValue(ChainDriveBlock.AXIS) == getAxis() &&
+                   getFirstAxisBetween(neighbor, structurePos) != getAxis() &&
+                   level.getBlockEntity(neighbor) instanceof KineticBlockEntity be) {
             be.detachKinetics();
             be.attachKinetics();
         }
@@ -182,9 +187,9 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         if (chain != null && !(level.getBlockState(controller.chain).getBlock() instanceof ChainDriveBlock))
             chain = null;
         if (chain == null &&
-                stateTo.getBlock() instanceof ChainDriveBlock &&
-                stateTo.getValue(ChainDriveBlock.AXIS) == stateFrom.getValue(LargeFanBlock.AXIS) &&
-                getFirstAxisBetween(BlockPos.ZERO, diff) != stateTo.getValue(ChainDriveBlock.AXIS))
+            stateTo.getBlock() instanceof ChainDriveBlock &&
+            stateTo.getValue(ChainDriveBlock.AXIS) == stateFrom.getValue(LargeFanBlock.AXIS) &&
+            getFirstAxisBetween(BlockPos.ZERO, diff) != stateTo.getValue(ChainDriveBlock.AXIS))
             chain = pos;
 
         if (!Objects.equals(chain, controller.chain)) {
@@ -450,8 +455,8 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
     private boolean isMultiBlockPart(BlockPos pos) {
         BlockPos controller = getController();
         return pos.getX() >= controller.getX() && pos.getX() < controller.getX() + getVolumeX() &&
-                pos.getY() >= controller.getY() && pos.getY() < controller.getY() + getVolumeY() &&
-                pos.getZ() >= controller.getZ() && pos.getZ() < controller.getZ() + getVolumeZ();
+               pos.getY() >= controller.getY() && pos.getY() < controller.getY() + getVolumeY() &&
+               pos.getZ() >= controller.getZ() && pos.getZ() < controller.getZ() + getVolumeZ();
     }
 
     // endregion
@@ -489,6 +494,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         return corners;
     }
 
+    @Nullable
     private static Direction.Axis getFirstAxisBetween(BlockPos pos1, BlockPos pos2) {
         if (pos1.getX() != pos2.getX()) return Direction.Axis.X;
         if (pos1.getY() != pos2.getY()) return Direction.Axis.Y;

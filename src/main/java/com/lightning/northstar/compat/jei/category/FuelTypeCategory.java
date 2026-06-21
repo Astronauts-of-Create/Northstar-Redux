@@ -5,6 +5,7 @@ import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.contraption.FuelType;
 import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -37,7 +38,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
     public static final int HEIGHT = 60;
 
     public FuelTypeCategory(IGuiHelper guiHelper) {
-        super(RECIPE_TYPE, Component.translatable("northstar.recipe.fuel_type"), guiHelper.createDrawableItemLike(NorthstarBlocks.JET_ENGINE), WIDTH, HEIGHT);
+        super(RECIPE_TYPE, Component.translatable("northstar.recipe.fuel_type"), guiHelper.createDrawableItemLike(NorthstarBlocks.ROCKET_THRUSTER), WIDTH, HEIGHT);
     }
 
     @Override
@@ -45,8 +46,9 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
         List<FluidStack> fluids = RegistryUtil.getRegistryAccess()
                 .registryOrThrow(Registries.FLUID)
                 .stream()
+                .map(FluidHelper::convertToStill)
                 .filter(recipe::supports)
-                .map(fluid -> new FluidStack(fluid, 1))
+                .map(fluid -> new FluidStack(fluid, 1000))
                 .toList();
 
         builder.addSlot(RecipeIngredientRole.INPUT, 5, 5)
@@ -82,7 +84,7 @@ public class FuelTypeCategory extends AbstractRecipeCategory<FuelType> {
                 .forGoggles(tooltip, baseIndents + 1);
 
         NorthstarLang.builder()
-                .add(NorthstarBlocks.JET_ENGINE.get().getName())
+                .add(NorthstarBlocks.ROCKET_THRUSTER.get().getName())
                 .text(":")
                 .forGoggles(tooltip, baseIndents);
 

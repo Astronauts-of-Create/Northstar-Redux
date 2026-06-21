@@ -1,64 +1,45 @@
 package com.lightning.northstar.contraption.rocket;
 
+import com.lightning.northstar.config.NorthstarConfigs;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RocketAirSound extends AbstractTickableSoundInstance {
 
-    private float pitch;
-    private RocketContraptionEntity parent;
+    private final RocketContraptionEntity entity;
 
-    public RocketAirSound(SoundEvent snd, float pitch, RocketContraptionEntity pParent) {
-        super(snd, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
-        this.pitch = pitch;
-        this.parent = pParent;
-        volume = 0.01f;
-        looping = true;
-        delay = 0;
-        relative = true;
+    public RocketAirSound(SoundEvent sound, RocketContraptionEntity entity) {
+        super(sound, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
+        this.entity = entity;
+        this.looping = true;
+        this.relative = true;
+        this.delay = 0;
     }
 
     @Override
     public void tick() {
-        this.x = parent.getX();
-        this.y = parent.getY();
-        this.z = parent.getZ();
+        x = entity.getX();
+        y = entity.getY();
+        z = entity.getZ();
 
-        if (parent.isRemoved()) stop();
+        float velocity = Math.abs(entity.getVelocity());
+        volume = Mth.clamp(velocity / RocketContraptionEntity.AIR_SOUND_SPEED, 0f, 1f) * (1 - NorthstarConfigs.server().calculateAtmosphereBlend(entity.level(), y));
+        pitch = Mth.clampedMap(velocity, 0f, RocketContraptionEntity.MAX_SPEED, 0.5f, 1.5f);
+
+        if (!shouldPlayFor(entity) || entity.isRemoved()) {
+            stop();
+        }
     }
 
-    public void setPitch(float pitch) {
-        this.pitch = pitch;
-    }
-
-    public void setVolume(float vol) {
-        this.volume = vol;
-    }
-
-    public void fadeIn(float maxVolume) {
-        volume = Math.min(maxVolume, volume + .05f);
-    }
-
-    public void fadeOut() {
-        volume = Math.max(0, volume - .05f);
-    }
-
-    public boolean isFaded() {
-        return volume == 0;
-    }
-
-    @Override
-    public float getPitch() {
-        return pitch;
-    }
-
-    public void stopSound() {
-        stop();
+    public static boolean shouldPlayFor(RocketContraptionEntity entity) {
+        return Math.abs(entity.getVelocity()) / RocketContraptionEntity.AIR_SOUND_SPEED >= Mth.EPSILON &&
+               entity.level().northstar$dimension().hasAtmosphere();
     }
 
 }

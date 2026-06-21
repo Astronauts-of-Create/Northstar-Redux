@@ -1,6 +1,5 @@
 package com.lightning.northstar.mixin.block;
 
-import com.lightning.northstar.world.dimension.NorthstarPlanets;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.simibubi.create.content.contraptions.bearing.MechanicalBearingBlockEntity;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
@@ -17,9 +16,15 @@ public abstract class WindmillBearingBlockEntityMixin extends MechanicalBearingB
         super(type, pos, state);
     }
 
-    @ModifyReturnValue(method = "getGeneratedSpeed", at = @At("RETURN"))
+    @ModifyReturnValue(
+            method = "getGeneratedSpeed",
+            at = @At(
+                    value = "RETURN",
+                    ordinal = 2
+            )
+    )
     private float northstar$updateGeneratedSpeed(float value) {
-        return value * NorthstarPlanets.getWindMultiplier(level);
+        return value * level.northstar$dimension().wind().get(level, worldPosition);
     }
 
 }

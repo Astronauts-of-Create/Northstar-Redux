@@ -67,7 +67,7 @@ public class IceBoxBlock extends Block implements IBE<IceBoxBlockEntity>, IWrenc
 
 
                 if (stack.getItem().equals(Items.SPONGE) &&
-                        be.fluidCapability.drain(Integer.MAX_VALUE, FluidAction.EXECUTE).isEmpty()) {
+                    be.fluidCapability.drain(Integer.MAX_VALUE, FluidAction.EXECUTE).isEmpty()) {
                     return ItemInteractionResult.SUCCESS;
                 }
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
