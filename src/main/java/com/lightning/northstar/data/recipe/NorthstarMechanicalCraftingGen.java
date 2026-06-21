@@ -18,8 +18,8 @@ public class NorthstarMechanicalCraftingGen extends MechanicalCraftingRecipeGen 
 
     AUTO_LANDER = create(NorthstarBlocks.AUTO_LANDER::get)
             .returns(1)
-            .recipe(b -> b.key('T', NorthstarItems.TITANIUM_SHEET)
-                    .key('I', NorthstarItems.TITANIUM_INGOT)
+            .recipe(b -> b.key('T', NorthstarItemTags.C_SHEETS_TITANIUM.tag)
+                    .key('I', NorthstarItemTags.C_INGOTS_TITANIUM.tag)
                     .key('C', NorthstarItems.CIRCUIT)
                     .key('S', NorthstarBlocks.ROCKET_STATION)
                     .key('#', NorthstarItems.POLISHED_LUNAR_SAPPHIRE)
