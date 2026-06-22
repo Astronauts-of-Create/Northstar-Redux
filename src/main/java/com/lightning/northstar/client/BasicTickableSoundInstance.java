@@ -1,6 +1,7 @@
 package com.lightning.northstar.client;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -13,12 +14,26 @@ import net.neoforged.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class BasicTickableSoundInstance extends AbstractTickableSoundInstance {
 
+    private static final float FADE_DISTANCE = 16.0f;
+
     private BlockEntity entity;
 
     public BasicTickableSoundInstance(SoundEvent soundEvent, SoundSource source, RandomSource random, BlockEntity entity) {
         super(soundEvent, source, random);
         this.entity = entity;
+        this.relative = false;
+        this.looping = false;
         setPos(entity.getBlockPos());
+    }
+
+    @Override
+    public float getVolume() {
+        var camera = net.minecraft.client.Minecraft.getInstance().cameraEntity;
+        if (camera == null)
+            return super.getVolume();
+        double dist = camera.position().distanceTo(new Vec3(x, y, z));
+        float multiplier = (float) net.minecraft.util.Mth.clampedMap(dist, 1.0, FADE_DISTANCE, 1.0, 0.0);
+        return super.getVolume() * multiplier;
     }
 
     @Override
