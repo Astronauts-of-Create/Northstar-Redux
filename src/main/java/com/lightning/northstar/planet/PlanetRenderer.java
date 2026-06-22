@@ -132,7 +132,6 @@ public class PlanetRenderer {
 
         // It's Northstar time! (and then we northstared all over the place)
         pose.pushPose();
-        pose.mulPose(Axis.YP.rotationDegrees(-90));
         pose.mulPose(Axis.XP.rotationDegrees(20));
         pose.mulPose(Axis.ZP.rotationDegrees(25));
         pose.translate(0, 0, -100);
