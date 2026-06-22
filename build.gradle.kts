@@ -117,6 +117,12 @@ repositories {
             includeGroupByRegex("dev\\.latvian\\..*")
         }
     }
+    maven("https://maven.ryanhcode.dev/releases") {
+        content {
+            includeGroup("dev.ryanhcode.sable")
+            includeGroup("dev.ryanhcode.sable-companion")
+        }
+    }
     flatDir { dir("run/mods-obf-1.21.1") }
 }
 
@@ -138,7 +144,6 @@ dependencies {
 
     compileOnly(libs.iris)
 
-    //implementation(libs.architectury)
     implementation(libs.jei.neoforge)
     implementation(libs.copycats)
     implementation(libs.cdg)
@@ -146,6 +151,7 @@ dependencies {
     implementation(libs.kubejs) { isTransitive = false }
     implementation(libs.kubejs.create)
     implementation(libs.rhino)
+    implementation(libs.sable.companion)
     implementation(libs.tfmg)
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here

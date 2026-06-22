@@ -1,0 +1,5 @@
+{
+  "dimension": "northstar:mars",
+  "base_gravity": [ 0.0, -3.73, 0.0 ],
+  "base_pressure": 0.00636
+}

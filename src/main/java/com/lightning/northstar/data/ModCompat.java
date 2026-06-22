@@ -12,6 +12,7 @@ public enum ModCompat implements Mod {
     KJS_CREATE("kubejs_create"),
     MEK("mekanism"),
     OCULUS("iris"),
+    SABLE("sable"),
     TFMG("tfmg");
 
     @ApiStatus.Internal

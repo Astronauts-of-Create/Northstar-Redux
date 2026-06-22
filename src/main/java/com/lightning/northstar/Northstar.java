@@ -2,10 +2,12 @@ package com.lightning.northstar;
 
 import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
+import com.lightning.northstar.compat.sable.NorthstarSable;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.content.world.NorthstarFeatures;
 import com.lightning.northstar.contraption.FuelType;
+import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.entity.*;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.planet.data.PlanetDimension;
@@ -103,6 +105,8 @@ public class Northstar {
         PlanetSpriteRenderer.register();
 
         NorthstarConfigs.register(container::registerConfig);
+
+        ModCompat.SABLE.executeIfLoaded(() -> NorthstarSable::init);
 
         RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> NorthstarClient.clientInit(eventBus));
     }

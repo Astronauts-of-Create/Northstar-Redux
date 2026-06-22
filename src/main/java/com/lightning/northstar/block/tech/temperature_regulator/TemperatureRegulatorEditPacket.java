@@ -108,7 +108,7 @@ public class TemperatureRegulatorEditPacket implements ServerboundPacketPayload 
     }
 
     private void handleWorld(ServerPlayer player, Level world) {
-        if (!world.isLoaded(pos) || !pos.closerThan(player.blockPosition(), 20))
+        if (!world.isLoaded(pos) || player.distanceToSqr(Vec3.atCenterOf(pos)) > 20 * 20)
             return;
 
         if (world.getBlockEntity(pos) instanceof TemperatureRegulatorBlockEntity be) {

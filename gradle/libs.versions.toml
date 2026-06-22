@@ -4,6 +4,7 @@ mixinextras = "0.5.0"
 ponder = "1.0.82+mc1.21.1"
 
 [libraries]
+aeronautics = "maven.modrinth:create-aeronautics:1.3.0+mc1.21.1"
 cdg = "maven.modrinth:create-diesel-generators:1.21.1-1.3.7"
 cca = "maven.modrinth:createaddition:neoforge-1.21.1-1.5.8"
 create = "com.simibubi.create:create-1.21.1:6.0.10-280"
@@ -21,4 +22,5 @@ mixinextras-neoforge = { module = "io.github.llamalad7:mixinextras-neoforge", ve
 ponder-neoforge = { module = "net.createmod.ponder:ponder-neoforge", version.ref = "ponder" }
 registrate = "com.tterrag.registrate:Registrate:MC1.21-1.3.0+67"
 rhino = "dev.latvian.mods:rhino:2101.2.7-build.81"
+sable-companion = "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0"
 tfmg = "maven.modrinth:create-tfmg:1.1.0e"

@@ -1,0 +1,5 @@
+{
+  "dimension": "northstar:mercury",
+  "base_gravity": [ 0.0, -3.7, 0.0 ],
+  "base_pressure": 0.0
+}

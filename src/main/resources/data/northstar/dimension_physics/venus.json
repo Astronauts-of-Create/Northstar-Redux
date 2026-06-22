@@ -1,0 +1,5 @@
+{
+  "dimension": "northstar:venus",
+  "base_gravity": [ 0.0, -8.87, 0.0 ],
+  "base_pressure": 93.0
+}
