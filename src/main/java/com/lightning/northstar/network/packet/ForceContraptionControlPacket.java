@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -34,16 +35,19 @@ public class ForceContraptionControlPacket extends SimplePacketBase {
 
     @Override
     public boolean handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            if (Minecraft.getInstance().level.getEntity(entityId) instanceof AbstractContraptionEntity entity) {
-                // Click twice to stop controlling and recontrol if needed
-                if (entity.equals(ControlsHandler.getContraption()) && controlPos.equals(ControlsHandler.getControlsPos())) {
-                    entity.handlePlayerInteraction(Minecraft.getInstance().player, controlPos, Direction.NORTH, InteractionHand.MAIN_HAND);
-                }
+        context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handle));
+        return false;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void handle() {
+        if (Minecraft.getInstance().level.getEntity(entityId) instanceof AbstractContraptionEntity entity) {
+            // Click twice to stop controlling and recontrol if needed
+            if (entity.equals(ControlsHandler.getContraption()) && controlPos.equals(ControlsHandler.getControlsPos())) {
                 entity.handlePlayerInteraction(Minecraft.getInstance().player, controlPos, Direction.NORTH, InteractionHand.MAIN_HAND);
             }
-        }));
-        return false;
+            entity.handlePlayerInteraction(Minecraft.getInstance().player, controlPos, Direction.NORTH, InteractionHand.MAIN_HAND);
+        }
     }
 
 }
