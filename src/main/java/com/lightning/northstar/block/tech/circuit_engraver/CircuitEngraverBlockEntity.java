@@ -12,12 +12,9 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -110,8 +107,6 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
         processingTicks = 0;
         if (held.stack.isEmpty()) {
             currentRecipe = null;
-            running = false;
-            sendData();
         }
 
         return HOLD;
@@ -139,16 +134,7 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
     public void tickAudio() {
         super.tickAudio();
 
-        if (running) {
-            if (sound == null || sound.isStopped()) {
-                sound = new BasicTickableSoundInstance(NorthstarSounds.LASER_AMBIENT.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
-                sound.setLooping(true);
-                Minecraft.getInstance().getSoundManager().play(sound);
-            }
-        } else if (sound != null) {
-            sound.cancel();
-            sound = null;
-        }
+        sound = BasicTickableSoundInstance.playLoopingSound(this, sound, running, NorthstarSounds.LASER_AMBIENT.get());
     }
 
     public void updateRedstone() {

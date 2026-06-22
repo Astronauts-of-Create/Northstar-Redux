@@ -1,8 +1,8 @@
 package com.lightning.northstar.block.tech.oxygen_sealer;
 
+import com.lightning.northstar.client.BasicTickableSoundInstance;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
-import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
@@ -24,7 +24,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,7 +50,8 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     protected float activeDrain;
     protected boolean active;
 
-    protected int audioTick;
+    @OnlyIn(Dist.CLIENT)
+    protected BasicTickableSoundInstance sound;
 
     public OxygenSealerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -123,15 +123,12 @@ public class OxygenSealerBlockEntity extends KineticBlockEntity implements IHave
     public void tickAudio() {
         super.tickAudio();
 
-        if (!active)
-            return;
+        // this sounds terrible???
+        //sound = BasicTickableSoundInstance.playLoopingSound(this, sound, active, NorthstarSounds.AIRFLOW.get());
 
-        if (audioTick++ % 13 == 0) {
-            level.playSound(null, worldPosition, NorthstarSounds.AIRFLOW.get(), SoundSource.BLOCKS, 0.1f, 0);
-        }
-
-        if (level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
+        if (active && level.random.nextFloat() < AllConfigs.client().fanParticleDensity.get()) {
             level.addParticle(NorthstarParticles.OXY_FLOW.get(), worldPosition.getX() + 0.5, worldPosition.getY() + 1, worldPosition.getZ() + 0.5, 0, 0, 0);
+        }
     }
 
     @Override
