@@ -69,7 +69,6 @@ public abstract class LivingEntityGravityMixin extends Entity {
             )
     )
     private boolean northstar$replaceZeroGravityKnockback(LivingEntity entity, double strength, double x, double z, @Local(argsOnly = true) DamageSource source) {
-        assert source.getEntity() != null;
         return ZeroGravityUtils.shouldApplyKnockback(source.getEntity(), this, strength);
     }
 
