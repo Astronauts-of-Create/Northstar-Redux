@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "2.1.21"
 }
 
-version = "0.5.4+1.20.1" // https://semver.org/
+version = "0.6.0+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {

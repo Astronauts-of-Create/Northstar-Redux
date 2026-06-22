@@ -17,13 +17,10 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -135,16 +132,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public void tickAudio() {
         super.tickAudio();
 
-        if (!Mth.equal(generatorSpeed, 0) && !isOverStressed()) {
-            if (sound == null || sound.isStopped()) {
-                sound = new BasicTickableSoundInstance(NorthstarSounds.COMBUSTION_ENGINE.get(), SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), this);
-                sound.setLooping(true);
-                Minecraft.getInstance().getSoundManager().play(sound);
-            }
-        } else if (sound != null) {
-            sound.cancel();
-            sound = null;
-        }
+        sound = BasicTickableSoundInstance.playLoopingSound(this, sound, !Mth.equal(generatorSpeed, 0) && !isOverStressed(), NorthstarSounds.COMBUSTION_ENGINE.get());
     }
 
     @Override

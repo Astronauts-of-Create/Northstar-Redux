@@ -1,6 +1,8 @@
 package com.lightning.northstar.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +21,20 @@ public class BasicTickableSoundInstance extends AbstractTickableSoundInstance {
         super(soundEvent, source, random);
         this.entity = entity;
         setPos(entity.getBlockPos());
+    }
+
+    public static BasicTickableSoundInstance playLoopingSound(BlockEntity be, BasicTickableSoundInstance sound, boolean active, SoundEvent soundEvent) {
+        if (active) {
+            if (sound == null || sound.isStopped()) {
+                sound = new BasicTickableSoundInstance(soundEvent, SoundSource.BLOCKS, SoundInstance.createUnseededRandom(), be);
+                sound.setLooping(true);
+                Minecraft.getInstance().getSoundManager().play(sound);
+            }
+        } else if (sound != null) {
+            sound.cancel();
+            sound = null;
+        }
+        return sound;
     }
 
     @Override
