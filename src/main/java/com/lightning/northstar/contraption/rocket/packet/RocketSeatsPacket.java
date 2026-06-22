@@ -11,6 +11,8 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ public record RocketSeatsPacket(
     );
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void handle(LocalPlayer player) {
         if (Minecraft.getInstance().level.getEntity(entityId) instanceof RocketContraptionEntity rocket) {
             rocket.getVirtualSeats().clear();

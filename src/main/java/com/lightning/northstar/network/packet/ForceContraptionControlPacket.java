@@ -12,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionHand;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public record ForceContraptionControlPacket(
         int entityId,
@@ -25,6 +27,7 @@ public record ForceContraptionControlPacket(
     );
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void handle(LocalPlayer player) {
         if (Minecraft.getInstance().level.getEntity(entityId) instanceof AbstractContraptionEntity entity) {
             // Click twice to stop controlling and recontrol if needed

@@ -14,6 +14,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 // Create devs, please make setBlock() sync the NBT :(
@@ -45,6 +47,7 @@ public class ActorConfigPacket implements ClientboundPacketPayload {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public void handle(LocalPlayer localPlayer) {
         if (!(Minecraft.getInstance().level.getEntity(contraptionId) instanceof AbstractContraptionEntity entity))
             return;

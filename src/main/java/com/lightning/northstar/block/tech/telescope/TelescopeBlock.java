@@ -40,6 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -106,9 +107,14 @@ public class TelescopeBlock extends Block {
         }
 
         if (level.isClientSide()) {
-            RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ScreenOpener.open(new TelescopeScreen(level, pos)));
+            RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(level, pos));
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void openScreen(Level level, BlockPos pos) {
+        ScreenOpener.open(new TelescopeScreen(level, pos));
     }
 
     public static void handlePrintRequest(ServerPlayer player, BlockPos pos, ResourceLocation planetId) {
