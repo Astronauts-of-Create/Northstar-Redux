@@ -1,12 +1,18 @@
 package com.lightning.northstar.planet;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class ZeroGravityUtils {
 
     /**
@@ -15,8 +21,8 @@ public class ZeroGravityUtils {
      *
      * @return if no knockback has been applied and vanilla knockback should be applied instead
      */
-    public static boolean shouldApplyKnockback(Entity attacker, Entity attacked, double strength) {
-        if (!attacker.level().northstar$isZeroGravity()) {
+    public static boolean shouldApplyKnockback(@Nullable Entity attacker, Entity attacked, double strength) {
+        if (attacker == null || !attacked.level().northstar$isZeroGravity()) {
             return true;
         }
 
