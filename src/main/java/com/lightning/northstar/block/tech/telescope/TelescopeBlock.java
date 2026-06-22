@@ -106,6 +106,11 @@ public class TelescopeBlock extends Block {
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
 
+        if (level.isRaining() && level.northstar$dimension().hasAtmosphere()) {
+            player.displayClientMessage(Component.translatable("northstar.block.telescope.requires_clear_sky").withStyle(ChatFormatting.RED), true);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        }
+
         if (level.isClientSide()) {
             RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(level, pos));
         }

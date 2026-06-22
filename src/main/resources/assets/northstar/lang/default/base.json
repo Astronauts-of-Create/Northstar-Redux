@@ -50,6 +50,7 @@
   "norhstar.gui.grouped_scroll_input.shift_hint": "Shift to skip children",
   "northstar.block.telescope.invalid_dimension": "Telescopes cannot be used in this dimension.",
   "northstar.block.telescope.requires_night": "Telescopes can only be used at night",
+  "northstar.block.telescope.requires_clear_sky": "Telescopes require a clear sky",
   "northstar.contraption.rocket.assembly.missing_controls": "No rocket controls attached. (Are you missing Super Glue?)",
   "northstar.contraption.rocket.assembly.unsupported_dimension": "Rockets cannot be assembled in this dimension.",
   "northstar.contraption.rocket.hold_to_slow_down": "Hold %s to slow down!",
