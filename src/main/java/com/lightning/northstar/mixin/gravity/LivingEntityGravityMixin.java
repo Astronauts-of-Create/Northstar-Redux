@@ -36,11 +36,11 @@ public abstract class LivingEntityGravityMixin extends Entity {
     )
     private double northstar$modifyGravity(double value) {
         return level().northstar$isZeroGravity() ?
-                jumping ?
-                -0.2f :
-                isCrouching() || new BlockCollisions<>(level(), this, getBoundingBox().expandTowards(0, -0.1f, 0), false, (pos, shape) -> pos).hasNext() ?
-                0.2f :
-                0.0f :
+                (jumping ?
+                 -0.2f :
+                 isCrouching() || new BlockCollisions<>(level(), this, getBoundingBox().expandTowards(0, -0.1f, 0), false, (pos, shape) -> pos).hasNext() ?
+                 0.2f :
+                 0.0f) * getDefaultGravity() :
                 value;
     }
 
