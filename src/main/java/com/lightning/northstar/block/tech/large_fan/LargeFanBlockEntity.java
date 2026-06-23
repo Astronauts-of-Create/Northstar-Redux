@@ -135,7 +135,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
                 be.attachKinetics();
             }
             updateNeighbors = true;
-            sendData();
+            notifyUpdate();
         } else if (manual &&
                    chain == null &&
                    structurePos != null &&
@@ -149,6 +149,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
     }
 
     /** Gets the block of this structure that is attached to the specific block */
+    @Nullable
     private BlockPos getBlockAttachedTo(BlockPos pos) {
         MutableBlockPos testPos = new MutableBlockPos();
         for (Direction direction : Iterate.directions) {
@@ -192,7 +193,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
 
         if (!Objects.equals(chain, controller.chain)) {
             controller.chain = chain;
-            controller.sendData();
+            controller.notifyUpdate();
         }
         if (pos.equals(chain))
             return 1;
@@ -316,6 +317,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
 
     @SuppressWarnings("unchecked")
     @Override
+    @Nullable
     public LargeFanBlockEntity getControllerBE() {
         if (isController() || !hasLevel())
             return this;
@@ -338,6 +340,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
     public void removeController(boolean keepContents) {
         if (level.isClientSide)
             return;
+        chain = null;
         controllerPos = null;
         updateConnectivity = true;
         width = 1;
@@ -345,8 +348,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         invalidateRenderBoundingBox();
 
         updateBlockState(Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE | Block.UPDATE_KNOWN_SHAPE);
-        setChanged();
-        sendData();
+        notifyUpdate();
     }
 
     @Override
@@ -378,7 +380,7 @@ public class LargeFanBlockEntity extends KineticBlockEntity implements IMultiBlo
         chain = null;
         detachKinetics();
         attachKinetics();
-        setChanged();
+        notifyUpdate();
     }
 
     private void dropBlades() {
