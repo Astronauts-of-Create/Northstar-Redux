@@ -28,12 +28,12 @@ public class ElectrolysisRecipe extends StandardProcessingRecipe<RecipeWrapper> 
         }
 
         FluidStack left = machine.outputTankL.getPrimaryHandler().getFluid();
-        if (!left.isEmpty() && !left.isFluidEqual(er.getFluidResults().get(0))) {
+        if (!left.isEmpty() && !FluidStack.isSameFluidSameComponents(left, er.getFluidResults().get(0))) {
             return false;
         }
 
         FluidStack right = machine.outputTankR.getPrimaryHandler().getFluid();
-        if (!right.isEmpty() && !right.isFluidEqual(er.getFluidResults().get(1))) {
+        if (!right.isEmpty() && !FluidStack.isSameFluidSameComponents(right, er.getFluidResults().get(1))) {
             return false;
         }
 

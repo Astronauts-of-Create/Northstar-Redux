@@ -1,7 +1,6 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
-import com.lightning.northstar.content.world.planet.core.NorthstarConfiguredFeatures;
 import com.lightning.northstar.content.world.planet.core.NorthstarVegetationConfiguredFeatures;
 import net.minecraft.world.level.block.grower.TreeGrower;
 

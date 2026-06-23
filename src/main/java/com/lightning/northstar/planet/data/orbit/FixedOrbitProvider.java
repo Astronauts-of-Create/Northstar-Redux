@@ -1,7 +1,6 @@
 package com.lightning.northstar.planet.data.orbit;
 
 import com.lightning.northstar.Northstar;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.MethodsReturnNonnullByDefault;

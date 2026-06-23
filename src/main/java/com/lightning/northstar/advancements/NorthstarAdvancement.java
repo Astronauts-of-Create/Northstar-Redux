@@ -1,6 +1,5 @@
 package com.lightning.northstar.advancements;
 
-import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllTriggers;

@@ -6,15 +6,12 @@ import com.lightning.northstar.fluid.GasFluid;
 import com.lightning.northstar.fluid.SulfuricAcidFluidBlock;
 import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
 import com.lightning.northstar.item.DrinkableBucket;
-import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.AllFluids;
+import com.simibubi.create.api.data.datamaps.BlazeBurnerFuel;
+import com.simibubi.create.api.registry.CreateDataMaps;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import net.createmod.catnip.theme.Color;
-import net.minecraft.client.Camera;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,15 +19,11 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.lightning.northstar.Northstar.REGISTRATE;
@@ -175,7 +168,7 @@ public class NorthstarFluids {
             .bucket()
             .tag(Tags.Items.BUCKETS)
             .tag(NorthstarItemTags.C_BUCKETS_LIQUID_HYDROGEN.tag)
-            .tag(AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.tag)
+            .dataMap(CreateDataMaps.SUPERHEATED_BLAZE_BURNER_FUELS, new BlazeBurnerFuel(3200))
             .build()
             .register();
 
@@ -214,7 +207,7 @@ public class NorthstarFluids {
             .bucket()
             .tag(Tags.Items.BUCKETS)
             .tag(NorthstarItemTags.C_BUCKETS_METHANE.tag)
-            .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
+            .dataMap(CreateDataMaps.REGULAR_BLAZE_BURNER_FUELS, new BlazeBurnerFuel(1600))
             .build()
             .register();
 
@@ -256,7 +249,7 @@ public class NorthstarFluids {
             .bucket()
             .tag(Tags.Items.BUCKETS)
             .tag(NorthstarItemTags.C_BUCKETS_HYDROCARBON.tag)
-            .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
+            .dataMap(CreateDataMaps.REGULAR_BLAZE_BURNER_FUELS, new BlazeBurnerFuel(1600))
             .build()
             .register();
 
@@ -276,7 +269,7 @@ public class NorthstarFluids {
             .bucket()
             .tag(Tags.Items.BUCKETS)
             .tag(NorthstarItemTags.C_BUCKETS_BIOFUEL.tag)
-            .tag(AllItemTags.BLAZE_BURNER_FUEL_REGULAR.tag)
+            .dataMap(CreateDataMaps.REGULAR_BLAZE_BURNER_FUELS, new BlazeBurnerFuel(1600))
             .build()
             .register();
 
@@ -284,79 +277,7 @@ public class NorthstarFluids {
     public static void register() {
     }
 
-    public static abstract class TintedFluidType extends FluidType {
-
-        protected static final int NO_TINT = 0xffffffff;
-        private ResourceLocation stillTexture;
-        private ResourceLocation flowingTexture;
-
-        public TintedFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
-            super(properties);
-            this.stillTexture = stillTexture;
-            this.flowingTexture = flowingTexture;
-        }
-
-        @Override
-        public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-            consumer.accept(new IClientFluidTypeExtensions() {
-
-                @Override
-                public ResourceLocation getStillTexture() {
-                    return stillTexture;
-                }
-
-                @Override
-                public ResourceLocation getFlowingTexture() {
-                    return flowingTexture;
-                }
-
-                @Override
-                public int getTintColor(FluidStack stack) {
-                    return TintedFluidType.this.getTintColor(stack);
-                }
-
-                @Override
-                public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                    return TintedFluidType.this.getTintColor(state, getter, pos);
-                }
-
-                @Override
-                public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level,
-                                                        int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-                    Vector3f customFogColor = TintedFluidType.this.getCustomFogColor();
-                    return customFogColor == null ? fluidFogColor : customFogColor;
-                }
-
-                @Override
-                public void modifyFogRender(Camera camera, FogMode mode, float renderDistance, float partialTick,
-                                            float nearDistance, float farDistance, FogShape shape) {
-                    float modifier = TintedFluidType.this.getFogDistanceModifier();
-                    float baseWaterFog = 96.0f;
-                    if (modifier != 1f) {
-                        RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-                        RenderSystem.setShaderFogStart(-8);
-                        RenderSystem.setShaderFogEnd(baseWaterFog * modifier);
-                    }
-                }
-
-            });
-        }
-
-        protected abstract int getTintColor(FluidStack stack);
-
-        protected abstract int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos);
-
-        protected Vector3f getCustomFogColor() {
-            return null;
-        }
-
-        protected float getFogDistanceModifier() {
-            return 1f;
-        }
-
-    }
-
-    private static class SolidRenderedPlaceableFluidType extends TintedFluidType {
+    private static class SolidRenderedPlaceableFluidType extends AllFluids.TintedFluidType {
 
         private Vector3f fogColor;
         private int tintColor;
