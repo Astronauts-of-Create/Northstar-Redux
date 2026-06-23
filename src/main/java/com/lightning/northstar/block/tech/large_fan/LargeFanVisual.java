@@ -34,7 +34,7 @@ public class LargeFanVisual extends KineticBlockEntityVisual<LargeFanBlockEntity
         casing = instancerProvider()
                 .instancer(InstanceTypes.ORIENTED, Models.partial(model, dir))
                 .createInstance()
-                .position(entity.getBlockPos())
+                .position(getVisualPosition())
                 .rotateDegrees(patch.rotation, axis);
         casing.setChanged();
     }
