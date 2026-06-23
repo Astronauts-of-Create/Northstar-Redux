@@ -6,6 +6,7 @@ import com.lightning.northstar.client.renderer.effect.SpaceEffects;
 import com.lightning.northstar.content.NorthstarTextures;
 import com.lightning.northstar.planet.PlanetRenderer;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
@@ -84,6 +85,8 @@ public class LevelRendererMixin {
 
         SpaceEffects.renderStars(pose, projectionMatrix, skyFogSetup, starOpacity);
         PlanetRenderer.render(level, pose, camera, starOpacity, NorthstarClient.getAtmosphereBlend());
+
+        RenderSystem.depthMask(false);
     }
 
     @ModifyExpressionValue(
