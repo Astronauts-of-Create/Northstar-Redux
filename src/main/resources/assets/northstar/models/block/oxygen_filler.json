@@ -8,7 +8,8 @@
 		"1": "northstar:block/oxygen_filler_front",
 		"2": "northstar:block/oxygen_filler_top",
 		"3": "northstar:block/oxygen_filler_side",
-		"4": "northstar:block/oxygen_filler_back"
+		"4": "northstar:block/oxygen_filler_back",
+		"particle": "northstar:block/titanium_block"
 	},
 	"elements": [
 		{
