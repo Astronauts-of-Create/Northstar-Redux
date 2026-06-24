@@ -3,7 +3,6 @@ package com.lightning.northstar.block.tech.oxygen_filler;
 import com.lightning.northstar.contraption.ActorConfigPacket;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,7 +19,6 @@ public class OxygenFillerActor implements ActorConfigPacket.ITakeConfig {
                 ActorConfigPacket.update(context.contraption.entity, context.localPos, context.blockEntityData);
             }
         });
-        container.fromTag(context.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));
     }
 
     public static OxygenFillerActor get(MovementContext context) {
