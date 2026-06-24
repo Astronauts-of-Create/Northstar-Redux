@@ -18,13 +18,13 @@ public class RocketStationActor implements ActorConfigPacket.ITakeConfig {
 
     public RocketStationActor(MovementContext context) {
         container = new BetterSimpleContainer(2);
+        container.fromTag(context.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND), context.world.registryAccess());
         container.addListener($ -> {
             context.blockEntityData.put("Inventory", container.createTag(context.world.registryAccess()));
             if (!context.world.isClientSide()) {
                 ActorConfigPacket.update(context.contraption.entity, context.localPos, context.blockEntityData);
             }
         });
-        container.fromTag(context.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND), context.world.registryAccess());
     }
 
     @Override
