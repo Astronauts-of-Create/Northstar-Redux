@@ -10,6 +10,8 @@ public class ClientConfig extends ConfigBase {
     public final ConfigEnum<TemperatureUnit> temperatureUnit = e(TemperatureUnit.CELSIUS, "temperatureUnit");
     public final ConfigEnum<PressureUnit> pressureUnit = e(PressureUnit.PASCAL, "pressureUnit");
 
+    public final ConfigBool alwaysEnableThrusterParticles = b(false, "alwaysEnableThrusterParticles", "Whether rocket thrusters on contraptions should always produce particles shown during countdown.");
+
     public final ConfigGroup debug = group(1, "debug");
     public final ConfigBool debugSealerBounds = b(false, "debugSealerBounds");
 

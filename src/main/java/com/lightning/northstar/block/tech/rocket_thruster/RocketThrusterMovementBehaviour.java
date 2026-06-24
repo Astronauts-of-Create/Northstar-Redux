@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.rocket_thruster;
 
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.contraption.rocket.LaunchStatus;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.particle.NorthstarParticles;
@@ -27,15 +28,18 @@ public class RocketThrusterMovementBehaviour implements MovementBehaviour {
             !(context.contraption.entity instanceof RocketContraptionEntity rocket)) {
             return;
         }
-        if (Minecraft.getInstance().options.particles().get() == ParticleStatus.MINIMAL) {
+        ParticleStatus particleStatus = Minecraft.getInstance().options.particles().get();
+        if (particleStatus == ParticleStatus.MINIMAL) {
             return;
         }
         Vec3 pos = context.position;
-        if (rocket.getStatus() == LaunchStatus.COUNTDOWN) {
-            context.world.addAlwaysVisibleParticle(NorthstarParticles.COLD_AIR.get(), true, pos.x, pos.y - 0.5, pos.z, 0, 0, 0);
-        } else if (rocket.areThrustersEnabled()) {
+        if (rocket.areThrustersEnabled()) {
             float velocity = rocket.getVelocity() - 2;
             context.world.addAlwaysVisibleParticle(NorthstarParticles.ROCKET_PLUME.get(), true, pos.x, pos.y - 0.5, pos.z, 0, velocity, 0);
+        } else if (rocket.getStatus() == LaunchStatus.COUNTDOWN || NorthstarConfigs.client().alwaysEnableThrusterParticles.get()) {
+            if (particleStatus == ParticleStatus.ALL || context.world.getGameTime() % 4 == 0) {
+                context.world.addAlwaysVisibleParticle(NorthstarParticles.COLD_AIR.get(), true, pos.x, pos.y - 0.3, pos.z, 0, 0, 0);
+            }
         }
     }
 
