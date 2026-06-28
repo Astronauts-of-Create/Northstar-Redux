@@ -275,21 +275,24 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                     if (targetPoint == Float.POSITIVE_INFINITY && dimension.isOrbit()) {
                         targetPoint = (level.getMinBuildHeight() + level.getMaxBuildHeight()) / 2f;
                     }
+                    if (targetPoint == Float.POSITIVE_INFINITY) {
+                        targetPoint = fromBelow ? level.getMinBuildHeight() : level.getMaxBuildHeight();
+                    }
 
-                    if (fromBelow) {
+                    if (fromBelow || dimension.isOrbit()) {
                         // TODO: The player should probably have some way of controlling this like regular landings
 
                         float delta = targetPoint - (float) getY();
 
-                        if (delta <= 1) {
+                        if (Math.abs(delta) <= 0.5f) {
                             thrustersEnabled = false;
                             velocity = 0;
                             doStop = true;
-                        } else if (delta <= 100) {
+                        } else if (Math.abs(delta) <= 100) {
                             thrustersEnabled = false;
                             velocity = Mth.map(delta, 100, 0, MAX_SPEED, 0);
                         } else {
-                            thrustersEnabled = !level.northstar$isZeroGravity();
+                            thrustersEnabled = fromBelow && !level.northstar$isZeroGravity();
                             velocity = 2;
                         }
 
@@ -346,7 +349,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                         double movement = checkCollisionDistance(velocity);
                         move(0, movement, 0);
 
-                        hasCollided = (dimension.isOrbit() && getY() <= targetPoint) || velocity != movement;
+                        hasCollided = velocity != movement;
                         doStop = hasCollided;
                     }
 
@@ -365,7 +368,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                         sendSyncPacket();
                         dismountPassengers();
 
-                        if (hasCollided && Math.abs(velocity) * 20 > NorthstarConfigs.server().landingMaxSafeSpeed.get()) {
+                        if (hasCollided && Math.abs(velocity) * 20 > NorthstarConfigs.server().landingMaxSafeSpeed.get() && !contraption.hasAutoLander) {
                             ServerPlayer player = level.getServer().getPlayerList().getPlayer(launchingPlayer);
                             if (player != null) {
                                 player.awardStat(NorthstarStats.ROCKET_CRASHES);
