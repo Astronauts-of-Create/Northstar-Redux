@@ -24,4 +24,5 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Mod versions:**
-The exact version of Northstar and Create. For example Northstar x.y.z+1.20.1, Create 1.20.1-x.y.z;
+The exact version of Northstar and Create as well as other mods used to reproduce the issue. For example Northstar x.y.z+1.20.1, Create 1.20.1-x.y.z.
+Alternatively a crash report can be attached to include all information about the game, F3+C can be held to generate a crash report.
