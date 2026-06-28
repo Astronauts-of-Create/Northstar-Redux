@@ -36,7 +36,7 @@ public class RocketThrusterMovementBehaviour implements MovementBehaviour {
         if (rocket.areThrustersEnabled()) {
             float velocity = rocket.getVelocity() - 2;
             context.world.addAlwaysVisibleParticle(NorthstarParticles.ROCKET_PLUME.get(), true, pos.x, pos.y - 0.5, pos.z, 0, velocity, 0);
-        } else if (rocket.getStatus() == LaunchStatus.COUNTDOWN || NorthstarConfigs.client().alwaysEnableThrusterParticles.get()) {
+        } else if (rocket.getStatus() == LaunchStatus.COUNTDOWN || (rocket.getStatus() == LaunchStatus.WAITING && NorthstarConfigs.client().alwaysEnableThrusterParticles.get())) {
             if (particleStatus == ParticleStatus.ALL || context.world.getGameTime() % 4 == 0) {
                 context.world.addAlwaysVisibleParticle(NorthstarParticles.COLD_AIR.get(), true, pos.x, pos.y - 0.3, pos.z, 0, 0, 0);
             }
