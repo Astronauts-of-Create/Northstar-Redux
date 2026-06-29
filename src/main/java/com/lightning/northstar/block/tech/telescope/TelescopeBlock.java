@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.telescope;
 
+import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarStats;
 import com.lightning.northstar.planet.Planet;
@@ -40,6 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -80,20 +82,13 @@ public class TelescopeBlock extends Block {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        Component message = canPlayerUse(level, pos, player);
+        if (message != null) {
+            player.displayClientMessage(message, true);
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
+
         player.awardStat(NorthstarStats.INTERACT_WITH_TELESCOPE);
-
-        if (level.northstar$planet() == null) {
-            player.displayClientMessage(Component.translatable("northstar.block.telescope.invalid_dimension").withStyle(ChatFormatting.RED), true);
-            return InteractionResult.sidedSuccess(level.isClientSide());
-        }
-
-        // this isn't called on ClientLevel making isNight() always return false
-        level.updateSkyBrightness();
-
-        if (!level.isNight() && level.northstar$dimension().hasAtmosphere()) {
-            player.displayClientMessage(Component.translatable("northstar.block.telescope.requires_night").withStyle(ChatFormatting.RED), true);
-            return InteractionResult.sidedSuccess(level.isClientSide());
-        }
 
         if (level.isClientSide()) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(level, pos));
@@ -104,6 +99,24 @@ public class TelescopeBlock extends Block {
     @OnlyIn(Dist.CLIENT)
     private static void openScreen(Level level, BlockPos pos) {
         ScreenOpener.open(new TelescopeScreen(level, pos));
+    }
+
+    @Nullable
+    public static Component canPlayerUse(Level level, BlockPos pos, Player player) {
+        if (level.northstar$planet() == null) {
+            return Component.translatable("northstar.block.telescope.invalid_dimension").withStyle(ChatFormatting.RED);
+        }
+
+        long time = level.getDayTime() % 24000;
+        if ((time < 12400 || time > 23600) && level.northstar$dimension().hasAtmosphere()) {
+            return Component.translatable("northstar.block.telescope.requires_night").withStyle(ChatFormatting.RED);
+        }
+
+        if (!NorthstarBlocks.TELESCOPE.has(level.getBlockState(pos))) {
+            return Component.empty();
+        }
+
+        return null;
     }
 
     public static void handlePrintRequest(ServerPlayer player, BlockPos pos, ResourceLocation planetId) {

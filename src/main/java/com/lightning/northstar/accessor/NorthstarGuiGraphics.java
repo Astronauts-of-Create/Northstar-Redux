@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public interface NorthstarGuiGraphics {
@@ -87,6 +88,21 @@ public interface NorthstarGuiGraphics {
         }
 
         BufferUploader.drawWithShader(vertexBuffer.end());
+        RenderSystem.disableBlend();
+    }
+
+    default void northstar$blitFloat(ResourceLocation texture, float x, float y, float w, float h, float u, float v, float uw, float vh) {
+        RenderSystem.setShaderTexture(0, texture);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.enableBlend();
+        Matrix4f transform = self().pose().last().pose();
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        builder.vertex(transform, x, y, 0).uv(u, v).endVertex();
+        builder.vertex(transform, x, y + h, 0).uv(u, v + vh).endVertex();
+        builder.vertex(transform, x + w, y + h, 0).uv(u + uw, v + vh).endVertex();
+        builder.vertex(transform, x + w, y, 0).uv(u + uw, v).endVertex();
+        BufferUploader.drawWithShader(builder.end());
         RenderSystem.disableBlend();
     }
 

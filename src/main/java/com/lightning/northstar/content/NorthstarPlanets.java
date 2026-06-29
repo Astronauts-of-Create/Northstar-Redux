@@ -102,8 +102,7 @@ public class NorthstarPlanets {
                 THE_MOON,
                 PlanetProperties.builder()
                         .centralBody(EARTH)
-                        .orbit(SimpleOrbitProvider.create(27.322, 0.00257, 5.145, 125.08, 0)) // real moon
-                        //.orbit(SimpleOrbitProvider.create(365.256, 0.00257, 5.145, 125.08, 357.51716)) // Minecraft moon (copies parameters from earth to be on the opposite side of the sun)
+                        .orbit(SimpleOrbitProvider.create(1, 0.00257, 5.145, 125.08, 357.51716))
                         .type("moon")
                         .requiredScience(2) // 3 readings from Earth
                         .rotationPeriodTidalLock()

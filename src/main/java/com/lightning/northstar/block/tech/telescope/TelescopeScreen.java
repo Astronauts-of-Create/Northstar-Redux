@@ -1,14 +1,13 @@
 package com.lightning.northstar.block.tech.telescope;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarTextures;
 import com.lightning.northstar.planet.Planet;
-import com.lightning.northstar.planet.PlanetRenderer;
 import com.lightning.northstar.planet.data.PlanetDimension;
-import com.lightning.northstar.planet.data.render.NoopPlanetRenderer;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.PressureUnit;
 import com.lightning.northstar.util.TemperatureUnit;
@@ -27,9 +26,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Quaterniond;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -41,14 +40,22 @@ public class TelescopeScreen extends AbstractSimiScreen {
     private static final ResourceLocation TEXTURE = Northstar.asResource("textures/gui/telescope_gui.png");
     private static final ResourceLocation SPACE_BACKGROUND = Northstar.asResource("textures/gui/space_background.png");
 
-    public static final int FULL_SIZE = 900;
     public static final int VIEW_SIZE = 300;
 
     private final Level level;
     private final BlockPos pos;
 
-    private float scrollX = FULL_SIZE / 2f - VIEW_SIZE / 2f;
-    private float scrollY = FULL_SIZE / 2f - VIEW_SIZE / 2f;
+    private List<TelescopeNode> nodes;
+    private float minX;
+    private float minY;
+    private float maxX;
+    private float maxY;
+
+    private float scrollX = 0.5f;
+    private float scrollY = 0.5f;
+    private float zoom = 1f;
+
+    private LerpedFloat smoothZoom = LerpedFloat.linear().startWithValue(zoom);
 
     private Planet hoveredPlanet;
     private Planet selectedPlanet;
@@ -64,8 +71,59 @@ public class TelescopeScreen extends AbstractSimiScreen {
     }
 
     @Override
+    protected void init() {
+        super.init();
+
+        Planet currentPlanet = level.northstar$planet();
+        if (currentPlanet == null) {
+            onClose();
+            return;
+        }
+
+        nodes = new ArrayList<>();
+        for (Planet root : NorthstarLevel.CLIENT_TRACKER.getRoots()) {
+            nodes.add(createPlanetNode(root, null));
+        }
+
+        minX = Float.POSITIVE_INFINITY;
+        minY = Float.POSITIVE_INFINITY;
+        maxX = Float.NEGATIVE_INFINITY;
+        maxY = Float.NEGATIVE_INFINITY;
+
+        for (TelescopeNode node : nodes) {
+            node.calculateSpacing(0);
+            minX = Math.min(minX, node.position.x - node.size / 2f - 1);
+            minY = Math.min(minY, node.position.y - node.size / 2f - 1);
+            maxX = Math.max(maxX, node.position.x + node.size / 2f + 1);
+            maxY = Math.max(maxY, node.position.y + node.size / 2f + 1);
+        }
+
+        for (int i = 0; i < nodes.size(); i++) {
+            nodes.addAll(nodes.get(i).children);
+        }
+    }
+
+    private TelescopeNode createPlanetNode(Planet planet, TelescopeNode parent) {
+        TelescopeNode node = new TelescopeNode(planet, parent);
+        for (Planet satellite : planet.satellites) {
+            node.children.add(createPlanetNode(satellite, node));
+        }
+        return node;
+    }
+
+    @Override
     public void tick() {
         super.tick();
+
+        Component message = TelescopeBlock.canPlayerUse(level, pos, minecraft.player);
+        if (message != null) {
+            minecraft.player.displayClientMessage(message, true);
+            onClose();
+            return;
+        }
+
+        smoothZoom.chase(zoom, 0.1f, LerpedFloat.Chaser.EXP);
+        smoothZoom.tickChaser();
 
         if (selectedPlanet != null) {
             float value = progress.getValue();
@@ -82,8 +140,7 @@ public class TelescopeScreen extends AbstractSimiScreen {
     @Override
     protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         graphics.enableScissor(guiLeft + 8, guiTop + 8, guiLeft + windowWidth - 8, guiTop + windowHeight - 8);
-        graphics.blit(SPACE_BACKGROUND, guiLeft, guiTop, scrollX, scrollY, windowWidth, windowHeight, FULL_SIZE, FULL_SIZE);
-        hoveredPlanet = renderPlanets(graphics, mouseX, mouseY);
+        hoveredPlanet = renderPlanets(graphics, mouseX, mouseY, partialTick);
         graphics.disableScissor();
 
         graphics.blit(TEXTURE, guiLeft, guiTop, 0, 0, windowWidth, windowHeight, windowWidth, windowHeight);
@@ -181,62 +238,57 @@ public class TelescopeScreen extends AbstractSimiScreen {
         }
     }
 
-    private Planet renderPlanets(GuiGraphics graphics, int mouseX, int mouseY) {
-        Planet currentPlanet = level.northstar$planet();
-        if (currentPlanet == null) {
-            onClose();
-            return null;
-        }
+    private Planet renderPlanets(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
 
-        Vector3d universePosition = currentPlanet.position;
-        Vector3d direction = new Vector3d();
-        Quaterniond viewRotation = PlanetRenderer.getViewRotation(pos.getX(), pos.getZ(), currentPlanet.properties, level.northstar$dimension());
+        onDragged(0, 0);
+
+        float sizeX = maxX - minX;
+        float sizeY = maxY - minY;
+        float scale = windowWidth / Math.max(sizeX, sizeY) * smoothZoom.getValue(partialTick);
+        float cameraX = minX + scrollX * sizeX;
+        float cameraY = minY + scrollY * sizeY;
+
+        pose.translate(guiLeft + windowWidth * 0.5f, guiTop + windowHeight * 0.5f, 0);
+        pose.scale(scale, scale, 1);
+        pose.translate(-cameraX, -cameraY, 0);
+
+        graphics.northstar$blitFloat(SPACE_BACKGROUND, -sizeX * 0.5f, -sizeY * 0.5f, sizeX, sizeY, 0, 0, 1, 1);
 
         Planet hovered = null;
-        double hoveredDistance = Double.POSITIVE_INFINITY;
+        double days = NorthstarLevel.CLIENT_TRACKER.getDeltaDays() * NorthstarConfigs.server().telescopePlanetSpeed.getF();
+
+        Vector3f projectedMouse = new Vector3f(mouseX, mouseY, 0);
+        projectedMouse.mulPosition(pose.last().pose().invert(new Matrix4f()));
 
         BufferBuilder vc = Tesselator.getInstance().getBuilder();
         vc.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
-        for (Planet planet : currentPlanet.system.planets()) {
-            if (planet.key.equals(currentPlanet.key) || planet.properties.renderer() instanceof NoopPlanetRenderer) {
-                continue;
+        for (TelescopeNode node : nodes) {
+            if (node.parent != null) {
+                float angle = (float) node.planet.properties.orbit().getVisualAngle(days);
+                node.position.set(Mth.cos(angle) * node.radius, Mth.sin(angle) * node.radius)
+                        .add(node.parent.position);
             }
 
-            direction.set(planet.position)
-                    .sub(universePosition)
-                    .rotate(viewRotation);
-            if (direction.y > 0) {
-                continue;
+            float x = node.position.x;
+            float y = node.position.y;
+
+            if (projectedMouse.x >= x - 0.25f &&
+                projectedMouse.x <= x + 0.25f &&
+                projectedMouse.y >= y - 0.25f &&
+                projectedMouse.y <= y + 0.25f) {
+                hovered = node.planet;
             }
 
-            double distance = direction.length();
-            direction.mul(1.0 / distance);
-
-            final double KM_PER_AU = 149597870.7;
-            int size = (int) Mth.clamp(planet.properties.diameter() / KM_PER_AU / distance * 20000, 0, 8); // magic value?
-            if (size < 1) {
-                continue;
-            }
-
-            float posX = Mth.map((float) direction.x, -1, +1, 0, FULL_SIZE) - scrollX + guiLeft;
-            float posY = Mth.map((float) direction.z, -1, +1, 0, FULL_SIZE) - scrollY + guiTop;
-
-            if (mouseX >= posX - size &&
-                mouseX <= posX + size &&
-                mouseY >= posY - size &&
-                mouseY <= posY + size &&
-                distance < hoveredDistance) {
-                hovered = planet;
-                hoveredDistance = distance;
-            }
-
-            PoseStack pose = graphics.pose();
             pose.pushPose();
-            pose.translate(posX, posY, 0);
-            planet.properties.renderer().render(level, pose, vc, size * 2, new Vector4f(1), planet);
+            pose.translate(x, y, 0);
+            node.planet.properties.renderer().render(level, pose, vc, 0.5f, new Vector4f(1), node.planet);
             pose.popPose();
         }
+
+        pose.popPose();
 
         BufferBuilder.RenderedBuffer buffer = vc.endOrDiscardIfEmpty();
         if (buffer != null) {
@@ -253,10 +305,17 @@ public class TelescopeScreen extends AbstractSimiScreen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (selectedPlanet == null) {
-            scrollX = Mth.clamp(scrollX - (float) dragX, 0, FULL_SIZE - VIEW_SIZE);
-            scrollY = Mth.clamp(scrollY - (float) dragY, 0, FULL_SIZE - VIEW_SIZE);
+            onDragged(dragX, dragY);
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    private void onDragged(double dragX, double dragY) {
+        float zoom = smoothZoom.getValue(minecraft.getPartialTick());
+        float size = 0.5f / zoom;
+        float sensitivity = 1f / VIEW_SIZE / zoom;
+        scrollX = Mth.clamp(scrollX - (float) dragX * sensitivity, size, 1 - size);
+        scrollY = Mth.clamp(scrollY - (float) dragY * sensitivity, size, 1 - size);
     }
 
     @Override
@@ -271,6 +330,38 @@ public class TelescopeScreen extends AbstractSimiScreen {
         selectedPlanet = null;
         progress.setValue(0);
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        zoom = Math.max(zoom + (float) delta, 1);
+        return super.mouseScrolled(mouseX, mouseY, delta);
+    }
+
+    private static class TelescopeNode {
+        private final Planet planet;
+        private final TelescopeNode parent;
+        private final Vector2f position;
+        private final List<TelescopeNode> children;
+        private int radius;
+        private int size;
+
+        public TelescopeNode(Planet planet, TelescopeNode parent) {
+            this.planet = planet;
+            this.parent = parent;
+            this.position = new Vector2f((float) planet.position.x, (float) planet.position.z);
+            this.children = new ArrayList<>();
+        }
+
+        private int calculateSpacing(int baseRadius) {
+            int spacing = 0;
+            for (TelescopeNode child : children) {
+                spacing += child.calculateSpacing(spacing);
+            }
+            radius = baseRadius + spacing + 1;
+            size = 1 + spacing * 2;
+            return size;
+        }
     }
 
 }

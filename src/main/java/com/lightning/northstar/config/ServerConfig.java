@@ -36,6 +36,8 @@ public class ServerConfig extends ConfigBase {
 
     public final ConfigGroup gameplay = group(1, "gameplay");
 
+    public final ConfigFloat telescopePlanetSpeed = f(10, 0, "telescopePlanetSpeed", "How fast should planets move in the telescope screen");
+
     public final ConfigInt spacesuitBaseOxygen = i(1800, 0, "spacesuitBaseOxygen", "The amount of oxygen that can be stored in spacesuits, uses 1 mB/second");
     public final ConfigInt spacesuitAdditionalOxygen = i(600, 0, "spacesuitAdditionalOxygen", "The added oxygen capacity for each level of capacity");
 
