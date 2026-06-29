@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public interface NorthstarGuiGraphics {
@@ -40,7 +41,6 @@ public interface NorthstarGuiGraphics {
         float diffV = vMax - vMin;
 
         float localU0, localV0, localU1, localV1;
-
 
         for (int tileX = 0; tileX <= tileCountX; tileX++) {
             int tileW = tileX == tileCountX ? remainderX : spriteW;
@@ -85,7 +85,24 @@ public interface NorthstarGuiGraphics {
             }
         }
 
-        BufferUploader.drawWithShader(vertexBuffer.buildOrThrow());
+        MeshData mesh = vertexBuffer.build();
+        if (mesh != null) {
+            BufferUploader.drawWithShader(mesh);
+        }
+        RenderSystem.disableBlend();
+    }
+
+    default void northstar$blitFloat(ResourceLocation texture, float x, float y, float w, float h, float u, float v, float uw, float vh) {
+        RenderSystem.setShaderTexture(0, texture);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.enableBlend();
+        Matrix4f transform = self().pose().last().pose();
+        BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        builder.addVertex(transform, x, y, 0).setUv(u, v);
+        builder.addVertex(transform, x, y + h, 0).setUv(u, v + vh);
+        builder.addVertex(transform, x + w, y + h, 0).setUv(u + uw, v + vh);
+        builder.addVertex(transform, x + w, y, 0).setUv(u + uw, v);
+        BufferUploader.drawWithShader(builder.buildOrThrow());
         RenderSystem.disableBlend();
     }
 

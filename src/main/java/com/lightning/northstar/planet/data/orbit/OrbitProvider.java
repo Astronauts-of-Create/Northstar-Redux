@@ -31,7 +31,7 @@ public interface OrbitProvider {
     /** Approximate average radius of the orbit, in AU */
     double approximateRadius();
 
-    /** Calculates the visualFog angle in radians at the given time. Used for rendering in the orrery. */
+    /** Calculates the visual angle in radians at the given time. Used for rendering in the orrery. */
     double getVisualAngle(double deltaDays);
 
     @Contract(value = "_, -> param1", mutates = "param1")
