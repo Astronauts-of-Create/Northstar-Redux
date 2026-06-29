@@ -193,18 +193,18 @@ public class NorthstarTemperature {
 
     public static int getFreezingPoint(FluidState state) {
         if (state.is(Fluids.WATER) || state.is(Fluids.FLOWING_WATER)) return 0;
-        if (state.is(Fluids.LAVA) || state.is(Fluids.FLOWING_LAVA)) return -200;
-        if (state.is(AllFluids.CHOCOLATE.get()) || state.is(AllFluids.HONEY.get())) return 20;
-        if (state.is(NorthstarFluids.METHANE.get()) || state.is(NorthstarFluids.METHANE.getSource().getSource()))
-            return -200;
-        if (state.is(NorthstarFluids.LIQUID_OXYGEN.get()) || state.is(NorthstarFluids.LIQUID_OXYGEN.getSource().getSource()))
-            return -220;
-        if (state.is(NorthstarFluids.HYDROCARBON.get()) || state.is(NorthstarFluids.HYDROCARBON.getSource().getSource()))
-            return -60;
-        if (state.is(NorthstarFluids.LIQUID_HYDROGEN.get()) || state.is(NorthstarFluids.LIQUID_HYDROGEN.getSource().getSource()))
-            return -259;
-        if (state.is(NorthstarFluids.SULFURIC_ACID.get()) || state.is(NorthstarFluids.SULFURIC_ACID.getSource().getSource()))
-            return -200;
+        //if (state.is(Fluids.LAVA) || state.is(Fluids.FLOWING_LAVA)) return -200;
+        //if (state.is(AllFluids.CHOCOLATE.get()) || state.is(AllFluids.HONEY.get())) return 20;
+        //if (state.is(NorthstarFluids.METHANE.get()) || state.is(NorthstarFluids.METHANE.getSource().getSource()))
+        //    return -200;
+        //if (state.is(NorthstarFluids.LIQUID_OXYGEN.get()) || state.is(NorthstarFluids.LIQUID_OXYGEN.getSource().getSource()))
+        //    return -220;
+        //if (state.is(NorthstarFluids.HYDROCARBON.get()) || state.is(NorthstarFluids.HYDROCARBON.getSource().getSource()))
+        //    return -60;
+        //if (state.is(NorthstarFluids.LIQUID_HYDROGEN.get()) || state.is(NorthstarFluids.LIQUID_HYDROGEN.getSource().getSource()))
+        //    return -259;
+        //if (state.is(NorthstarFluids.SULFURIC_ACID.get()) || state.is(NorthstarFluids.SULFURIC_ACID.getSource().getSource()))
+        //    return -200;
         return Integer.MIN_VALUE;
     }
 
