@@ -348,6 +348,11 @@ public class NorthstarTagGen {
             tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
                     .add(NorthstarDamageTypes.SUFFOCATION_NO_OXYGEN)
                     .add(NorthstarDamageTypes.SUFFOCATION_NO_SPACESUIT);
+
+            tag(DamageTypeTags.NO_KNOCKBACK)
+                    .add(NorthstarDamageTypes.ACID)
+                    .add(NorthstarDamageTypes.SUFFOCATION_NO_OXYGEN)
+                    .add(NorthstarDamageTypes.SUFFOCATION_NO_SPACESUIT);
         }
     }
 
