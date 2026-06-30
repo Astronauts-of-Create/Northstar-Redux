@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,11 +27,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BucketItemMixin extends Item {
 
     @Shadow
-    @Final
-    private Fluid content;
+    protected abstract void playEmptySound(@Nullable Player player, LevelAccessor level, BlockPos pos);
 
     @Shadow
-    protected abstract void playEmptySound(@Nullable Player player, LevelAccessor level, BlockPos pos);
+    public abstract Fluid getFluid();
 
     public BucketItemMixin(Properties properties) {
         super(properties);
@@ -49,7 +47,7 @@ public abstract class BucketItemMixin extends Item {
     private void northstar$emptyContent(Player player, Level level, BlockPos pos, BlockHitResult result, ItemStack container, CallbackInfoReturnable<Boolean> cir) {
         float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
 
-        if (temperature >= NorthstarTemperature.getBoilingPoint(content.defaultFluidState())) {
+        if (temperature >= NorthstarTemperature.getBoilingPoint(getFluid().defaultFluidState())) {
             cir.setReturnValue(true);
 
             int x = pos.getX();
@@ -60,10 +58,10 @@ public abstract class BucketItemMixin extends Item {
                 level.addParticle(ParticleTypes.LARGE_SMOKE, x + Math.random(), y + Math.random(), z + Math.random(), 0, 0, 0);
             }
             playEmptySound(player, level, pos);
-        } else if (temperature <= NorthstarTemperature.getFreezingPoint(content.defaultFluidState())) {
+        } else if (temperature <= NorthstarTemperature.getFreezingPoint(getFluid().defaultFluidState())) {
             cir.setReturnValue(true);
 
-            if (content.is(FluidTags.WATER) && level.getBlockState(pos).isAir()) {
+            if (getFluid().is(FluidTags.WATER) && level.getBlockState(pos).isAir()) {
                 level.setBlock(pos, Blocks.ICE.defaultBlockState(), Block.UPDATE_ALL);
             }
 
