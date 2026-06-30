@@ -1,7 +1,6 @@
 package com.lightning.northstar.advancements;
 
 import com.lightning.northstar.Northstar;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.SimpleCreateTrigger;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -30,7 +29,7 @@ import java.util.function.UnaryOperator;
 
 public class NorthstarAdvancement {
 
-    static final ResourceLocation BACKGROUND = Northstar.asResource("textures/gui/advancements.png");
+    static final ResourceLocation BACKGROUND = Northstar.asResource("textures/block/monolithite.png");
     static final String LANG = "advancement." + Northstar.MOD_ID + ".";
     static final String SECRET_SUFFIX = "§7\n(Hidden Advancement)";
 
@@ -103,8 +102,7 @@ public class NorthstarAdvancement {
                 id.equals("root") ? BACKGROUND : null, createBuilder.type.advancementType, createBuilder.type.toast,
                 createBuilder.type.announce, createBuilder.type.hide);
 
-        datagenResult = mcBuilder.save(t, Create.asResource(id)
-                .toString());
+        datagenResult = mcBuilder.save(t, Northstar.asResource(id).toString());
     }
 
     void appendToLang(BiConsumer<String, String> consumer) {
