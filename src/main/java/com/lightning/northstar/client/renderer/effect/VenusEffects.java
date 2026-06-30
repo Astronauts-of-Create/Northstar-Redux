@@ -113,7 +113,7 @@ public class VenusEffects extends SpaceEffects implements NorthstarDimensionEffe
     public boolean tickRain(ClientLevel level, int ticks, Camera camera) {
         Minecraft minecraft = Minecraft.getInstance();
 
-        float rain_det = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaTicks());
+        float rain_det = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaPartialTick(true));
         if (!(rain_det <= 0)) {
             float f = rain_det / (Minecraft.useFancyGraphics() ? 1 : 2);
             if (!(f <= 0)) {

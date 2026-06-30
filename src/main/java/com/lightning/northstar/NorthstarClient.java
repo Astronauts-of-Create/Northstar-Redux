@@ -117,7 +117,7 @@ public class NorthstarClient {
         // shouldRenderLevel is needed when leaving a singleplayer world, the level is still non-null
         // but Forge configs are unloaded causing a crash when accessing them.
         if (level != null && minecraft.player != null && minecraft.northstar$shouldRenderLevel()) {
-            float partialTick = event.getPartialTick().getGameTimeDeltaTicks();
+            float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(true);
             NorthstarLevel.CLIENT_TRACKER.tick(level, partialTick);
 
             atmosphereBlend = NorthstarConfigs.server().calculateAtmosphereBlend(level, minecraft.player.getEyePosition(partialTick).y);

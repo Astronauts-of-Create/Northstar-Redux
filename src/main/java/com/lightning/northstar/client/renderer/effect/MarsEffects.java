@@ -82,7 +82,7 @@ public class MarsEffects extends SpaceEffects {
         }
 
         Minecraft minecraft = Minecraft.getInstance();
-        float fogThickness = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaTicks());
+        float fogThickness = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaPartialTick(true));
         if (fogThickness != 0) {
             fog.setCanceled(true);
             fog.setNearPlaneDistance(Mth.lerp(fogThickness, fog.getNearPlaneDistance(), -8));
@@ -103,9 +103,9 @@ public class MarsEffects extends SpaceEffects {
             level.addAlwaysVisibleParticle(NorthstarParticles.DUST_CLOUD.get(), x, y + level.random.nextInt(3), z, 0, 0, 0);
         }
 
-        float rain_det = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaTicks());
+        float rain_det = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaPartialTick(true));
         if (rain_det > 0) {
-            float f = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaTicks()) / (Minecraft.useFancyGraphics() ? 1 : 2);
+            float f = minecraft.level.getRainLevel(minecraft.getTimer().getGameTimeDeltaPartialTick(true)) / (Minecraft.useFancyGraphics() ? 1 : 2);
             if (!(f <= 0)) {
                 RandomSource randomsource = RandomSource.create((long) ticks * 312987231L);
                 LevelReader levelreader = minecraft.level;

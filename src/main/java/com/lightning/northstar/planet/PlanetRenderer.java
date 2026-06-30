@@ -93,7 +93,7 @@ public class PlanetRenderer {
             if (planet.key.equals(NorthstarPlanets.SOL)) {
                 pose.pushPose();
                 pose.mulPose(Axis.YP.rotationDegrees(-90));
-                pose.mulPose(Axis.XP.rotationDegrees(level.getTimeOfDay(Minecraft.getInstance().getTimer().getGameTimeDeltaTicks()) * 360 + 90));
+                pose.mulPose(Axis.XP.rotationDegrees(level.getTimeOfDay(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true)) * 360 + 90));
                 pose.translate(0, 0, -100);
                 properties.renderer().render(level, pose, vc, 15, new Vector4f(1), planet);
                 pose.popPose();

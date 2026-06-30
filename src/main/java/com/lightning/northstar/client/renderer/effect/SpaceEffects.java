@@ -98,7 +98,7 @@ public class SpaceEffects extends DimensionSpecialEffects implements NorthstarDi
 
         Minecraft mc = Minecraft.getInstance();
         pose.mulPose(Axis.YP.rotationDegrees(-90));
-        pose.mulPose(Axis.XP.rotationDegrees(mc.level.getTimeOfDay(mc.getTimer().getGameTimeDeltaTicks()) * 360));
+        pose.mulPose(Axis.XP.rotationDegrees(mc.level.getTimeOfDay(mc.getTimer().getGameTimeDeltaPartialTick(true)) * 360));
 
         FogRenderer.setupNoFog();
         RenderSystem.enableBlend();

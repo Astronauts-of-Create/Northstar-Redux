@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "2.1.21"
 }
 
-version = "0.6.1+1.21.1" // https://semver.org/
+version = "0.6.2+1.21.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -50,11 +50,12 @@ neoForge {
         create("client") {
             client()
             gameDirectory = file("run")
-            jvmArgument("-Xmx6G")
+            jvmArgument("-Xmx4G")
         }
         create("data") {
             data()
             gameDirectory = file("run")
+            jvmArgument("-Xmx4G")
             programArguments.addAll(
                 "--all",
                 "--mod", "northstar",
@@ -65,6 +66,7 @@ neoForge {
         create("server") {
             server()
             gameDirectory = file("run-server")
+            jvmArgument("-Xmx4G")
         }
     }
 
