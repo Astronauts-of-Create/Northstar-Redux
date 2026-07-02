@@ -10,8 +10,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Optional;
-
 public class RocketDestinationPacket extends SimplePacketBase {
 
     public final int entityId;
@@ -23,13 +21,13 @@ public class RocketDestinationPacket extends SimplePacketBase {
     }
 
     public RocketDestinationPacket(FriendlyByteBuf buffer) {
-        this(buffer.readVarInt(), buffer.readOptional(RocketDestination::new).orElse(null));
+        this(buffer.readVarInt(), buffer.readNullable(RocketDestination::new));
     }
 
     @Override
     public void write(FriendlyByteBuf buffer) {
         buffer.writeVarInt(entityId);
-        buffer.writeOptional(Optional.ofNullable(destination), (buf, dest) -> dest.writeBuffer(buf));
+        buffer.writeNullable(destination, (buf, dest) -> dest.writeBuffer(buf));
     }
 
     @Override
