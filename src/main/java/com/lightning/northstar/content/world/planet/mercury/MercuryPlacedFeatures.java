@@ -110,19 +110,19 @@ public class MercuryPlacedFeatures {
 
         ores.builder(ORE_TUNGSTEN)
                 .sized(9, 0)
-                .ores(NorthstarBlocks.MERCURY_TITANIUM_ORE, NorthstarBlocks.MERCURY_DEEP_TITANIUM_ORE)
+                .ores(NorthstarBlocks.MERCURY_TUNGSTEN_ORE, NorthstarBlocks.MERCURY_DEEP_TUNGSTEN_ORE)
                 .trianglePlacement(50, VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(60))
                 .register();
 
         ores.builder(ORE_TUNGSTEN_BURIED)
                 .sized(12, 0.7f)
-                .ores(NorthstarBlocks.MERCURY_TITANIUM_ORE, NorthstarBlocks.MERCURY_DEEP_TITANIUM_ORE)
+                .ores(NorthstarBlocks.MERCURY_TUNGSTEN_ORE, NorthstarBlocks.MERCURY_DEEP_TUNGSTEN_ORE)
                 .trianglePlacement(50, VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(50))
                 .register();
 
         ores.builder(ORE_TUNGSTEN_SMALL)
                 .sized(4, 0)
-                .ores(NorthstarBlocks.MERCURY_TITANIUM_ORE, NorthstarBlocks.MERCURY_DEEP_TITANIUM_ORE)
+                .ores(NorthstarBlocks.MERCURY_TUNGSTEN_ORE, NorthstarBlocks.MERCURY_DEEP_TUNGSTEN_ORE)
                 .trianglePlacement(10, VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(110))
                 .register();
 
