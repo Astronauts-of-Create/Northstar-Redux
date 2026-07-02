@@ -155,7 +155,7 @@ public class MoonBiomes {
                                 ))
                                 .ambientParticle(new AmbientParticleSettings(
                                         NorthstarParticles.GLOWSTONE.get(),
-                                        1
+                                        0.01f
                                 ))
                                 .build())
                         .mobSpawnSettings(new MobSpawnSettings.Builder()
