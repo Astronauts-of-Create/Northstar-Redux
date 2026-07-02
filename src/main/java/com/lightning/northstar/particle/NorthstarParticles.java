@@ -7,7 +7,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -60,17 +59,6 @@ public class NorthstarParticles {
             event.registerSpriteSet(entry.get(), sprite -> (a, b, c, d, e, f, g, h) -> factory.createParticle(a, b, c, d, e, f, g, h, sprite));
         });
         return entry;
-    }
-
-    public static int getLight(int lightColor, float partialTick, int age, int lifetime) {
-        float f = Mth.clamp((age + partialTick) / lifetime, 0.0F, 1.0F);
-        int block = lightColor & 255;
-        int sky = lightColor >> 16 & 255;
-        block += (int) (f * 15 * 16);
-        if (block > 240) {
-            block = 240;
-        }
-        return block | sky << 16;
     }
 
     public interface SpriteParticleProvider<T extends ParticleOptions> {
