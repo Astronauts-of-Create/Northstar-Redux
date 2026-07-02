@@ -8,7 +8,7 @@ valkyrienskies-api = "1.1.0+cf6990a85d"
 architectury = "dev.architectury:architectury-forge:9.1.12"
 cdg = "maven.modrinth:create-diesel-generators:1.20.1-1.2i"
 create = "com.simibubi.create:create-1.20.1:0.5.1.j-55"
-copycats = "com.copycatsplus:copycats:2.2.0+mc.1.20.1-forge-build.213"
+copycats = "maven.modrinth:copycats:2.2.0+mc.1.20.1-forge"
 flywheel-forge = { module = "com.jozufozu.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"
 jei-forge = "mezz.jei:jei-1.20.1-forge:15.20.0.130"
