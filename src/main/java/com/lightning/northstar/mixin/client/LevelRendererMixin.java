@@ -3,7 +3,6 @@ package com.lightning.northstar.mixin.client;
 import com.lightning.northstar.NorthstarClient;
 import com.lightning.northstar.api.client.NorthstarDimensionEffectsExtension;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
-import com.lightning.northstar.content.NorthstarTextures;
 import com.lightning.northstar.planet.PlanetRenderer;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,12 +13,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Matrix4f;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,25 +44,6 @@ public class LevelRendererMixin {
         }
     }
 
-    @ModifyExpressionValue(
-            method = "renderSky",
-            at = {
-                    @At(
-                            value = "FIELD",
-                            target = "Lnet/minecraft/client/renderer/LevelRenderer;SUN_LOCATION:Lnet/minecraft/resources/ResourceLocation;",
-                            opcode = Opcodes.GETSTATIC
-                    ),
-                    @At(
-                            value = "FIELD",
-                            target = "Lnet/minecraft/client/renderer/LevelRenderer;MOON_LOCATION:Lnet/minecraft/resources/ResourceLocation;",
-                            opcode = Opcodes.GETSTATIC
-                    )
-            }
-    )
-    private ResourceLocation northstar$disableVanillaSunAndMoon(ResourceLocation original) {
-        return level.northstar$planet() == null ? original : NorthstarTextures.EMPTY;
-    }
-
     // This mixin only applies to the overworld, the nether and the end are unaffected.
     // Other dimensions are handled from their own dimension special effects;
     @Inject(
@@ -84,7 +62,7 @@ public class LevelRendererMixin {
         pose.mulPose(frustumMatrix);
 
         SpaceEffects.renderStars(pose, projectionMatrix, skyFogSetup, starOpacity);
-        PlanetRenderer.render(level, pose, camera, starOpacity, NorthstarClient.getAtmosphereBlend());
+        PlanetRenderer.render(level, pose, camera, starOpacity, NorthstarClient.getAtmosphereBlend(), true);
 
         RenderSystem.depthMask(false);
     }

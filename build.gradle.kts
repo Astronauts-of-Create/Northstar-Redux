@@ -92,12 +92,6 @@ repositories {
             includeGroup("com.eliotlash.mclib")
         }
     }
-    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-        credentials {
-            username = project.property("github.packages.username") as? String
-            password = project.property("github.packages.password") as? String
-        }
-    }
     maven("https://maven.ftb.dev/releases")
     maven("https://cursemaven.com") {
         content {
