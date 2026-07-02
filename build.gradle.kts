@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "2.1.21"
 }
 
-version = "0.6.1+1.20.1" // https://semver.org/
+version = "0.6.2+1.20.1" // https://semver.org/
 group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 
 java {
@@ -50,11 +50,12 @@ legacyForge {
         create("client") {
             client()
             gameDirectory = file("run")
-            jvmArgument("-Xmx6G")
+            jvmArgument("-Xmx4G")
         }
         create("data") {
             data()
             gameDirectory = file("run")
+            jvmArgument("-Xmx4G")
             programArguments.addAll(
                 "--all",
                 "--mod", "northstar",
@@ -65,6 +66,7 @@ legacyForge {
         create("server") {
             server()
             gameDirectory = file("run-server")
+            jvmArgument("-Xmx4G")
         }
     }
 
@@ -92,12 +94,6 @@ repositories {
         content {
             includeGroupByRegex("software\\.bernie.*")
             includeGroup("com.eliotlash.mclib")
-        }
-    }
-    maven("https://maven.pkg.github.com/copycats-plus/copycats") {
-        credentials {
-            username = project.property("github.packages.username") as? String
-            password = project.property("github.packages.password") as? String
         }
     }
     maven("https://cursemaven.com") {

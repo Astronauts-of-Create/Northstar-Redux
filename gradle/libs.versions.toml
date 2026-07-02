@@ -9,7 +9,7 @@ valkyrienskies-api = "1.1.0+4a7e0044b9"
 architectury = "dev.architectury:architectury-forge:9.1.12"
 cdg = "maven.modrinth:create-diesel-generators:1.20.1-1.3.5"
 create = "com.simibubi.create:create-1.20.1:6.0.8-290"
-copycats = "com.copycatsplus:copycats:3.0.7+mc.1.20.1-forge"
+copycats = "maven.modrinth:copycats:3.0.7+mc.1.20.1-forge"
 flywheel-forge-api = { module = "dev.engine-room.flywheel:flywheel-forge-api-1.20.1", version.ref = "flywheel" }
 flywheel-forge = { module = "dev.engine-room.flywheel:flywheel-forge-1.20.1", version.ref = "flywheel" }
 geckolib-forge = "software.bernie.geckolib:geckolib-forge-1.20.1:4.7.2"

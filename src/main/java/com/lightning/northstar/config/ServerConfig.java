@@ -25,8 +25,8 @@ public class ServerConfig extends ConfigBase {
     public final ConfigInt launchCountdownRadius = i(20, 0, "launchCountdownRadius", "From how far away should the launch countdown messages/sound be announced to players");
     public final ConfigFloat thrusterPower = f(500, 1, "thrusterPower", "The engine's force in Newtons (kg/m/s^2) assuming rocket weight is in kg");
     public final ConfigFloat landingMaxSafeSpeed = f(5, 0, "landingMaxSafeSpeed", "The maximum safe speed in blocks/second the rocket can move at before exploding on landing");
-    public final ConfigFloat rocketExplosionFraction = f(0.1f, 0, 1, "rocketExplosionFraction", "The fraction of blocks to explode when a rocket crash lands. Set to zero to disable.");
-    public final ConfigInt rocketExplosionSize = i(10, 1, "rocketExplosionSize", "The size of individual explosions when a rocket crash lands.");
+    public final ConfigFloat rocketExplosionFraction = f(0.005f, 0, 1, "explosionFraction", "The fraction of blocks to explode when a rocket crash lands. Set to zero to disable.");
+    public final ConfigInt rocketExplosionSize = i(8, 1, "explosionSize", "The size of individual explosions when a rocket crash lands.");
 
     public final ConfigGroup rocketFuel = group(2, "fuel", "Fuel properties for rockets");
 
@@ -35,6 +35,8 @@ public class ServerConfig extends ConfigBase {
     public final ConfigFloat travelFuelScale = f(10, 0, "travelFuelScale");
 
     public final ConfigGroup gameplay = group(1, "gameplay");
+
+    public final ConfigFloat telescopePlanetSpeed = f(10, 0, "telescopePlanetSpeed", "How fast should planets move in the telescope screen");
 
     public final ConfigInt spacesuitBaseOxygen = i(1800, 0, "spacesuitBaseOxygen", "The amount of oxygen that can be stored in spacesuits, uses 1 mB/second");
     public final ConfigInt spacesuitAdditionalOxygen = i(600, 0, "spacesuitAdditionalOxygen", "The added oxygen capacity for each level of capacity");

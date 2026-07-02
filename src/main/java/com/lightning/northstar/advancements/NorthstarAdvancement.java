@@ -1,8 +1,6 @@
 package com.lightning.northstar.advancements;
 
-import com.google.gson.JsonObject;
 import com.lightning.northstar.Northstar;
-import com.simibubi.create.Create;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -24,7 +22,7 @@ import java.util.function.UnaryOperator;
 
 public class NorthstarAdvancement {
 
-    static final ResourceLocation BACKGROUND = Create.asResource("textures/gui/advancements.png");
+    static final ResourceLocation BACKGROUND = Northstar.asResource("textures/block/monolithite.png");
     static final String LANG = "advancement." + Northstar.MOD_ID + ".";
     static final String SECRET_SUFFIX = "§7\n(Hidden Advancement)";
 

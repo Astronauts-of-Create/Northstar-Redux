@@ -14,7 +14,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
 
 /**
  * @param dim the target dimension, never null
@@ -32,8 +31,8 @@ public record RocketDestination(
     public RocketDestination(FriendlyByteBuf buffer) {
         this(
                 buffer.readResourceLocation(),
-                buffer.readOptional(FriendlyByteBuf::readBlockPos).orElse(null),
-                buffer.readOptional(buf -> buf.readEnum(Direction.class)).orElse(null)
+                buffer.readNullable(FriendlyByteBuf::readBlockPos),
+                buffer.readNullable(buf -> buf.readEnum(Direction.class))
         );
     }
 
@@ -43,8 +42,8 @@ public record RocketDestination(
 
     public void writeBuffer(FriendlyByteBuf buffer) {
         buffer.writeResourceLocation(dim);
-        buffer.writeOptional(Optional.ofNullable(pos), FriendlyByteBuf::writeBlockPos);
-        buffer.writeOptional(Optional.ofNullable(dir), FriendlyByteBuf::writeEnum);
+        buffer.writeNullable(pos, FriendlyByteBuf::writeBlockPos);
+        buffer.writeNullable(dir, FriendlyByteBuf::writeEnum);
     }
 
     public CompoundTag toTag() {

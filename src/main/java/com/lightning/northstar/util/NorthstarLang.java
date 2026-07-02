@@ -61,7 +61,7 @@ public class NorthstarLang {
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         } else {
-            CreateLang.translate("gui.goggles.empty")
+            translate("gui.goggles.empty")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }

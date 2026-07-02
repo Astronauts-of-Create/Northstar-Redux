@@ -61,6 +61,10 @@ public class PlanetRenderer {
     // FIXME: planets have to be rendered far to minimize view bobbing but doing so causes clipping on lower view distances
 
     public static void render(ClientLevel level, PoseStack pose, Camera camera, float starBrightness, float atmosphereBlend) {
+        render(level, pose, camera, starBrightness, atmosphereBlend, false);
+    }
+
+    public static void render(ClientLevel level, PoseStack pose, Camera camera, float starBrightness, float atmosphereBlend, boolean excludeSunAndMoon) {
         PlanetDimension dimension = level.northstar$dimension();
         Planet currentPlanet = level.northstar$planet();
         if (currentPlanet == null) {
@@ -90,8 +94,14 @@ public class PlanetRenderer {
             }
             PlanetProperties properties = planet.properties;
 
-            // render the vanilla sun to ensure it matches the day/night cycle.
-            if (planet.key.equals(NorthstarPlanets.SOL)) {
+            // It isn't possible to use a conditional renderer as those currently can't make the difference between
+            // the sky and telescope or requested dimension so those values are hardcoded for now, soon to change.
+            if (excludeSunAndMoon && (planet.key == NorthstarPlanets.SOL || planet.key == NorthstarPlanets.THE_MOON)) {
+                continue;
+            }
+
+            // Manually rotate the sun to ensure it matches the actual day/night cycle rather than position in the sky.
+            if (planet.key == NorthstarPlanets.SOL) {
                 pose.pushPose();
                 pose.mulPose(Axis.YP.rotationDegrees(-90));
                 pose.mulPose(Axis.XP.rotationDegrees(level.getTimeOfDay(Minecraft.getInstance().getPartialTick()) * 360 + 90));

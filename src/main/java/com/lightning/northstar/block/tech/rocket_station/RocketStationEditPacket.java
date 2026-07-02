@@ -17,8 +17,6 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.util.Optional;
-
 public class RocketStationEditPacket extends SimplePacketBase {
 
     public final BlockPos pos;
@@ -27,7 +25,7 @@ public class RocketStationEditPacket extends SimplePacketBase {
     public final RocketDestination destination;
 
     public RocketStationEditPacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos(), buffer.readInt(), buffer.readBoolean(), buffer.readOptional(RocketDestination::new).orElse(null));
+        this(buffer.readBlockPos(), buffer.readInt(), buffer.readBoolean(), buffer.readNullable(RocketDestination::new));
     }
 
     public RocketStationEditPacket(BlockPos pos, int rocketId, boolean flag, RocketDestination destination) {
@@ -42,7 +40,7 @@ public class RocketStationEditPacket extends SimplePacketBase {
         buffer.writeBlockPos(pos);
         buffer.writeInt(rocketId);
         buffer.writeBoolean(flag);
-        buffer.writeOptional(Optional.ofNullable(destination), (buf, value) -> value.writeBuffer(buf));
+        buffer.writeNullable(destination, (buf, value) -> value.writeBuffer(buf));
     }
 
     @Override
