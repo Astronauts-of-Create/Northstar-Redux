@@ -52,7 +52,7 @@ public record SimpleOrbitProvider(
 
     @Override
     public double getVisualAngle(double deltaDays) {
-        return Math.PI * 2 * deltaDays / (durationDays == 0 ? 1 : durationDays) + initialMeanAnomaly;
+        return Math.PI * 2 * (durationDays == 0 ? deltaDays : (deltaDays % durationDays) / durationDays) + initialMeanAnomaly;
     }
 
     @Override
