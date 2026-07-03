@@ -25,7 +25,13 @@ public class MarsBiomes {
             HIGHLANDS = key("martian_highlands"),
             MAGMATIC_CAVES = key("martian_magmatic_caves"),
             OVERGROWN_CAVERNS = key("martian_overgrown_caverns"),
-            PEAKS = key("martian_peaks");
+            PEAKS = key("martian_peaks"),
+            CANYONS = key("martian_canyons"),
+            VOLCANOES = key("martian_volcanoes"),
+            RIVERBEDS = key("martian_riverbeds"),
+            ICE_CAPS = key("martian_ice_caps"),
+            BASALT_FLATS = key("martian_basalt_flats"),
+            AEOLIAN_DUNES = key("martian_aeolian_dunes");
 
     private static ResourceKey<Biome> key(String path) {
         return ResourceKey.create(Registries.BIOME, Northstar.asResource(path));
@@ -228,6 +234,166 @@ public class MarsBiomes {
                                 .apply(MarsBiomes::commonOres)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.WORM_NEST)
                                 .addFeature(Decoration.VEGETAL_DECORATION, MarsPlacedFeatures.ROOTS)
+                                .build())
+                        .build()
+        );
+
+        context.register(
+                AEOLIAN_DUNES,
+                new Biome.BiomeBuilder()
+                        .hasPrecipitation(false)
+                        .temperature(0.8f)
+                        .downfall(0.4f)
+                        .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
+                        .specialEffects(new BiomeSpecialEffects.Builder()
+                                .skyColor(0xdaae9c)
+                                .fogColor(0xffdbbf)
+                                .waterColor(0x3f76e4)
+                                .waterFogColor(0x050533)
+                                .build())
+                        .mobSpawnSettings(new MobSpawnSettings.Builder()
+                                .apply(MarsBiomes::commonMonsters)
+                                .build())
+                        .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
+                                .addCarver(Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND)
+                                .addCarver(Carving.AIR, Carvers.CAVE)
+                                .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
+                                .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
+                                .apply(MarsBiomes::commonBlobs)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_VOLCANIC_ASH)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_GRAVEL)
+                                .apply(MarsBiomes::commonOres)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, NorthstarPlacedFeatures.BIG_DUMB_ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.WORM_NEST)
+                                .addFeature(Decoration.VEGETAL_DECORATION, MarsPlacedFeatures.ROOTS)
+                                .build())
+                        .build()
+        );
+
+        context.register(
+                BASALT_FLATS,
+                new Biome.BiomeBuilder()
+                        .hasPrecipitation(false)
+                        .temperature(0.8f)
+                        .downfall(0.4f)
+                        .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
+                        .specialEffects(new BiomeSpecialEffects.Builder()
+                                .skyColor(0xdaae9c)
+                                .fogColor(0xffdbbf)
+                                .waterColor(0x3f76e4)
+                                .waterFogColor(0x050533)
+                                .build())
+                        .mobSpawnSettings(new MobSpawnSettings.Builder()
+                                .apply(MarsBiomes::commonMonsters)
+                                .build())
+                        .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
+                                .addCarver(Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND)
+                                .addCarver(Carving.AIR, Carvers.CAVE)
+                                .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
+                                .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
+                                .apply(MarsBiomes::commonBlobs)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_VOLCANIC_ASH)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_GRAVEL)
+                                .apply(MarsBiomes::commonOres)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, NorthstarPlacedFeatures.BIG_DUMB_ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.WORM_NEST)
+                                .addFeature(Decoration.VEGETAL_DECORATION, MarsPlacedFeatures.ROOTS)
+                                .build())
+                        .build()
+        );
+
+        context.register(
+                CANYONS,
+                new Biome.BiomeBuilder()
+                        .hasPrecipitation(false)
+                        .temperature(0.8f)
+                        .downfall(0.3f)
+                        .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
+                        .specialEffects(new BiomeSpecialEffects.Builder()
+                                .skyColor(0xdaae9c)
+                                .fogColor(0xffdbbf)
+                                .waterColor(0x3f76e4)
+                                .waterFogColor(0x050533)
+                                .build())
+                        .mobSpawnSettings(new MobSpawnSettings.Builder()
+                                .apply(MarsBiomes::commonMonsters)
+                                .build())
+                        .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
+                                .addCarver(Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND)
+                                .addCarver(Carving.AIR, Carvers.CAVE)
+                                .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
+                                .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
+                                .apply(MarsBiomes::commonBlobs)
+                                .apply(MarsBiomes::commonOres)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, NorthstarPlacedFeatures.BIG_DUMB_ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.WORM_NEST)
+                                .build())
+                        .build()
+        );
+
+        context.register(
+                ICE_CAPS,
+                new Biome.BiomeBuilder()
+                        .hasPrecipitation(true)
+                        .temperature(-0.9f)
+                        .downfall(0.9f)
+                        .temperatureAdjustment(Biome.TemperatureModifier.NONE)
+                        .specialEffects(new BiomeSpecialEffects.Builder()
+                                .skyColor(0xdaae9c)
+                                .fogColor(0xffdbbf)
+                                .waterColor(0x3f76e4)
+                                .waterFogColor(0x050533)
+                                .build())
+                        .mobSpawnSettings(new MobSpawnSettings.Builder()
+                                .build())
+                        .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
+                                .addCarver(Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND)
+                                .addCarver(Carving.AIR, Carvers.CAVE)
+                                .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
+                                .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
+                                .apply(MarsBiomes::commonBlobs)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_ANDESITE)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_GRAVEL)
+                                .apply(MarsBiomes::commonOres)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
+                                .build())
+                        .build()
+        );
+
+        context.register(
+                VOLCANOES,
+                new Biome.BiomeBuilder()
+                        .hasPrecipitation(false)
+                        .temperature(0.8f)
+                        .downfall(0.3f)
+                        .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
+                        .specialEffects(new BiomeSpecialEffects.Builder()
+                                .skyColor(0xdaae9c)
+                                .fogColor(0xffdbbf)
+                                .waterColor(0x3f76e4)
+                                .waterFogColor(0x050533)
+                                .build())
+                        .mobSpawnSettings(new MobSpawnSettings.Builder()
+                                .build())
+                        .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
+                                .addCarver(Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND)
+                                .addCarver(Carving.AIR, Carvers.CAVE)
+                                .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
+                                .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
+                                .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
+                                .apply(MarsBiomes::commonBlobs)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_ANDESITE)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.LAVA_LAKE)
+                                .apply(MarsBiomes::commonOres)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.VOLCANO_CALDERA_MAIN)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.VOLCANO_CALDERA_BITE)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.VOLCANO_CALDERA_BITE2)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.VOLCANO_CALDERA_BITE3)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.LAVA_SPRING)
                                 .build())
                         .build()
         );

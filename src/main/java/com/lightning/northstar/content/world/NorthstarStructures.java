@@ -34,7 +34,8 @@ public class NorthstarStructures {
 
     public static final ResourceKey<Structure>
             LUNAR_BASE = key("lunar_base"),
-            MARTIAN_BASE = key("martian_base");
+            MARTIAN_BASE = key("martian_base"),
+            MARS_RUINS = key("mars_ruins");
 
     private static ResourceKey<Structure> key(String path) {
         return ResourceKey.create(Registries.STRUCTURE, Northstar.asResource(path));
@@ -81,6 +82,26 @@ public class NorthstarStructures {
                         80
                 )
         );
+
+        context.register(
+                MARS_RUINS,
+                new JigsawStructure(
+                        new Structure.StructureSettings(
+                                biomes.getOrThrow(NorthstarBiomeTags.HAS_MARS_RUINS.tag),
+                                Map.of(),
+                                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                                TerrainAdjustment.BEARD_THIN
+                        ),
+                        templatePools.getOrThrow(Templates.MARS_RUINS_POOL),
+                        Optional.of(Northstar.asResource("start_anchor")),
+                        1,
+                        ConstantHeight.of(VerticalAnchor.absolute(0)),
+                        false,
+                        Optional.of(Heightmap.Types.WORLD_SURFACE_WG),
+                        26
+
+                )
+        );
     }
 
     public static class Templates {
@@ -90,7 +111,8 @@ public class NorthstarStructures {
                 LUNAR_BASE_POOL_START = key("lunar_base_pool_start"),
                 MARTIAN_BASE_POOL_START = key("martian_base_pool_start"),
                 MARTIAN_BASE_POOL = key("martian_base_pool"),
-                MARTIAN_BASE_ROOM_POOL = key("martian_base_room_pool");
+                MARTIAN_BASE_ROOM_POOL = key("martian_base_room_pool"),
+                MARS_RUINS_POOL = key("mars_ruins_pool");
 
         private static ResourceKey<StructureTemplatePool> key(String path) {
             return ResourceKey.create(Registries.TEMPLATE_POOL, Northstar.asResource(path));
@@ -192,6 +214,18 @@ public class NorthstarStructures {
                             StructureTemplatePool.Projection.RIGID
                     )
             );
+
+            context.register(
+                    MARS_RUINS_POOL,
+                    new StructureTemplatePool(
+                            empty,
+                            List.of(
+                                    element("mars_ruins/ruin_1", 1),
+                                    element("mars_ruins/ruin_2", 1)
+                            ),
+                            StructureTemplatePool.Projection.TERRAIN_MATCHING
+                    )
+            );
         }
 
         private static Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer> element(String path, int weight) {
@@ -202,7 +236,8 @@ public class NorthstarStructures {
     public static class Sets {
         public static final ResourceKey<StructureSet>
                 LUNAR_BASE = key("lunar_base"),
-                MARTIAN_BASE = key("martian_base");
+                MARTIAN_BASE = key("martian_base"),
+                MARS_RUINS = key("mars_ruins");
 
         private static ResourceKey<StructureSet> key(String path) {
             return ResourceKey.create(Registries.STRUCTURE_SET, Northstar.asResource(path));
@@ -244,6 +279,25 @@ public class NorthstarStructures {
                                     Optional.empty(),
                                     40,
                                     16,
+                                    RandomSpreadType.LINEAR
+                            )
+                    )
+            );
+
+            context.register(
+                    MARS_RUINS,
+                    new StructureSet(
+                            List.of(
+                                    StructureSet.entry(structures.getOrThrow(NorthstarStructures.MARS_RUINS), 1)
+                            ),
+                            new RandomSpreadStructurePlacement(
+                                    Vec3i.ZERO,
+                                    StructurePlacement.FrequencyReductionMethod.DEFAULT,
+                                    1.0f,
+                                    982374651,
+                                    Optional.empty(),
+                                    24,
+                                    8,
                                     RandomSpreadType.LINEAR
                             )
                     )

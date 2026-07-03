@@ -1,0 +1,50 @@
+{
+  "type": "minecraft:canyon",
+  "config": {
+    "probability": 0.045,
+    "y": {
+      "type": "minecraft:uniform",
+      "min_inclusive": {
+        "absolute": 10
+      },
+      "max_inclusive": {
+        "absolute": 72
+      }
+    },
+    "lava_level": {
+      "above_bottom": 8
+    },
+    "yScale": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 0.3,
+      "max_exclusive": 0.6
+    },
+    "replaceable": "#northstar:natural_mars_blocks",
+    "shape": {
+      "distance_factor": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 0.75,
+        "max_exclusive": 1.0
+      },
+      "horizontal_radius_factor": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 2.5,
+        "max_exclusive": 4.0
+      },
+      "thickness": {
+        "type": "minecraft:trapezoid",
+        "min": 2.0,
+        "max": 4.0,
+        "plateau": 1.0
+      },
+      "vertical_radius_center_factor": 0.0,
+      "vertical_radius_default_factor": 0.3,
+      "width_smoothness": 8
+    },
+    "vertical_rotation": {
+      "type": "minecraft:uniform",
+      "min_inclusive": -0.05,
+      "max_exclusive": 0.05
+    }
+  }
+}
