@@ -313,7 +313,7 @@ public class MarsBiomes {
                         .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
                         .specialEffects(new BiomeSpecialEffects.Builder()
                                 .skyColor(0xdaae9c)
-                                .fogColor(0xffdbbf)
+                                .fogColor(0xe8e9d6)
                                 .waterColor(0x3f76e4)
                                 .waterFogColor(0x050533)
                                 .build())
@@ -326,6 +326,8 @@ public class MarsBiomes {
                                 .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
                                 .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
                                 .apply(MarsBiomes::commonBlobs)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_TUFF)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_GRAVEL)
                                 .apply(MarsBiomes::commonOres)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, NorthstarPlacedFeatures.BIG_DUMB_ROCK)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
@@ -354,7 +356,7 @@ public class MarsBiomes {
                                 .addCarver(Carving.AIR, Carvers.CAVE)
                                 .addFeature(Decoration.RAW_GENERATION, MarsPlacedFeatures.CRATER)
                                 .addFeature(Decoration.LAKES, MiscOverworldPlacements.LAKE_LAVA_UNDERGROUND)
-                                .apply(MarsBiomes::commonBlobs)
+                                .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_ANDESITE)
                                 .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_GRAVEL)
                                 .apply(MarsBiomes::commonOres)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
@@ -371,11 +373,18 @@ public class MarsBiomes {
                         .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
                         .specialEffects(new BiomeSpecialEffects.Builder()
                                 .skyColor(0xdaae9c)
-                                .fogColor(0xffdbbf)
+                                .fogColor(0xe9e3d6)
                                 .waterColor(0x3f76e4)
                                 .waterFogColor(0x050533)
                                 .build())
                         .mobSpawnSettings(new MobSpawnSettings.Builder()
+                                .addSpawn(MobCategory.MONSTER,
+                                        new MobSpawnSettings.SpawnerData(
+                                        NorthstarEntityTypes.MARS_WORM.get(),
+                                        30,
+                                        1,
+                                        2
+                                ))
                                 .build())
                         .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
                                 .addCarver(Carving.AIR, Carvers.CAVE_EXTRA_UNDERGROUND)
@@ -386,6 +395,7 @@ public class MarsBiomes {
                                 .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_BASALT)
                                 .addFeature(Decoration.UNDERGROUND_ORES, MarsPlacedFeatures.BLOB_VOLCANIC_ASH)
                                 .apply(MarsBiomes::commonOres)
+                                .addFeature(Decoration.UNDERGROUND_DECORATION, NorthstarPlacedFeatures.BIG_DUMB_ROCK)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.ROCK)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.VOLCANO_CALDERA_MAIN)
                                 .addFeature(Decoration.UNDERGROUND_DECORATION, MarsPlacedFeatures.VOLCANO_CALDERA_BITE)
