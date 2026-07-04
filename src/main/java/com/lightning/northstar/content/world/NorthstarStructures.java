@@ -93,7 +93,7 @@ public class NorthstarStructures {
                                 TerrainAdjustment.BEARD_THIN
                         ),
                         templatePools.getOrThrow(Templates.MARS_RUINS_POOL),
-                        Optional.of(Northstar.asResource("start_anchor")),
+                        Optional.empty(),
                         1,
                         ConstantHeight.of(VerticalAnchor.absolute(0)),
                         false,
