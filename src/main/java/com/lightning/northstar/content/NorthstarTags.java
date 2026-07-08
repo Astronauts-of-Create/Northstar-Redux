@@ -135,6 +135,7 @@ public class NorthstarTags {
         /** Temporary workaround for certain blocks that cannot be sealed with the current system even when they should be, eg: glass panes */
         @Deprecated
         BLOCKS_AIR,
+        C_BUDDING(COMMON, "budding"), // forge:budding or c:budding_blocks, used by AE2
         C_ORES_GLOWSTONE(COMMON, "ores/glowstone"),
         // TODO: should it just be "glowstone" or something else? because you would expect it to drop glowstone but it's glowstone ore
         C_ORES_TITANIUM(COMMON, "ores/titanium"),

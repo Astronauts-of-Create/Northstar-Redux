@@ -2175,8 +2175,8 @@ public class NorthstarBlocks {
             .tag(BlockTags.CRYSTAL_SOUND_BLOCKS)
             .register();
 
-    public static final BlockEntry<ClusterBlock> LUNAR_SAPPHIRE_CLUSTER = REGISTRATE
-            .block("lunar_sapphire_cluster", p -> new ClusterBlock(7, 3, p))
+    public static final BlockEntry<AmethystClusterBlock> LUNAR_SAPPHIRE_CLUSTER = REGISTRATE
+            .block("lunar_sapphire_cluster", p -> new AmethystClusterBlock(7, 3, p))
             .initialProperties(() -> AMETHYST_BLOCK)
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .sound(SoundType.AMETHYST)
@@ -2190,8 +2190,8 @@ public class NorthstarBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<ClusterBlock> SMALL_LUNAR_SAPPHIRE_BUD = REGISTRATE
-            .block("small_lunar_sapphire_bud", p -> new ClusterBlock(3, 4, p))
+    public static final BlockEntry<AmethystClusterBlock> SMALL_LUNAR_SAPPHIRE_BUD = REGISTRATE
+            .block("small_lunar_sapphire_bud", p -> new AmethystClusterBlock(3, 4, p))
             .initialProperties(() -> AMETHYST_BLOCK)
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .sound(SoundType.AMETHYST)
@@ -2205,8 +2205,8 @@ public class NorthstarBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<ClusterBlock> MEDIUM_LUNAR_SAPPHIRE_BUD = REGISTRATE
-            .block("medium_lunar_sapphire_bud", p -> new ClusterBlock(4, 3, p))
+    public static final BlockEntry<AmethystClusterBlock> MEDIUM_LUNAR_SAPPHIRE_BUD = REGISTRATE
+            .block("medium_lunar_sapphire_bud", p -> new AmethystClusterBlock(4, 3, p))
             .initialProperties(() -> AMETHYST_BLOCK)
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .sound(SoundType.AMETHYST)
@@ -2220,8 +2220,8 @@ public class NorthstarBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<ClusterBlock> LARGE_LUNAR_SAPPHIRE_BUD = REGISTRATE
-            .block("large_lunar_sapphire_bud", p -> new ClusterBlock(5, 3, p))
+    public static final BlockEntry<AmethystClusterBlock> LARGE_LUNAR_SAPPHIRE_BUD = REGISTRATE
+            .block("large_lunar_sapphire_bud", p -> new AmethystClusterBlock(5, 3, p))
             .properties(p -> p.mapColor(MapColor.COLOR_BLUE)
                     .sound(SoundType.AMETHYST)
                     .strength(1.5f, 5f)
@@ -2245,6 +2245,7 @@ public class NorthstarBlocks {
             .simpleItem()
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .tag(BlockTags.CRYSTAL_SOUND_BLOCKS)
+            .tag(NorthstarBlockTags.C_BUDDING.tag)
             .register();
 
     // endregion
