@@ -262,15 +262,13 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                     boolean doStop = false;
                     boolean hasCollided = false;
 
-                    float targetPoint = Float.POSITIVE_INFINITY;
-                    if (contraption.destination != null && contraption.destination.pos() != null && dimension.isOrbit()) {
-                        targetPoint = contraption.destination.pos().getY();
+                    if (Float.isNaN(landingHeight) || level.getGameTime() % 20 == 0) {
+                        landingHeight = calculateLandingHeight(fromBelow);
                     }
-                    if (targetPoint == Float.POSITIVE_INFINITY) {
-                        if (Float.isNaN(landingHeight) || level.getGameTime() % 20 == 0) {
-                            landingHeight = calculateLandingHeight(fromBelow);
-                        }
-                        targetPoint = landingHeight;
+                    float targetPoint = landingHeight;
+                    if (contraption.destination != null && contraption.destination.pos() != null && dimension.isOrbit() &&
+                        (targetPoint == Float.POSITIVE_INFINITY || ((contraption.destination.pos().getY() < targetPoint) == fromBelow))) {
+                        targetPoint = contraption.destination.pos().getY();
                     }
                     if (targetPoint == Float.POSITIVE_INFINITY && dimension.isOrbit()) {
                         targetPoint = (level.getMinBuildHeight() + level.getMaxBuildHeight()) / 2f;
@@ -284,16 +282,16 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
                         float delta = targetPoint - (float) getY();
 
-                        if (Math.abs(delta) <= 0.5f) {
+                        if (Math.abs(delta) < 0.5f) {
                             thrustersEnabled = false;
-                            velocity = 0;
+                            velocity = delta;
                             doStop = true;
-                        } else if (Math.abs(delta) <= 100) {
-                            thrustersEnabled = false;
-                            velocity = Mth.map(delta, 100, 0, MAX_SPEED, 0);
+                        } else if (Math.abs(delta) <= 200) {
+                            thrustersEnabled = !fromBelow;
+                            velocity = Mth.map(delta, 200, 1, MAX_SPEED, 0);
                         } else {
                             thrustersEnabled = fromBelow && !level.northstar$isZeroGravity();
-                            velocity = 2;
+                            velocity = MAX_SPEED * Math.signum(delta);
                         }
 
                         move(0, velocity, 0);
