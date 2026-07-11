@@ -282,13 +282,14 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
                         float delta = targetPoint - (float) getY();
 
-                        if (Math.abs(delta) < 0.5f) {
+                        float absDelta = Math.abs(delta);
+                        if (absDelta < 0.5f) {
                             thrustersEnabled = false;
                             velocity = delta;
                             doStop = true;
-                        } else if (Math.abs(delta) <= 200) {
+                        } else if (absDelta <= 200) {
                             thrustersEnabled = !fromBelow;
-                            velocity = Mth.map(delta, 200, 1, MAX_SPEED, 0);
+                            velocity = Mth.map(absDelta, 200, 0, MAX_SPEED, 0.025f) * Math.signum(delta);
                         } else {
                             thrustersEnabled = fromBelow && !level.northstar$isZeroGravity();
                             velocity = MAX_SPEED * Math.signum(delta);
