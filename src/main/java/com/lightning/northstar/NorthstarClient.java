@@ -4,6 +4,7 @@ import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.api.client.NorthstarDimensionEffectsExtension;
 import com.lightning.northstar.client.NorthstarAtlas;
 import com.lightning.northstar.client.renderer.RemainingOxygenOverlay;
+import com.lightning.northstar.client.renderer.armor.SpaceSuitFirstPersonRenderer;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
@@ -17,6 +18,7 @@ import com.lightning.northstar.contraption.rocket.LaunchStatus;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.lightning.northstar.util.NorthstarLang;
+import com.simibubi.create.content.trains.CameraDistanceModifier;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -164,7 +166,29 @@ public class NorthstarClient {
                 event.getEntityBeingMounted() instanceof RocketContraptionEntity rocket &&
                 rocket.getStatus() != LaunchStatus.WAITING) {
                 event.setCanceled(true);
+                return;
             }
+
+            if (player != null &&
+                player.equals(event.getEntityMounting()) &&
+                event.getEntityBeingMounted() instanceof RocketContraptionEntity) {
+                if (event.isDismounting()) {
+                    CameraDistanceModifier.reset();
+                } else {
+                    CameraDistanceModifier.zoomOut(6);
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public static void onTick(TickEvent.ClientTickEvent event) {
+            if (!isGameActive())
+                return;
+            SpaceSuitFirstPersonRenderer.clientTick();
+        }
+
+        protected static boolean isGameActive() {
+            return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
         }
     }
 
