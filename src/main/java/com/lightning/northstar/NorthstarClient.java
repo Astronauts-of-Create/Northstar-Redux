@@ -4,6 +4,7 @@ import com.lightning.northstar.accessor.NorthstarLevel;
 import com.lightning.northstar.api.client.NorthstarDimensionEffectsExtension;
 import com.lightning.northstar.client.NorthstarAtlas;
 import com.lightning.northstar.client.renderer.RemainingOxygenOverlay;
+import com.lightning.northstar.client.renderer.armor.SpaceSuitFirstPersonRenderer;
 import com.lightning.northstar.client.renderer.armor.SpaceSuitLayerRenderer;
 import com.lightning.northstar.client.renderer.effect.MarsEffects;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
@@ -19,6 +20,7 @@ import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.particle.NorthstarParticles;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.lightning.northstar.util.NorthstarLang;
+import com.simibubi.create.content.trains.CameraDistanceModifier;
 import net.createmod.catnip.lang.LangNumberFormat;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.ChatFormatting;
@@ -161,7 +163,29 @@ public class NorthstarClient {
             event.getEntityBeingMounted() instanceof RocketContraptionEntity rocket &&
             rocket.getStatus() != LaunchStatus.WAITING) {
             event.setCanceled(true);
+            return;
         }
+
+        if (player != null &&
+            player.equals(event.getEntityMounting()) &&
+            event.getEntityBeingMounted() instanceof RocketContraptionEntity) {
+            if (event.isDismounting()) {
+                CameraDistanceModifier.reset();
+            } else {
+                CameraDistanceModifier.zoomOut(6);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onTick(ClientTickEvent.Pre event) {
+        if (!isGameActive())
+            return;
+        SpaceSuitFirstPersonRenderer.clientTick();
+    }
+
+    protected static boolean isGameActive() {
+        return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
     }
 
     /** @return The current atmosphere blending factor for the player's eye position */
