@@ -231,7 +231,7 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
                                         targetLevel.getMinBuildHeight() - 20 :
                                         targetLevel.getMaxBuildHeight() + NorthstarConfigs.server().getCombinedTeleportHeight() - 100;
                                 RocketDestination dest = contraption.destination;
-                                BlockPos anchor = dest.pos() != null && dest.dir() != null ?
+                                BlockPos anchor = dest.pos() != null ?
                                         getAnchorPosition(dest.pos(), dest.dir()) :
                                         BlockPos.containing(position());
                                 Vec3 pos = Vec3.atLowerCornerOf(anchor).with(Direction.Axis.Y, height);
