@@ -12,8 +12,8 @@ public class DataGenMainMixin {
     @Inject(
             method = "main",
             at = @At("RETURN"),
-            require = 0, // don't fail if it's not here
-            remap = false // main method isn't obfuscated
+            require = 0,
+            remap = false
     )
     private static void northstar$onExit(String[] strings, CallbackInfo ci) {
         // something creates a thread pool that isn't closed and prevents the data generator from exiting

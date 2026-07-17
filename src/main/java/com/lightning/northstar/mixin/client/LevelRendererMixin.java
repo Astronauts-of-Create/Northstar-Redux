@@ -3,7 +3,6 @@ package com.lightning.northstar.mixin.client;
 import com.lightning.northstar.NorthstarClient;
 import com.lightning.northstar.api.client.NorthstarDimensionEffectsExtension;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
-import com.lightning.northstar.planet.PlanetRenderer;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -56,13 +55,10 @@ public class LevelRendererMixin {
             )
     )
     private void northstar$onRenderSky(Matrix4f frustumMatrix, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
-        float starOpacity = Math.max(level.getStarBrightness(partialTick) * 2, NorthstarClient.getAtmosphereBlend());
-
         PoseStack pose = new PoseStack();
         pose.mulPose(frustumMatrix);
 
-        SpaceEffects.renderStars(pose, projectionMatrix, skyFogSetup, starOpacity);
-        PlanetRenderer.render(level, pose, camera, starOpacity, NorthstarClient.getAtmosphereBlend(), true);
+        SpaceEffects.renderPlanetsAndStars(level, partialTick, pose, camera, projectionMatrix, skyFogSetup);
 
         RenderSystem.depthMask(false);
     }
