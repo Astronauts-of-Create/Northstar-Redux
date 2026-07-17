@@ -8,6 +8,7 @@ import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarTextures;
 import com.lightning.northstar.planet.Planet;
 import com.lightning.northstar.planet.data.PlanetDimension;
+import com.lightning.northstar.planet.data.render.NoopPlanetRenderer;
 import com.lightning.northstar.util.NorthstarLang;
 import com.lightning.northstar.util.PressureUnit;
 import com.lightning.northstar.util.TemperatureUnit;
@@ -82,7 +83,9 @@ public class TelescopeScreen extends AbstractSimiScreen {
 
         nodes = new ArrayList<>();
         for (Planet root : NorthstarLevel.CLIENT_TRACKER.getRoots()) {
-            nodes.add(createPlanetNode(root, null));
+            if (!(root.properties.renderer() instanceof NoopPlanetRenderer)) {
+                nodes.add(createPlanetNode(root, null));
+            }
         }
 
         minX = Float.POSITIVE_INFINITY;
@@ -106,7 +109,9 @@ public class TelescopeScreen extends AbstractSimiScreen {
     private TelescopeNode createPlanetNode(Planet planet, TelescopeNode parent) {
         TelescopeNode node = new TelescopeNode(planet, parent);
         for (Planet satellite : planet.satellites) {
-            node.children.add(createPlanetNode(satellite, node));
+            if (!(satellite.properties.renderer() instanceof NoopPlanetRenderer)) {
+                node.children.add(createPlanetNode(satellite, node));
+            }
         }
         return node;
     }
