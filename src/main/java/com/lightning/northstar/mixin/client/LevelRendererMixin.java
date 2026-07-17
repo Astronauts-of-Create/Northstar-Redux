@@ -3,7 +3,6 @@ package com.lightning.northstar.mixin.client;
 import com.lightning.northstar.NorthstarClient;
 import com.lightning.northstar.api.client.NorthstarDimensionEffectsExtension;
 import com.lightning.northstar.client.renderer.effect.SpaceEffects;
-import com.lightning.northstar.planet.PlanetRenderer;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -62,8 +61,6 @@ public class LevelRendererMixin {
             )
     )
     private void northstar$onRenderSky(PoseStack poseStack, Matrix4f projectionMatrix, float partialTick, Camera camera, boolean isFoggy, Runnable skyFogSetup, CallbackInfo ci) {
-        float starOpacity = Math.max(level.getStarBrightness(partialTick) * 2, NorthstarClient.getAtmosphereBlend());
-
         // We need to inject somewhere during the sun/moon/stars rendering so it renders during the proper phase for
         //  optimization/shader mods, we need to pop the pose that includes the rotation for our own rendering, the
         //  pose shouldn't be used anymore afterward but in case another mods injects between this and the popPose().
@@ -72,9 +69,7 @@ public class LevelRendererMixin {
         northstar$normal.set(last.normal());
         poseStack.popPose();
 
-        SpaceEffects.renderStars(poseStack, projectionMatrix, skyFogSetup, starOpacity);
-        PlanetRenderer.render(level, poseStack, camera, starOpacity, NorthstarClient.getAtmosphereBlend(), true);
-
+        SpaceEffects.renderPlanetsAndStars(level, partialTick, poseStack, camera, projectionMatrix, skyFogSetup);
         RenderSystem.depthMask(false);
 
         poseStack.pushPose();

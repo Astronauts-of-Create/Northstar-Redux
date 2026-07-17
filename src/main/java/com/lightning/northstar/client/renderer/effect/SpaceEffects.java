@@ -4,6 +4,7 @@ import com.lightning.northstar.NorthstarClient;
 import com.lightning.northstar.api.client.NorthstarDimensionEffectsExtension;
 import com.lightning.northstar.compat.oculus.OculusCompat;
 import com.lightning.northstar.compat.oculus.OculusPhase;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.planet.PlanetRenderer;
 import com.lightning.northstar.planet.data.Atmosphere;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -71,19 +72,25 @@ public class SpaceEffects extends DimensionSpecialEffects implements NorthstarDi
         return null;
     }
 
-    public float getStarBrightness(ClientLevel level, float partialTick) {
-        Atmosphere atmosphere = level.northstar$dimension().atmosphere();
-        float brightness = Math.max(level.getStarBrightness(partialTick) * (1 - level.getRainLevel(partialTick)) * 2, NorthstarClient.getAtmosphereBlend());
-        return atmosphere.daytimeStarBrightness() + brightness * (1 - atmosphere.daytimeStarBrightness());
-    }
-
     @Override
     public boolean renderSky(ClientLevel level, int ticks, float partialTick, PoseStack pose, Camera camera,
-                             Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
-        float starBrightness = getStarBrightness(level, partialTick);
-        renderStars(pose, projectionMatrix, setupFog, starBrightness);
-        PlanetRenderer.render(level, pose, camera, starBrightness, NorthstarClient.getAtmosphereBlend());
+                             Matrix4f projectionMatrix, boolean isFoggy, Runnable skyFogSetup) {
+        renderPlanetsAndStars(level, partialTick, pose, camera, projectionMatrix, skyFogSetup);
         return true;
+    }
+
+    public static void renderPlanetsAndStars(ClientLevel level, float partialTick, PoseStack pose, Camera camera, Matrix4f projectionMatrix, Runnable skyFogSetup) {
+        Atmosphere atmosphere = level.northstar$dimension().atmosphere();
+        // FIXME: rain level shouldn't affect visibility if there isn't rain on the planet (Orbits, Moon, Mercury, etc...)
+        float brightness = Math.max(level.getStarBrightness(partialTick) * (1 - level.getRainLevel(partialTick)) * 2, NorthstarClient.getAtmosphereBlend());
+        float baseBrightness = atmosphere.daytimeStarBrightness() + brightness * (1 - atmosphere.daytimeStarBrightness());
+        // TODO: Clamping this to daytimeStarBrightness isn't pretty, there should be a better way to render base stars (Orbits/Moon/Mercury)
+        float atmosphereBlend = Math.max(atmosphere.daytimeStarBrightness(), NorthstarClient.getAtmosphereBlend());
+        float planetBrightness = NorthstarConfigs.client().planetVisibility.get().getBrightness(baseBrightness, atmosphereBlend);
+        float starBrightness = NorthstarConfigs.client().starVisibility.get().getBrightness(baseBrightness, atmosphereBlend);
+
+        renderStars(pose, projectionMatrix, skyFogSetup, starBrightness);
+        PlanetRenderer.render(level, pose, camera, planetBrightness, NorthstarClient.getAtmosphereBlend(), true);
     }
 
     public static void renderStars(PoseStack pose, Matrix4f projectionMatrix, Runnable setupFog, float starBrightness) {
