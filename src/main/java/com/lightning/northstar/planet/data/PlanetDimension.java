@@ -148,11 +148,11 @@ public record PlanetDimension(
     }
 
     public static class Builder {
-        private ResourceKey<PlanetProperties> planet;
+        private @Nullable ResourceKey<PlanetProperties> planet;
         private String name;
         private ResourceKey<Level> dimension;
-        private ResourceKey<Level> dimensionAbove;
-        private ResourceKey<Level> dimensionBelow;
+        private @Nullable ResourceKey<Level> dimensionAbove;
+        private @Nullable ResourceKey<Level> dimensionBelow;
         private boolean isOrbit;
         private Atmosphere atmosphere = Atmosphere.DEFAULT.get();
         private float gravity = EARTH_GRAVITY;

@@ -137,12 +137,12 @@ public record SpaceAtlasContent(
                 return this;
             }
 
-            public Builder calculateScience(float weightExp) {
+            public Builder calculateScience(float decayExp) {
                 ensureSorted();
                 float science = 0;
                 Object2IntMap<ResourceLocation> counts = new Object2IntOpenHashMap<>();
                 for (SpaceAtlasContent.AtlasReading reading : readings) {
-                    science += reading.science() * (float) Math.pow(weightExp, counts.mergeInt(reading.origin(), 0, (a, b) -> a + b + 1));
+                    science += reading.science() * (float) Math.pow(decayExp, counts.mergeInt(reading.origin(), 0, (a, b) -> a + b + 1));
                 }
                 return science(science);
             }

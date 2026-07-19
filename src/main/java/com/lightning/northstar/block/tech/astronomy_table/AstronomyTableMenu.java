@@ -169,7 +169,7 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
                 SpaceAtlasContent.Planet.builder().planetId(targetPlanet.key.location()) :
                 planet.toBuilder())
                 .addReading(new SpaceAtlasContent.AtlasReading(originPlanet.key.location(), readingData.science(), readingData.day()))
-                .calculateScience(targetPlanet.properties.scienceWeightExp())
+                .calculateScience(targetPlanet.properties.scienceDecayExp())
                 .build();
 
         SpaceAtlasContent updatedAtlas = atlas.asBuilder()

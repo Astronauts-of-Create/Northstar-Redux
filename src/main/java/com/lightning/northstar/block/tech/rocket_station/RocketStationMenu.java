@@ -180,7 +180,7 @@ public class RocketStationMenu extends MenuBase<RocketStationHolder> {
 
             for (var entry : atlas.planets().entrySet()) {
                 Planet planet = planets.getPlanetById(entry.getKey());
-                if (planet == null || entry.getValue().science() < planet.properties.requiredScience()) {
+                if (planet == null || planet.properties.requiredScience() < 0 || entry.getValue().science() < planet.properties.requiredScience()) {
                     continue;
                 }
                 for (PlanetDimension dimension : planet.dimensions) {
