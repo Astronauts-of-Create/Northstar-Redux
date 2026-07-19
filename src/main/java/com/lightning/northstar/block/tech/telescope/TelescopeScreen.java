@@ -224,19 +224,21 @@ public class TelescopeScreen extends AbstractSimiScreen {
                 }
             }
 
-            tooltip.add(Component.empty());
+            if (hoveredPlanet.properties.canBeObserved()) {
+                tooltip.add(Component.empty());
 
-            Component holdForReading = Component.translatable("northstar.gui.telescope.hold_for_reading").withStyle(ChatFormatting.DARK_GRAY);
-            if (hoveredPlanet == selectedPlanet) {
-                int length = font.width(holdForReading) / font.width("|");
-                int filled = (int) (progress.getValue(partialTick) * length);
-                Component bar = Component.empty()
-                        .append(Component.literal("|".repeat(filled)).withStyle(ChatFormatting.GRAY))
-                        .append(Component.literal("|".repeat(length - filled)).withStyle(ChatFormatting.DARK_GRAY));
-                tooltip.add(bar);
-            } else {
-                tooltip.add(holdForReading);
-                tooltip.add(Component.translatable("northstar.gui.telescope.hold_for_reading_paper").withStyle(ChatFormatting.DARK_GRAY));
+                Component holdForReading = Component.translatable("northstar.gui.telescope.hold_for_reading").withStyle(ChatFormatting.DARK_GRAY);
+                if (hoveredPlanet == selectedPlanet) {
+                    int length = font.width(holdForReading) / font.width("|");
+                    int filled = (int) (progress.getValue(partialTick) * length);
+                    Component bar = Component.empty()
+                            .append(Component.literal("|".repeat(filled)).withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal("|".repeat(length - filled)).withStyle(ChatFormatting.DARK_GRAY));
+                    tooltip.add(bar);
+                } else {
+                    tooltip.add(holdForReading);
+                    tooltip.add(Component.translatable("northstar.gui.telescope.hold_for_reading_paper").withStyle(ChatFormatting.DARK_GRAY));
+                }
             }
 
             graphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
@@ -325,8 +327,10 @@ public class TelescopeScreen extends AbstractSimiScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        selectedPlanet = hoveredPlanet;
-        progress.setValue(0);
+        if (hoveredPlanet != null && hoveredPlanet.properties.canBeObserved()) {
+            selectedPlanet = hoveredPlanet;
+            progress.setValue(0);
+        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

@@ -171,7 +171,7 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
         float oldScience = planet.science;
 
         planet.readings.add(new SpaceAtlasContent.AtlasReading(originPlanet.key.location(), science, day));
-        planet.recalculateScience(targetPlanet.properties.scienceWeightExp());
+        planet.recalculateScience(targetPlanet.properties.scienceDecayExp());
 
         float newScience = planet.science;
         float addedScience = newScience - oldScience;

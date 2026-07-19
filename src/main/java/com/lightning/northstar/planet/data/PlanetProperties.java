@@ -26,10 +26,11 @@ import java.util.Optional;
 
 /**
  * @param centralBody            the body around which this body orbits
- * @param orbit                  the planet's orbit
+ * @param orbit                  the planet's orbital properties
  * @param type                   the type key, planet, star, gas_giant, etc...
- * @param scienceWeightExp       the weight exponent
- * @param requiredScience        the total needed science to unlock this planet_
+ * @param scienceDecayExp        the science decay exponent for readings of the same origin planet
+ * @param requiredScience        the total required science to unlock this planet, -1 to disable accessing via a space atlas
+ * @param canBeObserved          if the planet can be observed in the telescope to obtain astronomical readings
  * @param rotationPeriodDays     the amount of days it takes for the planet to complete a full cycle on itself
  * @param diameter               the planet diameter, in kilometers.
  * @param obliquity              the axial tilt, in radians.
@@ -44,8 +45,9 @@ public record PlanetProperties(
         @Nullable ResourceKey<PlanetProperties> centralBody,
         OrbitProvider orbit,
         String type,
-        float scienceWeightExp,
+        float scienceDecayExp,
         float requiredScience,
+        boolean canBeObserved,
         double rotationPeriodDays,
         double diameter,
         double obliquity,
@@ -59,13 +61,13 @@ public record PlanetProperties(
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public PlanetProperties(
             Optional<ResourceKey<PlanetProperties>> centralBody, OrbitProvider orbit,
-            String type, float scienceWeightExp, float requiredScience,
+            String type, float scienceWeightExp, float requiredScience, boolean canBeObserved,
             double rotationPeriodDays, double diameter,
             double axialTilt, double axialPrecession, double initialAxialPrecession,
             PlanetSpriteRenderer renderer, List<TextureLayer> texture, Optional<Component> notes
     ) {
-        this(centralBody.orElse(null), orbit, type, scienceWeightExp, requiredScience, rotationPeriodDays, diameter,
-                axialTilt, axialPrecession, initialAxialPrecession, renderer, texture, notes.orElse(null));
+        this(centralBody.orElse(null), orbit, type, scienceWeightExp, requiredScience, canBeObserved, rotationPeriodDays,
+                diameter, axialTilt, axialPrecession, initialAxialPrecession, renderer, texture, notes.orElse(null));
     }
 
     public double circumference() {
@@ -76,8 +78,9 @@ public record PlanetProperties(
             NorthstarRegistries.PLANET_KEY_CODEC.optionalFieldOf("central_body").forGetter(planet -> Optional.ofNullable(planet.centralBody())),
             OrbitProvider.CODEC.fieldOf("orbit").forGetter(PlanetProperties::orbit),
             Codec.STRING.optionalFieldOf("class", "planet").forGetter(PlanetProperties::type),
-            Codec.floatRange(0, 1).optionalFieldOf("science_weight_exp", 0.9f).forGetter(PlanetProperties::scienceWeightExp),
+            Codec.floatRange(0, 1).optionalFieldOf("science_weight_exp", 0.9f).forGetter(PlanetProperties::scienceDecayExp),
             Codec.FLOAT.fieldOf("required_science").forGetter(PlanetProperties::requiredScience),
+            Codec.BOOL.optionalFieldOf("can_be_observed", true).forGetter(PlanetProperties::canBeObserved),
             Codec.DOUBLE.optionalFieldOf("rotation_period_days", 1.0).forGetter(PlanetProperties::rotationPeriodDays),
             Codec.DOUBLE.fieldOf("diameter").forGetter(PlanetProperties::diameter),
             Codec.DOUBLE.optionalFieldOf("axial_tilt", 0.0).forGetter(PlanetProperties::obliquity),
@@ -104,11 +107,12 @@ public record PlanetProperties(
     }
 
     public static class Builder {
-        private ResourceKey<PlanetProperties> centralBody;
+        private @Nullable ResourceKey<PlanetProperties> centralBody;
         private OrbitProvider orbit;
         private String type;
         private float scienceWeightExponent = 0.9f;
         private Float requiredScience;
+        private boolean canBeObserved = true;
         private Double rotationPeriodDays;
         private Double diameter;
         private double axialTilt;
@@ -116,9 +120,9 @@ public record PlanetProperties(
         private double initialAxialPrecession;
         private PlanetSpriteRenderer renderer;
         private List<TextureLayer> texture = new ArrayList<>();
-        private Component notes;
+        private @Nullable Component notes;
 
-        public Builder centralBody(ResourceKey<PlanetProperties> centralBody) {
+        public Builder centralBody(@Nullable ResourceKey<PlanetProperties> centralBody) {
             this.centralBody = centralBody;
             return this;
         }
@@ -140,6 +144,11 @@ public record PlanetProperties(
 
         public Builder requiredScience(float requiredScience) {
             this.requiredScience = requiredScience;
+            return this;
+        }
+
+        public Builder canBeObserved(boolean canBeObserved) {
+            this.canBeObserved = canBeObserved;
             return this;
         }
 
@@ -208,7 +217,7 @@ public record PlanetProperties(
             return this;
         }
 
-        public Builder notes(Component notes) {
+        public Builder notes(@Nullable Component notes) {
             this.notes = notes;
             return this;
         }
@@ -220,6 +229,7 @@ public record PlanetProperties(
                     Objects.requireNonNull(type, "type"),
                     scienceWeightExponent,
                     requiredScience == null ? -1 : requiredScience,
+                    canBeObserved,
                     Objects.requireNonNull(rotationPeriodDays, "rotation period"),
                     Objects.requireNonNull(diameter, "diameter"),
                     axialTilt,

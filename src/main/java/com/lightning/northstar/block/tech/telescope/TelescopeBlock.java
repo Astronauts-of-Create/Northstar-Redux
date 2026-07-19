@@ -123,7 +123,7 @@ public class TelescopeBlock extends Block {
         Level level = player.level();
         Planet currentPlanet = level.northstar$planet();
         Planet targetPlanet = level.northstar$getPlanetTracker().getPlanetById(planetId);
-        if (currentPlanet == null || targetPlanet == null) {
+        if (currentPlanet == null || targetPlanet == null || !targetPlanet.properties.canBeObserved()) {
             return;
         }
 

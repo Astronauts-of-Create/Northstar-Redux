@@ -40,13 +40,13 @@ public class SpaceAtlasContent {
             this.id = id;
         }
 
-        public void recalculateScience(float weightExp) {
+        public void recalculateScience(float decayExp) {
             readings.sort(Comparator.comparing(reading -> -reading.science));
 
             float science = 0;
             Object2IntMap<ResourceLocation> counts = new Object2IntOpenHashMap<>();
             for (AtlasReading reading : readings) {
-                science += reading.science * (float) Math.pow(weightExp, counts.mergeInt(reading.origin, 0, (a, b) -> a + b + 1));
+                science += reading.science * (float) Math.pow(decayExp, counts.mergeInt(reading.origin, 0, (a, b) -> a + b + 1));
             }
             this.science = science;
         }
