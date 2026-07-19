@@ -41,7 +41,8 @@ public class TelescopeScreen extends AbstractSimiScreen {
     private static final ResourceLocation TEXTURE = Northstar.asResource("textures/gui/telescope_gui.png");
     private static final ResourceLocation SPACE_BACKGROUND = Northstar.asResource("textures/gui/space_background.png");
 
-    public static final int VIEW_SIZE = 300;
+    public static final int WINDOW_SIZE = 300;
+    public static final int VIEW_SIZE = WINDOW_SIZE - 16; // 8 pixels on each side
 
     private final Level level;
     private final BlockPos pos;
@@ -54,7 +55,7 @@ public class TelescopeScreen extends AbstractSimiScreen {
 
     private float scrollX = 0.5f;
     private float scrollY = 0.5f;
-    private float zoom = 1f;
+    private float zoom = 3f;
 
     private LerpedFloat smoothZoom = LerpedFloat.linear().startWithValue(zoom);
 
@@ -67,8 +68,8 @@ public class TelescopeScreen extends AbstractSimiScreen {
         this.level = level;
         this.pos = pos;
 
-        windowWidth = VIEW_SIZE;
-        windowHeight = VIEW_SIZE;
+        windowWidth = WINDOW_SIZE;
+        windowHeight = WINDOW_SIZE;
     }
 
     @Override
@@ -127,7 +128,7 @@ public class TelescopeScreen extends AbstractSimiScreen {
             return;
         }
 
-        smoothZoom.chase(zoom, 0.1f, LerpedFloat.Chaser.EXP);
+        smoothZoom.chase(zoom, 0.2f, LerpedFloat.Chaser.EXP);
         smoothZoom.tickChaser();
 
         if (selectedPlanet != null) {
@@ -253,11 +254,11 @@ public class TelescopeScreen extends AbstractSimiScreen {
 
         float sizeX = maxX - minX;
         float sizeY = maxY - minY;
-        float scale = windowWidth / Math.max(sizeX, sizeY) * smoothZoom.getValue(partialTick);
+        float scale = VIEW_SIZE / Math.max(sizeX, sizeY) * smoothZoom.getValue(partialTick);
         float cameraX = minX + scrollX * sizeX;
         float cameraY = minY + scrollY * sizeY;
 
-        pose.translate(guiLeft + windowWidth * 0.5f, guiTop + windowHeight * 0.5f, 0);
+        pose.translate(guiLeft + 8 + VIEW_SIZE * 0.5f, guiTop + 8 + VIEW_SIZE * 0.5f, 0);
         pose.scale(scale, scale, 1);
         pose.translate(-cameraX, -cameraY, 0);
 
@@ -320,7 +321,7 @@ public class TelescopeScreen extends AbstractSimiScreen {
     private void onDragged(double dragX, double dragY) {
         float zoom = smoothZoom.getValue(minecraft.getPartialTick());
         float size = 0.5f / zoom;
-        float sensitivity = 1f / VIEW_SIZE / zoom;
+        float sensitivity = 1f / WINDOW_SIZE / zoom;
         scrollX = Mth.clamp(scrollX - (float) dragX * sensitivity, size, 1 - size);
         scrollY = Mth.clamp(scrollY - (float) dragY * sensitivity, size, 1 - size);
     }
