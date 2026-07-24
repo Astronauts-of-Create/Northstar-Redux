@@ -2,6 +2,7 @@ package com.lightning.northstar.mixin.entity;
 
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.world.NorthstarDimensions;
+import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +39,8 @@ public abstract class LivingEntityMixin extends Entity {
             level.getRainLevel(0) > 0 &&
             level.getBrightness(LightLayer.SKY, blockPosition()) == 15 &&
             getY() < level.getMaxBuildHeight() + NorthstarConfigs.server().atmosphereBaseHeight.get() &&
-            !(self instanceof Player player && (player.isSpectator() || player.getAbilities().flying))) {
+            !(self instanceof Player player && (player.isSpectator() || player.getAbilities().flying)) &&
+            !NorthstarOxygen.hasOxygen(level, position())) {
             float force = 0.005f;
             // TODO: This should probably change direction instead of always pushing that axis
             setDeltaMovement(getDeltaMovement().add(force, 0, -force));
