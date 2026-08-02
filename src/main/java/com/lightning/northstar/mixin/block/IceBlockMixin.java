@@ -4,6 +4,8 @@ import com.lightning.northstar.world.sealer.SealReactiveBlock;
 import com.lightning.northstar.world.sealer.SealableBlock;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.IceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -23,6 +26,23 @@ public abstract class IceBlockMixin implements SealableBlock, SealReactiveBlock 
 
     @Shadow
     protected abstract void melt(BlockState state, Level level, BlockPos pos);
+
+    @ModifyExpressionValue(
+            method = {
+                    "playerDestroy",
+                    "melt"
+            },
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/dimension/DimensionType;ultraWarm()Z"
+            )
+    )
+    private boolean northstar$isUltraWarm(
+            boolean original,
+            @Local(argsOnly = true) Level level,
+            @Local(argsOnly = true) BlockPos pos) {
+        return level.northstar$temperature().isUltraWarm(pos, 100, original);
+    }
 
     @Override
     public boolean northstar$isFaceSealed(BlockGetter level, BlockPos pos, BlockState state, Direction direction, boolean source, SealingMode mode) {

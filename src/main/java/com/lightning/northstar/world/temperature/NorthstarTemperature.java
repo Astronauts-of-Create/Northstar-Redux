@@ -6,6 +6,7 @@ import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
+import com.lightning.northstar.planet.data.func.LevelFunction;
 import com.lightning.northstar.world.SealingProvider;
 import com.lightning.northstar.world.sealer.ProgressiveBlockUpdater;
 import com.lightning.northstar.world.sealer.SealingMode;
@@ -26,7 +27,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
@@ -51,11 +51,19 @@ public class NorthstarTemperature {
     private final Level level;
     private final Set<Provider> providers;
     private final ProgressiveBlockUpdater updater;
+    private boolean ultraWarm;
+    private LevelFunction baseTemperature;
 
     public NorthstarTemperature(Level level) {
         this.level = level;
         this.providers = new HashSet<>();
         this.updater = new ProgressiveBlockUpdater(SealingMode.TEMPERATURE);
+    }
+
+    @ApiStatus.Internal
+    public void onResourceReload() {
+        ultraWarm = level.dimensionType().ultraWarm();
+        baseTemperature = level.northstar$dimension().temperature();
     }
 
     public boolean isSealed(Vec3i pos) {
@@ -106,7 +114,7 @@ public class NorthstarTemperature {
             }
         }
 
-        return count == 0 ? includeDefault ? getBaseTemperature(level, pos instanceof BlockPos bp ? bp : new BlockPos(pos)) : Float.NaN : temperature / count;
+        return count == 0 ? includeDefault ? baseTemperature.get(level, pos instanceof BlockPos bp ? bp : new BlockPos(pos)) : Float.NaN : temperature / count;
     }
 
     private float getTemperatureDirect(Vec3 pos, boolean includeDefault) {
@@ -118,7 +126,27 @@ public class NorthstarTemperature {
                 count++;
             }
         }
-        return count == 0 ? includeDefault ? getBaseTemperature(level, BlockPos.containing(pos)) : Float.NaN : temperature / count;
+        return count == 0 ? includeDefault ? baseTemperature.get(level, BlockPos.containing(pos)) : Float.NaN : temperature / count;
+    }
+
+    public float getBaseTemperature(BlockPos pos) {
+        return baseTemperature.get(level, pos);
+    }
+
+    public boolean isUltraWarm(BlockPos pos, float critical) {
+        return isUltraWarm(pos, critical, ultraWarm);
+    }
+
+    public boolean isUltraWarm(BlockPos pos, float critical, boolean ultraWarm) {
+        // Dimension is ultrawarm: Check if artificial temperature is < critical
+        // Dimension isn't ultrawarm: Check if any temperature is >= critical
+
+        if (ultraWarm) {
+            float temperature = getTemperature(pos, false);
+            return Float.isNaN(temperature) || temperature >= critical;
+        }
+
+        return getTemperature(pos, true) >= critical;
     }
 
     public void registerSealer(Provider provider) {
@@ -272,7 +300,6 @@ public class NorthstarTemperature {
 
     public static void evaporate(Level level, BlockPos pos) {
         RandomSource random = level.random;
-        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (random.nextFloat() - random.nextFloat()) * 0.8F);
         for (int i = 0; i < 8; i++) {
             level.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + random.nextFloat(), pos.getY() + random.nextFloat(), pos.getZ() + random.nextFloat(), 0.0D, 0.0D, 0.0D);

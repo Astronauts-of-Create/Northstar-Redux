@@ -3,14 +3,18 @@ package com.lightning.northstar.mixin.block;
 import com.lightning.northstar.accessor.NorthstarFluidState;
 import com.lightning.northstar.world.sealer.SealingMode;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,16 +40,23 @@ public class FluidStateMixin implements NorthstarFluidState {
             return;
 
         FluidState self = (FluidState) (Object) this;
+        FluidType fluidType = self.getFluidType();
+        FluidStack stack = new FluidStack(self.getType(), 1000);
 
-        float temperature = NorthstarTemperature.getTemperature(level, pos);
+        float artificialTemperature = level.northstar$temperature().getTemperature(pos, false);
+        float temperature = Float.isNaN(artificialTemperature) ? level.northstar$temperature().getBaseTemperature(pos) : artificialTemperature;
+        boolean evaporate = level.dimensionType().ultraWarm() && FluidHelper.isTag(self, FluidTags.WATER) ?
+                Float.isNaN(artificialTemperature) || artificialTemperature >= NorthstarTemperature.getBoilingPoint(self) :
+                temperature >= NorthstarTemperature.getBoilingPoint(self);
 
-        if (temperature >= NorthstarTemperature.getBoilingPoint(self)) {
+        if (evaporate || fluidType.isVaporizedOnPlacement(level, pos, stack)) {
             BlockState block = level.getBlockState(pos);
             if (block.hasProperty(BlockStateProperties.WATERLOGGED) && !self.isEmpty()) {
                 level.setBlockAndUpdate(pos, block.setValue(BlockStateProperties.WATERLOGGED, false));
             } else {
-                NorthstarTemperature.evaporate(level, pos);
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             }
+            fluidType.onVaporize(null, level, pos, stack);
             return;
         }
 
@@ -64,7 +75,7 @@ public class FluidStateMixin implements NorthstarFluidState {
         }
     }
 
-    //EXPLOSION!!!!!! YEAH!!!!!!! I LOVE DEATH AND DESTRUCTION!!!!!!!!!!!!!!!!!!!
+    // EXPLOSION!!!!!! YEAH!!!!!!! I LOVE DEATH AND DESTRUCTION!!!!!!!!!!!!!!!!!!!
     @Unique
     public void northstar$combust(Level level, BlockPos pos) {
         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
