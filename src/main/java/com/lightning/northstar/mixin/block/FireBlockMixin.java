@@ -39,7 +39,7 @@ public class FireBlockMixin implements SealReactiveBlock {
             return;
         }
 
-        if (mode == SealingMode.TEMPERATURE && NorthstarTemperature.getTemperatureAt(level, pos) < -100) {
+        if (mode == SealingMode.TEMPERATURE && NorthstarTemperature.getTemperature(level, pos) < -100) {
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }
     }

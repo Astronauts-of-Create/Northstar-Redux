@@ -29,7 +29,7 @@ public class MartianGrassBlock extends Block implements BonemealableBlock {
             return false;
         } else {
             int i = BlockLightEngine.getLightBlockInto(pLevelReader, pState, pPos, blockstate, blockpos, Direction.UP, blockstate.getLightBlock(pLevelReader, blockpos));
-            return i < pLevelReader.getMaxLightLevel() && NorthstarTemperature.getTemperatureAt((Level) pLevelReader, pPos) > 0;
+            return i < pLevelReader.getMaxLightLevel() && NorthstarTemperature.getTemperature((Level) pLevelReader, pPos) > 0;
         }
     }
 

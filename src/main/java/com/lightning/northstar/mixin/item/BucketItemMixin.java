@@ -45,7 +45,7 @@ public abstract class BucketItemMixin extends Item {
             cancellable = true
     )
     private void northstar$emptyContent(Player player, Level level, BlockPos pos, BlockHitResult result, ItemStack container, CallbackInfoReturnable<Boolean> cir) {
-        float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
+        float temperature = NorthstarTemperature.getTemperature(level, pos);
 
         if (temperature >= NorthstarTemperature.getBoilingPoint(getFluid().defaultFluidState())) {
             cir.setReturnValue(true);

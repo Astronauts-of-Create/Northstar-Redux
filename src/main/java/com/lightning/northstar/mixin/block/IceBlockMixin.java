@@ -34,7 +34,7 @@ public abstract class IceBlockMixin implements SealableBlock, SealReactiveBlock 
         if (mode != SealingMode.TEMPERATURE)
             return;
 
-        float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
+        float temperature = NorthstarTemperature.getTemperature(level, pos);
         if (temperature >= 100) {
             NorthstarTemperature.evaporate(level, pos);
         } else if (temperature >= 30) { // ice should melt above 0°C but this would just cause ice to melt in the overworld so the temperature is a bit higher.
