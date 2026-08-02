@@ -16,9 +16,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class DrinkableBucket extends BucketItem {
+public class DrinkableBucketItem extends BucketItem {
 
-    public DrinkableBucket(Fluid content, Properties properties) {
+    public DrinkableBucketItem(Fluid content, Properties properties) {
         super(content, properties);
     }
 
