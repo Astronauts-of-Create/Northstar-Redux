@@ -1,6 +1,8 @@
 package com.lightning.northstar.mixin.item;
 
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -36,16 +38,40 @@ public abstract class BucketItemMixin extends Item {
         super(properties);
     }
 
+    // 3 checks are performed when emptying a bucket:
+    // - Water is checked for ultrawarm dimensions in FluidType#isVaporizedOnPlacement (and other custom fluid that override this)
+    // - Water is checked again via ultrawarm and minecraft:water fluid tag, removed by handler below
+    // - All fluids are checked to be frozen/vaporized before placement via other handler below
+
+    @ModifyExpressionValue(
+            method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/material/Fluid;is(Lnet/minecraft/tags/TagKey;)Z"
+            )
+    )
+    private boolean northstar$emptyContentIsUltraWarm(
+            boolean original,
+            @Local(argsOnly = true) Level level,
+            @Local(argsOnly = true) BlockPos pos
+    ) {
+        // If the block's temperature is controlled by Northstar, always disable ultrawarm and let the handler below take care of it.
+        return original && !NorthstarTemperature.isSealed(level, pos);
+    }
+
     @Inject(
             method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/dimension/DimensionType;ultraWarm()Z"
+                    target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
             ),
             cancellable = true
     )
     private void northstar$emptyContent(Player player, Level level, BlockPos pos, BlockHitResult result, ItemStack container, CallbackInfoReturnable<Boolean> cir) {
-        float temperature = NorthstarTemperature.getTemperature(level, pos);
+        float temperature = level.northstar$temperature().getTemperature(pos, false);
+        if (Float.isNaN(temperature)) {
+            return;
+        }
 
         if (temperature >= NorthstarTemperature.getBoilingPoint(getFluid().defaultFluidState())) {
             cir.setReturnValue(true);

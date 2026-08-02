@@ -93,6 +93,8 @@ public abstract class LevelMixin implements NorthstarLevel {
         northstar$gravityScale = dim.gravityScale();
         northstar$noGravity = dim.gravity() == 0;
 
+        northstar$temperature.onResourceReload();
+
         if (!init) {
             for (Entity entity : getEntities().getAll()) {
                 entity.northstar$onResourceReload();
