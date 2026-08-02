@@ -13,6 +13,7 @@ import com.lightning.northstar.content.world.planet.mercury.MercuryBiomes;
 import com.lightning.northstar.content.world.planet.moon.MoonBiomes;
 import com.lightning.northstar.content.world.planet.venus.VenusBiomes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
@@ -235,6 +236,10 @@ public class NorthstarTagGen {
                 .add(EntityType.WITHER_SKELETON)
                 .add(EntityType.ZOMBIE)
                 .add(EntityType.ZOMBIE_HORSE);
+
+        tags.tag(NorthstarEntityTags.ROCKET_PASSENGER_BLACKLIST)
+                .add(AllEntityTypes.SEAT.get())
+                .add(AllEntityTypes.SUPER_GLUE.get()); // Assembled superglue is removed, leftovers aren't attached and should stay here.
     }
 
     private static void fluids(RegistrateTagsProvider.IntrinsicImpl<Fluid> provider) {
