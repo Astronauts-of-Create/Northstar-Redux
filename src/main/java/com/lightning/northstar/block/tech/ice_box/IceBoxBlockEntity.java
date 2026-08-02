@@ -135,7 +135,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         if (!(currentRecipe instanceof FreezingRecipe r))
             return;
 
-        float currentTemperature = NorthstarTemperature.getTemperatureAt(level, worldPosition);
+        float currentTemperature = NorthstarTemperature.getTemperature(level, worldPosition);
         if (!r.isTemperatureWithinRange(currentTemperature)) {
             processingTicks = Math.max(0, processingTicks - 1);
             return;
@@ -337,7 +337,7 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
         NorthstarLang.translate("gui.goggles.generic.temperature")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
-        NorthstarLang.temperature(NorthstarTemperature.getTemperatureAt(level, worldPosition))
+        NorthstarLang.temperature(NorthstarTemperature.getTemperature(level, worldPosition))
                 .forGoggles(tooltip, 1);
 
         IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());

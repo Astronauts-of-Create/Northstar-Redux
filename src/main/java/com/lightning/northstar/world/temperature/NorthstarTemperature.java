@@ -59,27 +59,42 @@ public class NorthstarTemperature {
         this.updater = new ProgressiveBlockUpdater(SealingMode.TEMPERATURE);
     }
 
+    public boolean isSealed(Vec3i pos) {
+        return !Float.isNaN(getTemperature(pos, false));
+    }
+
+    public boolean isSealed(Vec3 pos) {
+        return !Float.isNaN(getTemperatureDirect(TransformProviders.getToWorld().applyTransformOrIdentity(level, pos), false));
+    }
+
+    /** @deprecated replace with {@link #getTemperature(Vec3)} */
+    @Deprecated(since = "0.6.5", forRemoval = true)
     public float getTemperatureAt(Vec3 pos) {
-        return getTemperatureDirect(TransformProviders.getToWorld().applyTransformOrIdentity(level, pos));
+        return getTemperature(pos);
     }
 
-    private float getTemperatureDirect(Vec3 pos) {
-        float temperature = 0;
-        int count = 0;
-        for (Provider provider : providers) {
-            if (provider.isSealed(pos)) {
-                temperature += provider.getTemperature();
-                count++;
-            }
-        }
-
-        return count == 0 ? getBaseTemperature(level, BlockPos.containing(pos)) : temperature / count;
-    }
-
+    /** @deprecated replace with {@link #getTemperature(Vec3i)} */
+    @Deprecated(since = "0.6.5", forRemoval = true)
     public float getTemperatureAt(Vec3i pos) {
+        return getTemperature(pos);
+    }
+
+    public float getTemperature(Vec3 pos) {
+        return getTemperature(pos, true);
+    }
+
+    public float getTemperature(Vec3i pos) {
+        return getTemperature(pos, true);
+    }
+
+    public float getTemperature(Vec3 pos, boolean includeDefault) {
+        return getTemperatureDirect(TransformProviders.getToWorld().applyTransformOrIdentity(level, pos), includeDefault);
+    }
+
+    public float getTemperature(Vec3i pos, boolean includeDefault) {
         Vec3 transformed = TransformProviders.getToWorld().applyTransform(level, Vec3.atCenterOf(pos));
         if (transformed != null) {
-            return getTemperatureDirect(transformed);
+            return getTemperatureDirect(transformed, includeDefault);
         }
 
         float temperature = 0;
@@ -92,7 +107,19 @@ public class NorthstarTemperature {
             }
         }
 
-        return count == 0 ? getBaseTemperature(level, pos instanceof BlockPos bp ? bp : new BlockPos(pos)) : temperature / count;
+        return count == 0 ? includeDefault ? getBaseTemperature(level, pos instanceof BlockPos bp ? bp : new BlockPos(pos)) : Float.NaN : temperature / count;
+    }
+
+    private float getTemperatureDirect(Vec3 pos, boolean includeDefault) {
+        float temperature = 0;
+        int count = 0;
+        for (Provider provider : providers) {
+            if (provider.isSealed(pos)) {
+                temperature += provider.getTemperature();
+                count++;
+            }
+        }
+        return count == 0 ? includeDefault ? getBaseTemperature(level, BlockPos.containing(pos)) : Float.NaN : temperature / count;
     }
 
     public void registerSealer(Provider provider) {
@@ -116,12 +143,32 @@ public class NorthstarTemperature {
         float getTemperature();
     }
 
-    public static float getTemperatureAt(Level level, Vec3 pos) {
-        return level.northstar$temperature().getTemperatureAt(pos);
+    public static boolean isSealed(Level level, Vec3 pos) {
+        return level.northstar$temperature().isSealed(pos);
     }
 
+    public static boolean isSealed(Level level, Vec3i pos) {
+        return level.northstar$temperature().isSealed(pos);
+    }
+
+    public static float getTemperature(Level level, Vec3 pos) {
+        return level.northstar$temperature().getTemperature(pos);
+    }
+
+    public static float getTemperature(Level level, Vec3i pos) {
+        return level.northstar$temperature().getTemperature(pos);
+    }
+
+    /** @deprecated replace with {@link #getTemperature(Level, Vec3)} */
+    @Deprecated(since = "0.6.5", forRemoval = true)
+    public static float getTemperatureAt(Level level, Vec3 pos) {
+        return level.northstar$temperature().getTemperature(pos);
+    }
+
+    /** @deprecated replace with {@link #getTemperature(Level, Vec3i)} */
+    @Deprecated(since = "0.6.5", forRemoval = true)
     public static float getTemperatureAt(Level level, Vec3i pos) {
-        return level.northstar$temperature().getTemperatureAt(pos);
+        return level.northstar$temperature().getTemperature(pos);
     }
 
     public static NorthstarTemperature getDimension(Level level) {
@@ -137,7 +184,7 @@ public class NorthstarTemperature {
         if (entity.level().isClientSide())
             return;
 
-        float temp = NorthstarTemperature.getTemperatureAt(entity.level(), entity.getEyePosition());
+        float temp = NorthstarTemperature.getTemperature(entity.level(), entity.getEyePosition());
         boolean hasInsulation = NorthstarTemperature.hasInsulation(entity);
         boolean hasHeatProtection = NorthstarTemperature.hasHeatProtection(entity);
 

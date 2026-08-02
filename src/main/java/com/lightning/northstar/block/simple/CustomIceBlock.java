@@ -48,7 +48,7 @@ public class CustomIceBlock extends HalfTransparentBlock implements SealReactive
         if (mode != SealingMode.TEMPERATURE)
             return;
 
-        float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
+        float temperature = NorthstarTemperature.getTemperature(level, pos);
         FluidState fluidstate = fluid.defaultFluidState();
 
         if (temperature >= NorthstarTemperature.getBoilingPoint(fluidstate)) {
