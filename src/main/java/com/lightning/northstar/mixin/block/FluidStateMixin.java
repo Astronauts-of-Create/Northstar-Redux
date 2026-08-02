@@ -37,7 +37,7 @@ public class FluidStateMixin implements NorthstarFluidState {
 
         FluidState self = (FluidState) (Object) this;
 
-        float temperature = NorthstarTemperature.getTemperatureAt(level, pos);
+        float temperature = NorthstarTemperature.getTemperature(level, pos);
 
         if (temperature >= NorthstarTemperature.getBoilingPoint(self)) {
             BlockState block = level.getBlockState(pos);

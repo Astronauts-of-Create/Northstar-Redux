@@ -33,7 +33,7 @@ public class TemperatureDisplaySource extends SingleLineDisplaySource {
 
     @Override
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-        float temperature = NorthstarTemperature.getTemperatureAt(context.level(), context.getSourceBlockEntity().getBlockPos());
+        float temperature = NorthstarTemperature.getTemperature(context.level(), context.getSourceBlockEntity().getBlockPos());
         TemperatureUnit unit = TemperatureUnit.ALL[context.sourceConfig().getInt("Unit")];
 
         return Component.literal(LangNumberFormat.format(unit.fromCelsius(temperature))).append(unit.symbol);

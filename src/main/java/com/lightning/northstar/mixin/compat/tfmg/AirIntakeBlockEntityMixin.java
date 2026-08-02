@@ -64,7 +64,7 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
     )
     private Object northstar$convertToHotAir(FluidEntry<?> instance) {
         // Only handle air for now, other gases will be implemented with the new planet system.
-        return NorthstarTemperature.getTemperatureAt(level, worldPosition) >= 1000 ? TFMGFluids.HOT_AIR.getSource() : TFMGFluids.AIR.getSource();
+        return NorthstarTemperature.getTemperature(level, worldPosition) >= 1000 ? TFMGFluids.HOT_AIR.getSource() : TFMGFluids.AIR.getSource();
     }
 
     @Override
