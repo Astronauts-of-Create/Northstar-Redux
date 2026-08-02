@@ -292,7 +292,8 @@ public class NorthstarTags {
         CAN_SURVIVE_HEAT,
         DOESNT_REQUIRE_OXYGEN,
         IGNORE_WORLD_BOUNDS_TELEPORT,
-        IGNORE_ZERO_GRAVITY_AI;
+        IGNORE_ZERO_GRAVITY_AI,
+        ROCKET_PASSENGER_BLACKLIST;
 
         public final TagKey<EntityType<?>> tag;
 

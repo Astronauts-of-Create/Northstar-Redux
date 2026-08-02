@@ -4,6 +4,7 @@ import com.lightning.northstar.block.tech.rocket_station.RocketStationActor;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.*;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
+import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import com.lightning.northstar.contraption.rocket.packet.RocketSeatsPacket;
 import com.lightning.northstar.contraption.rocket.packet.RocketSyncPacket;
 import com.lightning.northstar.network.packet.ForceContraptionControlPacket;
@@ -43,6 +44,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -888,6 +890,12 @@ public class RocketContraptionEntity extends AbstractContraptionEntity implement
 
     private void mountPassengers() {
         for (Entity passenger : level().getEntities(this, getBoundingBox())) {
+            if (NorthstarEntityTags.ROCKET_PASSENGER_BLACKLIST.matches(passenger) ||
+                passenger instanceof AbstractContraptionEntity ||
+                passenger instanceof Projectile) {
+                continue;
+            }
+
             if (passenger.startRiding(this, true)) {
                 virtualSeats.put(passenger.getUUID(), passenger.position().subtract(position()).add(0, passenger.getMyRidingOffset(), 0));
             }
