@@ -1,6 +1,7 @@
 package com.lightning.northstar.item;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,19 +12,22 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class DrinkableBucket extends BucketItem {
+public class DrinkableBucketItem extends BucketItem {
 
-    public DrinkableBucket(Fluid content, Properties properties) {
+    public DrinkableBucketItem(Fluid content, Properties properties) {
         super(content, properties);
     }
 
-    public DrinkableBucket(Supplier<? extends Fluid> supplier, Properties builder) {
+    public DrinkableBucketItem(Supplier<? extends Fluid> supplier, Properties builder) {
         super(supplier, builder);
     }
 
@@ -54,6 +58,13 @@ public class DrinkableBucket extends BucketItem {
             }
         }
         return result;
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        if (getClass() == DrinkableBucketItem.class)
+            return new FluidBucketWrapper(stack);
+        return super.initCapabilities(stack, nbt);
     }
 
 }

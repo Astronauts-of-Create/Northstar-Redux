@@ -4,7 +4,7 @@ import com.lightning.northstar.content.NorthstarTags.NorthstarFluidTags;
 import com.lightning.northstar.fluid.GasFluid;
 import com.lightning.northstar.fluid.SulfuricAcidFluidBlock;
 import com.lightning.northstar.fluid.TitaniumTetrachlorideBlock;
-import com.lightning.northstar.item.DrinkableBucket;
+import com.lightning.northstar.item.DrinkableBucketItem;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -74,7 +74,7 @@ public class NorthstarFluids {
     public static final FluidEntry<GasFluid> CHOCOLATE_ICE_CREAM = REGISTRATE
             .gasFluid("chocolate_ice_cream")
             .tag(NorthstarFluidTags.C_CHOCOLATE_ICE_CREAM.tag)
-            .bucket(DrinkableBucket::new)
+            .bucket(DrinkableBucketItem::new)
             .properties(p -> p.food(new FoodProperties.Builder()
                     .nutrition(4)
                     .saturationMod(0.8F)
@@ -86,7 +86,7 @@ public class NorthstarFluids {
     public static final FluidEntry<GasFluid> VANILLA_ICE_CREAM = REGISTRATE
             .gasFluid("vanilla_ice_cream")
             .tag(NorthstarFluidTags.C_VANILLA_ICE_CREAM.tag)
-            .bucket(DrinkableBucket::new)
+            .bucket(DrinkableBucketItem::new)
             .properties(p -> p.food(new FoodProperties.Builder()
                     .nutrition(4)
                     .saturationMod(0.7F)
@@ -97,7 +97,7 @@ public class NorthstarFluids {
     public static final FluidEntry<GasFluid> STRAWBERRY_ICE_CREAM = REGISTRATE
             .gasFluid("strawberry_ice_cream")
             .tag(NorthstarFluidTags.C_STRAWBERRY_ICE_CREAM.tag)
-            .bucket(DrinkableBucket::new)
+            .bucket(DrinkableBucketItem::new)
             .properties(p -> p.food(new FoodProperties.Builder()
                     .nutrition(5)
                     .saturationMod(0.7F)
