@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarFluids;
@@ -50,7 +51,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             ItemStack item = getContainedItem();
             if (tank == 0 || item == null || !item.has(NorthstarDataComponents.OXYGEN))
                 return FluidStack.EMPTY;
-            int oxygen = item.get(NorthstarDataComponents.OXYGEN);
+            int oxygen = item.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
             return oxygen == 0 ? FluidStack.EMPTY : new FluidStack(NorthstarFluids.OXYGEN.get(), oxygen);
         }
 
@@ -70,10 +71,12 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             ItemStack item = getContainedItem();
             if (!isFluidValid(0, stack) || item == null)
                 return 0;
-            int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
+            int transferRemaining = NorthstarConfigs.server().oxygenFillerMaxTransferPerTick.get() - currentTickTransfer;
+            int oxygen = item.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
             int capacity = NorthstarOxygen.getTankCapacity(level, item);
-            int fillable = Mth.clamp(capacity - oxygen, 0, stack.getAmount());
+            int fillable = Mth.clamp(stack.getAmount(), 0, Math.min(capacity - oxygen, transferRemaining));
             if (action.execute() && fillable != 0) {
+                currentTickTransfer += fillable;
                 item.set(NorthstarDataComponents.OXYGEN, oxygen + fillable);
                 sendData();
                 if (oxygen + fillable >= capacity) {
@@ -101,15 +104,18 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             ItemStack item = getContainedItem();
             if (item == null)
                 return 0;
-            int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
-            int drainable = Math.min(amount, oxygen);
+            int transferRemaining = NorthstarConfigs.server().oxygenFillerMaxTransferPerTick.get() - currentTickTransfer;
+            int oxygen = item.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
+            int drainable = Mth.clamp(amount, 0, Math.min(oxygen, transferRemaining));
             if (action.execute() && drainable != 0) {
+                currentTickTransfer += drainable;
                 item.set(NorthstarDataComponents.OXYGEN, oxygen - drainable);
                 sendData();
             }
             return drainable;
         }
     };
+    public int currentTickTransfer;
 
     public OxygenFillerBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -125,6 +131,13 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         ItemHelper.dropContents(level, worldPosition, new InvWrapper(container));
         container.clearContent();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        currentTickTransfer = 0;
     }
 
     @Nullable
@@ -160,7 +173,7 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
                 .forGoggles(tooltip);
 
         if (NorthstarItemTags.OXYGEN_SOURCES.matches(item)) {
-            int oxygen = item.has(NorthstarDataComponents.OXYGEN) ? item.get(NorthstarDataComponents.OXYGEN) : 0;
+            int oxygen = item.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
             CreateLang.builder()
                     .add(CreateLang.number(oxygen)
                             .add(NorthstarLang.MB)

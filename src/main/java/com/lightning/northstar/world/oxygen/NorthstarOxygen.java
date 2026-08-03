@@ -198,10 +198,7 @@ public class NorthstarOxygen {
     }
 
     public static boolean depleteOxygen(Level level, ItemStack stack, boolean deplete) {
-        if (!stack.has(NorthstarDataComponents.OXYGEN))
-            return false;
-
-        int oxygen = stack.get(NorthstarDataComponents.OXYGEN);
+        int oxygen = stack.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
         if (oxygen <= 0)
             return false;
 

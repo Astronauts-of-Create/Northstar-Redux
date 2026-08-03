@@ -33,7 +33,7 @@ public class RemainingOxygenOverlay implements LayeredDraw.Layer {
         ItemStack tank = NorthstarOxygen.getOxygenTank(player);
         if (tank.isEmpty())
             return;
-        int remainingTime = tank.has(NorthstarDataComponents.OXYGEN) ? tank.get(NorthstarDataComponents.OXYGEN) : 0;
+        int remainingTime = tank.getOrDefault(NorthstarDataComponents.OXYGEN, 0);
 
         pose.pushPose();
 
