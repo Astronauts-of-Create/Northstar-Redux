@@ -83,6 +83,8 @@ public class PlanetRenderer {
 
         BufferBuilder vc = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
 
+        float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+
         final float planetScale = 16f;
 
         List<Planet> forRendering = new ArrayList<>(NorthstarLevel.CLIENT_TRACKER.getPlanets().values());
@@ -103,7 +105,7 @@ public class PlanetRenderer {
             if (planet.key == NorthstarPlanets.SOL) {
                 pose.pushPose();
                 pose.mulPose(Axis.YP.rotationDegrees(-90));
-                pose.mulPose(Axis.XP.rotationDegrees(level.getTimeOfDay(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true)) * 360 + 90));
+                pose.mulPose(Axis.XP.rotationDegrees(level.getTimeOfDay(partialTick) * 360 + 90));
                 pose.translate(0, 0, -100);
                 properties.renderer().render(level, pose, vc, 15, new Vector4f(1), planet);
                 pose.popPose();
@@ -169,7 +171,7 @@ public class PlanetRenderer {
         if (!texture.isEmpty()) {
             OculusCompat.$.pushRenderPhase(OculusPhase.SKY);
 
-            int brightness = 255;
+            int brightness = (int) (255 * (1 - level.getSkyDarken(partialTick)));
             int alpha = dimension.isOrbit() ? 255 : (int) (255 * atmosphereBlend);
 
             float atmosphereStart = level.getMaxBuildHeight() + NorthstarConfigs.server().atmosphereBaseHeight.get();
