@@ -1,5 +1,6 @@
 package com.lightning.northstar.block.tech.oxygen_filler;
 
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarFluids;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.util.NorthstarLang;
@@ -69,11 +70,13 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             ItemStack item = getContainedItem();
             if (!isFluidValid(0, stack) || item == null)
                 return 0;
+            int transferRemaining = NorthstarConfigs.server().oxygenFillerMaxTransferPerTick.get() - currentTickTransfer;
             CompoundTag tag = item.getOrCreateTag();
             int oxygen = tag.getInt("Oxygen");
             int capacity = NorthstarOxygen.getTankCapacity(item);
-            int fillable = Mth.clamp(capacity - oxygen, 0, stack.getAmount());
+            int fillable = Mth.clamp(stack.getAmount(), 0, Math.min(capacity - oxygen, transferRemaining));
             if (action.execute() && fillable != 0) {
+                currentTickTransfer += fillable;
                 tag.putInt("Oxygen", oxygen + fillable);
                 sendData();
                 if (oxygen + fillable >= capacity) {
@@ -102,14 +105,17 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
             if (item == null)
                 return 0;
             CompoundTag tag = item.getOrCreateTag();
-            int drainable = Math.min(amount, tag.getInt("Oxygen"));
+            int transferRemaining = NorthstarConfigs.server().oxygenFillerMaxTransferPerTick.get() - currentTickTransfer;
+            int drainable = Mth.clamp(amount, 0, Math.min(tag.getInt("Oxygen"), transferRemaining));
             if (action.execute() && drainable != 0) {
+                currentTickTransfer += drainable;
                 tag.putInt("Oxygen", tag.getInt("Oxygen") - drainable);
                 sendData();
             }
             return drainable;
         }
     };
+    public int currentTickTransfer;
 
     public OxygenFillerBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -125,6 +131,13 @@ public class OxygenFillerBlockEntity extends SmartBlockEntity implements IHaveGo
 
         ItemHelper.dropContents(level, worldPosition, new InvWrapper(container));
         container.clearContent();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        currentTickTransfer = 0;
     }
 
     @Nullable
