@@ -12,6 +12,7 @@ import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -24,12 +25,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
 import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.HOLD;
 import static com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult.PASS;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CircuitEngraverBlockEntity extends KineticBlockEntity {
 
     private static final RecipeWrapper recipeInventory = new RecipeWrapper(new ItemStackHandler(1));
@@ -146,7 +150,7 @@ public class CircuitEngraverBlockEntity extends KineticBlockEntity {
             currentRecipe = null;
             processingTicks = 0;
         }
-        sendData();
+        notifyUpdate();
     }
 
     public Optional<EngravingRecipe> getRecipe(ItemStack item) {

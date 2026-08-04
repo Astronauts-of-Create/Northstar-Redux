@@ -3,6 +3,7 @@ package com.lightning.northstar.block.tech.circuit_engraver;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -15,6 +16,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class CircuitEngraverBlock extends HorizontalKineticBlock implements IBE<CircuitEngraverBlockEntity> {
 
     public CircuitEngraverBlock(Properties properties) {

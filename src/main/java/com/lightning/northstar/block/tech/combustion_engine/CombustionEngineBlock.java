@@ -11,6 +11,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -50,19 +51,31 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
     }
 
     @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        withBlockEntityDo(level, pos, CombustionEngineBlockEntity::updateRedstone);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        withBlockEntityDo(level, pos, CombustionEngineBlockEntity::updateRedstone);
+    }
+
+    @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return state.getValue(HORIZONTAL_FACING).getOpposite() == face;
     }
 
     @Override
-    public boolean northstar$isOxygenConsumptionDynamic(BlockGetter level, BlockPos pos) {
+    public boolean northstar$isGogglesOnly(BlockGetter level, BlockPos pos) {
         return true;
     }
 
     @Override
     public float northstar$getOxygenConsumption(BlockGetter level, BlockPos pos, float base) {
         if (level.getBlockEntity(pos) instanceof CombustionEngineBlockEntity be && be.generatorSpeed != 0 && !be.isOverStressed())
-            return base * 20;
+            return base * CombustionEngineBlockEntity.OXYGEN_CONSUMPTION_MULTIPLIER;
         return 0;
     }
 
