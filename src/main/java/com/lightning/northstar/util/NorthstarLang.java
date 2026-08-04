@@ -52,16 +52,28 @@ public class NorthstarLang {
     }
 
     public static void addTankTooltip(List<Component> tooltip, SmartFluidTank tank) {
-        addTankTooltip(tooltip, tank.getFluid(), tank.getCapacity());
+        addTankTooltip(tooltip, tank, Component.empty());
+    }
+
+    public static void addTankTooltip(List<Component> tooltip, SmartFluidTank tank, Component label) {
+        addTankTooltip(tooltip, tank.getFluid(), tank.getCapacity(), label);
     }
 
     public static void addTankTooltip(List<Component> tooltip, FluidStack fluid, int capacity) {
+        addTankTooltip(tooltip, fluid, capacity, Component.empty());
+    }
+
+    public static void addTankTooltip(List<Component> tooltip, FluidStack fluid, int capacity, Component label) {
         if (!fluid.isEmpty()) {
-            CreateLang.fluidName(fluid)
+            builder()
+                    .add(label)
+                    .add(CreateLang.fluidName(fluid))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         } else {
-            translate("gui.goggles.empty")
+            builder()
+                    .add(label)
+                    .translate("gui.goggles.empty")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
         }

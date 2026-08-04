@@ -55,14 +55,14 @@ public class CombustionEngineBlock extends HorizontalKineticBlock implements IBE
     }
 
     @Override
-    public boolean northstar$isOxygenConsumptionDynamic(BlockGetter level, BlockPos pos) {
+    public boolean northstar$isGogglesOnly(BlockGetter level, BlockPos pos) {
         return true;
     }
 
     @Override
     public float northstar$getOxygenConsumption(BlockGetter level, BlockPos pos, float base) {
         if (level.getBlockEntity(pos) instanceof CombustionEngineBlockEntity be && be.generatorSpeed != 0 && !be.isOverStressed())
-            return base * 20;
+            return base * CombustionEngineBlockEntity.OXYGEN_CONSUMPTION_MULTIPLIER;
         return 0;
     }
 

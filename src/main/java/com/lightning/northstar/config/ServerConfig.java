@@ -58,7 +58,7 @@ public class ServerConfig extends ConfigBase {
     public final ConfigInt oxygenSealerMaxContraptionSealed = i(4096, 0, "maxContraptionSealed");
     public final ConfigFloat oxygenSealerPassiveDrain = f(0.0001f, 0, "passiveDrain", "Passive oxygen drain in mB per block per tick");
     public final ConfigFloat oxygenSealerBlockActiveDrain = f(0.01f, 0, "blockActiveDrain", "Active drain scaling in mB per block per tick. Applies to block with dynamic consumption like fire, torches, leaves, etc...");
-    public final ConfigFloat oxygenSealerEntityActiveDrain = f(0.05f, 0, "entityActiveDrain", "Active drain for entity in mB per entity per tick.");
+    public final ConfigFloat oxygenSealerEntityActiveDrain = f(0.05f, 0, "entityActiveDrain", "Active drain for entities in mB per entity per tick.");
     // 1800 mB / 6 mB/t = 15 seconds (base) to 30 seconds (capacity 3)
     public final ConfigInt oxygenFillerMaxTransferPerTick = i(6, 0, "oxygenFillerMaxTransferPerTick", "The maximum oxygen that can be inserted/extracted using an oxygen filler, in mB/t");
     public final ConfigInt mountedOxygenFillerSpeed = i(6, 0, "mountedOxygenFillerSpeed", "The speed of oxygen fillers mounted on contraptions, in mB/t. Set to 0 to disable.");

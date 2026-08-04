@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.combustion_engine;
 
 import com.lightning.northstar.client.BasicTickableSoundInstance;
+import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
 import com.lightning.northstar.content.NorthstarSounds;
 import com.lightning.northstar.contraption.FuelType;
@@ -9,10 +10,12 @@ import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
@@ -42,9 +45,16 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity implements IHaveGoggleInformation {
 
+    public static final float OXYGEN_CONSUMPTION_MULTIPLIER = 20;
+    public static final BehaviourType<SmartFluidTankBehaviour>
+            FUEL_TANK = new BehaviourType<>("Fuel"),
+            OXIDIZER_TANK = new BehaviourType<>("Oxidizer");
+
     public ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
-    public SmartFluidTankBehaviour tank;
-    protected float usageBuffer;
+    public SmartFluidTankBehaviour fuelTank;
+    public SmartFluidTankBehaviour oxidizerTank;
+    protected float fuelUsageBuffer;
+    protected float oxidizerUsageBuffer;
     protected float generatorSpeed;
     protected Fluid lastFluid;
     protected FuelType fuelType;
@@ -58,7 +68,8 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 1000));
+        behaviours.add(fuelTank = new SmartFluidTankBehaviour(FUEL_TANK, this, 1, 1000, false));
+        behaviours.add(oxidizerTank = new SmartFluidTankBehaviour(OXIDIZER_TANK, this, 1, 1000, false));
 
         ValueBoxTransform slot = new ValueBoxTransform.Sided() {
             @Override
@@ -87,7 +98,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public void tick() {
         super.tick();
 
-        FluidStack fluid = tank.getPrimaryHandler().getFluid();
+        FluidStack fluid = fuelTank.getPrimaryHandler().getFluid();
         if (!fluid.getFluid().equals(lastFluid)) {
             lastFluid = fluid.getFluid();
             fuelType = FuelType.getFuelType(lastFluid);
@@ -101,22 +112,42 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
             return;
         }
 
-        if (!NorthstarOxygen.hasOxygen(level, worldPosition)) {
+        boolean hasAtmosphere = level.northstar$oxygen().hasOxygen();
+        boolean hasOxidizer = !hasAtmosphere && NorthstarOxygen.isBreathable(oxidizerTank.getPrimaryHandler().getFluidInTank(0).getFluid());
+        NorthstarOxygen.Provider sealer = hasAtmosphere || hasOxidizer ? null : level.northstar$oxygen().getSealer(worldPosition);
+
+        if (!hasAtmosphere && !hasOxidizer && sealer == null) {
             setGeneratorSpeed(0);
             return;
         }
 
-        if (generatorSpeed > 0 && !isOverStressed())
-            usageBuffer += fuel.combustionEngineUse();
-        int drainable = Math.min(fluid.getAmount(), (int) usageBuffer);
-        tank.getPrimaryHandler().drain(drainable, IFluidHandler.FluidAction.EXECUTE);
-        usageBuffer -= drainable;
+        if (generatorSpeed > 0 && !isOverStressed()) {
+            fuelUsageBuffer += fuel.combustionEngineUse();
+            if (!hasAtmosphere) {
+                oxidizerUsageBuffer += NorthstarConfigs.server().oxygenSealerBlockActiveDrain.getF() * OXYGEN_CONSUMPTION_MULTIPLIER;
+            }
+        }
 
-        if (usageBuffer > 1) {
+        fuelUsageBuffer = drainTank(fuelTank, fuelUsageBuffer);
+
+        if (hasOxidizer) {
+            oxidizerUsageBuffer = drainTank(oxidizerTank, oxidizerUsageBuffer);
+        } else if (sealer != null) {
+            sealer.drainOxygen(oxidizerUsageBuffer);
+            oxidizerUsageBuffer = 0;
+        }
+
+        if (fuelUsageBuffer > 1 || oxidizerUsageBuffer > 1) {
             setGeneratorSpeed(0);
         } else if (generatorSpeed == 0) {
             setGeneratorSpeed(fuel.combustionEngineRpm());
         }
+    }
+
+    private float drainTank(SmartFluidTankBehaviour tank, float buffer) {
+        int drainable = Math.min(tank.getPrimaryHandler().getFluidAmount(), (int) buffer);
+        tank.getPrimaryHandler().drain(drainable, IFluidHandler.FluidAction.EXECUTE);
+        return buffer - drainable;
     }
 
     private void setGeneratorSpeed(float generatorSpeed) {
@@ -129,7 +160,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     @Override
     @OnlyIn(Dist.CLIENT)
     public void tickAudio() {
-        super.tickAudio();
+        //super.tickAudio();
 
         sound = BasicTickableSoundInstance.playLoopingSound(this, sound, !Mth.equal(generatorSpeed, 0) && !isOverStressed(), NorthstarSounds.COMBUSTION_ENGINE.get());
     }
@@ -146,8 +177,12 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, NorthstarBlockEntityTypes.COMBUSTION_ENGINE.get(), (be, face) -> {
-            if (face == null || face == be.getBlockState().getValue(CombustionEngineBlock.HORIZONTAL_FACING))
-                return be.tank.getCapability();
+            if (face == null)
+                return new CombinedTankWrapper(be.fuelTank.getCapability(), be.oxidizerTank.getCapability());
+            if (face == be.getBlockState().getValue(CombustionEngineBlock.HORIZONTAL_FACING))
+                return be.fuelTank.getCapability();
+            if (face == Direction.DOWN)
+                return be.oxidizerTank.getCapability();
             return null;
         });
     }
@@ -156,32 +191,26 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-        FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
-        if (!fluidStack.getFluid().getFluidType().isAir()) {
-            CreateLang.fluidName(fluidStack)
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
-        } else {
-            CreateLang.translate("gui.goggles.empty")
-                    .style(ChatFormatting.GRAY)
-                    .forGoggles(tooltip);
+        NorthstarLang.addTankTooltip(tooltip, fuelTank.getPrimaryHandler(), Component.translatable("northstar.gui.goggles.combustion_engine.fuel"));
+        if (!level.northstar$oxygen().hasOxygen() || !oxidizerTank.isEmpty()) {
+            NorthstarLang.addTankTooltip(tooltip, oxidizerTank.getPrimaryHandler(), Component.translatable("northstar.gui.goggles.combustion_engine.oxidizer"));
         }
 
-        NorthstarLang.builder()
-                .add(NorthstarLang.number(fluidStack.getAmount())
-                        .add(NorthstarLang.MB)
-                        .style(ChatFormatting.GOLD))
-                .text(ChatFormatting.GRAY, " / ")
-                .add(NorthstarLang.number(tank.getPrimaryHandler().getTankCapacity(0))
-                        .add(NorthstarLang.MB)
-                        .style(ChatFormatting.DARK_GRAY))
-                .forGoggles(tooltip, 1);
-
         if (fuelType != null) {
-            NorthstarLang.translate("gui.goggles.fuel_use")
+            NorthstarLang.translate("gui.goggles.combustion_engine.fuel_usage")
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             NorthstarLang.number(fuelType.combustionEngineUse())
+                    .style(ChatFormatting.GOLD)
+                    .add(NorthstarLang.MB_PER_TICK)
+                    .forGoggles(tooltip, 1);
+        }
+
+        if (!level.northstar$oxygen().hasOxygen()) {
+            NorthstarLang.translate("gui.goggles.combustion_engine.oxidizer_usage")
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip);
+            NorthstarLang.number(NorthstarConfigs.server().oxygenSealerBlockActiveDrain.getF() * OXYGEN_CONSUMPTION_MULTIPLIER)
                     .style(ChatFormatting.GOLD)
                     .add(NorthstarLang.MB_PER_TICK)
                     .forGoggles(tooltip, 1);
@@ -194,14 +223,16 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(compound, registries, clientPacket);
         generatorSpeed = compound.getFloat("GeneratorSpeed");
-        usageBuffer = compound.getFloat("UsageBuffer");
+        fuelUsageBuffer = compound.getFloat("FuelUsageBuffer");
+        oxidizerUsageBuffer = compound.getFloat("OxidizerUsageBuffer");
     }
 
     @Override
     protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(compound, registries, clientPacket);
         compound.putFloat("GeneratorSpeed", generatorSpeed);
-        compound.putFloat("UsageBuffer", usageBuffer);
+        compound.putFloat("FuelUsageBuffer", fuelUsageBuffer);
+        compound.putFloat("OxidizerUsageBuffer", oxidizerUsageBuffer);
     }
 
 }
