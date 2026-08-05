@@ -67,7 +67,7 @@ public class NorthstarTagGen {
                         Blocks.AZALEA, Blocks.FLOWERING_AZALEA, Blocks.SCULK_SHRIEKER, Blocks.COBWEB,
                         Blocks.CAMPFIRE, Blocks.SOUL_CAMPFIRE, Blocks.CAULDRON, Blocks.LADDER, Blocks.SCAFFOLDING,
                         Blocks.RAIL, Blocks.POWERED_RAIL, Blocks.DETECTOR_RAIL, Blocks.ACTIVATOR_RAIL,
-                        Blocks.LIGHT)
+                        Blocks.KELP, Blocks.KELP_PLANT, Blocks.LIGHT)
                 .add(BlockTags.FIRE)
                 .add(BlockTags.LEAVES)
 
