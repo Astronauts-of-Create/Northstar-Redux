@@ -11,8 +11,6 @@ import net.minecraft.world.level.Level;
 import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(Player.class)
 public abstract class PlayerGravityMixin extends LivingEntity {
@@ -21,18 +19,25 @@ public abstract class PlayerGravityMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
-            constant = @Constant(doubleValue = (double) 0.2F)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "doubleValue=0.20000000298023224"
+            )
     )
     private double northstar$modifyDropVerticalVelocity1(double constant) {
         // make items spread evenly up and down when dying
         return level().northstar$isZeroGravity() ? random.nextFloat() * 0.2 - 0.1 : constant;
     }
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
-            constant = @Constant(floatValue = 0.1F, ordinal = 0)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "floatValue=0.1",
+                    ordinal = 0
+            )
     )
     private float northstar$modifyDropVerticalVelocity2(float constant) {
         // make items fly directly forward (without up bias) when dropping
