@@ -6,8 +6,6 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public class ServerGamePacketListenerImplGravityMixin {
@@ -15,9 +13,12 @@ public class ServerGamePacketListenerImplGravityMixin {
     @Shadow
     public ServerPlayer player;
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "tick",
-            constant = @Constant(intValue = 80)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=80"
+            )
     )
     private int northstar$modifyAllowedFlightDuration(int constant) {
         return (int) (constant / player.level().northstar$gravityScale());

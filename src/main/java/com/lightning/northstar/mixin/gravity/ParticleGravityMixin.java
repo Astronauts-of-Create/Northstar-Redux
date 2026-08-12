@@ -8,8 +8,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(Particle.class)
 public class ParticleGravityMixin {
@@ -18,12 +16,15 @@ public class ParticleGravityMixin {
     @Final
     protected ClientLevel level;
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = {
                     "<init>(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDD)V",
                     "setPower"
             },
-            constant = @Constant(doubleValue = (double) 0.1f)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "doubleValue=0.10000000149011612"
+            )
     )
     private double northstar$modifyInitialVelocity(double original) {
         // particles have a small vertical velocity bias which makes them go up slightly before falling due to gravity.
@@ -49,7 +50,7 @@ public class ParticleGravityMixin {
             super(level, x, y, z);
         }
 
-        @ModifyConstant(method = "tick", constant = @Constant(doubleValue = (double) 0.003F))
+        @ModifyExpressionValue(method = "tick", at = @At(value = "CONSTANT", args = "doubleValue=0.003000000026077032"))
         private double northstar$modifyGravity(double constant) {
             return constant * level.northstar$gravityScale();
         }
@@ -61,7 +62,7 @@ public class ParticleGravityMixin {
             super(level, x, y, z);
         }
 
-        @ModifyConstant(method = "tick", constant = @Constant(doubleValue = (double) 0.0074F))
+        @ModifyExpressionValue(method = "tick", at = @At(value = "CONSTANT", args = "doubleValue=0.007400000002235174"))
         private double northstar$modifyGravity(double constant) {
             return constant * level.northstar$gravityScale();
         }
