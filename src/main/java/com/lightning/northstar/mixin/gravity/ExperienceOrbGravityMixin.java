@@ -10,8 +10,6 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ExperienceOrb.class)
 public abstract class ExperienceOrbGravityMixin extends Entity {
@@ -31,22 +29,31 @@ public abstract class ExperienceOrbGravityMixin extends Entity {
         return level.northstar$isZeroGravity() ? y * 2.0 - 1.0 : y;
     }
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "tick",
-            constant = @Constant(doubleValue = -0.03)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "doubleValue=-0.03"
+            )
     )
     private double northstar$modifyGravity(double constant) {
         return constant * level().northstar$gravityScale();
     }
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = {
                     "tick",
                     "scanForEntities"
             },
-            constant = {
-                    @Constant(doubleValue = 64.0),
-                    @Constant(doubleValue = 8.0)
+            at = {
+                    @At(
+                            value = "CONSTANT",
+                            args = "doubleValue=64.0"
+                    ),
+                    @At(
+                            value = "CONSTANT",
+                            args = "doubleValue=8.0"
+                    )
             }
     )
     private double northstar$increaseFollowRange(double constant) {

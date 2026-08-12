@@ -1,12 +1,12 @@
 package com.lightning.northstar.mixin.gravity;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.item.ExperienceBottleItem;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin({
         ExperienceBottleItem.class,
@@ -14,9 +14,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 })
 public class ThrowableItemGravityMixin {
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "use",
-            constant = @Constant(floatValue = -20.0F)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "floatValue=-20.0"
+            )
     )
     private float northstar$modifyVerticalVelocityBias(float constant, @Local(argsOnly = true) Level level) {
         return level.northstar$isZeroGravity() ? 0 : constant;

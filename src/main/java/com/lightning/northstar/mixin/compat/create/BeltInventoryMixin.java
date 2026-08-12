@@ -1,12 +1,12 @@
 package com.lightning.northstar.mixin.compat.create;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.transport.BeltInventory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BeltInventory.class)
 public class BeltInventoryMixin {
@@ -15,9 +15,12 @@ public class BeltInventoryMixin {
     @Final
     BeltBlockEntity belt;
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "eject",
-            constant = @Constant(doubleValue = (double) (1 / 8f)),
+            at = @At(
+                    value = "CONSTANT",
+                    args = "doubleValue=0.125"
+            ),
             remap = false
     )
     private double northstar$modifyVerticalVelocity(double original) {
