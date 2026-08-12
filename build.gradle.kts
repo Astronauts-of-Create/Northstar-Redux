@@ -147,6 +147,7 @@ dependencies {
     implementation(libs.kubejs) { isTransitive = false }
     implementation(libs.kubejs.create)
     implementation(libs.rhino)
+    implementation(libs.sable)
     implementation(libs.sable.companion)
     implementation(libs.tfmg)
 

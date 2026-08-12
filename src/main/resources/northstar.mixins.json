@@ -59,6 +59,7 @@
     "compat.create.KineticBlockEntityMixin",
     "compat.create.OpenEndedPipeMixin",
     "compat.create.SequencedAssemblyRecipeBuilderMixin",
+    "compat.sable.ServerBoundPunchSubLevelPacketMixin",
     "compat.tfmg.AirIntakeBlockEntityMixin",
     "compat.tfmg.AirIntakeBlockMixin",
     "compat.tfmg.EngineBlockEntityMixin",
