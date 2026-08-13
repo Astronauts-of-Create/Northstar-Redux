@@ -1,164 +1,198 @@
 package com.lightning.northstar.item.atlas;
 
-import com.lightning.northstar.Northstar;
 import com.lightning.northstar.contraption.rocket.RocketDestination;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.createmod.catnip.lang.LangNumberFormat;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SpaceAtlasContent {
+public record SpaceAtlasContent(
+        @Unmodifiable Map<ResourceLocation, Planet> planets,
+        @Unmodifiable Map<RocketDestination, Component> destinations
+) {
 
-    public final Map<ResourceLocation, AtlasPlanet> planets = new HashMap<>();
-    public final Map<RocketDestination, Component> destinations = new LinkedHashMap<>();
+    public static final SpaceAtlasContent EMPTY = new SpaceAtlasContent(Map.of(), Map.of());
+    public static final Codec<SpaceAtlasContent> CODEC;
 
-    public static class AtlasPlanet {
+    static {
+        Codec<Map<RocketDestination, Component>> theInnerThingOrElseItExplodes = RecordCodecBuilder.<Map.Entry<RocketDestination, Component>>create(d -> d.group(
+                        RocketDestination.NBT_CODEC.fieldOf("destination").forGetter(Map.Entry::getKey),
+                        ExtraCodecs.COMPONENT.fieldOf("label").forGetter(Map.Entry::getValue)
+                ).apply(d, Map::entry))
+                .listOf()
+                .xmap(entries -> Map.ofEntries(entries.toArray(Map.Entry[]::new)), map -> List.copyOf(map.entrySet()));
 
-        public final ResourceLocation id;
-        public final List<AtlasReading> readings = new ArrayList<>();
-        public float science;
+        CODEC = RecordCodecBuilder.create(i -> i.group(
+                Planet.CODEC.listOf()
+                        .xmap(l -> l.stream().collect(Collectors.toMap(Planet::planetId, Function.identity())), m -> List.copyOf(m.values()))
+                        .fieldOf("planets")
+                        .forGetter(SpaceAtlasContent::planets),
+                theInnerThingOrElseItExplodes.fieldOf("destinations").forGetter(SpaceAtlasContent::destinations)
+        ).apply(i, SpaceAtlasContent::new));
+    }
 
-        public AtlasPlanet(ResourceLocation id) {
-            this.id = id;
+    public Builder asBuilder() {
+        return new Builder(this);
+    }
+
+    public static Builder builder() {
+        return EMPTY.asBuilder();
+    }
+
+    public static class Builder {
+        private final Map<ResourceLocation, Planet> planets = new HashMap<>();
+        private final Map<RocketDestination, Component> destinations = new HashMap<>();
+
+        private Builder(SpaceAtlasContent content) {
+            planets.putAll(content.planets);
+            destinations.putAll(content.destinations);
         }
 
-        public void recalculateScience(float decayExp) {
-            readings.sort(Comparator.comparing(reading -> -reading.science));
-
-            float science = 0;
-            Object2IntMap<ResourceLocation> counts = new Object2IntOpenHashMap<>();
-            for (AtlasReading reading : readings) {
-                science += reading.science * (float) Math.pow(decayExp, counts.mergeInt(reading.origin, 0, (a, b) -> a + b + 1));
-            }
-            this.science = science;
+        public Builder addPlanet(Planet planet) {
+            planets.put(planet.planetId, planet);
+            return this;
         }
 
-        public CompoundTag toTag() {
-            CompoundTag tag = new CompoundTag();
-            tag.putFloat("science", science);
-
-            ListTag readings = new ListTag();
-            for (AtlasReading reading : this.readings) {
-                readings.add(reading.toTag());
-            }
-            tag.put("readings", readings);
-
-            return tag;
+        public Builder addDestination(RocketDestination destination, Component label) {
+            destinations.put(destination, label);
+            return this;
         }
 
-        public static AtlasPlanet fromTag(ResourceLocation id, CompoundTag tag) {
-            AtlasPlanet planet = new AtlasPlanet(id);
+        public Map<ResourceLocation, Planet> getPlanets() {
+            return planets;
+        }
 
-            planet.science = tag.getFloat("science");
-            for (Tag reading : tag.getList("readings", Tag.TAG_COMPOUND)) {
-                planet.readings.add(AtlasReading.fromTag((CompoundTag) reading));
-            }
+        public Map<RocketDestination, Component> getDestinations() {
+            return destinations;
+        }
 
-            return planet;
+        public SpaceAtlasContent build() {
+            return new SpaceAtlasContent(Map.copyOf(planets), Map.copyOf(destinations));
         }
     }
 
-    public static class AtlasReading {
-        public ResourceLocation origin;
-        public float science;
-        public int day;
+    public record Planet(
+            ResourceLocation planetId,
+            @Unmodifiable List<AtlasReading> readings,
+            float science
+    ) {
+        public static final Codec<Planet> CODEC = RecordCodecBuilder.create(i -> i.group(
+                ResourceLocation.CODEC.fieldOf("planet").forGetter(Planet::planetId),
+                AtlasReading.CODEC.listOf().fieldOf("readings").forGetter(Planet::readings),
+                Codec.FLOAT.fieldOf("science").forGetter(Planet::science)
+        ).apply(i, Planet::new));
 
-        public AtlasReading() {
+        public Planet.Builder toBuilder() {
+            return new Planet.Builder(this);
         }
 
-        public AtlasReading(ResourceLocation origin, float science, int day) {
-            this.origin = origin;
-            this.science = science;
-            this.day = day;
+        public static Planet.Builder builder() {
+            return new Planet.Builder();
         }
 
-        public CompoundTag toTag() {
-            CompoundTag tag = new CompoundTag();
-            tag.putString("origin", origin.toString());
-            tag.putFloat("science", science);
-            tag.putInt("day", day);
-            return tag;
-        }
+        public static class Builder {
+            private ResourceLocation planetId;
+            private List<AtlasReading> readings = new ArrayList<>();
+            private float science;
 
-        public static AtlasReading fromTag(CompoundTag tag) {
-            ResourceLocation origin = ResourceLocation.tryParse(tag.getString("origin"));
-            if (origin == null) {
-                origin = ResourceLocation.parse("invalid");
+            private Builder() {
             }
-            return new AtlasReading(origin, tag.getFloat("science"), tag.getInt("day"));
+
+            private Builder(Planet planet) {
+                this.planetId = planet.planetId;
+                this.readings.addAll(planet.readings);
+                this.science = planet.science;
+            }
+
+            public Builder planetId(ResourceLocation planetId) {
+                this.planetId = planetId;
+                return this;
+            }
+
+            public Builder addReading(AtlasReading reading) {
+                readings.add(reading);
+                return this;
+            }
+
+            public Builder science(float science) {
+                this.science = science;
+                return this;
+            }
+
+            public Builder calculateScience(float decayExp) {
+                ensureSorted();
+                float science = 0;
+                Object2IntMap<ResourceLocation> counts = new Object2IntOpenHashMap<>();
+                for (SpaceAtlasContent.AtlasReading reading : readings) {
+                    science += reading.science() * (float) Math.pow(decayExp, counts.mergeInt(reading.origin(), 0, (a, b) -> a + b + 1));
+                }
+                return science(science);
+            }
+
+            public ResourceLocation getPlanetId() {
+                return planetId;
+            }
+
+            public List<AtlasReading> getReadings() {
+                return readings;
+            }
+
+            public float getScience() {
+                return science;
+            }
+
+            public Planet build() {
+                ensureSorted();
+                return new Planet(Objects.requireNonNull(planetId, "planetId"), List.copyOf(readings), science);
+            }
+
+            private void ensureSorted() {
+                readings.sort(Comparator.comparing(reading -> -reading.science));
+            }
         }
     }
 
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
-        toTag(tag);
-        return tag;
+    public record AtlasReading(
+            ResourceLocation origin,
+            float science,
+            int day
+    ) {
+        public static final Codec<AtlasReading> CODEC = RecordCodecBuilder.create(i -> i.group(
+                ResourceLocation.CODEC.fieldOf("origin").forGetter(AtlasReading::origin),
+                Codec.FLOAT.fieldOf("science").forGetter(AtlasReading::science),
+                Codec.INT.fieldOf("day").forGetter(AtlasReading::day)
+        ).apply(i, AtlasReading::new));
     }
+
 
     public void toTag(CompoundTag tag) {
-        CompoundTag atlas = new CompoundTag();
-
-        CompoundTag planets = new CompoundTag();
-        for (Map.Entry<ResourceLocation, AtlasPlanet> entry : this.planets.entrySet()) {
-            planets.put(entry.getKey().toString(), entry.getValue().toTag());
-        }
-        atlas.put("planets", planets);
-
-        ListTag destinations = new ListTag();
-        for (Map.Entry<RocketDestination, Component> entry : this.destinations.entrySet()) {
-            CompoundTag dest = entry.getKey().toTag();
-            dest.put("label", ExtraCodecs.COMPONENT.encodeStart(NbtOps.INSTANCE, entry.getValue()).getOrThrow(false, Util.prefix("Failed to encode Component:", Northstar.LOGGER::error)));
-            destinations.add(dest);
-        }
-        atlas.put("destinations", destinations);
-
-        tag.put("atlas", atlas);
+        tag.put("atlas", CODEC.encode(this, NbtOps.INSTANCE, NbtOps.INSTANCE.empty()).getOrThrow(false, message -> {
+        }));
     }
 
     public static SpaceAtlasContent fromTag(CompoundTag tag) {
-        SpaceAtlasContent content = new SpaceAtlasContent();
-        CompoundTag atlas = tag.getCompound("atlas");
-
-        CompoundTag planets = atlas.getCompound("planets");
-        for (String key : planets.getAllKeys()) {
-            ResourceLocation loc = ResourceLocation.tryParse(key);
-            if (loc == null) {
-                continue;
-            }
-            content.planets.put(loc, AtlasPlanet.fromTag(loc, planets.getCompound(key)));
-        }
-
-        ListTag destinations = atlas.getList("destinations", Tag.TAG_COMPOUND);
-        for (Tag destinationTag : destinations) {
-            RocketDestination destination = RocketDestination.fromTag((CompoundTag) destinationTag);
-            if (destination != null && destination.pos() != null) {
-                Component label = ExtraCodecs.COMPONENT.parse(NbtOps.INSTANCE, ((CompoundTag) destinationTag).get("label"))
-                        .result()
-                        .orElseGet(() -> getDefaultLabel(destination.pos(), destination.dir()));
-
-                content.destinations.put(destination, label);
-            }
-        }
-
-        return content;
+        return CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow(false, message -> {
+        }).getFirst();
     }
 
     @Contract("_, _ -> new")

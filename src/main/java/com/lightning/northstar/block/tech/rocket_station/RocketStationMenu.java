@@ -182,9 +182,9 @@ public class RocketStationMenu extends MenuBase<RocketStationHolder> {
             List<DimensionEntry> dimensions = new ArrayList<>();
             SpaceAtlasContent atlas = SpaceAtlasContent.fromTag(tag);
 
-            for (var entry : atlas.planets.entrySet()) {
+            for (var entry : atlas.planets().entrySet()) {
                 Planet planet = planets.getPlanetById(entry.getKey());
-                if (planet == null || planet.properties.requiredScience() < 0 || entry.getValue().science < planet.properties.requiredScience()) {
+                if (planet == null || planet.properties.requiredScience() < 0 || entry.getValue().science() < planet.properties.requiredScience()) {
                     continue;
                 }
                 for (PlanetDimension dimension : planet.dimensions) {
@@ -193,7 +193,7 @@ public class RocketStationMenu extends MenuBase<RocketStationHolder> {
 
                     List<Pair<RocketDestination, Component>> destinations = new ArrayList<>();
                     destinations.add(Pair.of(new RocketDestination(dimensionId, null, null), Component.translatable("northstar.gui.rocket_station.hold_position")));
-                    atlas.destinations.entrySet()
+                    atlas.destinations().entrySet()
                             .stream()
                             .filter(e -> e.getKey().dim().equals(dimensionId))
                             .forEach(e -> destinations.add(Pair.of(e.getKey(), e.getValue())));

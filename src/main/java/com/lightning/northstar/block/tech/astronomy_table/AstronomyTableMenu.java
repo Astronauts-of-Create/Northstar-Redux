@@ -158,9 +158,9 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
         }
 
         SpaceAtlasContent atlas = SpaceAtlasContent.fromTag(atlasItem.getOrCreateTag());
-        SpaceAtlasContent.AtlasPlanet planet = atlas.planets.computeIfAbsent(targetPlanet.key.location(), SpaceAtlasContent.AtlasPlanet::new);
+        SpaceAtlasContent.Planet planet = atlas.planets().get(targetPlanet.key.location());
 
-        if (planet.readings.stream().anyMatch(r -> r.origin.equals(originPlanet.key.location()) && r.day == day)) {
+        if (planet != null && planet.readings().stream().anyMatch(r -> r.origin().equals(originPlanet.key.location()) && r.day() == day)) {
             messages = List.of(
                     Component.translatable("northstar.gui.astronomy_table.duplicate_reading").withStyle(ChatFormatting.RED),
                     Component.translatable("northstar.gui.astronomy_table.duplicate_reading.tip")
@@ -168,16 +168,23 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
             return;
         }
 
-        float oldScience = planet.science;
+        SpaceAtlasContent.Planet updatedPlanet = (planet == null ?
+                SpaceAtlasContent.Planet.builder().planetId(targetPlanet.key.location()) :
+                planet.toBuilder())
+                .addReading(new SpaceAtlasContent.AtlasReading(originPlanet.key.location(), science, day))
+                .calculateScience(targetPlanet.properties.scienceDecayExp())
+                .build();
 
-        planet.readings.add(new SpaceAtlasContent.AtlasReading(originPlanet.key.location(), science, day));
-        planet.recalculateScience(targetPlanet.properties.scienceDecayExp());
+        SpaceAtlasContent updatedAtlas = atlas.asBuilder()
+                .addPlanet(updatedPlanet)
+                .build();
 
-        float newScience = planet.science;
+        float oldScience = planet == null ? 0 : planet.science();
+        float newScience = updatedPlanet.science();
         float addedScience = newScience - oldScience;
 
         ItemStack result = atlasItem.copy();
-        atlas.toTag(result.getOrCreateTag());
+        updatedAtlas.toTag(result.getOrCreateTag());
         resultSlots.setItem(0, result);
 
         List<Component> message = new ArrayList<>();
