@@ -106,11 +106,15 @@ public record PlanetProperties(
         return new Builder();
     }
 
+    public Builder asBuilder() {
+        return new Builder(this);
+    }
+
     public static class Builder {
         private @Nullable ResourceKey<PlanetProperties> centralBody;
         private OrbitProvider orbit;
         private String type;
-        private float scienceWeightExponent = 0.9f;
+        private float scienceDecayExp = 0.9f;
         private Float requiredScience;
         private boolean canBeObserved = true;
         private Double rotationPeriodDays;
@@ -121,6 +125,26 @@ public record PlanetProperties(
         private PlanetSpriteRenderer renderer;
         private List<TextureLayer> texture = new ArrayList<>();
         private @Nullable Component notes;
+
+        private Builder() {
+        }
+
+        private Builder(PlanetProperties properties) {
+            this.centralBody = properties.centralBody;
+            this.orbit = properties.orbit;
+            this.type = properties.type;
+            this.scienceDecayExp = properties.scienceDecayExp;
+            this.requiredScience = properties.requiredScience < 0 ? null : properties.requiredScience;
+            this.canBeObserved = properties.canBeObserved;
+            this.rotationPeriodDays = properties.rotationPeriodDays;
+            this.diameter = properties.diameter;
+            this.axialTilt = properties.obliquity;
+            this.axialPrecession = properties.axialPrecession;
+            this.initialAxialPrecession = properties.initialAxialPrecession;
+            this.renderer = properties.renderer;
+            this.texture.addAll(properties.texture);
+            this.notes = properties.notes;
+        }
 
         public Builder centralBody(@Nullable ResourceKey<PlanetProperties> centralBody) {
             this.centralBody = centralBody;
@@ -138,7 +162,7 @@ public record PlanetProperties(
         }
 
         public Builder scienceWeightExponent(float scienceWeightExponent) {
-            this.scienceWeightExponent = scienceWeightExponent;
+            this.scienceDecayExp = scienceWeightExponent;
             return this;
         }
 
@@ -227,7 +251,7 @@ public record PlanetProperties(
                     centralBody,
                     Objects.requireNonNull(orbit, "orbit"),
                     Objects.requireNonNull(type, "type"),
-                    scienceWeightExponent,
+                    scienceDecayExp,
                     requiredScience == null ? -1 : requiredScience,
                     canBeObserved,
                     Objects.requireNonNull(rotationPeriodDays, "rotation period"),

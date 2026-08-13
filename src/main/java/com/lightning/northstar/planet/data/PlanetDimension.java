@@ -147,6 +147,10 @@ public record PlanetDimension(
         return new Builder();
     }
 
+    public Builder asBuilder() {
+        return new Builder(this);
+    }
+
     public static class Builder {
         private @Nullable ResourceKey<PlanetProperties> planet;
         private String name;
@@ -164,6 +168,27 @@ public record PlanetDimension(
         private float heatGradient = 1;
         private double longitudeOffset;
         private double latitudeOffset;
+
+        private Builder() {
+        }
+
+        private Builder(PlanetDimension dimension) {
+            this.planet = dimension.planet;
+            this.name = dimension.name;
+            this.dimensionAbove = dimension.dimensionAbove;
+            this.dimensionBelow = dimension.dimensionBelow;
+            this.isOrbit = dimension.isOrbit;
+            this.atmosphere = dimension.atmosphere;
+            this.gravity = dimension.gravity;
+            this.averageTemperature.set(dimension.averageTemperature);
+            this.temperature = dimension.temperature;
+            this.wind = dimension.wind;
+            this.sun = dimension.sun;
+            this.heatIntercept = dimension.heatIntercept;
+            this.heatGradient = dimension.heatGradient;
+            this.longitudeOffset = dimension.longitudeOffset;
+            this.latitudeOffset = dimension.latitudeOffset;
+        }
 
         public Builder planet(@Nullable ResourceKey<PlanetProperties> planet) {
             this.planet = planet;
