@@ -63,10 +63,6 @@ public record Atmosphere(
 
     public static final Lazy<Atmosphere> DEFAULT = Lazy.of(() -> builder().build());
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public boolean isVacuum() {
         return fluid == Fluids.EMPTY;
     }
@@ -75,12 +71,31 @@ public record Atmosphere(
         return new FluidStack(fluid, amount, fluidNbt);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder asBuilder() {
+        return new Builder(this);
+    }
+
     public static class Builder {
         private Fluid fluid = NorthstarFluids.OXYGEN.get();
         private CompoundTag fluidNbt = new CompoundTag();
         private float collectionRate = 10;
         private float pressure = PlanetDimension.EARTH_ATMOSPHERE_PRESSURE;
         private float daytimeStarBrightness = Float.NaN;
+
+        private Builder() {
+        }
+
+        private Builder(Atmosphere atmosphere) {
+            this.fluid = atmosphere.fluid;
+            this.fluidNbt = atmosphere.fluidNbt.copy();
+            this.collectionRate = atmosphere.collectionRate;
+            this.pressure = atmosphere.pressure;
+            this.daytimeStarBrightness = atmosphere.daytimeStarBrightness;
+        }
 
         public Builder fluid(Fluid fluid) {
             this.fluid = fluid;
