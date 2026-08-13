@@ -1,5 +1,7 @@
 package com.lightning.northstar.contraption.rocket;
 
+import com.lightning.northstar.util.NorthstarCodecs;
+import com.mojang.serialization.Codec;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +29,8 @@ public record RocketDestination(
         @Nullable BlockPos pos,
         @Nullable Direction dir
 ) {
+
+    public static final Codec<RocketDestination> NBT_CODEC = NorthstarCodecs.wrapNbt(CompoundTag.class, RocketDestination::fromTag, RocketDestination::toTag);
 
     public RocketDestination(FriendlyByteBuf buffer) {
         this(

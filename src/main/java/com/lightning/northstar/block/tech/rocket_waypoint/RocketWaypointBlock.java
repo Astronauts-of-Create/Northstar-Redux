@@ -57,22 +57,22 @@ public class RocketWaypointBlock extends Block implements IWrenchable {
         }
 
         if (!level.isClientSide()) {
-            SpaceAtlasContent content = SpaceAtlasContent.fromTag(stack.getOrCreateTag());
+            SpaceAtlasContent.Builder content = SpaceAtlasContent.fromTag(stack.getOrCreateTag()).asBuilder();
             RocketDestination destination = new RocketDestination(level.dimension().location(), pos, direction);
 
-            content.destinations.keySet().removeIf(dest -> destination.dim().equals(dest.dim()) && destination.pos().equals(dest.pos()));
+            content.getDestinations().keySet().removeIf(dest -> destination.dim().equals(dest.dim()) && destination.pos().equals(dest.pos()));
 
-            if (content.destinations.size() >= NorthstarConfigs.server().spaceAtlasMaxWaypoints.get()) {
+            if (content.getDestinations().size() >= NorthstarConfigs.server().spaceAtlasMaxWaypoints.get()) {
                 player.sendSystemMessage(Component.translatable("northstar.gui.rocket_waypoint.max_waypoints"));
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
 
             playEffect(pos, direction);
 
-            content.destinations.put(destination, SpaceAtlasContent.getDefaultLabel(pos, direction));
+            content.addDestination(destination, SpaceAtlasContent.getDefaultLabel(pos, direction));
             player.sendSystemMessage(Component.translatable("northstar.gui.rocket_waypoint.added_waypoint"));
 
-            content.toTag(stack.getOrCreateTag());
+            content.build().toTag(stack.getOrCreateTag());
             player.setItemInHand(hand, stack);
         }
 

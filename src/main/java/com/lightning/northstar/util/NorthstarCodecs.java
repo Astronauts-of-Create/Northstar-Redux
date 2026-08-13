@@ -2,10 +2,14 @@ package com.lightning.northstar.util;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.fluids.FluidStack;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -74,4 +78,21 @@ public class NorthstarCodecs {
         return list;
     }
 
+    public static <T extends Tag, R> Codec<R> wrapNbt(Class<T> tagType, Function<T, R> decoder, Function<R, T> encoder) {
+        return new Codec<>() {
+            @Override
+            public <U> DataResult<U> encode(R input, DynamicOps<U> ops, U prefix) {
+                return DataResult.success(NbtOps.INSTANCE.convertTo(ops, encoder.apply(input)));
+            }
+
+            @Override
+            public <U> DataResult<com.mojang.datafixers.util.Pair<R, U>> decode(DynamicOps<U> ops, U input) {
+                Tag tag = ops.convertTo(NbtOps.INSTANCE, input);
+                if (tagType.isAssignableFrom(tag.getClass())) {
+                    return DataResult.success(com.mojang.datafixers.util.Pair.of(decoder.apply(tagType.cast(tag)), input));
+                }
+                return DataResult.error(() -> "Expected " + tagType.getSimpleName() + " but got " + tag.getClass().getSimpleName());
+            }
+        };
+    }
 }

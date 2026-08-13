@@ -53,20 +53,19 @@ public class NorthstarCreativeModeTab {
         return (parameters, output) -> {
             Map<Item, Consumer<CreativeModeTab.Output>> builders = Map.of(
                     NorthstarItems.SPACE_ATLAS.get(), out -> {
-                        SpaceAtlasContent atlas = new SpaceAtlasContent();
+                        SpaceAtlasContent.Builder atlas = SpaceAtlasContent.builder();
 
                         for (Planet planet : NorthstarLevel.CLIENT_TRACKER.getPlanets().values()) {
-                            SpaceAtlasContent.AtlasPlanet planetInfo = new SpaceAtlasContent.AtlasPlanet(planet.key.location());
-
-                            planetInfo.science = Float.POSITIVE_INFINITY;
-                            planetInfo.readings.add(new SpaceAtlasContent.AtlasReading(Northstar.asResource("creative_menu"), Float.POSITIVE_INFINITY, 0));
-
-                            atlas.planets.put(planet.key.location(), planetInfo);
+                            atlas.addPlanet(SpaceAtlasContent.Planet.builder()
+                                    .planetId(planet.key.location())
+                                    .addReading(new SpaceAtlasContent.AtlasReading(Northstar.asResource("creative_menu"), Float.POSITIVE_INFINITY, 0))
+                                    .science(Float.POSITIVE_INFINITY)
+                                    .build());
                         }
 
                         ItemStack item = NorthstarItems.SPACE_ATLAS.asStack();
                         item.setHoverName(Component.translatable("item.northstar.space_atlas.creative").withStyle(ChatFormatting.LIGHT_PURPLE));
-                        atlas.toTag(item.getOrCreateTag());
+                        atlas.build().toTag(item.getOrCreateTag());
                         out.accept(item);
                     },
                     NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get(), out -> registerSpaceSuit(out, NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE.get()),

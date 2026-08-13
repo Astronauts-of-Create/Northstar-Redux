@@ -44,13 +44,13 @@ public class SpaceAtlasScreen extends AbstractSimiContainerScreen<SpaceAtlasMenu
 
         SpaceAtlasContent content = SpaceAtlasContent.fromTag(menu.contentHolder.getOrCreateTag());
 
-        if (content.destinations.isEmpty()) {
+        if (content.destinations().isEmpty()) {
             Minecraft.getInstance().gui.getChat().addMessage(Component.translatable("northstar.item.space_atlas.empty").withStyle(ChatFormatting.RED));
             onClose();
             return;
         }
 
-        for (Map.Entry<RocketDestination, Component> entry : content.destinations.entrySet()) {
+        for (Map.Entry<RocketDestination, Component> entry : content.destinations().entrySet()) {
             destinations.add(new EditableDestination(entry.getKey(), entry.getValue().getString()));
         }
 

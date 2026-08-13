@@ -41,15 +41,15 @@ public class SpaceAtlasEditPacket extends SimplePacketBase {
             ServerPlayer player = context.getSender();
             if (player != null && player.containerMenu instanceof SpaceAtlasMenu menu) {
                 CompoundTag tag = menu.contentHolder.getOrCreateTag();
-                SpaceAtlasContent content = SpaceAtlasContent.fromTag(tag);
+                SpaceAtlasContent.Builder content = SpaceAtlasContent.fromTag(tag).asBuilder();
 
                 for (Map.Entry<RocketDestination, String> entry : renamed.entrySet()) {
-                    content.destinations.computeIfPresent(entry.getKey(), (k, v) -> Component.literal(entry.getValue()));
+                    content.getDestinations().computeIfPresent(entry.getKey(), (k, v) -> Component.literal(entry.getValue()));
                 }
 
-                content.destinations.keySet().removeIf(removed::contains);
+                content.getDestinations().keySet().removeIf(removed::contains);
 
-                content.toTag(tag);
+                content.build().toTag(tag);
             }
         });
         return false;
