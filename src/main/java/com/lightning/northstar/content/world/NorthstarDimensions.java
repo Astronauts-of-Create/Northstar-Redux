@@ -7,6 +7,7 @@ import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.NorthstarWeathers;
 import com.lightning.northstar.content.world.planet.core.NorthstarBiomes;
 import com.lightning.northstar.planet.data.Atmosphere;
+import com.lightning.northstar.planet.data.AtmosphereFluid;
 import com.lightning.northstar.planet.data.PlanetDimension;
 import com.lightning.northstar.planet.data.func.DispatchableFunction;
 import com.lightning.northstar.planet.data.func.LevelFunction;
@@ -95,7 +96,7 @@ public class NorthstarDimensions {
                         .dimension(MARS)
                         .dimensionAbove(MARS_ORBIT)
                         .atmosphere(Atmosphere.builder()
-                                .fluid(NorthstarFluids.CARBON)
+                                .composition(new AtmosphereFluid(NorthstarFluids.CARBON, 0.05f, true)) // 1 mB/s
                                 .pressurePa(610)
                                 .daytimeStarBrightness(0.4f)
                                 .build())
@@ -144,7 +145,7 @@ public class NorthstarDimensions {
                         .dimension(VENUS)
                         .dimensionAbove(VENUS_ORBIT)
                         .atmosphere(Atmosphere.builder()
-                                .fluid(NorthstarFluids.CARBON)
+                                .composition(new AtmosphereFluid(NorthstarFluids.CARBON))
                                 .pressureAtm(90.7969f)
                                 .build())
                         .gravity(8.87f)

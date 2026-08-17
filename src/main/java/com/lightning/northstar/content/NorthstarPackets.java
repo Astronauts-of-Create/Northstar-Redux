@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorEditPacket;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket;
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
@@ -33,6 +34,7 @@ import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
 public enum NorthstarPackets {
 
     // client to server
+    UPDATE_ATMOSPHERIC_CONCENTRATOR(AtmosphericConcentratorEditPacket.class, AtmosphericConcentratorEditPacket::new, PLAY_TO_SERVER),
     UPDATE_ROCKET_STATION(RocketStationEditPacket.class, RocketStationEditPacket::new, PLAY_TO_SERVER),
     UPDATE_SPACE_ATLAS(SpaceAtlasEditPacket.class, SpaceAtlasEditPacket::new, PLAY_TO_SERVER),
     UPDATE_TEMPERATURE_REGULATOR(TemperatureRegulatorEditPacket.class, TemperatureRegulatorEditPacket::new, PLAY_TO_SERVER),
@@ -47,7 +49,7 @@ public enum NorthstarPackets {
     RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket::new, PLAY_TO_CLIENT);
 
     public static final ResourceLocation CHANNEL_NAME = Northstar.asResource("main");
-    public static final int NETWORK_VERSION = 7;
+    public static final int NETWORK_VERSION = 8;
     public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
     private static SimpleChannel channel;
 

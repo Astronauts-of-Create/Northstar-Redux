@@ -16,7 +16,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -295,8 +294,7 @@ public record PlanetDimension(
         /** Sets the atmosphere to empty, disables wind and heat requirement */
         public Builder noAtmosphere() {
             return atmosphere(atm -> atm
-                    .fluid(Fluids.EMPTY)
-                    .collectionRate(0)
+                    .composition()
                     .pressurePa(0))
                     .wind(0)
                     .heatRequirement(0, 0);

@@ -7,6 +7,7 @@ import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarPackets;
 import com.lightning.northstar.content.NorthstarTextures;
 import com.lightning.northstar.planet.Planet;
+import com.lightning.northstar.planet.data.AtmosphereFluid;
 import com.lightning.northstar.planet.data.PlanetDimension;
 import com.lightning.northstar.planet.data.render.NoopPlanetRenderer;
 import com.lightning.northstar.util.NorthstarLang;
@@ -185,14 +186,48 @@ public class TelescopeScreen extends AbstractSimiScreen {
 
                     Component indent = Component.literal("  ");
 
-                    MutableComponent atmosphere = dimension.hasAtmosphere() ?
-                            dimension.atmosphere().asFluidStack(1).getDisplayName().copy() :
-                            Component.translatable("northstar.gui.generic_planet.dimension.atmosphere.none");
+                    List<AtmosphereFluid> atmosphere = dimension.atmosphere().composition();
 
-                    tooltip.add(indent.copy().append(Component.translatable(
-                            "northstar.gui.generic_planet.dimension.atmosphere",
-                            atmosphere.withStyle(ChatFormatting.AQUA)
-                    ).withStyle(ChatFormatting.GRAY)));
+                    if (atmosphere.isEmpty() || atmosphere.size() == 1) {
+                        MutableComponent atmosphereComposition = dimension.hasAtmosphere() ?
+                                atmosphere.get(0).asFluidStack(1).getDisplayName().copy() :
+                                Component.translatable("northstar.gui.generic_planet.dimension.atmosphere.none");
+
+                        tooltip.add(indent.copy().append(Component.translatable(
+                                "northstar.gui.generic_planet.dimension.atmosphere.single",
+                                atmosphereComposition.withStyle(ChatFormatting.AQUA)
+                        ).withStyle(ChatFormatting.GRAY)));
+                    } else {
+                        tooltip.add(indent.copy()
+                                .append(Component.translatable("northstar.gui.generic_planet.dimension.atmosphere")
+                                        .withStyle(ChatFormatting.GRAY)));
+
+                        float total = 0;
+                        for (AtmosphereFluid fluid : atmosphere) {
+                            total += fluid.collectionRate();
+                        }
+
+                        Component fluidIndent = indent.copy()
+                                .append(indent);
+
+                        for (AtmosphereFluid fluid : atmosphere) {
+                            float fraction = fluid.collectionRate() / total * 100;
+
+                            MutableComponent fluidName = fluid.asFluidStack(1).getDisplayName().copy();
+                            MutableComponent percentage = fraction <= 0.01 ?
+                                    Component.literal("<0.01%") :
+                                    NorthstarLang.numberDirect(fraction).append("%");
+
+                            tooltip.add(
+                                    fluidIndent.copy()
+                                            .withStyle(ChatFormatting.GRAY)
+                                            .append(fluidName.withStyle(ChatFormatting.WHITE))
+                                            .append(": ")
+                                            .append(percentage.withStyle(ChatFormatting.AQUA))
+                            );
+                        }
+                    }
+
                     if (dimension.hasAtmosphere()) {
                         tooltip.add(indent.copy().append(Component.translatable(
                                 "northstar.gui.generic_planet.dimension.atmosphere_pressure",
