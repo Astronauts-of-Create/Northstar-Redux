@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.tech.atmospheric_concentrator;
 
 import com.lightning.northstar.planet.data.Atmosphere;
+import com.lightning.northstar.planet.data.AtmosphereFluid;
 import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -12,6 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +34,8 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
 
     protected SmartFluidTankBehaviour tank;
     protected float buffer;
+    @Nullable
+    protected AtmosphereFluid collectedFluid;
 
     public AtmosphericConcentratorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -47,20 +52,43 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
     public void tick() {
         super.tick();
 
-        Atmosphere atmosphere = level.northstar$dimension().atmosphere();
+        if (collectedFluid == null) {
+            Atmosphere atmosphere = level.northstar$dimension().atmosphere();
+            if (atmosphere.isVacuum()) {
+                return;
+            }
+            setCollectedFluid(atmosphere.composition().get(0));
+        }
+
         float speed = getCollectionSpeed();
-        if (atmosphere.isVacuum() || Mth.equal(speed, 0)) {
+        if (Mth.equal(speed, 0)) {
             return;
         }
 
         float newBuffer = buffer + speed;
         int filled = Mth.floor(newBuffer);
         buffer = newBuffer - filled;
-        tank.getPrimaryHandler().fill(atmosphere.asFluidStack(filled), FluidAction.EXECUTE);
+
+        if (filled > 0) {
+            tank.getPrimaryHandler().fill(collectedFluid.asFluidStack(filled), FluidAction.EXECUTE);
+        }
+    }
+
+    @Nullable
+    public AtmosphereFluid getCollectedFluid() {
+        return collectedFluid;
+    }
+
+    public void setCollectedFluid(@Nullable AtmosphereFluid fluid) {
+        collectedFluid = fluid;
+        if (fluid == null || !fluid.asFluidStack(1).isFluidEqual(tank.getPrimaryHandler().getFluid())) {
+            tank.getPrimaryHandler().setFluid(FluidStack.EMPTY);
+        }
+        notifyUpdate();
     }
 
     public float getCollectionSpeed() {
-        return level.northstar$dimension().atmosphere().collectionRate() * Math.abs(speed) / 256f;
+        return collectedFluid == null ? 0 : collectedFluid.collectionRate() * Math.abs(speed) / 256f;
     }
 
     @Override
@@ -68,18 +96,18 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
         NorthstarLang.translate("gui.goggles.atmospheric_concentrator")
                 .forGoggles(tooltip);
 
-        if (IRotate.StressImpact.isEnabled())
+        if (IRotate.StressImpact.isEnabled()) {
             addStressImpactStats(tooltip, calculateStressApplied());
+        }
 
-        Atmosphere atmosphere = level.northstar$dimension().atmosphere();
-        if (atmosphere.isVacuum()) {
+        if (collectedFluid == null) {
             NorthstarLang.translate("gui.goggles.atmospheric_concentrator.no_atmosphere")
                     .style(ChatFormatting.RED)
                     .forGoggles(tooltip);
         } else {
             NorthstarLang.translate("gui.goggles.atmospheric_concentrator.collected_fluid")
                     .style(ChatFormatting.GRAY)
-                    .add(CreateLang.fluidName(atmosphere.asFluidStack(1)))
+                    .add(CreateLang.fluidName(collectedFluid.asFluidStack(1)))
                     .forGoggles(tooltip);
 
             CreateLang.builder()
@@ -103,6 +131,31 @@ public class AtmosphericConcentratorBlockEntity extends KineticBlockEntity imple
         }
 
         return true;
+    }
+
+    @Override
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
+
+        FluidStack stack = FluidStack.loadFluidStackFromNBT(compound.getCompound("CollectedFluid"));
+        collectedFluid = level.northstar$dimension()
+                .atmosphere()
+                .composition()
+                .stream()
+                .filter(c -> c.asFluidStack(1).isFluidEqual(stack))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    protected void write(CompoundTag compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
+
+        if (collectedFluid != null) {
+            compound.put("CollectedFluid", collectedFluid.asFluidStack(1).writeToNBT(new CompoundTag()));
+        } else {
+            compound.remove("CollectedFluid");
+        }
     }
 
     @Override

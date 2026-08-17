@@ -11,7 +11,6 @@ import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.NorthstarTags.NorthstarBlockTags;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.data.ModCompat;
-import com.lightning.northstar.planet.data.PlanetDimension;
 import com.simibubi.create.compat.jei.CreateJEI;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
@@ -128,7 +127,10 @@ public class NorthstarJEI implements IModPlugin {
                 AtmosphericConcentratorCategory.RECIPE_TYPE,
                 registryAccess.registryOrThrow(NorthstarRegistries.PLANET_DIMENSION)
                         .stream()
-                        .filter(PlanetDimension::hasAtmosphere)
+                        .flatMap(dimension -> dimension.atmosphere()
+                                .composition()
+                                .stream()
+                                .map(fluid -> new AtmosphericConcentratorCategory.Entry(dimension, fluid)))
                         .toList()
         );
 

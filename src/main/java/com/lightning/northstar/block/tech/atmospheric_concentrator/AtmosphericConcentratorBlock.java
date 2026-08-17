@@ -1,20 +1,33 @@
 package com.lightning.northstar.block.tech.atmospheric_concentrator;
 
 import com.lightning.northstar.content.NorthstarBlockEntityTypes;
+import com.lightning.northstar.content.NorthstarStats;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -38,6 +51,25 @@ public class AtmosphericConcentratorBlock extends HorizontalKineticBlock impleme
         if (context.getPlayer() != null && context.getPlayer().isCrouching())
             return defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
         return defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        player.awardStat(NorthstarStats.INTERACT_WITH_ATMOSPHERIC_CONCENTRATOR);
+        if (level.isClientSide()) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> withBlockEntityDo(level, pos, this::openScreen));
+        }
+
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(AtmosphericConcentratorBlockEntity be) {
+        if (be.getLevel().northstar$dimension().atmosphere().isVacuum()) {
+            Minecraft.getInstance().gui.setOverlayMessage(Component.translatable("northstar.gui.atmospheric_concentrator.no_atmosphere").withStyle(ChatFormatting.RED), false);
+        } else {
+            ScreenOpener.open(new AtmosphericConcentratorScreen(be));
+        }
     }
 
     @Override

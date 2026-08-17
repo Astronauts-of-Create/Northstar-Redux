@@ -10,6 +10,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -25,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Mixin(Level.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class LevelMixin implements NorthstarLevel {
+public abstract class LevelMixin implements NorthstarLevel, LevelAccessor {
 
     @Shadow
     @Final
@@ -93,6 +94,7 @@ public abstract class LevelMixin implements NorthstarLevel {
         northstar$gravityScale = dim.gravityScale();
         northstar$noGravity = dim.gravity() == 0;
 
+        northstar$oxygen.onResourceReload();
         northstar$temperature.onResourceReload();
 
         if (!init) {

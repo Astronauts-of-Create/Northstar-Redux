@@ -44,6 +44,7 @@ public class NorthstarOxygen {
     private final Level level;
     private final Set<Provider> providers;
     private final ProgressiveBlockUpdater updater;
+    private boolean hasOxygen;
 
     public NorthstarOxygen(Level level) {
         this.level = level;
@@ -51,8 +52,13 @@ public class NorthstarOxygen {
         this.updater = new ProgressiveBlockUpdater(SealingMode.OXYGEN);
     }
 
+    @ApiStatus.Internal
+    public void onResourceReload() {
+        hasOxygen = level.northstar$dimension().atmosphere().composition().stream().anyMatch(fluid -> fluid.breathable() && isBreathable(fluid.fluid()));
+    }
+
     public boolean hasOxygen() {
-        return isBreathable(level.northstar$dimension().atmosphere().fluid());
+        return hasOxygen;
     }
 
     public Provider getSealer(Vec3 pos) {
