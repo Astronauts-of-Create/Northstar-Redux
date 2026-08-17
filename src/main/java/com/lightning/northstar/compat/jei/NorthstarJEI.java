@@ -112,7 +112,10 @@ public class NorthstarJEI implements IModPlugin {
                 AtmosphericConcentratorCategory.RECIPE_TYPE,
                 registryAccess.registryOrThrow(NorthstarRegistries.PLANET_DIMENSION)
                         .stream()
-                        .filter(PlanetDimension::hasAtmosphere)
+                        .flatMap(dimension -> dimension.atmosphere()
+                                .composition()
+                                .stream()
+                                .map(fluid -> new AtmosphericConcentratorCategory.Entry(dimension, fluid)))
                         .toList()
         );
 

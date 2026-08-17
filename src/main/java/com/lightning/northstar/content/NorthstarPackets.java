@@ -1,6 +1,7 @@
 package com.lightning.northstar.content;
 
 import com.lightning.northstar.Northstar;
+import com.lightning.northstar.block.tech.atmospheric_concentrator.AtmosphericConcentratorEditPacket;
 import com.lightning.northstar.block.tech.rocket_station.RocketStationEditPacket;
 import com.lightning.northstar.block.tech.telescope.TelescopePrintPacket;
 import com.lightning.northstar.block.tech.temperature_regulator.TemperatureRegulatorEditPacket;
@@ -22,6 +23,7 @@ import java.util.Locale;
 public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
 
     // client to server
+    UPDATE_ATMOSPHERIC_CONCENTRATOR(AtmosphericConcentratorEditPacket.class, AtmosphericConcentratorEditPacket.STREAM_CODEC),
     UPDATE_ROCKET_STATION(RocketStationEditPacket.class, RocketStationEditPacket.STREAM_CODEC),
     UPDATE_SPACE_ATLAS(SpaceAtlasEditPacket.class, SpaceAtlasEditPacket.STREAM_CODEC),
     UPDATE_TEMPERATURE_REGULATOR(TemperatureRegulatorEditPacket.class, TemperatureRegulatorEditPacket.STREAM_CODEC),
@@ -35,7 +37,7 @@ public enum NorthstarPackets implements BasePacketPayload.PacketTypeProvider {
     ACTOR_CONFIG(ActorConfigPacket.class, ActorConfigPacket.STREAM_CODEC),
     RELATIVE_TELEPORT(RelativeTeleportPacket.class, RelativeTeleportPacket.STREAM_CODEC);
 
-    public static final int NETWORK_VERSION = 6;
+    public static final int NETWORK_VERSION = 8;
 
     private final CatnipPacketRegistry.PacketType<?> type;
 

@@ -14,6 +14,7 @@ public class NorthstarStats {
 
     public static final ResourceLocation
             INTERACT_WITH_ASTRONOMY_TABLE = register("interact_with_astronomy_table"),
+            INTERACT_WITH_ATMOSPHERIC_CONCENTRATOR = register("interact_with_atmospheric_concentrator"),
             INTERACT_WITH_COMPUTER_RACK = register("interact_with_computer_rack"),
             INTERACT_WITH_OXYGEN_FILLER = register("interact_with_oxygen_filler"),
             INTERACT_WITH_OXYGEN_SEALER = register("interact_with_oxygen_sealer"),
