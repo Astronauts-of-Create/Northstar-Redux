@@ -96,6 +96,9 @@ import static com.lightning.northstar.Northstar.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static net.minecraft.world.level.block.Blocks.*;
 
+// Directly accessing items (and other registry entries) via Class.ENTRY or Class.ENTRY::get instead of () -> Class.ENTRY.get()
+// causes the Class to be loaded on the spot instead of lazily which can mess with global state or loading order (e.g: Registrate's Creative tab)
+@SuppressWarnings("Convert2MethodRef")
 public class NorthstarBlocks {
 
     static {
@@ -760,7 +763,7 @@ public class NorthstarBlocks {
                     .noCollission()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .blockstate(NorthstarDataGenModels.manualModel())
-            .loot(NorthstarDataGenLoot.cropLoot(NorthstarItems.MARS_TULIP_FLOWER, NorthstarItems.MARS_TULIP_SEEDS, 2))
+            .loot(NorthstarDataGenLoot.cropLoot(() -> NorthstarItems.MARS_TULIP_FLOWER.get(), () -> NorthstarItems.MARS_TULIP_SEEDS.get(), 2))
             .item()
             .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
@@ -776,7 +779,7 @@ public class NorthstarBlocks {
                     .noCollission()
                     .offsetType(BlockBehaviour.OffsetType.XZ))
             .blockstate(NorthstarDataGenModels.manualModel())
-            .loot(NorthstarDataGenLoot.cropLoot(NorthstarItems.MARS_PALM_FLOWER, NorthstarItems.MARS_PALM_SEEDS, 2))
+            .loot(NorthstarDataGenLoot.cropLoot(() -> NorthstarItems.MARS_PALM_FLOWER.get(), () -> NorthstarItems.MARS_PALM_SEEDS.get(), 2))
             .item()
             .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
@@ -793,7 +796,7 @@ public class NorthstarBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XZ)
                     .lightLevel(pState -> 7))
             .blockstate(NorthstarDataGenModels.manualModel())
-            .loot(NorthstarDataGenLoot.cropLoot(NorthstarItems.MARS_SPROUT_FLOWER, NorthstarItems.MARS_SPROUT_SEEDS, 2))
+            .loot(NorthstarDataGenLoot.cropLoot(() -> NorthstarItems.MARS_SPROUT_FLOWER.get(), () -> NorthstarItems.MARS_SPROUT_SEEDS.get(), 2))
             .item()
             .model(NorthstarDataGenModels.itemGeneratedBlock())
             .build()
