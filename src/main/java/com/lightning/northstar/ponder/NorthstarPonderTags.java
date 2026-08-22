@@ -27,7 +27,10 @@ public class NorthstarPonderTags {
                 // see comment in NorthstarPonderPlugin
                 //.add(NorthstarBlocks.IRON_COGWHEEL)
                 //.add(NorthstarBlocks.IRON_LARGE_COGWHEEL)
-                .add(NorthstarBlocks.ROCKET_CONTROLS);
+                .add(NorthstarBlocks.OXYGEN_FILLER)
+                .add(NorthstarBlocks.ROCKET_THRUSTER)
+                .add(NorthstarBlocks.ROCKET_CONTROLS)
+                .add(NorthstarBlocks.ROCKET_STATION);
     }
 
 }

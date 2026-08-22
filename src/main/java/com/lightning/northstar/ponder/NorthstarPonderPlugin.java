@@ -2,6 +2,8 @@ package com.lightning.northstar.ponder;
 
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.content.NorthstarBlocks;
+import com.lightning.northstar.ponder.scene.CombustionEnginePonder;
+import com.lightning.northstar.ponder.scene.OxygenFillerPonder;
 import com.lightning.northstar.ponder.scene.RocketStationPonder;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -22,7 +24,6 @@ public class NorthstarPonderPlugin implements PonderPlugin {
     @Override
     public void registerScenes(@NotNull PonderSceneRegistrationHelper<ResourceLocation> helper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
-
         // FIXME: those register under northstar and are missing the translation keys
         /*HELPER.forComponents(NorthstarBlocks.IRON_COGWHEEL)
                 .addStoryBoard(ResourceLocation.parse("create:cog/small"), KineticsScenes::cogAsRelay, AllCreatePonderTags.KINETIC_RELAYS)
@@ -33,7 +34,13 @@ public class NorthstarPonderPlugin implements PonderPlugin {
                 .addStoryBoard(ResourceLocation.parse("create:cog/speedup"), KineticsScenes::cogsSpeedUp)
                 .addStoryBoard(ResourceLocation.parse("create:cog/encasing"), KineticsScenes::cogwheelsCanBeEncased);*/
 
-        HELPER.forComponents(NorthstarBlocks.ROCKET_STATION, NorthstarBlocks.ROCKET_CONTROLS)
+        HELPER.forComponents(NorthstarBlocks.COMBUSTION_ENGINE)
+                .addStoryBoard("combustion_engine", CombustionEnginePonder::program, AllCreatePonderTags.KINETIC_SOURCES);
+
+        HELPER.forComponents(NorthstarBlocks.OXYGEN_FILLER)
+                .addStoryBoard("oxygen_filler", OxygenFillerPonder::program, AllCreatePonderTags.KINETIC_SOURCES);
+
+        HELPER.forComponents(NorthstarBlocks.ROCKET_STATION, NorthstarBlocks.ROCKET_CONTROLS, NorthstarBlocks.ROCKET_THRUSTER, NorthstarBlocks.INTERPLANETARY_NAVIGATOR, NorthstarBlocks.AUTO_LANDER)
                 .addStoryBoard("rocket", RocketStationPonder::program, AllCreatePonderTags.MOVEMENT_ANCHOR);
     }
 

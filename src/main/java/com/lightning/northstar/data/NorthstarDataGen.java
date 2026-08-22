@@ -19,9 +19,11 @@ import com.lightning.northstar.content.world.planet.moon.MoonPlacedFeatures;
 import com.lightning.northstar.content.world.planet.venus.VenusBiomes;
 import com.lightning.northstar.content.world.planet.venus.VenusConfiguredFeatures;
 import com.lightning.northstar.content.world.planet.venus.VenusPlacedFeatures;
+import com.lightning.northstar.ponder.NorthstarPonderPlugin;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.DetectedVersion;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -58,6 +60,9 @@ public class NorthstarDataGen {
             provideDefaultLang("tooltips", provider::add);
             provideDefaultLang("tags", provider::add);
             NorthstarAdvancements.provideLangEntries(provider::add);
+
+            PonderIndex.addPlugin(new NorthstarPonderPlugin());
+            PonderIndex.getLangAccess().provideLang(Northstar.MOD_ID, provider::add);
         });
     }
 
