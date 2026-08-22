@@ -18,7 +18,6 @@ public class RocketStationPonder {
         scene.scaleSceneView(.7f);
         scene.setSceneOffsetY(-3);
 
-        Selection rocket = util.select().fromTo(3, 1, 3, 11, 18, 11);
         Selection front = util.select().fromTo(2, 1, 2, 11, 15, 5);
         Selection right = util.select().fromTo(0, 1, 0, 5, 18, 14);
 
@@ -51,7 +50,7 @@ public class RocketStationPonder {
         scene.addKeyframe();
         scene.overlay()
                 .showOutlineWithText(fuelTank, 80)
-                .text("The thrusters require fuel, you need one or more tanks containing Methane or Hydrocarbon.");
+                .text("The thrusters require fuel, you need one or more tanks containing Hydrocarbon, Hydrogen or Methane.");
         scene.idle(80);
 
         scene.addKeyframe();
@@ -72,13 +71,13 @@ public class RocketStationPonder {
         scene.addKeyframe();
         scene.overlay()
                 .showOutlineWithText(station, 80)
-                .text("The rocket station allows to choose the destination and assemble the rocket.");
+                .text("The rocket station allows to choose the destination and assemble the rocket. It also displays information about the fuel and heat shielding needed to travel across planets.");
         scene.idle(80);
 
         scene.addKeyframe();
         scene.overlay()
                 .showOutlineWithText(controls, 80)
-                .text("Rocket controls allow to launch the rocket once assembled.");
+                .text("Rocket controls allow to launch and control the rocket once assembled.");
         scene.idle(80);
 
         scene.addKeyframe();
@@ -88,9 +87,15 @@ public class RocketStationPonder {
         scene.idle(80);
 
         scene.world().showSection(util.select().layers(12, 7).add(front).add(right), Direction.DOWN);
-        scene.addKeyframe();
         scene.idle(20);
 
+        scene.addKeyframe();
+        scene.overlay()
+                .showOutlineWithText(fuelTank, 80)
+                .text("Heat Shielding can be increased by adding metallic blocks.");
+        scene.idle(80);
+
+        scene.addKeyframe();
         scene.overlay()
                 .showText(80)
                 .text("Don't forget to glue it. You can use scaffolding or individual glue sections.");
