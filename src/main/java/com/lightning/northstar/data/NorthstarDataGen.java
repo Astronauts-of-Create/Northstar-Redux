@@ -3,7 +3,10 @@ package com.lightning.northstar.data;
 import com.google.gson.JsonElement;
 import com.lightning.northstar.Northstar;
 import com.lightning.northstar.advancements.NorthstarAdvancements;
-import com.lightning.northstar.content.*;
+import com.lightning.northstar.content.NorthstarDamageTypes;
+import com.lightning.northstar.content.NorthstarFuelTypes;
+import com.lightning.northstar.content.NorthstarPlanets;
+import com.lightning.northstar.content.NorthstarRegistries;
 import com.lightning.northstar.content.recipe.*;
 import com.lightning.northstar.content.world.*;
 import com.lightning.northstar.content.world.planet.core.*;
@@ -19,6 +22,9 @@ import com.lightning.northstar.content.world.planet.moon.MoonPlacedFeatures;
 import com.lightning.northstar.content.world.planet.venus.VenusBiomes;
 import com.lightning.northstar.content.world.planet.venus.VenusConfiguredFeatures;
 import com.lightning.northstar.content.world.planet.venus.VenusPlacedFeatures;
+import com.lightning.northstar.ponder.NorthstarPonderPlugin;
+import com.lightning.northstar.ponder.NorthstarPonderTags;
+import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.DetectedVersion;
@@ -60,6 +66,11 @@ public class NorthstarDataGen {
             provideDefaultLang("tooltips", provider::add);
             provideDefaultLang("tags", provider::add);
             NorthstarAdvancements.provideLangEntries(provider::add);
+
+            NorthstarPonderTags.register();
+            NorthstarPonderPlugin.register();
+            PonderLocalization.generateSceneLang();
+            PonderLocalization.provideLang(Northstar.MOD_ID, provider::add);
         });
 
         RegistrySetBuilder builder = new RegistrySetBuilder()

@@ -17,6 +17,7 @@ import com.lightning.northstar.content.world.NorthstarDimensionEffects;
 import com.lightning.northstar.contraption.rocket.LaunchStatus;
 import com.lightning.northstar.contraption.rocket.RocketContraptionEntity;
 import com.lightning.northstar.ponder.NorthstarPonderPlugin;
+import com.lightning.northstar.ponder.NorthstarPonderTags;
 import com.lightning.northstar.util.NorthstarLang;
 import com.simibubi.create.content.trains.CameraDistanceModifier;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
@@ -53,6 +54,11 @@ public class NorthstarClient {
     private static float atmosphereBlend;
 
     public static void clientInit(IEventBus modEventBus, IEventBus forgeEventBus) {
+    }
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        NorthstarPonderTags.register();
         NorthstarPonderPlugin.register();
     }
 
