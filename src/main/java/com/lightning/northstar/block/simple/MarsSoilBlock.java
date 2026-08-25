@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.content.NorthstarBlocks;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -12,9 +13,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.util.TriState;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MarsSoilBlock extends Block {
 
     public MarsSoilBlock(Properties properties) {
@@ -26,7 +30,7 @@ public class MarsSoilBlock extends Block {
         if (itemAbility.equals(ItemAbilities.HOE_TILL) && context.getLevel().getBlockState(context.getClickedPos().above()).isAir()) {
             return NorthstarBlocks.MARS_FARMLAND.get().defaultBlockState();
         }
-        return super.getToolModifiedState(state, context, itemAbility, simulate);
+        return null;
     }
 
     @Override

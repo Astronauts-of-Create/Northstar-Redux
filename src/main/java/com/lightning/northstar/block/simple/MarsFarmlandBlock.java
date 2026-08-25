@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.content.NorthstarBlocks;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,13 +21,17 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.FarmlandWaterManager;
 import net.neoforged.neoforge.common.util.TriState;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MarsFarmlandBlock extends FarmBlock {
 
     public MarsFarmlandBlock(Properties properties) {
         super(properties);
     }
 
-    public static void turntoMarsSoil(BlockState state, Level level, BlockPos pos) {
+    public static void turnToMarsSoil(BlockState state, Level level, BlockPos pos) {
         level.setBlockAndUpdate(pos, pushEntitiesUp(state, NorthstarBlocks.MARS_SOIL.get().defaultBlockState(), level, pos));
     }
 
@@ -40,17 +45,15 @@ public class MarsFarmlandBlock extends FarmBlock {
         return FarmlandWaterManager.hasBlockWaterTicket(level, pos);
     }
 
-    private static TriState isUnderCrops(BlockGetter level, BlockPos pos) {
-        BlockState plant = level.getBlockState(pos.above());
-        BlockState state = level.getBlockState(pos);
-        return state.canSustainPlant(level, pos, Direction.UP,  plant);
+    private static TriState isUnderCrops(BlockGetter block, BlockPos pos) {
+        BlockState plant = block.getBlockState(pos.above());
+        BlockState state = block.getBlockState(pos);
+        return state.canSustainPlant(block, pos, Direction.UP, plant);
     }
-
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        BlockState aboveState = level.getBlockState(pos.above());
-        return super.canSurvive(state, level, pos) || aboveState.getBlock() instanceof AttachedStemBlock;
+        return super.canSurvive(state, level, pos) || level.getBlockState(pos.above()).getBlock() instanceof AttachedStemBlock;
     }
 
     @Override
@@ -61,16 +64,17 @@ public class MarsFarmlandBlock extends FarmBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
         if (!state.canSurvive(level, pos)) {
-            turntoMarsSoil(state, level, pos);
+            turnToMarsSoil(state, level, pos);
         }
     }
 
     @Override
     public void fallOn(Level level, BlockState blockState, BlockPos pos, Entity entity, float p_153231_) {
         if (!level.isClientSide && CommonHooks.onFarmlandTrample(level, pos, Blocks.DIRT.defaultBlockState(), p_153231_, entity)) { // Forge: Move logic to Entity#canTrample
-            turntoMarsSoil(blockState, level, pos);
+            turnToMarsSoil(blockState, level, pos);
         }
     }
+
     @Override
     public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, RandomSource p_221142_) {
         int i = blockState.getValue(MOISTURE);
@@ -78,7 +82,7 @@ public class MarsFarmlandBlock extends FarmBlock {
             if (i > 0) {
                 level.setBlock(pos, blockState.setValue(MOISTURE, i - 1), 2);
             } else if (isUnderCrops(level, pos).isFalse()) {
-                turntoMarsSoil(blockState, level, pos);
+                turnToMarsSoil(blockState, level, pos);
             }
         } else if (i < 7) {
             level.setBlock(pos, blockState.setValue(MOISTURE, 7), 2);

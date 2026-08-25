@@ -3,6 +3,7 @@ package com.lightning.northstar.block.crops;
 import com.lightning.northstar.content.NorthstarBlocks;
 import com.lightning.northstar.content.NorthstarItems;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -24,9 +25,12 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
 
     public static final MapCodec<MartianFlowerBlock> CODEC = simpleCodec(MartianFlowerBlock::new);
@@ -38,7 +42,7 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
     public MartianFlowerBlock(BlockBehaviour.Properties properties) {
         super(properties);
 
-        registerDefaultState(stateDefinition.any().setValue(getAgeProperty(), 2));
+        registerDefaultState(stateDefinition.any().setValue(getAgeProperty(), getMaxAge()));
     }
 
     @Override
@@ -46,69 +50,48 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         return CODEC;
     }
 
-    public Item getSeedItem() {
-        return NorthstarItems.MARS_TULIP_SEEDS.get();
-    }
-
-    public IntegerProperty getAgeProperty() {
-        return AGE;
-    }
-
-    public int getMaxAge() {
-        return MAX_AGE;
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(AGE));
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        Vec3 vec3 = pState.getOffset(pLevel, pPos);
-        return SHAPE.move(vec3.x, vec3.y, vec3.z);
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        Vec3 offset = state.getOffset(level, pos);
+        return SHAPE.move(offset.x, offset.y, offset.z);
     }
 
     @Override
-    protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return pState.is(BlockTags.DIRT) || pState.is(Blocks.FARMLAND) || pState.is(NorthstarBlocks.MARS_SOIL.get()) || pState.is(NorthstarBlocks.MARS_FARMLAND.get()) || pState.is(NorthstarBlocks.MARTIAN_GRASS.get());
-    }
-
-    public boolean isMaxAge(BlockState pState) {
-        return pState.getValue(this.getAgeProperty()) >= this.getMaxAge();
-    }
-
-    @Override
-    public boolean isRandomlyTicking(BlockState pState) {
-        return !this.isMaxAge(pState);
+    protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.is(BlockTags.DIRT) ||
+               state.is(Blocks.FARMLAND) ||
+               state.is(NorthstarBlocks.MARS_SOIL.get()) ||
+               state.is(NorthstarBlocks.MARS_FARMLAND.get()) ||
+               state.is(NorthstarBlocks.MARTIAN_GRASS.get());
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        if (!pLevel.isAreaLoaded(pPos, 1)) return;
-        if (pLevel.getRawBrightness(pPos, 0) >= 9) {
-            int i = this.getAge(pState);
-            if (i < this.getMaxAge()) {
-                pLevel.setBlock(pPos, this.getStateForAge(i + 1), 2);
+    public boolean isRandomlyTicking(BlockState state) {
+        return !isMaxAge(state);
+    }
+
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!level.isAreaLoaded(pos, 1)) return;
+
+        if (level.getRawBrightness(pos, 0) >= 9) {
+            int age = getAge(state);
+            if (age < getMaxAge()) {
+                level.setBlock(pos, getStateForAge(age + 1), 2);
             }
         }
     }
 
-    public BlockState getStateForAge(int pAge) {
-        return this.defaultBlockState().setValue(this.getAgeProperty(), pAge);
-    }
-
-    protected int getAge(BlockState pState) {
-        return pState.getValue(this.getAgeProperty());
-    }
-
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(AGE);
-    }
-
-    @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        Item playerItem = pContext.getPlayer().getItemInHand(pContext.getHand()).getItem();
-        if (playerItem == this.getSeedItem())
-            return this.defaultBlockState().setValue(AGE, 0);
-        return this.defaultBlockState();
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        if (context.getPlayer() != null && context.getPlayer().getItemInHand(context.getHand()).getItem() == getSeedItem())
+            return defaultBlockState().setValue(AGE, 0);
+        return defaultBlockState();
     }
 
     @Override
@@ -126,6 +109,30 @@ public class MartianFlowerBlock extends BushBlock implements BonemealableBlock {
         if (!isMaxAge(state)) {
             level.setBlock(pos, getStateForAge(getAge(state) + 1), 2);
         }
+    }
+
+    public Item getSeedItem() {
+        return NorthstarItems.MARS_TULIP_SEEDS.get();
+    }
+
+    public IntegerProperty getAgeProperty() {
+        return AGE;
+    }
+
+    public int getMaxAge() {
+        return MAX_AGE;
+    }
+
+    public boolean isMaxAge(BlockState state) {
+        return state.getValue(getAgeProperty()) >= getMaxAge();
+    }
+
+    public BlockState getStateForAge(int age) {
+        return defaultBlockState().setValue(getAgeProperty(), age);
+    }
+
+    protected int getAge(BlockState state) {
+        return state.getValue(getAgeProperty());
     }
 
 }

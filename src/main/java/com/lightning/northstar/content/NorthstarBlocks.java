@@ -634,6 +634,7 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<MartianGrassBlock> MARTIAN_GRASS = REGISTRATE
             .block("martian_grass", MartianGrassBlock::new)
+            .lang("Martian Grass Block")
             .initialProperties(() -> DIRT)
             .properties(p -> p.mapColor(MapColor.COLOR_PURPLE)
                     .sound(SoundType.GRASS)
@@ -645,6 +646,7 @@ public class NorthstarBlocks {
 
     public static final BlockEntry<MartianTallGrassBlock> MARTIAN_TALL_GRASS = REGISTRATE
             .block("martian_tall_grass", MartianTallGrassBlock::new)
+            .lang("Martian Grass")
             /*.initialProperties(SharedProperties::REPLACEABLE_PLANT)*/
             .properties(p -> p.mapColor(MapColor.COLOR_PURPLE)
                     .sound(SoundType.GRASS)
