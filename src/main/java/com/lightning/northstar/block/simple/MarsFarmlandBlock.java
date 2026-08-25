@@ -1,6 +1,7 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.content.NorthstarBlocks;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,14 +15,21 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.FarmlandWaterManager;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MarsFarmlandBlock extends FarmBlock {
+
     public MarsFarmlandBlock(Properties properties) {
         super(properties);
     }
 
-    public static void turntoMarsSoil(BlockState state, Level level, BlockPos pos) {
+    public static void turnToMarsSoil(BlockState state, Level level, BlockPos pos) {
         level.setBlockAndUpdate(pos, pushEntitiesUp(state, NorthstarBlocks.MARS_SOIL.get().defaultBlockState(), level, pos));
     }
 
@@ -32,22 +40,18 @@ public class MarsFarmlandBlock extends FarmBlock {
                 return true;
             }
         }
-        return net.minecraftforge.common.FarmlandWaterManager.hasBlockWaterTicket(level, pos);
+        return FarmlandWaterManager.hasBlockWaterTicket(level, pos);
     }
 
     private static boolean isUnderCrops(BlockGetter block, BlockPos pos) {
         BlockState plant = block.getBlockState(pos.above());
         BlockState state = block.getBlockState(pos);
-        return plant.getBlock() instanceof net.minecraftforge.common.IPlantable && state.canSustainPlant(block, pos, Direction.UP, (net.minecraftforge.common.IPlantable) plant.getBlock());
+        return plant.getBlock() instanceof IPlantable && state.canSustainPlant(block, pos, Direction.UP, (IPlantable) plant.getBlock());
     }
-
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        BlockState aboveState = level.getBlockState(pos.above());
-        return super.canSurvive(state, level, pos) || aboveState.getBlock() instanceof StemGrownBlock;
-
-
+        return super.canSurvive(state, level, pos) || level.getBlockState(pos.above()).getBlock() instanceof StemGrownBlock;
     }
 
     @Override
@@ -58,14 +62,14 @@ public class MarsFarmlandBlock extends FarmBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
         if (!state.canSurvive(level, pos)) {
-            turntoMarsSoil(state, level, pos);
+            turnToMarsSoil(state, level, pos);
         }
     }
 
     @Override
     public void fallOn(Level level, BlockState blockState, BlockPos pos, Entity entity, float p_153231_) {
         if (!level.isClientSide && net.minecraftforge.common.ForgeHooks.onFarmlandTrample(level, pos, Blocks.DIRT.defaultBlockState(), p_153231_, entity)) { // Forge: Move logic to Entity#canTrample
-            turntoMarsSoil(blockState, level, pos);
+            turnToMarsSoil(blockState, level, pos);
         }
     }
 
@@ -77,18 +81,16 @@ public class MarsFarmlandBlock extends FarmBlock {
                 level.setBlock(pos, blockState.setValue(MOISTURE, i - 1), 2);
 
             } else if (!isUnderCrops(level, pos)) {
-                turntoMarsSoil(blockState, level, pos);
+                turnToMarsSoil(blockState, level, pos);
             }
         } else if (i < 7) {
             level.setBlock(pos, blockState.setValue(MOISTURE, 7), 2);
         }
-
-
     }
 
     @Override
-    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, net.minecraftforge.common.IPlantable plantable) {
-        net.minecraftforge.common.PlantType plantType = plantable.getPlantType(world, pos.relative(facing));
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        PlantType plantType = plantable.getPlantType(world, pos.relative(facing));
         return plantType == PlantType.CROP || plantType == PlantType.PLAINS;
     }
 }

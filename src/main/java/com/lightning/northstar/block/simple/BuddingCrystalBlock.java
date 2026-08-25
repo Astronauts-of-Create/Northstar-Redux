@@ -21,10 +21,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class BuddingCrystalBlock extends AmethystBlock {
 
-    private Block small;
-    private Block medium;
-    private Block large;
-    private Block cluster;
+    private final Block small;
+    private final Block medium;
+    private final Block large;
+    private final Block cluster;
 
     public BuddingCrystalBlock(BlockBehaviour.Properties properties, Block small, Block medium, Block large, Block cluster) {
         super(properties);

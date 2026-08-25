@@ -1,8 +1,13 @@
 package com.lightning.northstar.block.crops;
 
 import com.lightning.northstar.content.NorthstarItems;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.Item;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MarsTulipBlock extends MartianFlowerBlock {
 
     public MarsTulipBlock(Properties properties) {

@@ -1,16 +1,23 @@
 package com.lightning.northstar.block.simple;
 
 import com.lightning.northstar.content.NorthstarBlocks;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class MarsSoilBlock extends Block {
 
     public MarsSoilBlock(Properties properties) {
@@ -26,8 +33,8 @@ public class MarsSoilBlock extends Block {
     }
 
     @Override
-    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, net.minecraft.core.Direction facing, net.minecraftforge.common.IPlantable plantable) {
-        net.minecraftforge.common.PlantType plantType = plantable.getPlantType(world, pos.relative(facing));
+    public boolean canSustainPlant(BlockState state, BlockGetter world, BlockPos pos, Direction facing, IPlantable plantable) {
+        PlantType plantType = plantable.getPlantType(world, pos.relative(facing));
         return plantType != PlantType.CROP && plantType != PlantType.WATER;
     }
 
