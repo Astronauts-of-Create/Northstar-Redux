@@ -97,7 +97,7 @@ public record PlanetDimension(
                             either -> either.map(Vector2f::new, v -> v),
                             vector -> Mth.equal(vector.x, vector.y) ? Either.left(vector.x) : Either.right(vector)
                     )
-                    .fieldOf("averageTemperature")
+                    .optionalFieldOf("average_temperature", new Vector2f(NorthstarTemperature.DEFAULT))
                     .forGetter(PlanetDimension::averageTemperature),
             LevelFunction.CODEC.optionalFieldOf("temperature", LevelFunction.constant(NorthstarTemperature.DEFAULT)).forGetter(PlanetDimension::temperature),
             LevelFunction.CODEC.optionalFieldOf("wind_multiplier", LevelFunction.constant(1)).forGetter(PlanetDimension::wind),
