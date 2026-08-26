@@ -43,7 +43,9 @@ public class TorchBlockMixin extends Block implements LiquidBlockContainer, Seal
                                             @Local(argsOnly = true, ordinal = 0) BlockPos pos) {
         if (state.getBlock() == Blocks.TORCH && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
-            return NorthstarBlocks.EXTINGUISHED_TORCH.get().defaultBlockState();
+            return NorthstarBlocks.EXTINGUISHED_TORCH.get()
+                    .defaultBlockState()
+                    .setValue(ExtinguishedTorchBlock.OXYGEN_DEPRIVED, true);
         }
         return state;
     }
@@ -75,7 +77,10 @@ public class TorchBlockMixin extends Block implements LiquidBlockContainer, Seal
     @Override
     public void northstar$onSealUpdated(Level level, BlockPos pos, BlockState state, SealingMode mode) {
         if (mode == SealingMode.OXYGEN && state.getBlock() == Blocks.TORCH && !NorthstarOxygen.hasOxygen(level, pos)) {
-            level.setBlock(pos, NorthstarBlocks.EXTINGUISHED_TORCH.get().defaultBlockState(), Block.UPDATE_ALL);
+            BlockState torch = NorthstarBlocks.EXTINGUISHED_TORCH.get()
+                    .defaultBlockState()
+                    .setValue(ExtinguishedTorchBlock.OXYGEN_DEPRIVED, true);
+            level.setBlock(pos, torch, Block.UPDATE_ALL);
         }
     }
 

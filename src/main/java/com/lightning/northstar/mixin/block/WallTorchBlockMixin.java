@@ -80,7 +80,8 @@ public class WallTorchBlockMixin extends Block implements LiquidBlockContainer, 
         return NorthstarBlocks.EXTINGUISHED_TORCH_WALL
                 .get()
                 .defaultBlockState()
-                .setValue(ExtinguishedTorchWallBlock.FACING, state.getValue(FACING));
+                .setValue(ExtinguishedTorchWallBlock.FACING, state.getValue(FACING))
+                .setValue(ExtinguishedTorchWallBlock.OXYGEN_DEPRIVED, true);
     }
 
     @Override

@@ -1,7 +1,11 @@
 package com.lightning.northstar.block.simple;
 
+import com.lightning.northstar.config.NorthstarConfigs;
+import com.lightning.northstar.content.NorthstarBlockStateProperties;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.lightning.northstar.world.sealer.SealReactiveBlock;
+import com.lightning.northstar.world.sealer.SealingMode;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -21,6 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -29,18 +34,21 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ExtinguishedTorchBlock extends TorchBlock implements ProperWaterloggedBlock {
+public class ExtinguishedTorchBlock extends TorchBlock implements ProperWaterloggedBlock, SealReactiveBlock {
+
+    public static final BooleanProperty OXYGEN_DEPRIVED = NorthstarBlockStateProperties.OXYGEN_DEPRIVED;
 
     public ExtinguishedTorchBlock(Properties properties) {
         super(properties, ParticleTypes.FLAME);
 
         registerDefaultState(defaultBlockState()
-                .setValue(WATERLOGGED, false));
+                .setValue(WATERLOGGED, false)
+                .setValue(OXYGEN_DEPRIVED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder.add(WATERLOGGED));
+        super.createBlockStateDefinition(builder.add(WATERLOGGED, OXYGEN_DEPRIVED));
     }
 
     @Override
@@ -75,6 +83,19 @@ public class ExtinguishedTorchBlock extends TorchBlock implements ProperWaterlog
         level.setBlock(pos, Blocks.TORCH.defaultBlockState(), UPDATE_ALL);
         level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
         return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
+    public void northstar$onSealUpdated(Level level, BlockPos pos, BlockState state, SealingMode mode) {
+        if (mode != SealingMode.OXYGEN) {
+            return;
+        }
+
+        if (state.getValue(OXYGEN_DEPRIVED) &&
+            NorthstarConfigs.server().relitExtinguishedBlocks.get() &&
+            NorthstarOxygen.hasOxygen(level, pos)) {
+            level.setBlock(pos, Blocks.TORCH.defaultBlockState(), UPDATE_ALL);
+        }
     }
 
 }

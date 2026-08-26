@@ -45,18 +45,28 @@ public class LanternBlockMixin extends Block implements SealReactiveBlock {
     }
 
     @Nullable
-    @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
-    public BlockState northstar$updatePlacementLit(@Nullable BlockState state,
-                                                   @Local(argsOnly = true) BlockPlaceContext context) {
+    @ModifyReturnValue(
+            method = "getStateForPlacement",
+            at = @At("RETURN")
+    )
+    public BlockState northstar$updatePlacementLit(
+            @Nullable BlockState state,
+            @Local(argsOnly = true) BlockPlaceContext context
+    ) {
         if (state != null && state.getBlock() == Blocks.LANTERN && !NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos()))
             return northstar$copyStateExtinguished(state);
         return state;
     }
 
-    @ModifyReturnValue(method = "updateShape", at = @At("RETURN"))
-    public BlockState northstar$updateShape(BlockState state,
-                                            @Local(argsOnly = true) LevelAccessor level,
-                                            @Local(argsOnly = true, ordinal = 0) BlockPos pos) {
+    @ModifyReturnValue(
+            method = "updateShape",
+            at = @At("RETURN")
+    )
+    public BlockState northstar$updateShape(
+            BlockState state,
+            @Local(argsOnly = true) LevelAccessor level,
+            @Local(argsOnly = true, ordinal = 0) BlockPos pos
+    ) {
         if (state.getBlock() == Blocks.LANTERN && level instanceof Level l && !NorthstarOxygen.hasOxygen(l, pos)) {
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
             return northstar$copyStateExtinguished(state);
@@ -77,7 +87,8 @@ public class LanternBlockMixin extends Block implements SealReactiveBlock {
                 .get()
                 .defaultBlockState()
                 .setValue(ExtinguishedLanternBlock.HANGING, state.getValue(HANGING))
-                .setValue(ExtinguishedLanternBlock.WATERLOGGED, state.getValue(WATERLOGGED));
+                .setValue(ExtinguishedLanternBlock.WATERLOGGED, state.getValue(WATERLOGGED))
+                .setValue(ExtinguishedLanternBlock.OXYGEN_DEPRIVED, true);
     }
 
 }
