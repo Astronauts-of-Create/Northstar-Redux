@@ -3750,6 +3750,15 @@ public class NorthstarBlocks {
             .build()
             .register();
 
+    public static final BlockEntry<ExtinguishedFireBlock> EXTINGUISHED_FIRE = REGISTRATE
+            .block("extinguished_fire", ExtinguishedFireBlock::new)
+            .properties(p -> p.mapColor(MapColor.NONE)
+                    .noCollission()
+                    .air()
+                    .replaceable())
+            .blockstate((c, p) -> p.simpleBlock(c.get(), p.models().getExistingFile(p.mcLoc("block/barrier"))))
+            .register();
+
     public static final BlockEntry<GlowstoneTorchBlock> GLOWSTONE_TORCH = REGISTRATE
             .block("glowstone_torch", GlowstoneTorchBlock::new)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY)

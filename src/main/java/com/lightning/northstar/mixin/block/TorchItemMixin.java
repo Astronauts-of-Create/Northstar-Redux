@@ -21,24 +21,29 @@ public class TorchItemMixin {
 
     @Nullable
     @ModifyReturnValue(method = "getPlacementState", at = @At("RETURN"))
-    public BlockState northstar$updatePlacementLit(@Nullable BlockState state,
-                                                   @Local(argsOnly = true) BlockPlaceContext context) {
+    public BlockState northstar$updatePlacementLit(
+            @Nullable BlockState state,
+            @Local(argsOnly = true) BlockPlaceContext context
+    ) {
         if (state == null)
             return null;
 
+        boolean oxygen = NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos());
         boolean water = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        if (NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos()) && !water)
+        if (oxygen && !water)
             return state;
 
         if (state.is(Blocks.TORCH)) {
             return NorthstarBlocks.EXTINGUISHED_TORCH.get()
                     .defaultBlockState()
-                    .setValue(ExtinguishedTorchBlock.WATERLOGGED, water);
+                    .setValue(ExtinguishedTorchBlock.WATERLOGGED, water)
+                    .setValue(ExtinguishedTorchBlock.OXYGEN_DEPRIVED, !oxygen);
         } else if (state.is(Blocks.WALL_TORCH)) {
             return NorthstarBlocks.EXTINGUISHED_TORCH_WALL.get()
                     .defaultBlockState()
                     .setValue(ExtinguishedTorchWallBlock.FACING, state.getValue(WallTorchBlock.FACING))
-                    .setValue(ExtinguishedTorchWallBlock.WATERLOGGED, water);
+                    .setValue(ExtinguishedTorchWallBlock.WATERLOGGED, water)
+                    .setValue(ExtinguishedTorchWallBlock.OXYGEN_DEPRIVED, !oxygen);
         }
         // otherwise it's likely a soul/redstone torch, those shouldn't require air to work as they are special
         return state;

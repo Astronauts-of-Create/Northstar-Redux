@@ -62,6 +62,8 @@ public class ServerConfig extends ConfigBase {
     // 1800 mB / 6 mB/t = 15 seconds (base) to 30 seconds (capacity 3)
     public final ConfigInt oxygenFillerMaxTransferPerTick = i(6, 0, "oxygenFillerMaxTransferPerTick", "The maximum oxygen that can be inserted/extracted using an oxygen filler, in mB/t");
     public final ConfigInt mountedOxygenFillerSpeed = i(6, 0, "mountedOxygenFillerSpeed", "The speed of oxygen fillers mounted on contraptions, in mB/t. Set to 0 to disable.");
+    public final ConfigBool relitExtinguishedBlocks = b(true, "relitExtinguishedBlocks", "Whether blocks extinguished from the lack of oxygen (torches, campfires, etc...) should be relit automatically when oxygen is available again. This doesn't affect blocks extinguished manually or fire.");
+    public final ConfigBool relitExtinguishedFire = b(false, "relitExtinguishedFire", "Whether fire extinguished from the lack of oxygen should be relit automatically.");
 
     public final ConfigGroup temperature = group(2, "temperature");
 
