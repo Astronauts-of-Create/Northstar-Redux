@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin;
+package com.lightning.northstar.mixin.data;
 
 import net.minecraft.data.Main;
 import org.spongepowered.asm.mixin.Mixin;
