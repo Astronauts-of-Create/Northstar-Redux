@@ -90,6 +90,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
         movementDirection = new ScrollOptionBehaviour<>(WindmillBearingBlockEntity.RotationDirection.class,
                 Lang.translateDirect("contraptions.windmill.rotation_direction"), this, slot);
+        movementDirection.value = 1;
         movementDirection.withCallback($ -> reActivateSource = true);
         behaviours.add(movementDirection);
     }
@@ -172,7 +173,7 @@ public class CombustionEngineBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public float getGeneratedSpeed() {
-        return generatorSpeed * (movementDirection.getValue() == 1 ? 1 : -1);
+        return convertToDirection(generatorSpeed * (movementDirection.getValue() == 1 ? -1 : 1), getBlockState().getValue(CombustionEngineBlock.HORIZONTAL_FACING));
     }
 
     public void updateRedstone() {
