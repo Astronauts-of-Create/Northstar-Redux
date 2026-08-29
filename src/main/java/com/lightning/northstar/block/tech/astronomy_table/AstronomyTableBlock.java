@@ -6,11 +6,8 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -69,18 +66,8 @@ public class AstronomyTableBlock extends Block implements IBE<AstronomyTableBloc
         };
     }
 
-    // TODO (all be): are both methods needed or are they called in order?
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        return use(level, pos, player).result();
-    }
-
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return use(level, pos, player);
-    }
-
-    private ItemInteractionResult use(Level level, BlockPos pos, Player player) {
         if (!level.isClientSide()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof AstronomyTableBlockEntity be) {
@@ -90,7 +77,7 @@ public class AstronomyTableBlock extends Block implements IBE<AstronomyTableBloc
                 throw new IllegalStateException("Our Container provider is missing!");
             }
         }
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override

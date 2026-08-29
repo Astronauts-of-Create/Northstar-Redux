@@ -19,9 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -84,19 +82,10 @@ public class TelescopeBlock extends Block {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        return use(level, pos, player).result();
-    }
-
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return use(level, pos, player);
-    }
-
-    public ItemInteractionResult use(Level level, BlockPos pos, Player player) {
         Component message = canPlayerUse(level, pos, player);
         if (message != null) {
             player.displayClientMessage(message, true);
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
 
         player.awardStat(NorthstarStats.INTERACT_WITH_TELESCOPE);
@@ -104,7 +93,7 @@ public class TelescopeBlock extends Block {
         if (level.isClientSide()) {
             RegistrateDistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> openScreen(level, pos));
         }
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @OnlyIn(Dist.CLIENT)

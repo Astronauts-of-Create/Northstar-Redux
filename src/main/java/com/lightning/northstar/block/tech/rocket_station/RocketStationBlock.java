@@ -10,9 +10,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -78,32 +76,23 @@ public class RocketStationBlock extends HorizontalDirectionalBlock implements IB
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        return use(level, pos, player).result();
-    }
-
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return use(level, pos, player);
-    }
-
-    private ItemInteractionResult use(Level level, BlockPos pos, Player player) {
-        return onBlockEntityUseItemOn(level, pos, be -> {
+        return onBlockEntityUse(level, pos, be -> {
             player.awardStat(NorthstarStats.INTERACT_WITH_ROCKET_STATION);
             if (player instanceof ServerPlayer serverPlayer) {
                 ItemStack returnTicket = be.container.getItem(1);
                 if (!returnTicket.isEmpty()) {
                     level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), returnTicket, 0, 0, 0));
                     be.container.setItem(1, ItemStack.EMPTY);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide());
+                    return InteractionResult.sidedSuccess(level.isClientSide());
                 }
 
                 RocketContraption contraption = be.assembleContraption();
                 if (contraption != null) {
                     RocketStationMenu.open(serverPlayer, be.container, pos, contraption, be, null);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide());
+                    return InteractionResult.sidedSuccess(level.isClientSide());
                 }
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         });
     }
 
