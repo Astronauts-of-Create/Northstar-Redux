@@ -31,7 +31,7 @@ public record CurveFunction(
     public static final Codec<CurveFunction> CODEC = RecordCodecBuilder.create(i -> i.group(
             LevelFunction.CODEC.fieldOf("key").forGetter(CurveFunction::key),
             Codec.STRING.fieldOf("interpolation").xmap(FACTORIES.lookup("interpolation type"), CurveDataFactory::name).forGetter(CurveFunction::interpolation),
-            Codec.unboundedMap(Codec.FLOAT, LevelFunction.CODEC).fieldOf("points").forGetter(CurveFunction::points)
+            Codec.unboundedMap(Codec.STRING.xmap(Float::parseFloat, String::valueOf), LevelFunction.CODEC).fieldOf("points").forGetter(CurveFunction::points)
     ).apply(i, CurveFunction::create));
 
     static {
@@ -39,6 +39,10 @@ public record CurveFunction(
     }
 
     private static CurveFunction create(LevelFunction key, CurveDataFactory interpolation, Map<Float, LevelFunction> points) {
+        if (points.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create empty curve, this requires at least 1 data point");
+        }
+
         boolean canBeConstant = points
                 .values()
                 .stream()
