@@ -4,6 +4,8 @@ import com.lightning.northstar.client.model.armor.BrokenIronSpaceSuitArmorModel;
 import com.lightning.northstar.client.model.armor.IronSpaceSuitArmorModel;
 import com.lightning.northstar.client.model.armor.MartianSteelSpaceSuitArmorModel;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
+import com.lightning.northstar.data.util.NorthstarDataGenModels;
+import com.lightning.northstar.item.SpaceSuitArmorItem;
 import com.lightning.northstar.item.MartianFlowerItem;
 import com.lightning.northstar.item.SeedItem;
 import com.lightning.northstar.item.SpaceSuitArmorItem;
@@ -251,16 +253,20 @@ public class NorthstarItems {
 
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_HELMET = REGISTRATE
             .item("iron_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(11 * 20))
             .tag(ItemTags.HEAD_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
 
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
             .item("iron_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(16 * 20))
             .tag(ItemTags.CHEST_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.OXYGEN_SOURCES.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
@@ -269,16 +275,20 @@ public class NorthstarItems {
 
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
             .item("iron_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(15 * 20))
             .tag(ItemTags.LEG_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
 
     public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_BOOTS = REGISTRATE
             .item("iron_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(13 * 20))
             .tag(ItemTags.FOOT_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
@@ -323,26 +333,34 @@ public class NorthstarItems {
 
     public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_HELMET = REGISTRATE
             .item("broken_iron_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(11 * 20))
             .tag(ItemTags.HEAD_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .register();
 
     public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
             .item("broken_iron_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(16 * 20))
             .tag(ItemTags.CHEST_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .register();
 
     public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
             .item("broken_iron_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(15 * 20))
             .tag(ItemTags.LEG_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .register();
 
     public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_BOOTS = REGISTRATE
             .item("broken_iron_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorMaterials.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .properties(p -> p.durability(13 * 20))
             .tag(ItemTags.FOOT_ARMOR)
+            .tag(ItemTags.DYEABLE)
             .register();
 
     // endregion

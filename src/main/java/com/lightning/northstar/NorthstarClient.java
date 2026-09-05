@@ -12,6 +12,7 @@ import com.lightning.northstar.client.renderer.effect.VenusEffects;
 import com.lightning.northstar.config.NorthstarConfigs;
 import com.lightning.northstar.content.NorthstarDataComponents;
 import com.lightning.northstar.content.NorthstarFluids;
+import com.lightning.northstar.content.NorthstarItems;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
 import com.lightning.northstar.content.NorthstarTextures;
 import com.lightning.northstar.content.world.NorthstarDimensionEffects;
@@ -34,6 +35,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.material.FogType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -53,8 +55,13 @@ public class NorthstarClient {
 
     public static void clientInit(IEventBus eventBus) {
         eventBus.addListener(NorthstarParticles::registerFactories);
+    }
 
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
         PonderIndex.addPlugin(new NorthstarPonderPlugin());
+
+        SpaceSuitFirstPersonRenderer.register();
     }
 
     @SubscribeEvent
@@ -96,6 +103,21 @@ public class NorthstarClient {
     @SubscribeEvent
     public static void registerGuiOverlays(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, Northstar.asResource("remaining_oxygen"), RemainingOxygenOverlay.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        event.register(
+                (stack, index) -> index > 0 ? 0xFFFFFFFF : DyedItemColor.getOrDefault(stack, 0xFFFFFF) | 0xFF000000,
+                NorthstarItems.IRON_SPACE_SUIT_HELMET,
+                NorthstarItems.IRON_SPACE_SUIT_CHESTPIECE,
+                NorthstarItems.IRON_SPACE_SUIT_LEGGINGS,
+                NorthstarItems.IRON_SPACE_SUIT_BOOTS,
+                NorthstarItems.BROKEN_IRON_SPACE_SUIT_HELMET,
+                NorthstarItems.BROKEN_IRON_SPACE_SUIT_CHESTPIECE,
+                NorthstarItems.BROKEN_IRON_SPACE_SUIT_LEGGINGS,
+                NorthstarItems.BROKEN_IRON_SPACE_SUIT_BOOTS
+        );
     }
 
     @SubscribeEvent
@@ -175,17 +197,6 @@ public class NorthstarClient {
                 CameraDistanceModifier.zoomOut(6);
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void onTick(ClientTickEvent.Pre event) {
-        if (!isGameActive())
-            return;
-        SpaceSuitFirstPersonRenderer.clientTick();
-    }
-
-    protected static boolean isGameActive() {
-        return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
     }
 
     /** @return The current atmosphere blending factor for the player's eye position */

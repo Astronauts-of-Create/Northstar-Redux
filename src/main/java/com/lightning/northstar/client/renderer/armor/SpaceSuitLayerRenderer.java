@@ -37,9 +37,11 @@ public class SpaceSuitLayerRenderer<T extends LivingEntity, M extends EntityMode
     }
 
     @Override
-    public void render(PoseStack ms, MultiBufferSource buffer, int light, T entity,
-                       float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks,
-                       float netHeadYaw, float headPitch) {
+    public void render(
+            PoseStack ms, MultiBufferSource buffer, int light, T entity,
+            float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks,
+            float netHeadYaw, float headPitch
+    ) {
         if (entity.getPose() == Pose.SLEEPING)
             return;
 

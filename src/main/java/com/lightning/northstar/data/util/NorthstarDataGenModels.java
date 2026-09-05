@@ -30,6 +30,10 @@ public class NorthstarDataGenModels {
         return (c, p) -> p.generated(c::get, p.modLoc("block/" + c.getName() + String.join("", suffix)));
     }
 
+    public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> itemGeneratedItemAndOverlay() {
+        return (c, p) -> p.generated(c, p.itemTexture(c), p.itemTexture(c).withSuffix("_overlay"));
+    }
+
     // temporary placeholders nothingness to bypass data generation errors, those will need to be done one day
     public static <B extends Block> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> manualModel() {
         return (c, p) -> {
