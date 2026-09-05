@@ -11,11 +11,13 @@ public class NorthstarEntityResources {
     public static final ResourceLocation IRON_SPACESUIT_ARMOR_TEXTURE = Northstar.asResource("textures/armor/iron_space_suit.png");
     public static final ResourceLocation IRON_SPACESUIT_ARMOR_ANIMATIONS = Northstar.asResource("animations/armor/iron_space_suit.animation.json");
     public static final ResourceLocation IRON_SPACESUIT_ARMOR_ARM = Northstar.asResource("textures/armor/iron_space_suit_arm.png");
+    public static final ResourceLocation IRON_SPACESUIT_ARMOR_ARM_OVERLAY = Northstar.asResource("textures/armor/iron_space_suit_arm_overlay.png");
 
     public static final ResourceLocation BROKEN_IRON_SPACESUIT_ARMOR_MODEL = IRON_SPACESUIT_ARMOR_MODEL;
     public static final ResourceLocation BROKEN_IRON_SPACESUIT_ARMOR_TEXTURE = Northstar.asResource("textures/armor/broken_iron_space_suit.png");
     public static final ResourceLocation BROKEN_IRON_SPACESUIT_ARMOR_ANIMATIONS = IRON_SPACESUIT_ARMOR_ANIMATIONS;
     public static final ResourceLocation BROKEN_IRON_SPACESUIT_ARMOR_ARM = Northstar.asResource("textures/armor/broken_iron_space_suit_arm.png");
+    public static final ResourceLocation BROKEN_IRON_SPACESUIT_ARMOR_ARM_OVERLAY = Northstar.asResource("textures/armor/broken_iron_space_suit_arm_overlay.png");
 
     public static final ResourceLocation MARTIAN_STEEL_SPACESUIT_ARMOR_MODEL = Northstar.asResource("geo/armor/martian_steel_space_suit.geo.json");
     public static final ResourceLocation MARTIAN_STEEL_SPACESUIT_ARMOR_TEXTURE = Northstar.asResource("textures/armor/martian_steel_space_suit.png");
