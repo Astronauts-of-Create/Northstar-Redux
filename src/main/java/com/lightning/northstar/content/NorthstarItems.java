@@ -4,6 +4,8 @@ import com.lightning.northstar.client.model.armor.BrokenIronSpaceSuitArmorModel;
 import com.lightning.northstar.client.model.armor.IronSpaceSuitArmorModel;
 import com.lightning.northstar.client.model.armor.MartianSteelSpaceSuitArmorModel;
 import com.lightning.northstar.content.NorthstarTags.NorthstarItemTags;
+import com.lightning.northstar.data.util.NorthstarDataGenModels;
+import com.lightning.northstar.item.DyeableSpaceSuitArmorItem;
 import com.lightning.northstar.item.MartianFlowerItem;
 import com.lightning.northstar.item.SeedItem;
 import com.lightning.northstar.item.SpaceSuitArmorItem;
@@ -241,15 +243,17 @@ public class NorthstarItems {
             .tag(Tags.Items.ARMORS_BOOTS)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_HELMET = REGISTRATE
-            .item("iron_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, IronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> IRON_SPACE_SUIT_HELMET = REGISTRATE
+            .item("iron_space_suit_helmet", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_HELMETS)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
-            .item("iron_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, IronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
+            .item("iron_space_suit_chestpiece", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_CHESTPLATES)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.OXYGEN_SOURCES.tag)
@@ -257,15 +261,17 @@ public class NorthstarItems {
             .lang("Iron Space Suit Chestplate")
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
-            .item("iron_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, IronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
+            .item("iron_space_suit_leggings", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_LEGGINGS)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> IRON_SPACE_SUIT_BOOTS = REGISTRATE
-            .item("iron_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, IronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> IRON_SPACE_SUIT_BOOTS = REGISTRATE
+            .item("iron_space_suit_boots", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, IronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_BOOTS)
             .tag(NorthstarItemTags.OXYGEN_SEALING.tag)
             .tag(NorthstarItemTags.INSULATING.tag)
@@ -305,23 +311,27 @@ public class NorthstarItems {
             .tag(NorthstarItemTags.INSULATING.tag)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_HELMET = REGISTRATE
-            .item("broken_iron_space_suit_helmet", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, BrokenIronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_HELMET = REGISTRATE
+            .item("broken_iron_space_suit_helmet", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.HELMET, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_HELMETS)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
-            .item("broken_iron_space_suit_chestpiece", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, BrokenIronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_CHESTPIECE = REGISTRATE
+            .item("broken_iron_space_suit_chestpiece", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.CHESTPLATE, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_CHESTPLATES)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
-            .item("broken_iron_space_suit_leggings", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, BrokenIronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_LEGGINGS = REGISTRATE
+            .item("broken_iron_space_suit_leggings", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.LEGGINGS, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_LEGGINGS)
             .register();
 
-    public static final ItemEntry<SpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_BOOTS = REGISTRATE
-            .item("broken_iron_space_suit_boots", p -> new SpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, BrokenIronSpaceSuitArmorModel::new))
+    public static final ItemEntry<DyeableSpaceSuitArmorItem> BROKEN_IRON_SPACE_SUIT_BOOTS = REGISTRATE
+            .item("broken_iron_space_suit_boots", p -> new DyeableSpaceSuitArmorItem(NorthstarArmorTiers.IRON_SPACE_SUIT, ArmorItem.Type.BOOTS, p, BrokenIronSpaceSuitArmorModel::new))
+            .model(NorthstarDataGenModels.itemGeneratedItemAndOverlay())
             .tag(Tags.Items.ARMORS_BOOTS)
             .register();
 
