@@ -290,17 +290,30 @@ public class NorthstarTagGen {
                     .addTag(NorthstarBiomeTags.C_IS_CAVE_VENUS.tag);
 
             tag(Tags.Biomes.IS_PEAK)
-                    .add(MarsBiomes.PEAKS);
+                    .add(MarsBiomes.PEAKS)
+                    .add(MarsBiomes.VOLCANOES);
 
             tag(Tags.Biomes.IS_SNOWY)
-                    .add(MarsBiomes.PEAKS);
+                    .add(MarsBiomes.PEAKS)
+                    .add(MarsBiomes.ICE_CAPS);
 
             tag(Tags.Biomes.IS_VOID)
                     .add(NorthstarBiomes.VOID);
 
             tag(NorthstarBiomeTags.HAS_MARS_BASE.tag)
                     .add(MarsBiomes.DUNES)
-                    .add(MarsBiomes.HIGHLANDS);
+                    .add(MarsBiomes.HIGHLANDS)
+                    .add(MarsBiomes.BASALT_FLATS)
+                    .add(MarsBiomes.CANYONS)
+                    .add(MarsBiomes.ICE_CAPS)
+                    .add(MarsBiomes.RIVERBEDS)
+                    .add(MarsBiomes.AEOLIAN_DUNES);
+
+            tag(NorthstarBiomeTags.HAS_MARS_RUINS.tag)
+                    .add(MarsBiomes.CANYONS)
+                    .add(MarsBiomes.RIVERBEDS)
+                    .add(MarsBiomes.DUNES)
+                    .add(MarsBiomes.BASALT_FLATS);
 
             tag(NorthstarBiomeTags.MARS_BIOMES.tag)
                     .add(MarsBiomes.CRIMSITE_CAVERNS)
@@ -308,7 +321,13 @@ public class NorthstarTagGen {
                     .add(MarsBiomes.HIGHLANDS)
                     .add(MarsBiomes.MAGMATIC_CAVES)
                     .add(MarsBiomes.OVERGROWN_CAVERNS)
-                    .add(MarsBiomes.PEAKS);
+                    .add(MarsBiomes.PEAKS)
+                    .add(MarsBiomes.CANYONS)
+                    .add(MarsBiomes.VOLCANOES)
+                    .add(MarsBiomes.RIVERBEDS)
+                    .add(MarsBiomes.ICE_CAPS)
+                    .add(MarsBiomes.BASALT_FLATS)
+                    .add(MarsBiomes.AEOLIAN_DUNES);
 
             tag(NorthstarBiomeTags.MERCURY_BIOMES.tag)
                     .add(MercuryBiomes.BASINS)

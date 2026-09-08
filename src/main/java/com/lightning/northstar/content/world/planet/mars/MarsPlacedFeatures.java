@@ -59,7 +59,11 @@ public class MarsPlacedFeatures {
             ORE_ZINC = key("ore_zinc"),
             ROCK = key("rock"),
             ROOTS = key("roots"),
-            WORM_NEST = key("worm_nest");
+            WORM_NEST = key("worm_nest"),
+            VOLCANO_CALDERA_BITE = key("volcano_caldera_bite"),
+            VOLCANO_CALDERA_BITE2 = key("volcano_caldera_bite2"),
+            VOLCANO_CALDERA_BITE3 = key("volcano_caldera_bite3"),
+            VOLCANO_CALDERA_MAIN = key("volcano_caldera_main");
 
     private static ResourceKey<PlacedFeature> key(String path) {
         return ResourceKey.create(Registries.PLACED_FEATURE, Northstar.asResource("mars_" + path));
@@ -403,6 +407,50 @@ public class MarsPlacedFeatures {
                         BlockPredicate.ONLY_IN_AIR_PREDICATE,
                         32
                 ),
+                BiomeFilter.biome()
+        );
+
+        register(
+                context,
+                VOLCANO_CALDERA_BITE,
+                MarsConfiguredFeatures.VOLCANO_CALDERA_BITE,
+                RarityFilter.onAverageOnceEvery(90),
+                InSquarePlacement.spread(),
+                SurfaceWaterDepthFilter.forMaxDepth(0),
+                HeightmapPlacement.onHeightmap(Heightmap.Types.OCEAN_FLOOR),
+                BiomeFilter.biome()
+        );
+
+        register(
+                context,
+                VOLCANO_CALDERA_BITE2,
+                MarsConfiguredFeatures.VOLCANO_CALDERA_BITE2,
+                RarityFilter.onAverageOnceEvery(50),
+                InSquarePlacement.spread(),
+                SurfaceWaterDepthFilter.forMaxDepth(0),
+                HeightmapPlacement.onHeightmap(Heightmap.Types.OCEAN_FLOOR),
+                BiomeFilter.biome()
+        );
+
+        register(
+                context,
+                VOLCANO_CALDERA_BITE3,
+                MarsConfiguredFeatures.VOLCANO_CALDERA_BITE3,
+                RarityFilter.onAverageOnceEvery(25),
+                InSquarePlacement.spread(),
+                SurfaceWaterDepthFilter.forMaxDepth(0),
+                HeightmapPlacement.onHeightmap(Heightmap.Types.OCEAN_FLOOR),
+                BiomeFilter.biome()
+        );
+
+        register(
+                context,
+                VOLCANO_CALDERA_MAIN,
+                MarsConfiguredFeatures.VOLCANO_CALDERA_MAIN,
+                RarityFilter.onAverageOnceEvery(400),
+                InSquarePlacement.spread(),
+                SurfaceWaterDepthFilter.forMaxDepth(0),
+                HeightmapPlacement.onHeightmap(Heightmap.Types.OCEAN_FLOOR),
                 BiomeFilter.biome()
         );
     }

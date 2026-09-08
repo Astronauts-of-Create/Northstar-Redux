@@ -330,6 +330,7 @@ public class NorthstarTags {
         C_IS_CAVE_MOON(COMMON, "is_cave/moon"),
         C_IS_CAVE_VENUS(COMMON, "is_cave/venus"),
         HAS_MARS_BASE(MOD, "has_mars_base"),
+        HAS_MARS_RUINS(MOD, "has_mars_ruins"),
         MARS_BIOMES(MOD, "mars_biomes"),
         MERCURY_BIOMES(MOD, "mercury_biomes"),
         MOON_BIOMES(MOD, "moon_biomes"),
