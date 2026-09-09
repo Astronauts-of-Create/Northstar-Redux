@@ -1,6 +1,7 @@
 package com.lightning.northstar.item.atlas;
 
 import com.lightning.northstar.contraption.rocket.RocketDestination;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
@@ -191,8 +192,7 @@ public record SpaceAtlasContent(
     }
 
     public static SpaceAtlasContent fromTag(CompoundTag tag) {
-        return CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow(false, message -> {
-        }).getFirst();
+        return CODEC.decode(NbtOps.INSTANCE, tag.getCompound("atlas")).result().map(Pair::getFirst).orElse(EMPTY);
     }
 
     @Contract("_, _ -> new")
