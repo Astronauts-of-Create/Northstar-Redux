@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -108,7 +109,7 @@ public class TelescopeBlock extends Block {
         }
 
         long time = level.getDayTime() % 24000;
-        if ((time < 12400 || time > 23600) && level.northstar$dimension().hasAtmosphere()) {
+        if ((time < 12400 || time > 23600) && level.northstar$dimension().hasAtmosphere() && Mth.equal(level.northstar$dimension().atmosphere().daytimeStarBrightness(), 0)) {
             return Component.translatable("northstar.block.telescope.requires_night").withStyle(ChatFormatting.RED);
         }
 
