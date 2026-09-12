@@ -19,6 +19,8 @@ import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.ViewportEvent;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +62,7 @@ public class SpaceEffects extends DimensionSpecialEffects implements NorthstarDi
 
     @Override
     public void northstar$setupFogRender(ViewportEvent.RenderFog fog) {
-        if (!Minecraft.getInstance().level.northstar$dimension().hasAtmosphere()) {
+        if (!Minecraft.getInstance().level.northstar$dimension().hasAtmosphere() && !shouldSkipCustomFog(fog)) {
             fog.setCanceled(true);
             fog.setNearPlaneDistance(Float.POSITIVE_INFINITY);
             fog.setFarPlaneDistance(Float.POSITIVE_INFINITY);
@@ -77,6 +79,23 @@ public class SpaceEffects extends DimensionSpecialEffects implements NorthstarDi
                              Matrix4f projectionMatrix, boolean isFoggy, Runnable skyFogSetup) {
         renderPlanetsAndStars(level, partialTick, pose, camera, projectionMatrix, skyFogSetup);
         return true;
+    }
+
+    public static boolean shouldSkipCustomFog() {
+        return shouldSkipCustomFog(Minecraft.getInstance().gameRenderer.getMainCamera().getFluidInCamera());
+    }
+
+    public static boolean shouldSkipCustomFog(ViewportEvent.RenderFog event) {
+        return shouldSkipCustomFog(event.getType());
+    }
+
+    private static boolean shouldSkipCustomFog(FogType type) {
+        if (type != FogType.NONE) {
+            return true;
+        }
+        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        FluidState state = camera.getEntity().level().getFluidState(camera.getBlockPosition());
+        return camera.getPosition().y < camera.getBlockPosition().getY() + state.getHeight(camera.getEntity().level(), camera.getBlockPosition());
     }
 
     public static void renderPlanetsAndStars(ClientLevel level, float partialTick, PoseStack pose, Camera camera, Matrix4f projectionMatrix, Runnable skyFogSetup) {

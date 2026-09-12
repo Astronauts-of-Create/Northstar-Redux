@@ -35,7 +35,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.FogType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -161,10 +160,12 @@ public class NorthstarClient {
                 effects.northstar$setupFogColor(event);
             }
 
-            float alpha = 1 - atmosphereBlend;
-            event.setRed(event.getRed() * alpha);
-            event.setGreen(event.getGreen() * alpha);
-            event.setBlue(event.getBlue() * alpha);
+            if (!SpaceEffects.shouldSkipCustomFog()) {
+                float alpha = 1 - atmosphereBlend;
+                event.setRed(event.getRed() * alpha);
+                event.setGreen(event.getGreen() * alpha);
+                event.setBlue(event.getBlue() * alpha);
+            }
         }
 
         @SubscribeEvent
@@ -174,7 +175,7 @@ public class NorthstarClient {
                 effects.northstar$setupFogRender(event);
             }
 
-            if (event.getType() == FogType.NONE && atmosphereBlend > 0) {
+            if (!SpaceEffects.shouldSkipCustomFog(event) && atmosphereBlend > 0) {
                 float extent = atmosphereBlend * Minecraft.getInstance().gameRenderer.getRenderDistance();
                 event.setNearPlaneDistance(event.getNearPlaneDistance() + extent);
                 event.setFarPlaneDistance(event.getFarPlaneDistance() + extent);
