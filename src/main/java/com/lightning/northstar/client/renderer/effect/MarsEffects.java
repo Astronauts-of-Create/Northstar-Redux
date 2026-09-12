@@ -23,7 +23,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.event.ViewportEvent;
@@ -77,7 +76,7 @@ public class MarsEffects extends SpaceEffects {
 
     @Override
     public void northstar$setupFogRender(ViewportEvent.RenderFog fog) {
-        if (fog.getType() != FogType.NONE || fog.getMode() != FogRenderer.FogMode.FOG_TERRAIN) {
+        if (fog.getMode() != FogRenderer.FogMode.FOG_TERRAIN || shouldSkipCustomFog(fog)) {
             return;
         }
 

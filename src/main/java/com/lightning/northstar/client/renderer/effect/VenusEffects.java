@@ -28,7 +28,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.event.ViewportEvent;
@@ -70,6 +69,10 @@ public class VenusEffects extends SpaceEffects implements NorthstarDimensionEffe
 
     @Override
     public void northstar$setupFogColor(ViewportEvent.ComputeFogColor fog) {
+        if (shouldSkipCustomFog()) {
+            return;
+        }
+
         float time = Minecraft.getInstance().level.getTimeOfDay((float) fog.getPartialTick());
         float darken = Mth.clamp(Mth.cos(time * Mth.TWO_PI) * 2 + 0.5f, 0.125f, 1);
         fog.setRed(0.975f * darken);
@@ -79,7 +82,7 @@ public class VenusEffects extends SpaceEffects implements NorthstarDimensionEffe
 
     @Override
     public void northstar$setupFogRender(ViewportEvent.RenderFog fog) {
-        if (fog.getType() != FogType.NONE || fog.getMode() != FogRenderer.FogMode.FOG_TERRAIN) {
+        if (fog.getMode() != FogRenderer.FogMode.FOG_TERRAIN || shouldSkipCustomFog(fog)) {
             return;
         }
 
