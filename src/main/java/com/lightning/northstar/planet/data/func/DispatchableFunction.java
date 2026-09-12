@@ -51,7 +51,7 @@ public record DispatchableFunction<T>(
     public static final Factory<Block> BLOCK = new Factory<>(Northstar.asResource("block"), ForgeRegistries.BLOCKS.getCodec(),
             (level, pos) -> level.getBlockState(pos).getBlock());
     public static final Factory<ResourceLocation> WEATHER = new Factory<>(Northstar.asResource("weather"), ResourceLocation.CODEC,
-            (level, pos) -> level.isRainingAt(pos) ? level.isThundering() ? NorthstarWeathers.THUNDERING : NorthstarWeathers.RAINING : NorthstarWeathers.CLEAR);
+            (level, pos) -> level.isRaining() ? level.isThundering() ? NorthstarWeathers.THUNDERING : NorthstarWeathers.RAINING : NorthstarWeathers.CLEAR);
 
     public static <T> Codec<DispatchableFunction<T>> codec(Codec<T> codec, Function<Pair<LevelFunction, Map<T, LevelFunction>>, DispatchableFunction<T>> constructor) {
         // this is... special (and used to be worse as a one-liner)
