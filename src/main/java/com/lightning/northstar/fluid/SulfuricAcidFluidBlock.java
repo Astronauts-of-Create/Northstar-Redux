@@ -1,5 +1,6 @@
 package com.lightning.northstar.fluid;
 
+import com.lightning.northstar.content.NorthstarTags.NorthstarEntityTags;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -25,7 +26,7 @@ public class SulfuricAcidFluidBlock extends LiquidBlock {
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         super.entityInside(state, world, pos, entity);
 
-        if (entity instanceof LivingEntity && !world.isClientSide) {
+        if (entity instanceof LivingEntity && !world.isClientSide && !NorthstarEntityTags.IMMUNE_TO_SULFURIC_ACID.matches(entity)) {
             if (entity.hurt(entity.level().damageSources().northstar$acid(), 6.0F)) {
                 entity.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + world.random.nextFloat() * 0.4F);
             }

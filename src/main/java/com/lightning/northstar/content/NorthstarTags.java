@@ -293,6 +293,7 @@ public class NorthstarTags {
         DOESNT_REQUIRE_OXYGEN,
         IGNORE_WORLD_BOUNDS_TELEPORT,
         IGNORE_ZERO_GRAVITY_AI,
+        IMMUNE_TO_SULFURIC_ACID,
         ROCKET_PASSENGER_BLACKLIST;
 
         public final TagKey<EntityType<?>> tag;
