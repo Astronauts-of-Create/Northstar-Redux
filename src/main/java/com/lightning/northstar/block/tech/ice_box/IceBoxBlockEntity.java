@@ -118,6 +118,8 @@ public class IceBoxBlockEntity extends SmartBlockEntity implements IHaveGoggleIn
 
         ItemHelper.dropContents(level, worldPosition, inputInventory);
         ItemHelper.dropContents(level, worldPosition, outputInventory);
+        inputInventory.clearContent();
+        outputInventory.clearContent();
     }
 
     @Override
