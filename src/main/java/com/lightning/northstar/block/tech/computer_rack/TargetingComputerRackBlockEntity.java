@@ -38,6 +38,7 @@ public class TargetingComputerRackBlockEntity extends SmartBlockEntity {
         super.destroy();
 
         ItemHelper.dropContents(level, worldPosition, new InvWrapper(container));
+        container.clearContent();
     }
 
     @Override
