@@ -3,8 +3,6 @@ package com.lightning.northstar.mixin;
 import com.lightning.northstar.api.WhenModLoaded;
 import com.lightning.northstar.data.ModCompat;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLLoader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -48,11 +46,7 @@ public class NorthstarMixinPlugin implements IMixinConfigPlugin {
                     List<ModCompat> mods = Annotations.getValue(node, "value", false, ModCompat.class);
 
                     for (ModCompat mod : mods) {
-                        ModList modlist = ModList.get();
-                        boolean loaded = modlist == null ?
-                                FMLLoader.getLoadingModList().getMods().stream().anyMatch(m -> m.getModId().equals(mod.modId)) :
-                                modlist.isLoaded(mod.modId);
-                        if (loaded) {
+                        if (mod.isLoaded()) {
                             return true;
                         }
                     }

@@ -4,7 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLLoader;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -18,7 +18,7 @@ public interface Mod {
     }
 
     default boolean isLoaded() {
-        return ModList.get().isLoaded(getModId());
+        return FMLLoader.getLoadingModList().getMods().stream().anyMatch(m -> m.getModId().equals(getModId()));
     }
 
     default <T> Optional<T> runIfLoaded(Supplier<Supplier<T>> action) {

@@ -20,11 +20,27 @@ java {
 
 val generatedResources = file("src/generated")
 
-sourceSets.main {
-    resources.srcDir(generatedResources)
+sourceSets {
+    main {
+        resources.srcDir(generatedResources)
 
-    blossom.javaSources {
-        property("version", version.toString())
+        blossom.javaSources {
+            property("version", version.toString())
+        }
+    }
+
+    val main by getting
+
+    val tfmgCe = create("tfmg-ce") {
+        compileClasspath += (main.output + main.compileClasspath).filter { "tfmg" !in it.name }
+    }
+
+    tasks.named<Jar>("jar") {
+        from(tfmgCe.output)
+    }
+
+    tasks.named<Jar>("sourcesJar") {
+        from(tfmgCe.allSource)
     }
 }
 
@@ -150,6 +166,8 @@ dependencies {
     implementation(libs.sable)
     implementation(libs.sable.companion)
     implementation(libs.tfmg)
+
+    "tfmgCeImplementation"(libs.tfmg.ce)
 
     // Create a folder name "mods-obf" inside "run" and put extra mods needed for testing here
     file("run/mods-obf-1.21.1").listFiles()?.forEach { runtimeOnly("local:${it.nameWithoutExtension}") }

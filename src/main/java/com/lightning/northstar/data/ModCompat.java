@@ -1,5 +1,6 @@
 package com.lightning.northstar.data;
 
+import net.neoforged.fml.loading.FMLLoader;
 import org.jetbrains.annotations.ApiStatus;
 
 public enum ModCompat implements Mod {
@@ -13,7 +14,8 @@ public enum ModCompat implements Mod {
     MEK("mekanism"),
     OCULUS("iris"),
     SABLE("sable"),
-    TFMG("tfmg");
+    TFMG("tfmg"),
+    TFMG_CE("tfmg");
 
     @ApiStatus.Internal
     public static boolean HAS_JEI_RUNTIME;
@@ -31,7 +33,19 @@ public enum ModCompat implements Mod {
 
     @Override
     public boolean isLoaded() {
-        return Mod.super.isLoaded() || (this == JEI && HAS_JEI_RUNTIME);
+        return switch (this) {
+            case JEI -> Mod.super.isLoaded() || HAS_JEI_RUNTIME;
+            case TFMG -> checkTFMG(false);
+            case TFMG_CE -> checkTFMG(true);
+            default -> Mod.super.isLoaded();
+        };
+    }
+
+    private static boolean checkTFMG(boolean community) {
+        return FMLLoader.getLoadingModList()
+                .getMods()
+                .stream()
+                .anyMatch(mod -> mod.getModId().equals("tfmg") && mod.getVersion().toString().contains("community") == community);
     }
 
 }

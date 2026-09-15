@@ -1,4 +1,4 @@
-package com.lightning.northstar.mixin.compat.tfmg;
+package com.lightning.northstar.mixin.compat.tfmg_ce;
 
 import com.drmangotea.tfmg.content.machinery.misc.air_intake.AirIntakeBlockEntity;
 import com.drmangotea.tfmg.registry.TFMGFluids;
@@ -7,6 +7,7 @@ import com.lightning.northstar.api.WhenModLoaded;
 import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
 import com.lightning.northstar.world.temperature.NorthstarTemperature;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -16,12 +17,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-@WhenModLoaded(ModCompat.TFMG)
+@WhenModLoaded(ModCompat.TFMG_CE)
 @Mixin(AirIntakeBlockEntity.class)
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -34,17 +34,19 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
         super(type, pos, state);
     }
 
-    @ModifyVariable(
+    @ModifyExpressionValue(
             method = "tick",
-            at = @At("STORE"),
-            name = "production",
-            remap = false
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/drmangotea/tfmg/content/machinery/misc/air_intake/AirIntakeBlockEntity;getProduction()I",
+                    ordinal = 1
+            )
     )
-    private int northstar$tick$addOxygenRequirement(int production) {
+    private int northstar$tick$addOxygenRequirement(int original) {
         NorthstarOxygen oxygen = level.northstar$oxygen();
         northstar$lastConsumed = 0;
         if (oxygen.hasOxygen()) {
-            return production;
+            return original;
         }
 
         NorthstarOxygen.Provider sealer = oxygen.getSealer(worldPosition);
@@ -52,9 +54,9 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
             return 0;
         }
 
-        northstar$lastConsumed = production;
-        sealer.drainOxygen(production);
-        return production;
+        northstar$lastConsumed = original;
+        sealer.drainOxygen(original);
+        return original;
     }
 
     @Redirect(
