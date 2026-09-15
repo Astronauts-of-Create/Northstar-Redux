@@ -26,7 +26,12 @@ public class ExhaustBlockEntityMixin implements NorthstarOxygenConsumingBlockEnt
     @Unique
     private int northstar$dumpedLastTick;
 
-    @Inject(method = "tick", at = @At("HEAD"), remap = false)
+    @Inject(
+            method = "tick",
+            at = @At("HEAD"),
+            remap = false,
+            require = 0
+    )
     private void northstar$onDrain(CallbackInfo ci) {
         northstar$dumpedLastTick = 0;
     }

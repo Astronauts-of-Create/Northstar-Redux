@@ -34,7 +34,8 @@ public class AirIntakeBlockEntityMixin extends KineticBlockEntity implements Nor
             method = "tick",
             at = @At("STORE"),
             ordinal = 0,
-            remap = false
+            remap = false,
+            require = 0
     )
     private int northstar$addOxygenRequirement(int production) {
         NorthstarOxygen oxygen = level.northstar$oxygen();
