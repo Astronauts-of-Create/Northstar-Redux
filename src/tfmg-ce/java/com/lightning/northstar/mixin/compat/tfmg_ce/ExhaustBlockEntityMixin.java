@@ -35,7 +35,8 @@ public class ExhaustBlockEntityMixin implements NorthstarOxygenConsumingBlockEnt
                     value = "INVOKE",
                     target = "Lcom/drmangotea/tfmg/base/fluid/ForceableFluidTank;forceDrain(ILnet/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction;)Lnet/neoforged/neoforge/fluids/FluidStack;",
                     shift = At.Shift.BEFORE
-            )
+            ),
+            require = 0
     )
     private void northstar$onDrain(CallbackInfo ci) {
         northstar$dumpedLastTick = Math.min(100, tankInventory.getFluidAmount());

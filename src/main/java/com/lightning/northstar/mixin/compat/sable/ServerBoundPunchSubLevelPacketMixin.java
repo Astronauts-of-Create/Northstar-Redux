@@ -41,7 +41,8 @@ public class ServerBoundPunchSubLevelPacketMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"
-            )
+            ),
+            require = 0
     )
     private boolean northstar$handleOnGround(
             boolean original,
@@ -56,7 +57,8 @@ public class ServerBoundPunchSubLevelPacketMixin {
                     value = "INVOKE",
                     target = "Ldev/ryanhcode/sable/network/packets/tcp/ServerboundPunchSubLevelPacket;computeStrengthScalar(Ldev/ryanhcode/sable/sublevel/ServerSubLevel;Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;)D",
                     ordinal = 1
-            )
+            ),
+            require = 0
     )
     private double northstar$handle(
             double original,
