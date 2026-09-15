@@ -4,6 +4,7 @@ import com.jesz.createdieselgenerators.content.diesel_engine.huge.HugeDieselEngi
 import com.lightning.northstar.api.WhenModLoaded;
 import com.lightning.northstar.data.ModCompat;
 import com.lightning.northstar.world.oxygen.NorthstarOxygen;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -12,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @WhenModLoaded(ModCompat.CDG)
@@ -26,17 +26,18 @@ public abstract class HugeDieselEngineBlockEntityMixin extends SmartBlockEntity 
         super(type, pos, state);
     }
 
-    @Redirect(
+    @ModifyExpressionValue(
             method = { "tick", "tickClient", "addToGoggleTooltip" },
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/jesz/createdieselgenerators/content/diesel_engine/huge/HugeDieselEngineBlockEntity;enabled()Z",
                     remap = false
             ),
-            remap = false
+            remap = false,
+            require = 0
     )
-    private boolean northstar$addOxygenCheck(HugeDieselEngineBlockEntity instance) {
-        return northstar$hasOxygen && instance.enabled();
+    private boolean northstar$addOxygenCheck(boolean original) {
+        return original && northstar$hasOxygen;
     }
 
     @Inject(method = "tick", at = @At("HEAD"), remap = false)

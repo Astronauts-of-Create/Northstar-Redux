@@ -28,7 +28,8 @@ public class EngineBlockEntityMixin extends KineticBlockEntity {
     @ModifyReturnValue(
             method = "canWork",
             at = @At("RETURN"),
-            remap = false
+            remap = false,
+            require = 0
     )
     private boolean northstar$checkForOxygen(boolean original) {
         return original && NorthstarOxygen.hasOxygen(level, worldPosition);
