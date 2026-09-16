@@ -7,8 +7,8 @@ plugins {
     kotlin("jvm") version "2.1.21"
 }
 
-version = "0.6.5+1.20.1" // https://semver.org/
-group = "com.lightning.northstar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "0.6.5+1.20.1"
+group = "com.lightning.northstar"
 
 java {
     toolchain {
@@ -29,7 +29,11 @@ sourceSets.main {
 }
 
 legacyForge {
-    version = "1.20.1-47.4.0"
+    enable {
+        forgeVersion = "1.20.1-47.4.0"
+        // Workaround for https://github.com/neoforged/ModDevGradle/issues/345
+        isDisableRecompilation = false
+    }
 
     parchment {
         minecraftVersion = "1.20.1"
