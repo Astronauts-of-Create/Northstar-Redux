@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.simibubi.create.content.contraptions.bearing.MechanicalBearingBlockEntity;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -71,7 +70,7 @@ public abstract class WindmillBearingBlockEntityMixin extends MechanicalBearingB
             method = "write",
             at = @At("TAIL")
     )
-    private void northstar$write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket, CallbackInfo ci) {
+    private void northstar$write(CompoundTag compound, boolean clientPacket, CallbackInfo ci) {
         compound.putFloat("NorthstarWindMultiplier", northstar$windMultiplier);
     }
 
@@ -79,7 +78,7 @@ public abstract class WindmillBearingBlockEntityMixin extends MechanicalBearingB
             method = "read",
             at = @At("TAIL")
     )
-    private void northstar$read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket, CallbackInfo ci) {
+    private void northstar$read(CompoundTag compound, boolean clientPacket, CallbackInfo ci) {
         northstar$windMultiplier = compound.getFloat("NorthstarWindMultiplier");
     }
 
