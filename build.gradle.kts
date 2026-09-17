@@ -1,4 +1,4 @@
-import java.time.Instant
+import java.time.*
 
 plugins {
     `maven-publish`
@@ -41,6 +41,11 @@ sourceSets {
 
     tasks.named<Jar>("sourcesJar") {
         from(tfmgCe.allSource)
+    }
+
+    tasks.named<Javadoc>("javadoc") {
+        source(tfmgCe.allJava)
+        classpath += tfmgCe.compileClasspath + tfmgCe.output
     }
 }
 
@@ -89,6 +94,7 @@ neoForge {
     mods {
         create("northstar") {
             sourceSet(sourceSets.main.get())
+            sourceSet(sourceSets["tfmg-ce"])
         }
     }
 }
