@@ -19,6 +19,7 @@
     "accessor.NorthstarContraptionWorld",
     "accessor.NorthstarFlowingFluid",
     "block.AbstractFurnaceBlockEntityMixin",
+    "block.AbstractFurnaceBlockMixin",
     "block.BlockMixin",
     "block.CampfireBlockMixin",
     "block.CandleBlockMixin",

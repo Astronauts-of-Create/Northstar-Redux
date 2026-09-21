@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "2.1.21"
 }
 
-version = "0.6.5+1.20.1-create5"
+version = "0.6.6+1.20.1-create5"
 group = "com.lightning.northstar"
 
 java {
