@@ -85,6 +85,7 @@ public class NorthstarDataGen {
                     VenusConfiguredFeatures.bootstrap(context);
                 })
                 .add(Registries.DENSITY_FUNCTION, NorthstarDensityFunctions::bootstrap)
+                .add(Registries.CONFIGURED_CARVER, NorthstarConfiguredCarvers::bootstrap)
                 .add(Registries.DAMAGE_TYPE, NorthstarDamageTypes::bootstrap)
                 .add(Registries.DIMENSION_TYPE, NorthstarDimensionTypes::bootstrap)
                 .add(Registries.LEVEL_STEM, NorthstarDimensions::bootstrapLevelStems)

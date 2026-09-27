@@ -10,24 +10,213 @@
           "biome": "northstar:martian_dunes",
           "parameters": {
             "temperature": [
-              0.55,
-              1
+              -0.55,
+              0.7
             ],
             "humidity": [
               -1,
-              -0.35
+              1
             ],
             "continentalness": [
-              -0.19,
-              -0.11
+              -1,
+              -0.05
             ],
             "erosion": [
               -1,
-              -0.375
+              1
             ],
             "weirdness": [
-              -0.9333,
-              -0.7666
+              0,
+              1
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_basalt_flats",
+          "parameters": {
+            "temperature": [
+              -0.55,
+              0.7
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1,
+              -0.05
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -1,
+              0
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_aeolian_dunes",
+          "parameters": {
+            "temperature": [
+              -0.55,
+              0.7
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1,
+              -0.05
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -0.15,
+              0
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_riverbeds",
+          "parameters": {
+            "temperature": [
+              -0.55,
+              0.7
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -0.4,
+              0.75
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -0.16,
+              0.16
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_canyons",
+          "parameters": {
+            "temperature": [
+              -0.55,
+              0.7
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -0.05,
+              0.55
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -1,
+              1
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_highlands",
+          "parameters": {
+            "temperature": [
+              -0.55,
+              0.7
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              0.3,
+              0.45
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -1,
+              1
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_volcanoes",
+          "parameters": {
+            "temperature": [
+              -0.55,
+              0.7
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              0.45,
+              1
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -1,
+              1
+            ],
+            "depth": 0,
+            "offset": 0
+          }
+        },
+        {
+          "biome": "northstar:martian_ice_caps",
+          "parameters": {
+            "temperature": [
+              -1,
+              -0.55
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1,
+              1
+            ],
+            "erosion": [
+              -1,
+              1
+            ],
+            "weirdness": [
+              -1,
+              1
             ],
             "depth": 0,
             "offset": 0
@@ -37,8 +226,8 @@
           "biome": "northstar:martian_peaks",
           "parameters": {
             "temperature": [
-              -1,
-              -0.45
+              0.7,
+              1
             ],
             "humidity": [
               0,
@@ -106,33 +295,6 @@
           }
         },
         {
-          "biome": "northstar:martian_highlands",
-          "parameters": {
-            "temperature": [
-              -1,
-              -0.75
-            ],
-            "humidity": [
-              -1,
-              -0.35
-            ],
-            "continentalness": [
-              0.3,
-              1
-            ],
-            "erosion": [
-              -1,
-              -0.475
-            ],
-            "weirdness": [
-              -0.9333,
-              -0.7666
-            ],
-            "depth": 0,
-            "offset": 0
-          }
-        },
-        {
           "biome": "northstar:martian_overgrown_caverns",
           "parameters": {
             "temperature": [
@@ -166,4 +328,3 @@
     }
   }
 }
-

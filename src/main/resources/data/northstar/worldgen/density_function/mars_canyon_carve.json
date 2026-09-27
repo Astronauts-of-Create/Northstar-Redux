@@ -1,0 +1,65 @@
+{
+  "type": "minecraft:mul",
+  "argument1": {
+    "type": "minecraft:range_choice",
+    "input": "minecraft:overworld/continents",
+    "min_inclusive": -0.05,
+    "max_exclusive": 0.55,
+    "when_in_range": 1.0,
+    "when_out_of_range": 0.0
+  },
+  "argument2": {
+    "type": "minecraft:mul",
+    "argument1": {
+      "type": "minecraft:y_clamped_gradient",
+      "from_y": -64,
+      "to_y": -16,
+      "from_value": 0.0,
+      "to_value": 1.0
+    },
+    "argument2": {
+      "type": "minecraft:clamp",
+      "input": {
+        "type": "minecraft:mul",
+        "argument1": -60.0,
+        "argument2": {
+          "type": "minecraft:square",
+          "argument": {
+            "type": "minecraft:range_choice",
+            "input": {
+              "type": "minecraft:abs",
+              "argument": {
+                "type": "minecraft:noise",
+                "noise": "northstar:mars_canyons",
+                "xz_scale": 0.85,
+                "y_scale": 1.0
+              }
+            },
+            "min_inclusive": -1000000,
+            "max_exclusive": 0.045,
+            "when_in_range": {
+              "type": "minecraft:add",
+              "argument1": 1.0,
+              "argument2": {
+                "type": "minecraft:mul",
+                "argument1": -22.22,
+                "argument2": {
+                  "type": "minecraft:abs",
+                  "argument": {
+                    "type": "minecraft:noise",
+                    "noise": "northstar:mars_canyons",
+                    "xz_scale": 0.85,
+                    "y_scale": 1.0
+                  }
+                }
+              }
+            },
+            "when_out_of_range": 0.0
+          }
+        }
+      },
+      "min": -60.0,
+      "max": 0.0
+    }
+  }
+}
