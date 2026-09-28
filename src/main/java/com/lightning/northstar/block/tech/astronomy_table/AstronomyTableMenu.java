@@ -225,8 +225,9 @@ public class AstronomyTableMenu extends MenuBase<AstronomyTableBlockEntity> {
 
         // from container to inventory
         if (index <= 2) {
-            moveItemStackTo(movedItem, 4, slots.size(), true);
-            slot.onTake(player, movedItem);
+            if (moveItemStackTo(movedItem, 4, slots.size(), true)) {
+                slot.onTake(player, movedItem);
+            }
             return ItemStack.EMPTY;
         }
 
