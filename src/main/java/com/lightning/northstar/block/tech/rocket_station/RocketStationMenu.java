@@ -165,8 +165,9 @@ public class RocketStationMenu extends MenuBase<RocketStationHolder> {
 
         // from container to inventory
         if (index == 0) {
-            moveItemStackTo(movedItem, 1, slots.size(), true);
-            slot.onTake(player, movedItem);
+            if (moveItemStackTo(movedItem, 1, slots.size(), true)) {
+                slot.onTake(player, movedItem);
+            }
             return ItemStack.EMPTY;
         }
 
