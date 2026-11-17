@@ -70,6 +70,7 @@
   "block.northstar.computer_rack.tooltip.summary": "架設_導航計算機_以減少火箭的_燃料消耗_",
   "block.northstar.electrolysis_machine": "電解分離器",
   "block.northstar.electrolysis_machine.tooltip.summary": "將_液態水_轉化為_氫氣_和_氧氣_",
+  "block.northstar.extinguished_fire": "Extinguished Fire",
   "block.northstar.extinguished_lantern": "熄滅的燈籠",
   "block.northstar.extinguished_torch": "熄滅的火把",
   "block.northstar.frost": "霜",
