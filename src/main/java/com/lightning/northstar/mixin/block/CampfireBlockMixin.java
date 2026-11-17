@@ -42,7 +42,7 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock implements Seal
             at = @At("TAIL")
     )
     private void northstar$init(boolean spawnParticles, int fireDamage, Properties properties, CallbackInfo ci) {
-        registerDefaultState(defaultBlockState().setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false));
+        registerDefaultState(defaultBlockState().trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false));
     }
 
     @Inject(
@@ -65,7 +65,7 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock implements Seal
         if (state == null || NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos()))
             return state;
         return state.setValue(CampfireBlock.LIT, false)
-                .setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
+                .trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
     }
 
     @ModifyReturnValue(
@@ -103,14 +103,15 @@ public abstract class CampfireBlockMixin extends BaseEntityBlock implements Seal
             if (!NorthstarOxygen.hasOxygen(level, pos)) {
                 level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1, 1);
                 return state.setValue(CampfireBlock.LIT, false)
-                        .setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
+                        .trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
             }
         } else {
-            if (state.getValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED) &&
+            if (state.hasProperty(NorthstarBlockStateProperties.OXYGEN_DEPRIVED) &&
+                state.getValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED) &&
                 NorthstarConfigs.server().relitExtinguishedBlocks.get() &&
                 NorthstarOxygen.hasOxygen(level, pos)) {
                 return state.setValue(CampfireBlock.LIT, true)
-                        .setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false);
+                        .trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false);
             }
         }
         return null;
