@@ -42,7 +42,7 @@ public abstract class CandleCakeBlockMixin extends AbstractCandleBlock implement
             at = @At("TAIL")
     )
     private void northstar$init(Block candleBlock, Properties properties, CallbackInfo ci) {
-        registerDefaultState(defaultBlockState().setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false));
+        registerDefaultState(defaultBlockState().trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false));
     }
 
     @Inject(
@@ -58,7 +58,7 @@ public abstract class CandleCakeBlockMixin extends AbstractCandleBlock implement
         BlockState state = super.getStateForPlacement(context);
         if (state != null && state.getBlock() instanceof CandleCakeBlock && !NorthstarOxygen.hasOxygen(context.getLevel(), context.getClickedPos())) {
             return state.setValue(LIT, false)
-                    .setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
+                    .trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
         }
         return state;
     }
@@ -98,14 +98,15 @@ public abstract class CandleCakeBlockMixin extends AbstractCandleBlock implement
             if (!NorthstarOxygen.hasOxygen(level, pos)) {
                 level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
                 return state.setValue(LIT, false)
-                        .setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
+                        .trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, true);
             }
         } else {
-            if (state.getValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED) &&
+            if (state.hasProperty(NorthstarBlockStateProperties.OXYGEN_DEPRIVED) &&
+                state.getValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED) &&
                 NorthstarConfigs.server().relitExtinguishedBlocks.get() &&
                 NorthstarOxygen.hasOxygen(level, pos)) {
                 return state.setValue(LIT, true)
-                        .setValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false);
+                        .trySetValue(NorthstarBlockStateProperties.OXYGEN_DEPRIVED, false);
             }
         }
         return null;
