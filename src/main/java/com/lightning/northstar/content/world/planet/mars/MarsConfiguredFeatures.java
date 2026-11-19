@@ -39,7 +39,11 @@ public class MarsConfiguredFeatures {
             LAVA_SPRING = key("lava_spring"),
             ROCK = key("rock"),
             ROOTS = key("roots"),
-            WORM_NEST = key("worm_nest");
+            WORM_NEST = key("worm_nest"),
+            VOLCANO_CALDERA_BITE = key("mars_volcano_caldera_bite"),
+            VOLCANO_CALDERA_BITE2 = key("mars_volcano_caldera_bite2"),
+            VOLCANO_CALDERA_BITE3 = key("mars_volcano_caldera_bite3"),
+            VOLCANO_CALDERA_MAIN = key("mars_volcano_caldera_main");
 
     private static ResourceKey<ConfiguredFeature<?, ?>> key(String path) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, Northstar.asResource("mars_" + path));
@@ -186,6 +190,66 @@ public class MarsConfiguredFeatures {
                                         Northstar.asResource("worm_nest/mars_worm_nest_big")
                                 ),
                                 1
+                        )
+                )
+        );
+
+        context.register(
+                VOLCANO_CALDERA_BITE,
+                new ConfiguredFeature<>(
+                        NorthstarFeatures.CRATER.get(),
+                        new CraterConfig(
+                                UniformInt.of(14, 22),
+                                ConstantInt.of(8),
+                                UniformInt.of(9, 16),
+                                BlockStateProvider.simple(NorthstarBlocks.VOLCANIC_ASH.get()),
+                                BlockStateProvider.simple(Blocks.AIR),
+                                blocks.getOrThrow(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+                        )
+                )
+        );
+
+        context.register(
+                VOLCANO_CALDERA_BITE2,
+                new ConfiguredFeature<>(
+                        NorthstarFeatures.CRATER.get(),
+                        new CraterConfig(
+                                UniformInt.of(11, 18),
+                                ConstantInt.of(7),
+                                UniformInt.of(6, 12),
+                                BlockStateProvider.simple(NorthstarBlocks.VOLCANIC_ASH.get()),
+                                BlockStateProvider.simple(Blocks.AIR),
+                                blocks.getOrThrow(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+                        )
+                )
+        );
+
+        context.register(
+                VOLCANO_CALDERA_BITE3,
+                new ConfiguredFeature<>(
+                        NorthstarFeatures.CRATER.get(),
+                        new CraterConfig(
+                                UniformInt.of(8, 14),
+                                ConstantInt.of(5),
+                                UniformInt.of(4, 8),
+                                BlockStateProvider.simple(NorthstarBlocks.VOLCANIC_ASH.get()),
+                                BlockStateProvider.simple(Blocks.AIR),
+                                blocks.getOrThrow(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
+                        )
+                )
+        );
+
+        context.register(
+                VOLCANO_CALDERA_MAIN,
+                new ConfiguredFeature<>(
+                        NorthstarFeatures.CRATER.get(),
+                        new CraterConfig(
+                                UniformInt.of(24, 32),
+                                ConstantInt.of(10),
+                                UniformInt.of(24, 36),
+                                BlockStateProvider.simple(NorthstarBlocks.VOLCANIC_ASH.get()),
+                                BlockStateProvider.simple(Blocks.AIR),
+                                blocks.getOrThrow(NorthstarBlockTags.NATURAL_MARS_BLOCKS.tag)
                         )
                 )
         );
